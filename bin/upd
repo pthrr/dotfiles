@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+P=$PWD
+
+if [ $# -gt 0 ]; then
+    LIMIT=$1
+else
+    LIMIT=1
+fi
+
+for ((i=1; i <= LIMIT; i++)); do
+    P=$P/..
+done
+
+echo $P

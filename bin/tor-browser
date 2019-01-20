@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+cd ~/opt/tor-browser/
+./start-tor-browser.desktop
