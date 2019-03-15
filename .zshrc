@@ -85,6 +85,8 @@ source $ZSH/oh-my-zsh.sh
 # Example aliases
 alias zshconfig="nvim ~/.zshrc"
 alias ohmyzsh="nvim ~/.oh-my-zsh"
+alias xdg="xdg-open"
+alias todo="python3 ~/Code/Python/todo/todo.py"
 
 # Functions
 source ~/.oh-my-zsh/functions/up
