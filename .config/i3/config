@@ -177,7 +177,7 @@ bindsym $mod+Ctrl+q mode "Exit >> (S)ecure, (L)ogout, (R)eboot, (P)oweroff"
 bar {
     status_command py3status -c ~/.config/i3/i3status.conf
     output eDP1
-    tray_output primary
+    tray_output eDP1
     position top
 }
 
@@ -209,7 +209,8 @@ focus_on_window_activation urgent
 workspace_auto_back_and_forth yes
 
 # Switch between monitors
-bindsym $mod+m move workspace to output down
+bindsym $mod+Ctrl+greater move workspace to output right
+bindsym $mod+Ctrl+less move workspace to output left
 
 # Resize Containers, Vim-style                            ($mod+Control+[hjkl])
 bindsym $mod+Control+j resize grow height 5 px or 5 ppt

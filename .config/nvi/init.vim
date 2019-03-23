@@ -28,6 +28,7 @@ if dein#load_state(s:settings.dein_dir)
     call dein#add('kien/ctrlp.vim')
     call dein#add('scrooloose/nerdtree')
     call dein#add('lervag/vimtex')
+    call dein#add('sirver/ultisnips')
 
     call dein#end()
     call dein#save_state()
@@ -154,9 +155,23 @@ nnoremap <A-l> <C-w>l
 " --- PLUGINS -----------------------------------------------------------------
 cd ~/
 
+" python support
+let g:python3_host_prog = '/usr/bin/python3'
+
 " vimtex
-"let g:vimtex_latexmk_progname = 'nvr'
-"let g:vimtex_view_method = 'evince'
+let g:vimtex_compiler_progname = 'nvr'
+let g:tex_flavor = 'latex'
+let g:vimtex_view_method = 'zathura'
+let g:vimtex_quickfix_mode = 0
+set conceallevel=1 " conceal irrelevant synatx
+let g:tex_conceal = 'abdmg'
+let g:latex_view_general_viewer = 'zathura'
+
+" ultisnips
+let g:UltiSnipsExpandTrigger = '<tab>'
+let g:UltiSnipsJumpForwardTrigger = '<tab>'
+let g:UltiSnipsJumpBackwardTrigger = '<s-tab>'
+let g:UltiSnipsSnippetDirectories = [$HOME.'/Documents/LaTex/UltiSnips_snippets']
 
 " vim-airline setup
 set laststatus=2
