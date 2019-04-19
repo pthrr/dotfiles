@@ -30,7 +30,8 @@ font pango:DejaVu Sans Mono 8, FontAwesome 8
 floating_modifier $mod
 
 # start a terminal
-bindsym $mod+Return exec gnome-terminal
+bindsym $mod+Shift+Return exec gnome-terminal
+bindsym $mod+Return exec xterm -fa "DejaVu Sans Mono" -fs 10
 
 # kill focused window
 bindsym $mod+Shift+q kill
@@ -163,7 +164,7 @@ mode "Exit >> (S)ecure, (L)ogout, (R)eboot, (P)oweroff" {
     bindsym r exec systemctl reboot
     bindsym l exec i3-msg exit
     bindsym p exec systemctl poweroff
-    bindsym s exec --no-startup-id i3lock -c 000000
+    bindsym s exec --no-startup-id ~/bin/lock.sh
 
     # back to normal: Enter or Escape
     bindsym Return mode "default"
@@ -223,7 +224,8 @@ bindsym $mod+Ctrl+Left workspace prev
 bindsym $mod+Ctrl+Right workspace next
 
 # Open FileManager
-bindsym $mod+BackSpace exec nautilus --no-desktop &
+bindsym $mod+BackSpace exec gnome-terminal -e nnn
+bindsym $mod+Shift+BackSpace exec nautilus --no-desktop &
 
 # Rename workspace
 #bindsym $mod+Ctrl+r exec python3 ~/.config/i3/rename_workspace.py

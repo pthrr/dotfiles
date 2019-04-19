@@ -23,3 +23,5 @@ PATH="$HOME/bin:$HOME/.local/bin:$PATH"
 if [ -d "$HOME/opt/adb-fastboot/platform-tools" ] ; then
     export PATH="$HOME/opt/adb-fastboot/platform-tools:$PATH"
 fi
+
+export PATH="$HOME/.cargo/bin:$PATH"

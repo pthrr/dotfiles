@@ -1,7 +1,7 @@
 # If you come from bash you might have to change your $PATH.
 export GOROOT=$HOME/opt/go
 export GOPATH=$HOME/Code/Go
-export PATH=$GOROOT/bin:$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
+export PATH=$HOME/.cargo/bin:$GOROOT/bin:$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
 export ZSH=/home/pthrr/.oh-my-zsh
@@ -53,7 +53,7 @@ HYPHEN_INSENSITIVE="true"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git git-prompt github python cp commmand-not-found)
+plugins=(z sudo extract)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -87,6 +87,34 @@ alias zshconfig="nvim ~/.zshrc"
 alias ohmyzsh="nvim ~/.oh-my-zsh"
 alias xdg="xdg-open"
 alias todo="python3 ~/Code/Python/todo/run.py"
+alias rmi="rm -iv"
+alias ls="exa"
+alias py3="python3"
+alias py="python"
+alias py2="python2"
+alias cl="clear"
+alias nvimconfig="nvim ~/.config/nvim/init.vim"
+alias gitconfig="nvim ~/.gitconfig"
+alias lsg="ll | grep"
+alias i3config="nvim ~/.config/i3/config"
+alias i3statusconfig="nvim ~/.config/i3/i3status.conf"
+alias grep="rg"
+alias find="fd"
+alias top="htop"
+alias cpi='cp -iv' # Preferred 'cp' implementation
+alias mvi='mv -iv' # Preferred 'mv' implementation
+alias mkdir='mkdir -pv' # Preferred 'mkdir' implementation
+alias less='less -FSRXc' # Preferred 'less' implementation
+alias df="pydf"
+alias jl="julia"
+alias d="dirs -v"
+alias h="history"
+alias pyr="python3 run.py"
+alias bc="bc -l"
+alias diff="colordiff"
+alias ports="netstat -tulanp"
+alias ln="ln -iv"
+alias lso="ls -la | awk '{k=0;for(i=0;i<=8;i++)k+=((substr(\$1,i+2,1)~/[rwx]/)*2^(8-i));if(k)printf(\" %0o \",k);print}'"
 
 # Functions
-source ~/.oh-my-zsh/functions/up
+#source ~/.oh-my-zsh/functions/up
