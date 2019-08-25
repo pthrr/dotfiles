@@ -71,6 +71,8 @@ source $ZSH/oh-my-zsh.sh
 #   export EDITOR='mvim'
 # fi
 
+export EDITOR=nvim
+
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
 
@@ -115,6 +117,8 @@ alias diff="colordiff"
 alias ports="netstat -tulanp"
 alias ln="ln -iv"
 alias lso="ls -la | awk '{k=0;for(i=0;i<=8;i++)k+=((substr(\$1,i+2,1)~/[rwx]/)*2^(8-i));if(k)printf(\" %0o \",k);print}'"
+alias xtermconfig="nvim ~/.Xresources"
+alias vifmconfig="nvim ~/.vifm/vifmrc"
 
 # Functions
 #source ~/.oh-my-zsh/functions/up
