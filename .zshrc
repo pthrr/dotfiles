@@ -9,7 +9,8 @@ export ZSH=/home/pthrr/.oh-my-zsh
 # Set name of the theme to load. Optionally, if you set this to "random"
 # it'll load a random theme each time that oh-my-zsh is loaded.
 # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
-ZSH_THEME="gallifrey"
+#ZSH_THEME="gallifrey"
+ZSH_THEME=powerlevel10k/powerlevel10k
 
 # Uncomment the following line to use case-sensitive completion.
 # CASE_SENSITIVE="true"
@@ -117,8 +118,7 @@ alias diff="colordiff"
 alias ports="netstat -tulanp"
 alias ln="ln -iv"
 alias lso="ls -la | awk '{k=0;for(i=0;i<=8;i++)k+=((substr(\$1,i+2,1)~/[rwx]/)*2^(8-i));if(k)printf(\" %0o \",k);print}'"
-alias xtermconfig="nvim ~/.Xresources"
-alias vifmconfig="nvim ~/.vifm/vifmrc"
+alias xconfig="nvim ~/.Xresources"
 
-# Functions
-#source ~/.oh-my-zsh/functions/up
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh

@@ -23,10 +23,10 @@ endif
 if dein#load_state(s:settings.dein_dir)
     call dein#begin(s:settings.dein_dir)
 
+    call dein#add('itchyny/lightline.vim')
     call dein#add('iCyMind/NeoSolarized')
-    call dein#add('vim-airline/vim-airline')
-    call dein#add('kien/ctrlp.vim')
-    call dein#add('scrooloose/nerdtree')
+    "call dein#add('kien/ctrlp.vim')
+    "call dein#add('scrooloose/nerdtree')
     call dein#add('lervag/vimtex')
     call dein#add('sirver/ultisnips')
 
@@ -50,27 +50,26 @@ colorscheme NeoSolarized
 syntax on
 filetype plugin indent on
 
+" Encoding
+set encoding=utf-8
+set fileencoding=utf-8
+set fileencodings=utf-8
+
+" Center cursor
 set number " Show line numbers
 set rnu " Relative Numbering
 set so=999 " Center cursor
 
-"autocmd InsertEnter,InsertLeave * set cul!
-autocmd InsertEnter * set cul
-autocmd InsertLeave * set nocul
+" Highlight match
+highlight clear cursorline
+highlight cursorline gui=underline cterm=underline
+autocmd InsertEnter * set cursorline
+autocmd InsertLeave * set nocursorline
 
-set guicursor=n-v-c:block,i-ci-ve:block "ver25 ",r-cr:hor20,o:hor50,a:blinkwait700-blinkoff400-blinkon250-Cursor/lCursor,sm:block-blinkwait175-blinkoff150-blinkon175
+" Hide - INSERT -
+set noshowmode
 
-"if has("autocmd")
-"  au VimEnter,InsertLeave * silent execute '!echo -ne "\e[2 q"' | redraw!
-"  au InsertEnter,InsertChange *
-"    if v:insertmode == 'i' | 
-"        silent execute '!echo -ne "\e[6 q"' | redraw! |
-"    elseif v:insertmode == 'r' |
-"        silent execute '!echo -ne "\e[4 q"' | redraw! |
-"    endif
-"  au VimLeave * silent execute '!echo -ne "\e[ q"' | redraw!
-"endif
-
+" Modify pane
 set colorcolumn=100
 set tw=99 " Autoformat to 99 chars per row
 set nowrap " Dont't auto wrap on load
@@ -85,23 +84,26 @@ set splitright
 " Disable spk noise
 set vb
 set t_vb=
+set novisualbell
+set noerrorbells
 
 " Highlight search
 set hlsearch
 
-" Tabs are 4 spaces
-set tabstop=4
-set softtabstop=4
-set shiftwidth=4
-set shiftround
+" Tabs are 8 spaces
+set tabstop=8
+set softtabstop=8
+set shiftwidth=8
+"set shiftround
 set expandtab
 
 " Show matching brackets
 set showmatch
-"hi MatchParen cterm=underline ctermbg=green ctermfg=blue
-"hi MatchParen cterm=bold ctermbg=none ctermfg=magenta
 hi MatchParen guibg=none guifg=magenta gui=bold
 set matchtime=0
+
+" Mouse support
+set mouse=a
 
 " Enable code folding (optimized for Python)
 set foldmethod=indent
@@ -173,14 +175,17 @@ let g:UltiSnipsJumpForwardTrigger = '<tab>'
 let g:UltiSnipsJumpBackwardTrigger = '<s-tab>'
 let g:UltiSnipsSnippetDirectories = [$HOME.'/Documents/LaTex/UltiSnips_snippets']
 
+" lightline
+let g:lightline = { 'colorscheme': 'solarized',}
+
 " vim-airline setup
-set laststatus=2
-let g:airline#extensions#tabline#enabled=1
-let g:airline#extensions#tabline#buffer_nr_show=1 " NUM Ctrl-6
+"set laststatus=2
+"let g:airline#extensions#tabline#enabled=1
+"let g:airline#extensions#tabline#buffer_nr_show=1 " NUM Ctrl-6
 
 " ctrlP setup
-let g:ctrlp_max_height = 5
-set wildignore+=*.pyc,*_build/*,*/coverage/*
+"let g:ctrlp_max_height = 5
+"set wildignore+=*.pyc,*_build/*,*/coverage/*
 
 " NERDtree mapping
-map <C-n> :NERDTreeToggle<CR>
+"map <C-n> :NERDTreeToggle<CR>

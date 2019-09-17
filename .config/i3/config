@@ -31,7 +31,8 @@ floating_modifier $mod
 
 # start a terminal
 bindsym $mod+Shift+Return exec gnome-terminal
-bindsym $mod+Return exec xterm -fa 'DejaVu Sans Mono' -fs 10
+#bindsym $mod+Return exec xterm -fa 'DejaVu Sans Mono' -fs 10
+bindsym $mod+Return exec st
 
 # kill focused window
 bindsym $mod+Shift+q kill
