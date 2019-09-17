@@ -1,3 +1,0 @@
-#!/bin/sh
-
-xterm -fa mono -fs 20 "$@"
