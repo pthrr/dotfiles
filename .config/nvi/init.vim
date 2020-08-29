@@ -24,6 +24,7 @@ if dein#load_state(s:settings.dein_dir)
     call dein#begin(s:settings.dein_dir)
 
     call dein#add('itchyny/lightline.vim')
+    call dein#add('mengelbrecht/lightline-bufferline')
     call dein#add('iCyMind/NeoSolarized')
     "call dein#add('kien/ctrlp.vim')
     "call dein#add('scrooloose/nerdtree')
@@ -70,8 +71,8 @@ autocmd InsertLeave * set nocursorline
 set noshowmode
 
 " Modify pane
-set colorcolumn=100
-set tw=99 " Autoformat to 99 chars per row
+set colorcolumn=80
+set tw=79 " Autoformat to 79 chars per row
 set nowrap " Dont't auto wrap on load
 set fo-=t " Dont't auto wrap text when typing
 set list listchars=tab:\›\ ,trail:-,extends:>,precedes:< ",eol:¬
@@ -117,6 +118,9 @@ nnoremap <space> za
 set nobackup
 set nowritebackup
 set noswapfile
+
+" allow buffer switching without saving
+set hidden
 
 " Set <Leader> key
 let mapleader = ","
@@ -175,8 +179,20 @@ let g:UltiSnipsJumpForwardTrigger = '<tab>'
 let g:UltiSnipsJumpBackwardTrigger = '<s-tab>'
 let g:UltiSnipsSnippetDirectories = [$HOME.'/Documents/LaTex/UltiSnips_snippets']
 
+" install fzf
+" If installed using git
+set rtp+=~/.fzf
+
 " lightline
+set showtabline=2 " force tabline
+
 let g:lightline = { 'colorscheme': 'solarized',}
+let g:lightline#bufferline#show_number  = 1
+let g:lightline#bufferline#shorten_path = 1
+let g:lightline#bufferline#unnamed      = '[No Name]'
+let g:lightline.tabline          = {'left': [['buffers']], 'right': []}
+let g:lightline.component_expand = {'buffers': 'lightline#bufferline#buffers'}
+let g:lightline.component_type   = {'buffers': 'tabsel'}
 
 " vim-airline setup
 "set laststatus=2

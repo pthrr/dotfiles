@@ -30,9 +30,9 @@ font pango:DejaVu Sans Mono 8, FontAwesome 8
 floating_modifier $mod
 
 # start a terminal
-bindsym $mod+Shift+Return exec gnome-terminal
+bindsym $mod+Shift+Return exec st
 #bindsym $mod+Return exec xterm -fa 'DejaVu Sans Mono' -fs 10
-bindsym $mod+Return exec st
+bindsym $mod+Return exec gnome-terminal
 
 # kill focused window
 bindsym $mod+Shift+q kill
@@ -199,7 +199,7 @@ exec --no-startup-id nm-applet
 exec --no-startup-id nextcloud-client
 exec --no-startup-id fluxgui
 exec_always python3 ~/.config/i3/autoname_workspaces.py &
-exec --no-startup-id xrdb ~/.Xresources
+#exec --no-startup-id xrdb ~/.Xresources
 
 # Ergonomy improvements
 focus_follows_mouse no
@@ -230,10 +230,10 @@ bindsym $mod+BackSpace exec xterm -e vifm
 bindsym $mod+Shift+BackSpace exec nautilus --no-desktop &
 
 # Rename workspace
-#bindsym $mod+Ctrl+r exec python3 ~/.config/i3/rename_workspace.py
+bindsym $mod+Ctrl+r exec python3 ~/.config/i3/rename_workspace.py
 
 # Wallpaper
-exec --no-startup-id feh --bg-scale ~/Pictures/wallpaper.png
+exec --no-startup-id feh --bg-fill ~/Pictures/wallpaper.png
 
 # ALSA
 bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume 1 +5%

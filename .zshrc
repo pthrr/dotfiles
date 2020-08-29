@@ -86,12 +86,14 @@ export EDITOR=nvim
 # For a full list of active aliases, run `alias`.
 #
 # Example aliases
+alias vim="nvim"
 alias zshconfig="nvim ~/.zshrc"
 alias ohmyzsh="nvim ~/.oh-my-zsh"
 alias xdg="xdg-open"
 alias todo="python3 ~/Code/Python/todo/run.py"
 alias rmi="rm -iv"
 alias ls="exa"
+alias cat="bat"
 alias py3="python3"
 alias py="python"
 alias py2="python2"
@@ -118,7 +120,10 @@ alias diff="colordiff"
 alias ports="netstat -tulanp"
 alias ln="ln -iv"
 alias lso="ls -la | awk '{k=0;for(i=0;i<=8;i++)k+=((substr(\$1,i+2,1)~/[rwx]/)*2^(8-i));if(k)printf(\" %0o \",k);print}'"
-alias xconfig="nvim ~/.Xresources"
+alias calc="julia -q"
+alias hist="history"
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
