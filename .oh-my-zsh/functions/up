@@ -1,9 +1,0 @@
-function up() {
-    if [ $# -gt 0 ]; then
-        P=$( upd $1 )
-    else
-        P=$( upd )
-    fi
-
-    cd $P
-}
