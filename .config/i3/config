@@ -196,8 +196,9 @@ bar {
 # --------------------------------------------------------------------
 # Autostart
 exec --no-startup-id nm-applet
-exec --no-startup-id nextcloud-client
-exec --no-startup-id fluxgui
+exec --no-startup-id nextcloud
+#exec --no-startup-id fluxgui
+exec --no-startup-id redshift -t 4500:3500
 exec_always python3 ~/.config/i3/autoname_workspaces.py &
 #exec --no-startup-id xrdb ~/.Xresources
 
@@ -227,7 +228,8 @@ bindsym $mod+Ctrl+Right workspace next
 
 # Open FileManager
 bindsym $mod+BackSpace exec xterm -e vifm
-bindsym $mod+Shift+BackSpace exec nautilus --no-desktop &
+#bindsym $mod+Shift+BackSpace exec nautilus --no-desktop &
+bindsym $mod+Shift+BackSpace exec nautilus &
 
 # Rename workspace
 bindsym $mod+Ctrl+r exec python3 ~/.config/i3/rename_workspace.py
@@ -236,10 +238,10 @@ bindsym $mod+Ctrl+r exec python3 ~/.config/i3/rename_workspace.py
 exec --no-startup-id feh --bg-fill ~/Pictures/wallpaper.png
 
 # ALSA
-bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume 1 +5%
-bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume 1 -5%
-bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute 1 toggle
-bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute 2 toggle
+bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +10%
+bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -10%
+bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle
+bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle
 
 # Brightness
 bindsym XF86MonBrightnessUp exec --no-startup-id xbacklight +10
