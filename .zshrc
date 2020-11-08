@@ -2,6 +2,7 @@
 export GOROOT=$HOME/opt/go
 export GOPATH=$HOME/Code/Go
 export PATH=$HOME/.cargo/bin:$GOROOT/bin:$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
+#export PYTHONPATH=/usr/lib/python3/dist-packages:$PYTHONPATH
 
 # Path to your oh-my-zsh installation.
 export ZSH=/home/pthrr/.oh-my-zsh
@@ -9,7 +10,6 @@ export ZSH=/home/pthrr/.oh-my-zsh
 # Set name of the theme to load. Optionally, if you set this to "random"
 # it'll load a random theme each time that oh-my-zsh is loaded.
 # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
-#ZSH_THEME="gallifrey"
 ZSH_THEME=powerlevel10k/powerlevel10k
 
 # Uncomment the following line to use case-sensitive completion.
@@ -87,11 +87,12 @@ export EDITOR=nvim
 #
 # Example aliases
 alias vim="nvim"
+alias vi="nvim"
 alias zshconfig="nvim ~/.zshrc"
 alias ohmyzsh="nvim ~/.oh-my-zsh"
 alias xdg="xdg-open"
 alias todo="python3 ~/Code/Python/todo/run.py"
-alias rmi="rm -iv"
+alias rm="rm -iv"
 alias ls="exa -la"
 alias cat="bat"
 alias py3="python3"
@@ -106,12 +107,11 @@ alias i3statusconfig="nvim ~/.config/i3/i3status.conf"
 alias grep="rg"
 alias find="fd"
 alias top="htop"
-alias cpi='cp -iv' # Preferred 'cp' implementation
-alias mvi='mv -iv' # Preferred 'mv' implementation
+alias cp='cp -iv' # Preferred 'cp' implementation
+alias mv='mv -iv' # Preferred 'mv' implementation
 alias mkdir='mkdir -pv' # Preferred 'mkdir' implementation
 alias less='less -FSRXc' # Preferred 'less' implementation
 alias df="pydf"
-alias jl="julia"
 alias d="dirs -v"
 alias h="history"
 alias pyr="python3 run.py"
@@ -119,11 +119,33 @@ alias bc="bc -l"
 alias diff="colordiff"
 alias ports="netstat -tulanp"
 alias ln="ln -iv"
+alias hex="xxd"
 alias lso="ls -la | awk '{k=0;for(i=0;i<=8;i++)k+=((substr(\$1,i+2,1)~/[rwx]/)*2^(8-i));if(k)printf(\" %0o \",k);print}'"
-alias calc="julia -q"
-alias hist="history"
+alias calc="insect"
+alias cht="cht.sh"
+alias sed="sd"
+alias ps="procs"
+alias locate="ix"
+alias cf="cd ~/Code/Codeforces"
+alias bw="cd ~/Nextcloud/to_Cloud/Documents/Bewerbungen"
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+# >>> conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+#__conda_setup="$('/home/pthrr/opt/anaconda/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+#if [ $? -eq 0 ]; then
+#%    eval "$__conda_setup"
+#else
+#    if [ -f "/home/pthrr/opt/anaconda/etc/profile.d/conda.sh" ]; then
+#        . "/home/pthrr/opt/anaconda/etc/profile.d/conda.sh"
+#    else
+#        export PATH="/home/pthrr/opt/anaconda/bin:$PATH"
+#    fi
+#fi
+#unset __conda_setup
+# <<< conda initialize <<<
+

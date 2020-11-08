@@ -95,7 +95,7 @@ bindsym $mod+space focus mode_toggle
 #bindsym $mod+d focus child
 
 # hide window borders
-hide_edge_borders horizontal
+hide_edge_borders smart
 new_window pixel 2
 
 #default_border normal
@@ -197,10 +197,8 @@ bar {
 # Autostart
 exec --no-startup-id nm-applet
 exec --no-startup-id nextcloud
-#exec --no-startup-id fluxgui
 exec --no-startup-id redshift -t 4500:3500
 exec_always python3 ~/.config/i3/autoname_workspaces.py &
-#exec --no-startup-id xrdb ~/.Xresources
 
 # Ergonomy improvements
 focus_follows_mouse no

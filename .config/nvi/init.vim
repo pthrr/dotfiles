@@ -107,8 +107,10 @@ set matchtime=0
 set mouse=a
 
 " Enable code folding (optimized for Python)
-set foldmethod=indent
+set foldmethod=syntax
 set foldnestmax=2
+autocmd BufWinLeave *.* mkview
+autocmd BufWinEnter *.* silent loadview
 
 " Mapping for fast open/close fold
 " TIP: zj,zk to move between folds
