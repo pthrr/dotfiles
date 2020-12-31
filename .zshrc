@@ -128,6 +128,12 @@ alias ps="procs"
 alias locate="ix"
 alias cf="cd ~/Code/Codeforces"
 alias bw="cd ~/Nextcloud/to_Cloud/Documents/Bewerbungen"
+alias ar="cd ~/Projects/automotive-radar/automotive-radar"
+alias mcu="sudo nodemcu-tool terminal"
+alias rt="cd ~/Code/C++/RT_Cpp"
+alias m="make"
+alias mc="make clean"
+alias mr="./bin/main"
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh

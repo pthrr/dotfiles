@@ -1,6 +1,0 @@
-st.font:        Monospace-10;
-st.borderpx:    2
-st.cursorColor: white
-st.termname:    st-256color
-st.shell:       /usr/bin/zsh
-st.tabspaces:   8

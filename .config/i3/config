@@ -225,15 +225,16 @@ bindsym $mod+Ctrl+Left workspace prev
 bindsym $mod+Ctrl+Right workspace next
 
 # Open FileManager
-bindsym $mod+BackSpace exec xterm -e vifm
+bindsym $mod+Shift+BackSpace exec xterm -e vifm
 #bindsym $mod+Shift+BackSpace exec nautilus --no-desktop &
-bindsym $mod+Shift+BackSpace exec nautilus &
+bindsym $mod+BackSpace exec nautilus &
 
 # Rename workspace
 bindsym $mod+Ctrl+r exec python3 ~/.config/i3/rename_workspace.py
 
 # Wallpaper
-exec --no-startup-id feh --bg-fill ~/Pictures/wallpaper.png
+#exec --no-startup-id feh --bg-fill ~/Pictures/wallpaper.png
+exec --no-startup-id feh --bg-scale ~/Pictures/debian.jpg
 
 # ALSA
 bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +10%

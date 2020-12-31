@@ -26,8 +26,6 @@ if dein#load_state(s:settings.dein_dir)
     call dein#add('itchyny/lightline.vim')
     call dein#add('mengelbrecht/lightline-bufferline')
     call dein#add('iCyMind/NeoSolarized')
-    "call dein#add('kien/ctrlp.vim')
-    "call dein#add('scrooloose/nerdtree')
     call dein#add('lervag/vimtex')
     call dein#add('sirver/ultisnips')
 
@@ -75,7 +73,7 @@ set colorcolumn=80
 set tw=79 " Autoformat to 79 chars per row
 set nowrap " Dont't auto wrap on load
 set fo-=t " Dont't auto wrap text when typing
-set list listchars=tab:\›\ ,trail:-,extends:>,precedes:< ",eol:¬
+set list listchars=tab:\›\ ,trail:-,extends:>,precedes:<
 set linespace=0
 
 " More natural splits
@@ -98,6 +96,9 @@ set shiftwidth=8
 "set shiftround
 set expandtab
 
+set autoindent
+set smartindent
+
 " Show matching brackets
 set showmatch
 hi MatchParen guibg=none guifg=magenta gui=bold
@@ -109,6 +110,7 @@ set mouse=a
 " Enable code folding (optimized for Python)
 set foldmethod=syntax
 set foldnestmax=2
+set viewoptions-=options " dont save path with view
 autocmd BufWinLeave *.* mkview
 autocmd BufWinEnter *.* silent loadview
 
@@ -134,14 +136,10 @@ nnoremap <Leader>q :q<CR>
 " Quick save
 nnoremap <Leader>w :w<CR>
 
-" Ctags
-"nnoremap <Leader>. :CtrlPTag<CR>
-
-" Quick sort
-"vnoremap <Leader>s :sort<CR>
-
 " Copy to clipboard
 set clipboard=unnamedplus
+" paste multiple times
+xnoremap p pgvy
 
 " Term ESC
 tnoremap <Esc> <C-\><C-n>
@@ -160,8 +158,28 @@ nnoremap <A-j> <C-w>j
 nnoremap <A-k> <C-w>k
 nnoremap <A-l> <C-w>l
 
+" comprehensive movement
+tnoremap <S-PageUp> <C-\><C-O>5k
+tnoremap <S-PageDown> <C-\><C-O>5j
+inoremap <S-PageUp> <C-\><C-O>5k
+inoremap <S-PageDown> <C-\><C-O>5j
+xnoremap <S-PageUp> 5k
+xnoremap <S-PageDown> 5j
+nnoremap <S-PageUp> 5k
+nnoremap <S-PageDown> 5j
+tnoremap <PageUp> <C-\><C-O>40k
+tnoremap <PageDown> <C-\><C-O>40j
+inoremap <PageUp> <C-\><C-O>40k
+inoremap <PageDown> <C-\><C-O>40j
+xnoremap <PageUp> 40k
+xnoremap <PageDown> 40j
+nnoremap <PageUp> 40k
+nnoremap <PageDown> 40j
+
 " --- PLUGINS -----------------------------------------------------------------
-cd ~/
+set path=$PWD/**
+set wildmenu
+set wildmode=list:longest,full
 
 " python support
 let g:python3_host_prog = '/usr/bin/python3'
@@ -195,15 +213,3 @@ let g:lightline#bufferline#unnamed      = '[No Name]'
 let g:lightline.tabline          = {'left': [['buffers']], 'right': []}
 let g:lightline.component_expand = {'buffers': 'lightline#bufferline#buffers'}
 let g:lightline.component_type   = {'buffers': 'tabsel'}
-
-" vim-airline setup
-"set laststatus=2
-"let g:airline#extensions#tabline#enabled=1
-"let g:airline#extensions#tabline#buffer_nr_show=1 " NUM Ctrl-6
-
-" ctrlP setup
-"let g:ctrlp_max_height = 5
-"set wildignore+=*.pyc,*_build/*,*/coverage/*
-
-" NERDtree mapping
-"map <C-n> :NERDTreeToggle<CR>
