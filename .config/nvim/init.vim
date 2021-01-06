@@ -190,13 +190,13 @@ set wildmode=list:longest,full
 let g:python3_host_prog = '/usr/bin/python3'
 
 " vimtex
-let g:vimtex_compiler_progname = 'nvr'
+"let g:vimtex_compiler_progname = 'nvr'
 let g:tex_flavor = 'latex'
-let g:vimtex_view_method = 'zathura'
-let g:vimtex_quickfix_mode = 0
+"let g:vimtex_view_method = 'zathura'
+"let g:vimtex_quickfix_mode = 0
 set conceallevel=1 " conceal irrelevant synatx
 let g:tex_conceal = 'abdmg'
-let g:latex_view_general_viewer = 'zathura'
+"let g:latex_view_general_viewer = 'zathura'
 
 " ultisnips
 let g:UltiSnipsExpandTrigger = '<tab>'

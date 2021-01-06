@@ -20,10 +20,10 @@ ZSH_THEME=powerlevel10k/powerlevel10k
 HYPHEN_INSENSITIVE="true"
 
 # Uncomment the following line to disable bi-weekly auto-update checks.
-# DISABLE_AUTO_UPDATE="true"
+DISABLE_AUTO_UPDATE="false"
 
 # Uncomment the following line to change how often to auto-update (in days).
-# export UPDATE_ZSH_DAYS=13
+export UPDATE_ZSH_DAYS=30
 
 # Uncomment the following line to disable colors in ls.
 # DISABLE_LS_COLORS="true"
@@ -142,19 +142,4 @@ alias mr="./bin/main"
 [[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-
-# >>> conda initialize >>>
-# !! Contents within this block are managed by 'conda init' !!
-#__conda_setup="$('/home/pthrr/opt/anaconda/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
-#if [ $? -eq 0 ]; then
-#%    eval "$__conda_setup"
-#else
-#    if [ -f "/home/pthrr/opt/anaconda/etc/profile.d/conda.sh" ]; then
-#        . "/home/pthrr/opt/anaconda/etc/profile.d/conda.sh"
-#    else
-#        export PATH="/home/pthrr/opt/anaconda/bin:$PATH"
-#    fi
-#fi
-#unset __conda_setup
-# <<< conda initialize <<<
 
