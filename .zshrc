@@ -63,7 +63,10 @@ source $ZSH/oh-my-zsh.sh
 # export MANPATH="/usr/local/man:$MANPATH"
 
 # You may need to manually set your language environment
-# export LANG=en_US.UTF-8
+export LANG=de_DE.UTF-8
+
+# make sudo -A possible
+export SUDO_ASKPASS=/usr/bin/ssh-askpass
 
 # Preferred editor for local and remote sessions
 # if [[ -n $SSH_CONNECTION ]]; then
@@ -92,7 +95,7 @@ alias zshconfig="nvim ~/.zshrc"
 alias ohmyzsh="nvim ~/.oh-my-zsh"
 alias xdg="xdg-open"
 alias todo="python3 ~/Code/Python/todo/run.py"
-alias rm="rm -iv"
+alias rm="rm -Iv"
 alias ls="exa -la"
 alias cat="bat"
 alias py3="python3"

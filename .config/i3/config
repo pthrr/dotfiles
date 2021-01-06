@@ -31,7 +31,6 @@ floating_modifier $mod
 
 # start a terminal
 bindsym $mod+Shift+Return exec st
-#bindsym $mod+Return exec xterm -fa 'DejaVu Sans Mono' -fs 10
 bindsym $mod+Return exec gnome-terminal
 
 # kill focused window
@@ -225,7 +224,7 @@ bindsym $mod+Ctrl+Left workspace prev
 bindsym $mod+Ctrl+Right workspace next
 
 # Open FileManager
-bindsym $mod+Shift+BackSpace exec xterm -e vifm
+bindsym $mod+Shift+BackSpace exec gnome-terminal -e vifm
 #bindsym $mod+Shift+BackSpace exec nautilus --no-desktop &
 bindsym $mod+BackSpace exec nautilus &
 

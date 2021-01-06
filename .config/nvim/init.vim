@@ -176,6 +176,11 @@ xnoremap <PageDown> 40j
 nnoremap <PageUp> 40k
 nnoremap <PageDown> 40j
 
+" switch buffers
+":nnoremap <F5> :buffers<CR>:buffer<Space>
+nnoremap <A-Left> :bN<CR>
+nnoremap <A-Right> :bn<CR>
+
 " --- PLUGINS -----------------------------------------------------------------
 set path=$PWD/**
 set wildmenu
