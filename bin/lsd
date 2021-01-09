@@ -1,7 +1,0 @@
-#!/usr/bin/env bash
-
-if [ $# -gt 0 ]; then
-    find $1 -type d -not -path "*/.git/*"
-else
-    find . -type d -not -path "*/.git/*"
-fi
