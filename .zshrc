@@ -88,16 +88,28 @@ export EDITOR=nvim
 # users are encouraged to define aliases within the ZSH_CUSTOM folder.
 # For a full list of active aliases, run `alias`.
 #
-# Example aliases
+# Replacements
+alias sed="sd"
+alias ps="procs"
+alias locate="ix"
+alias cp='cp -iv' # Preferred 'cp' implementation
+alias mv='mv -iv' # Preferred 'mv' implementation
+alias mkdir='mkdir -pv' # Preferred 'mkdir' implementation
+alias less='less -FSRXc' # Preferred 'less' implementation
+alias diff="colordiff"
+alias rm="rm -Iv"
+alias cat="bat"
+alias ls="exa -la"
+alias grep="rg"
+alias find="fd"
+alias top="htop"
 alias vim="nvim"
 alias vi="nvim"
+# Shortcuts
 alias zshconfig="nvim ~/.zshrc"
 alias ohmyzsh="nvim ~/.oh-my-zsh"
 alias xdg="xdg-open"
 alias todo="python3 ~/Code/Python/todo/run.py"
-alias rm="rm -Iv"
-alias ls="exa -la"
-alias cat="bat"
 alias py3="python3"
 alias py="python"
 alias py2="python2"
@@ -107,28 +119,17 @@ alias gitconfig="nvim ~/.gitconfig"
 alias lsg="ll | grep"
 alias i3config="nvim ~/.config/i3/config"
 alias i3statusconfig="nvim ~/.config/i3/i3status.conf"
-alias grep="rg"
-alias find="fd"
-alias top="htop"
-alias cp='cp -iv' # Preferred 'cp' implementation
-alias mv='mv -iv' # Preferred 'mv' implementation
-alias mkdir='mkdir -pv' # Preferred 'mkdir' implementation
-alias less='less -FSRXc' # Preferred 'less' implementation
 alias df="pydf"
 alias d="dirs -v"
 alias h="history"
 alias pyr="python3 run.py"
 alias bc="bc -l"
-alias diff="colordiff"
 alias ports="netstat -tulanp"
 alias ln="ln -iv"
 alias hex="xxd"
 alias lso="ls -la | awk '{k=0;for(i=0;i<=8;i++)k+=((substr(\$1,i+2,1)~/[rwx]/)*2^(8-i));if(k)printf(\" %0o \",k);print}'"
 alias calc="insect"
 alias cht="cht.sh"
-alias sed="sd"
-alias ps="procs"
-alias locate="ix"
 alias cf="cd ~/Code/Codeforces"
 alias bw="cd ~/Nextcloud/to_Cloud/Documents/Bewerbungen"
 alias ar="cd ~/Projects/automotive-radar/automotive-radar"
