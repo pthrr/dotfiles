@@ -25,9 +25,17 @@ if dein#load_state(s:settings.dein_dir)
 
     call dein#add('itchyny/lightline.vim')
     call dein#add('mengelbrecht/lightline-bufferline')
+
     call dein#add('iCyMind/NeoSolarized')
+
     call dein#add('lervag/vimtex')
     call dein#add('sirver/ultisnips')
+
+    call dein#add('junegunn/fzf')
+
+    call dein#add('google/vim-maktaba', {'merged': 0})
+    call dein#add('google/vim-codefmt', {'merged': 0})
+    call dein#add('google/vim-glaive', {'merged': 0})
 
     call dein#end()
     call dein#save_state()
@@ -36,6 +44,10 @@ endif
 if dein#check_install()
     call dein#install()
 endif
+
+call maktaba#plugin#Detect()
+call glaive#Install()
+Glaive codefmt clang_format_style="google"
 
 " Colorscheme
 if has('termguicolors')
@@ -56,8 +68,8 @@ set fileencodings=utf-8
 
 " Center cursor
 set number " Show line numbers
-set rnu " Relative Numbering
-set so=999 " Center cursor
+set relativenumber " Relative Numbering
+set scrolloff=999 " Center cursor
 
 " Highlight match
 highlight clear cursorline
@@ -88,6 +100,9 @@ set noerrorbells
 
 " Highlight search
 set hlsearch
+set ignorecase
+set smartcase
+set incsearch
 
 " Tabs are 8 spaces
 set tabstop=8
@@ -106,6 +121,9 @@ set matchtime=0
 
 " Mouse support
 set mouse=a
+
+" backspace
+set backspace=indent,eol,start
 
 " Enable code folding (optimized for Python)
 set foldmethod=syntax
@@ -182,6 +200,7 @@ nnoremap <A-Left> :bN<CR>
 nnoremap <A-Right> :bn<CR>
 
 " --- PLUGINS -----------------------------------------------------------------
+" add all subfodlers to path
 set path=$PWD/**
 set wildmenu
 set wildmode=list:longest,full

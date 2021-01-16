@@ -16,8 +16,9 @@ if [ -n "$BASH_VERSION" ]; then
     fi
 fi
 
-# OpenFOAM
-#. /opt/openfoam7/etc/bashrc
+# If running zsh
+if [ -n "$ZSH_VERSION" ]; then
+    . "$HOME/.zshrc"
 
 # set PATH so it includes user's private bin directories
 PATH="$HOME/bin:$HOME/.local/bin:$PATH"
