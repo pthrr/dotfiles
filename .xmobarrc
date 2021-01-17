@@ -3,10 +3,10 @@ Config { font = "xft:Inconsolata:size=16"
        , fgColor = "grey"
        , position = Top
        , border = NoBorder
-       , commands = [ Run Date "%a, KW %V, %d.%m.%y - %H:%M" "date" 10
-                Run Battery ["-t","<left>% ","-L","25","-H","75","-h","green","-n","yellow","-l","red"] 10
-                , Run Memory ["-t","Mem: <usedratio>%"] 10
-                , Run DiskU [("/", "<used>"),  ("/mnt/iomega", "<used>")]
+       , commands = [ Run Date "%a, KW %V, %d.%m.%y - %H:%M " "date" 10
+                , Run Battery ["-t","Bat:<left>%","-L","25","-H","75","-h","green","-n","yellow","-l","red"] 10
+                , Run Memory ["-t","Mem:<usedratio>%"] 10
+                , Run DiskU [("/", "SSD:<used>")]
                         ["-L", "20", "-H", "50", "-m", "1", "-p", "3",
                         "--normal", "grey50", "--high", "#a0522d",
                         "--low", "#2f4f4f"] 20
