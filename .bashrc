@@ -10,6 +10,6 @@ alias py2="python2"
 alias xdg="xdg-open"
 alias ls="ls -la --color=always"
 alias lsd="find -d 3 -t d -E \"*/.git/*\" ."
-alias lsg="ll | grep"
+alias lsg="ls | grep"
 export PS1='\u@\h:\[\e[33m\]\w\[\e[0m\]\$ '
 export EDITOR='nvim'

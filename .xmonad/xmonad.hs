@@ -19,4 +19,4 @@ xmonad $ def
   , borderWidth = 3
   }
   `additionalKeys`
-  [ ((mod1Mask, xK_p), spawn "exe=`dmenu_path | /home/pthrr/.cabal/bin/yeganesh -- -b -fn xft:Inconsolata:size=16` && eval \"exec $exe\"") ]
+  [ ((mod1Mask, xK_p), spawn "exe=`dmenu_path | /home/pthrr/.cabal/bin/yeganesh -- -b -fn xft:Inconsolata:size=14` && eval \"exec $exe\"") ]
