@@ -48,6 +48,7 @@ endif
 call maktaba#plugin#Detect()
 call glaive#Install()
 Glaive codefmt clang_format_style="google"
+" use :FormatCode
 
 " Colorscheme
 if has('termguicolors')
@@ -77,6 +78,7 @@ highlight cursorline gui=underline cterm=underline
 autocmd InsertEnter * set cursorline
 autocmd InsertLeave * set nocursorline
 
+set title
 " Hide - INSERT -
 set noshowmode
 
@@ -204,6 +206,12 @@ nnoremap <A-Right> :bn<CR>
 set path=$PWD/**
 set wildmenu
 set wildmode=list:longest,full
+
+" pylint
+autocmd FileType python compiler pylint " use :make
+let g:pylint_onwrite = 0
+let g:pylint_show_rate = 0
+let g:pylint_cwindow = 0
 
 " python support
 let g:python3_host_prog = '/usr/bin/python3'
