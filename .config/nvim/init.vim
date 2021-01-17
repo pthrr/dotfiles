@@ -207,10 +207,14 @@ set wildmenu
 set wildmode=list:longest,full
 
 " pylint
-autocmd FileType python compiler pylint " use :make
+autocmd FileType python compiler pylint
+" use :make
 let g:pylint_onwrite = 0
 let g:pylint_show_rate = 0
 let g:pylint_cwindow = 0
+
+" cpplint
+autocmd FileType cpp compiler cpplint
 
 " python support
 let g:python3_host_prog = '/usr/bin/python3'
