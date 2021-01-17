@@ -18,7 +18,7 @@
     aa = add -A .
     cm = commit -m
     aacm = !git add -A . && git commit -m
-    cp = cherry-pick
+    cpi = cherry-pick
     amend = commit --amend -m
     dev = !git checkout dev && git pull origin dev
     staging = !git checkout staging && git pull origin staging
