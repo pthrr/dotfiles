@@ -127,7 +127,6 @@ alias bc="bc -l"
 alias ports="netstat -tulanp"
 alias ln="ln -iv"
 alias hex="xxd"
-alias lso="ls -la | awk '{k=0;for(i=0;i<=8;i++)k+=((substr(\$1,i+2,1)~/[rwx]/)*2^(8-i));if(k)printf(\" %0o \",k);print}'"
 alias cht="cht.sh"
 alias cf="cd ~/Code/Codeforces"
 alias bw="cd ~/Nextcloud/to_Cloud/Documents/Bewerbungen"
@@ -137,6 +136,8 @@ alias rt="cd ~/Code/C++/RT_Cpp"
 alias m="make"
 alias mc="make clean"
 alias mr="./bin/main"
+# Tools
+alias lso="ls -la | awk '{k=0;for(i=0;i<=8;i++)k+=((substr(\$1,i+2,1)~/[rwx]/)*2^(8-i));if(k)printf(\" %0o \",k);print}'"
 alias lsd="find -d 3 -t d -E \"*/.git/*\" ."
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.

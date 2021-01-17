@@ -84,9 +84,9 @@ set noshowmode
 
 " Modify pane
 set colorcolumn=80
-set tw=79 " Autoformat to 79 chars per row
+set textwidth=80 " Autoformat to 80 chars per row
 set nowrap " Dont't auto wrap on load
-set fo-=t " Dont't auto wrap text when typing
+"set fo-=t " Dont't auto wrap text when typing
 set list listchars=tab:\›\ ,trail:-,extends:>,precedes:<
 set linespace=0
 
@@ -95,8 +95,8 @@ set splitbelow " Horizontal split below current
 set splitright
 
 " Disable spk noise
-set vb
-set t_vb=
+set visualbell
+"set t_vb=
 set novisualbell
 set noerrorbells
 
@@ -112,9 +112,8 @@ set softtabstop=8
 set shiftwidth=8
 "set shiftround
 set expandtab
-
-set autoindent
-set smartindent
+"set autoindent
+"set smartindent
 
 " Show matching brackets
 set showmatch
