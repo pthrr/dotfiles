@@ -9,6 +9,8 @@ set nobackup
 set nowritebackup
 set noswapfile
 set number
+set relativenumber
+set scrolloff=999
 set hlsearch
 set title
 set hidden
@@ -25,15 +27,17 @@ set tabstop=8
 set softtabstop=8
 set shiftwidth=8
 set expandtab
-" Add all subfolders to path
+" paste multiple times
+xnoremap p pgvy
+" add all subfolders to path
 set path=$PWD/**
 set wildmenu
 set wildmode=list:longest,full
-" Show matching brackets
+" show matching brackets
 set showmatch
 hi MatchParen guibg=none guifg=magenta gui=bold
 set matchtime=0
-" Highlight cursorline in insert mode
+" highlight cursorline in insert mode
 highlight clear cursorline
 highlight cursorline gui=underline cterm=underline
 autocmd InsertEnter * set cursorline
