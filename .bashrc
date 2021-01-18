@@ -19,7 +19,3 @@ alias ls='ls -la --color=always'
 alias lsd='find . -maxdepth 3 -not -path "*/\.*" -type d'
 alias lsg='ls | grep'
 export PS1='\u@\h:\[\e[33m\]\w\[\e[0m\]\$ '
-export EDITOR='nvim'
-export SUDO_ASKPASS='/usr/bin/ssh-askpass'
-export _JAVA_AWT_WM_NONREPARENTING=1
-export LANG='de_DE.UTF-8'

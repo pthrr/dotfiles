@@ -17,7 +17,6 @@ set hidden
 set noshowmode
 set novisualbell
 set noerrorbells
-set showtabline=2
 set colorcolumn=80
 set textwidth=80
 set clipboard=unnamedplus

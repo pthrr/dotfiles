@@ -1,6 +1,6 @@
 decorations none
 transparent false
-geometry 3x1-3+3
+geometry 4x1-3+3
 background "#000000"
 kludges force_icons_size
 grow_gravity W
