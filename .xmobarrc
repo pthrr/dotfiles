@@ -3,11 +3,24 @@ Config { font = "xft:Inconsolata:size=12"
        , fgColor = "grey"
        , position = TopP 0 55
        , border = NoBorder
+       , allDesktops = True
        , commands = [ Run Date "%a, KW %V, %d.%m.%y - %H:%M" "date" 60
-                , Run Battery ["-t", "Bat <left>%", "-L", "25", "-H", "75", "-h", "grey", "-n", "yellow", "-l","red"] 60
-                , Run Memory ["-t", "Mem <usedratio>%"] 60
-                , Run DiskU [("/", "SSD <free>")]
-			["-L", "1", "-H", "10", "-m", "1", "-p", "3", "-h", "grey", "-n", "yellow", "-l", "red"] 60
+                , Run Battery ["--template", "Bat <timeleft>h"
+                        , "--Low", "5"
+                        , "--High", "20"
+                        , "--low", "red"
+                        , "--normal", "yellow"
+                        , "--high", "grey"
+                        ] 60
+                , Run Memory ["--template", "Mem <usedratio>%"
+                        , "--Low", "80"
+                        , "--High", "90"
+                        , "--low", "grey"
+                        , "--normal", "yellow"
+                        , "--high", "red"
+                        ] 60
+                , Run DiskU [("/", "SSD <free>")] [
+                        ] 60
                 , Run StdinReader
                 ]
        , sepChar = "%"
