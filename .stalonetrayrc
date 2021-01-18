@@ -1,0 +1,13 @@
+decorations none
+transparent false
+geometry 3x1-3+3
+background "#000000"
+kludges force_icons_size
+grow_gravity W
+icon_gravity E
+icon_size 15
+slot_size 16
+sticky true
+window_strut top
+window_type dock
+window_layer bottom
