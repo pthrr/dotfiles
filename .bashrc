@@ -1,17 +1,20 @@
-alias vi="nvim"
-alias vim="nvim"
-alias cp="cp -iv"
-alias mv="mv -iv"
-alias mkdir="mkdir -pv"
-alias rm="rm -Iv"
-alias py3="python3"
-alias py="python"
-alias py2="python2"
-alias xdg="xdg-open"
-alias ..="cd ../"
-alias ...="cd ../../"
-alias ls="ls -la --color=always"
-alias lsd="find -d 3 -t d -E \"*/.git/*\" ."
-alias lsg="ls | grep"
+alias vi='nvim'
+alias vim='nvim'
+alias cp='cp -iv'
+alias mv='mv -iv'
+alias mkdir='mkdir -pv'
+alias rm='rm -Iv'
+alias cl='clear'
+alias py3='python3'
+alias py='python'
+alias py2='python2'
+alias xdg='xdg-open'
+alias ..='cd ../'
+alias ...='cd ../../'
+alias ls='ls -la --color=always'
+alias lsd="find . -maxdepth 3 -not -path '*/\.*' -type d"
+alias lsg='ls | grep'
 export PS1='\u@\h:\[\e[33m\]\w\[\e[0m\]\$ '
 export EDITOR='nvim'
+export SUDO_ASKPASS='/usr/bin/ssh-askpass'
+export LANG='de_DE.UTF-8'
