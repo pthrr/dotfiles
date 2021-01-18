@@ -1,5 +1,7 @@
 syntax on
 filetype plugin indent on
+colorscheme elflord
+set termguicolors
 set encoding=utf-8
 set fileencoding=utf-8
 set fileencodings=utf-8
