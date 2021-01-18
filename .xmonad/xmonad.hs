@@ -20,7 +20,7 @@ xmonad $ def
   , borderWidth = 3
   }
   `additionalKeys`
-  [ ((mod1Mask, xK_p), spawn "exe=`dmenu_path | /home/pthrr/.cabal/bin/yeganesh -- -b -fn xft:Inconsolata:size=12` && eval \"exec $exe\"")
+  [ ((mod1Mask, xK_p), spawn "exe=`dmenu_path | /home/pthrr/.cabal/bin/yeganesh -- -b -fn xft:Inconsolata:size=10` && eval \"exec $exe\"")
   , ((0, xF86XK_MonBrightnessUp), spawn "xbacklight +10")
   , ((0, xF86XK_MonBrightnessDown), spawn "xbacklight -10")
   , ((0, xF86XK_AudioMute), spawn "pactl set-sink-mute @DEFAULT_SINK@ toggle")
