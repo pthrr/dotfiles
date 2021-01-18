@@ -1,6 +1,6 @@
 xrdb -merge ~/.Xresources
 exec /usr/bin/xmonad
-xrandr --output Virtual1 --mode 1440x900
+xsetroot -solid black
 stalonetray &
 redshift -t 4500:3500 &
 nm-applet &
