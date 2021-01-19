@@ -18,7 +18,7 @@ Config { font = "xft:Inconsolata:size=10"
                         , "--low", "grey"
                         , "--normal", "yellow"
                         , "--high", "red"
-                        ] 60
+                        ] 10
                 , Run DiskU [("/", "SSD <free>")] [
                         ] 60
                 , Run StdinReader
