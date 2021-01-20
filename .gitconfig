@@ -2,6 +2,12 @@
     name = pthrr
     email = pthrr@posteo.de
 
+[diff]
+    tool = vimdiff
+
+[merge]
+    tool = vimdiff
+
 [push]
     default = simple
 
@@ -22,7 +28,7 @@
     amend = commit --amend -m
     dev = !git checkout dev && git pull origin dev
     staging = !git checkout staging && git pull origin staging
-    master = !git checkout master && git pull origin 
+    master = !git checkout master && git pull origin
     po = push origin
     pod = push origin dev
     pos = push origin staging
