@@ -17,7 +17,7 @@ set hidden
 set noshowmode
 set novisualbell
 set noerrorbells
-set statusline=%t\ %h%w%m%r%y\ %=%(0x%B\ %L\ %P%)
+set statusline=%t\ %h%w%m%r%y[%{&fileencoding?&fileencoding:&encoding}]\ 0x%B\ %L\ %P
 set colorcolumn=80
 set textwidth=80
 set clipboard=unnamedplus
