@@ -17,15 +17,18 @@ set hidden
 set noshowmode
 set novisualbell
 set noerrorbells
+set statusline=%t\ %h%w%m%r%y\ %=%(0x%B\ %L\ %P%)
 set colorcolumn=80
 set textwidth=80
 set clipboard=unnamedplus
 set list listchars=tab:\›\ ,trail:-,extends:>,precedes:<
 set linespace=0
-set tabstop=8
-set softtabstop=8
-set shiftwidth=8
+set tabstop=4
+set softtabstop=4
+set shiftwidth=4
 set expandtab
+" automatically save view, load with :loadview
+autocmd BufWinLeave *.* mkview
 " paste multiple times
 xnoremap p pgvy
 " add all subfolders to path
