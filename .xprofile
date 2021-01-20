@@ -1,6 +1,6 @@
 xrdb -merge ~/.Xresources
 xsetroot -solid black
+redshift -O 4500
 stalonetray &
-redshift -t 4500:3500 &
 nm-applet &
 nextcloud &
