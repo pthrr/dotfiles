@@ -1,4 +1,5 @@
-sudo apt-get install curl wget git gitg neovim chromium build-essential gcc-8
+sudo apt-get install curl wget git gitg neovim chromium
+sudo apt-get install build-essential cmake automake g++-10 gcc-10
 sudo apt-get install libx11-dev libxinerama-dev libxext-dev
 sudo apt-get install libxrandr-dev libxss-dev libxft-dev
 sudo apt-get install xterm suckless-tools x11-xserver-utils
