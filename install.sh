@@ -6,6 +6,5 @@ sudo apt-get install xterm suckless-tools x11-xserver-utils
 sudo apt-get install xcircuit xlog xfig xpdf xbacklight x11-apps
 sudo apt-get install tmux ssh-askpass network-manager-gnome
 sudo apt-get install stalonetray pulseaudio-utils pavucontrol redshift
-sudo apt-get install cabal-install
-cabal update
+sudo apt-get install cabal-install && cabal update
 cabal install xmonad xmonad-contrib xmobar yeganesh
