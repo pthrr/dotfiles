@@ -1,5 +1,5 @@
 xrdb -merge ~/.Xresources
-xrandr --ouput Virtual1 --mode 1920x985
+xrandr --output Virtual1 --mode 1920x985
 xsetroot -solid black
 redshift -O 4000
 stalonetray &
