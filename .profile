@@ -26,6 +26,11 @@ if [ -d "$HOME/.local/bin" ] ; then
     PATH="$HOME/.local/bin:$PATH"
 fi
 
+# include Cabal
+if [ -d "$HOME/.cabal/bin" ] ; then
+    export PATH="$HOME/.cabal/bin:$PATH"
+fi
+
 export LANG='de_DE.UTF-8'
 export EDITOR='nvim'
 export SUDO_ASKPASS='/usr/bin/ssh-askpass'

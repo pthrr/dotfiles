@@ -12,3 +12,4 @@ alias ls='ls -la --color=always'
 alias lsd='find . -maxdepth 3 -not -path "*/\.*" -type d'
 alias lsg='ls | grep'
 export PS1='\u@\h:\[\e[33m\]\w\[\e[0m\]\$ '
+source "$HOME/.cargo/env"
