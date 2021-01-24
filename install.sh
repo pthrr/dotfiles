@@ -8,3 +8,4 @@ sudo apt-get install -y tmux ssh-askpass network-manager-gnome
 sudo apt-get install -y stalonetray pulseaudio-utils pavucontrol redshift
 sudo apt-get install -y cabal-install && cabal v1-update
 cabal v1-install xmonad xmonad-contrib xmobar yeganesh
+curl https://sh.rustup.rs -sSf | sh
