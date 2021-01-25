@@ -31,12 +31,8 @@ if [ -d "$HOME/.cabal/bin" ] ; then
     export PATH="$HOME/.cabal/bin:$PATH"
 fi
 
-# include CARGO
-if [ -f "$HOME/.cargo/env" ] ; then
-    source "$HOME/.cargo/env"
-fi
-
 export LANG='de_DE.UTF-8'
 export EDITOR='nvim'
 export SUDO_ASKPASS='/usr/bin/ssh-askpass'
 export _JAVA_AWT_WM_NONREPARENTING=1
+source "$HOME/.cargo/env"
