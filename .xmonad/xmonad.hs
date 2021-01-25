@@ -5,7 +5,6 @@ import XMonad.Hooks.DynamicLog
 import XMonad.Util.CustomKeys
 import XMonad.Util.EZConfig
 import Graphics.X11.ExtraTypes.XF86
-import XMonad.Actions.UpdatePointer
 
 main = do
 xmproc <- spawnPipe "xmobar"
@@ -22,7 +21,7 @@ xmonad $ def
   , borderWidth = 3
   }
   `additionalKeys`
-  [ ((mod1Mask, xK_p), spawn "exe=`dmenu_path | /home/ps/.cabal/bin/yeganesh -- -b` && eval \"exec $exe\"")
+  [ ((mod1Mask, xK_p), spawn "exe=`dmenu_path | yeganesh -- -b -fn 'xft:DejaVu Sans Mono:size=12'` && eval \"exec $exe\"")
   , ((0, xF86XK_MonBrightnessUp), spawn "xbacklight +10")
   , ((0, xF86XK_MonBrightnessDown), spawn "xbacklight -10")
   , ((0, xF86XK_AudioMute), spawn "pactl set-sink-mute @DEFAULT_SINK@ toggle")

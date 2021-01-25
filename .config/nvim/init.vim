@@ -11,6 +11,7 @@ set noswapfile
 set number
 set relativenumber
 set scrolloff=999
+set nowrap
 set hlsearch
 set title
 set hidden
