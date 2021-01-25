@@ -1,4 +1,4 @@
-sudo mkdir ~/bin ~/opt ~/tmp
+mkdir ~/bin ~/opt ~/tmp
 cd ~/tmp
 sudo wget http://security.ubuntu.com/ubuntu/pool/main/p/poppler/libpoppler73_0.62.0-2ubuntu2.12_amd64.deb
 sudo apt-get install -y ./libpoppler73_0.62.0-2ubuntu2.12_amd64.deb
