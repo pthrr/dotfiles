@@ -20,7 +20,7 @@ set novisualbell
 set noerrorbells
 set statusline=%t\ %h%w%m%r%y[%{&fileencoding?&fileencoding:&encoding}]\ 0x%B\ %L\ %P
 set colorcolumn=80
-set textwidth=80
+set textwidth=79
 set clipboard=unnamedplus
 set list listchars=tab:\›\ ,trail:-,extends:>,precedes:<
 set linespace=0
