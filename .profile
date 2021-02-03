@@ -31,11 +31,6 @@ if [ -d "$HOME/.cabal/bin" ] ; then
     export PATH="$HOME/.cabal/bin:$PATH"
 fi
 
-# include pip
-if [ -d "$HOME/.local/bin" ] ; then
-    export PATH="$HOME/.local/bin:$PATH"
-fi
-
 export LANG='de_DE.UTF-8'
 export EDITOR='nvim'
 export SUDO_ASKPASS='/usr/bin/ssh-askpass'
