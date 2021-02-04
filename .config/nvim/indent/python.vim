@@ -46,12 +46,13 @@ function GetGooglePythonIndent(lnum)
 
 endfunction
 
-let pyindent_nested_paren="&sw*2"
-let pyindent_open_paren="&sw*2"
-
 setlocal shiftwidth=4
 setlocal tabstop=4
 setlocal softtabstop=4
 setlocal expandtab
-setlocal textwidth=80
-setlocal wrap
+setlocal colorcolumn=88
+setlocal textwidth=87
+setlocal nowrap
+
+let pyindent_nested_paren="&sw*2"
+let pyindent_open_paren="&sw*2"

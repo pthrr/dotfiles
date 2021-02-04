@@ -1,4 +1,4 @@
-" Bootstrap dein and install plugins
+" bootstrap dein and install plugins
 let s:settings = {}
 let s:settings.cache_dir = expand('~/.config/nvim/cache')
 let s:settings.dein_dir = s:settings.cache_dir . '/dein'
