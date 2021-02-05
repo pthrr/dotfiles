@@ -29,7 +29,6 @@ set nobackup
 set nowritebackup
 set noswapfile
 set number
-set scrolloff=1
 set nowrap
 set hlsearch
 set title

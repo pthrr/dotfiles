@@ -23,7 +23,6 @@ endsnippet
 snippet with "with" b
 with ${1:expr}`!p snip.rv = " as " if t[2] else ""`${2:var}:
 	${3:${VISUAL:pass}}
-$0
 endsnippet
 
 snippet for "for loop" b
@@ -270,7 +269,7 @@ class ${1:MyClass}(${2:object}):
 
 	`!p snip.rv = triple_quotes(snip)`${3:Docstring for $1. }`!p snip.rv = triple_quotes(snip)`
 
-	def __init__(self$4):
+	def __init__(self$4) -> None:
 		`!p snip.rv = triple_quotes(snip)`${5:TODO: to be defined.}`!p
 snip.rv = ""
 snip >> 2
@@ -298,7 +297,7 @@ args = get_args(t[4])
 write_slots_args(args, snip)
 `
 
-	def __init__(self$4):
+	def __init__(self$4) -> None:
 		`!p snip.rv = triple_quotes(snip)`${5:TODO: to be defined.}`!p
 snip.rv = ""
 snip >> 2
@@ -498,14 +497,14 @@ def __coerce__(self, other):
 endsnippet
 
 snippet deff "function or class method"
-def ${1:fname}(`!p snip.rv = "self, " if snip.indent else ""`$2):
+def ${1:fname}(`!p snip.rv = "self, " if snip.indent else ""`$2) -> ${3:None}:
 	$0
 endsnippet
 
 snippet def "function with docstrings" b
 def ${1:function}(`!p
 if snip.indent:
-	snip.rv = 'self' + (", " if len(t[2]) else "")`${2:arg1}):
+	snip.rv = 'self' + (", " if len(t[2]) else "")`${2:arg1}) -> ${3:None}:
 	`!p snip.rv = triple_quotes(snip)`${4:TODO: Docstring for $1.}`!p
 write_function_docstring(t, snip) `
 	${5:${VISUAL:pass}}
@@ -516,7 +515,7 @@ snippet defc "class method with docstrings" b
 @classmethod
 def ${1:function}(`!p
 if snip.indent:
-	snip.rv = 'cls' + (", " if len(t[2]) else "")`${2:arg1}):
+	snip.rv = 'cls' + (", " if len(t[2]) else "")`${2:arg1}) -> ${3:None}:
 	`!p snip.rv = triple_quotes(snip)`${4:TODO: Docstring for $1.}`!p
 write_function_docstring(t, snip) `
 	${5:${VISUAL:pass}}
@@ -525,7 +524,7 @@ endsnippet
 
 snippet defs "static method with docstrings" b
 @staticmethod
-def ${1:function}(${2:arg1}):
+def ${1:function}(${2:arg1}) -> ${3:None}:
 	`!p snip.rv = triple_quotes(snip)`${4:TODO: Docstring for $1.}`!p
 write_function_docstring(t, snip) `
 	${5:${VISUAL:pass}}
@@ -538,17 +537,20 @@ self.
 endsnippet
 
 snippet from "from module import name" b
-from ${1:module} import ${2:Stuff}
+from ${1:module} import ${2:name}
 endsnippet
 
+snippet import "import module as name" b
+import ${1:module} as ${2:name}
+endsnippet
 
 ##############
 # PROPERTIES #
 ##############
 snippet roprop "Read Only Property" b
 @property
-def ${1:name}(self):
-	${2:return self._$1}$0
+def ${1:name}(self) -> ${2:None}:
+	return self.$1$0
 endsnippet
 
 snippet rwprop "Read write property" b
@@ -565,11 +567,12 @@ if t[2]:
 	snip += triple_quotes(snip)
 else:
 	snip.rv = ""`
-	def fget(self):
-		return self._$1$0
+	def fget(self) -> ${2:None}:
+		return self.$1$0
 
-	def fset(self, value):
-		self._$1 = value
+	def fset(self, ${3:value}: ${4}) -> None:
+		self.$1 = $3
+
 	return locals()
 
 $1 = property(**$1(), doc=$1.__doc__)
