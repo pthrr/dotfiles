@@ -12,6 +12,7 @@ endif
 if dein#load_state(s:settings.dein_dir)
     call dein#begin(s:settings.dein_dir)
     call dein#add('sirver/ultisnips')
+    call dein#add('lifepillar/vim-solarized8')
     call dein#end()
     call dein#save_state()
 endif
@@ -20,14 +21,15 @@ if dein#check_install()
 endif
 syntax on
 filetype plugin indent on
-colorscheme elflord
-set termguicolors
+let g:solarized_use16=1
+colorscheme solarized8
 set encoding=utf-8
 set fileencoding=utf-8
 set fileencodings=utf-8
 set nobackup
 set nowritebackup
 set noswapfile
+set nobomb
 set number
 set nowrap
 set hlsearch
@@ -67,5 +69,5 @@ autocmd InsertLeave * set nocursorline
 let g:UltiSnipsExpandTrigger = '<tab>'
 let g:UltiSnipsJumpForwardTrigger = '<tab>'
 let g:UltiSnipsJumpBackwardTrigger = '<s-tab>'
-let g:UltiSnipsSnippetDirectories = [$HOME.'/Documents/snippets']
+let g:UltiSnipsSnippetDirectories = [$HOME.'/Dokumente/snippets']
 let g:ultisnips_python_style = 'google'
