@@ -4,6 +4,12 @@ xterm*saveLines: 2000
 xterm*VT100.Translations: #override \
   <Btn1Up>: select-end(PRIMARY, CLIPBOARD, CUT_BUFFER0) \n\
   Ctrl <KeyPress> V: insert-selection(CLIPBOARD, CUT_BUFFER0, PRIMARY)
+! xpdf
+Xpdf.paperColor: #002b36
+Xpdf.matteColor: #002b36
+Xpdf.fullScreenMatteColor: #002b36
+Xpdf.selectionColor: #333333
+Xpdf.reverseVideo: 1
 ! solarized xterm
 xterm*background: #002b36
 xterm*foreground: #657b83
