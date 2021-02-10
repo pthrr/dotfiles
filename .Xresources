@@ -19,7 +19,7 @@ xterm*cursorColor: #93a1a1
 xterm*pointerColorBackground: #586e75
 xterm*pointerColorForeground: #93a1a1
 ! solarized8 vim
-xterm*color0: #073642
+xterm*color0: #002b36
 xterm*color1: #dc322f
 xterm*color2: #859900
 xterm*color3: #b58900

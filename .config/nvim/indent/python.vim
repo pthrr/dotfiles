@@ -52,7 +52,7 @@ setlocal softtabstop=4
 setlocal expandtab
 setlocal colorcolumn=88
 setlocal textwidth=87
-setlocal nowrap
+setlocal wrap
 
 let pyindent_nested_paren="&sw*2"
 let pyindent_open_paren="&sw*2"
