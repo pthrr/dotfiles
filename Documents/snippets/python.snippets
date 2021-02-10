@@ -23,6 +23,7 @@ endsnippet
 snippet with "with" b
 with ${1:expr}`!p snip.rv = " as " if t[2] else ""`${2:var}:
 	${3:${VISUAL:pass}}
+$0
 endsnippet
 
 snippet for "for loop" b
@@ -220,7 +221,7 @@ def write_init_body(args, parents, snip):
 		snip.rv += '\n' + snip.mkline('', indent='')
 
 	for arg in filter(lambda arg: not arg.is_vararg(), args):
-		snip += "self.%s = %s" % (arg, arg)
+		snip += "self._%s = %s" % (arg, arg)
 
 
 def write_slots_args(args, snip):
@@ -550,7 +551,7 @@ endsnippet
 snippet roprop "Read Only Property" b
 @property
 def ${1:name}(self) -> ${2:None}:
-	return self.$1$0
+	${3:return self._$1}$0
 endsnippet
 
 snippet rwprop "Read write property" b
@@ -568,10 +569,10 @@ if t[2]:
 else:
 	snip.rv = ""`
 	def fget(self) -> ${2:None}:
-		return self.$1$0
+		return self._$1$0
 
-	def fset(self, ${3:value}: ${4}) -> None:
-		self.$1 = $3
+	def fset(self, value) -> None:
+		self._$1 = value
 
 	return locals()
 
