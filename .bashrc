@@ -11,5 +11,6 @@ alias ...='cd ../../'
 alias ls='ls -la --color=always'
 alias lsd='find . -maxdepth 3 -not -path "*/\.*" -type d'
 alias lsg='ls | grep'
+alias pwgen='python3 -c "import secrets,pyperclip;pw=secrets.token_urlsafe(32);pyperclip.copy(pw);print(pw)"'
 export PS1='\u@\h:\[\e[33m\]\w\[\e[0m\]\$ '
 source "$HOME/.cargo/env"
