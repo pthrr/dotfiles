@@ -11,5 +11,8 @@ alias ...='cd ../../'
 alias ls='ls -la --color=always'
 alias lsd='find . -maxdepth 3 -not -path "*/\.*" -type d'
 alias lsg='ls | grep'
-export PS1='\u@\h:\[\e[33m\]\w\[\e[0m\]\$ '
+source "$HOME/git-prompt.sh"
+export PROMPT_DIRTRIM=2
+export GIT_PS1_SHOWDIRTYSTATE=1
+export PS1='\u@\h:\[\e[33m\]\w\[\e[31m\]$(__git_ps1 "(%s)")\[\e[0m\]\$ '
 source "$HOME/.cargo/env"
