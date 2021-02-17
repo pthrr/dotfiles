@@ -38,12 +38,21 @@ set hidden
 set noshowmode
 set novisualbell
 set noerrorbells
-set statusline=%t\ %h%w%m%r%y[%{&fileencoding?&fileencoding:&encoding}]\ 0x%B\ %L\ %P
+set statusline=
+set statusline +=\ %n\             "buffer number
+set statusline +=%{&ff}            "file format
+set statusline +=%y                "file type
+set statusline +=\ %<%F            "full path
+set statusline +=%m                "modified flag
+set statusline +=%=%5l             "current line
+set statusline +=/%L               "total lines
+set statusline +=%4v\              "virtual column number
+set statusline +=0x%04B\           "character under cursor
 set colorcolumn=80
+highlight ColorColumn ctermbg=darkgrey ctermfg=none cterm=none
 set textwidth=79
 set clipboard=unnamedplus
 set list listchars=tab:\›\ ,trail:-,extends:>,precedes:<
-set linespace=0
 set tabstop=4
 set softtabstop=4
 set shiftwidth=4
@@ -58,11 +67,11 @@ set wildmenu
 set wildmode=list:longest,full
 " show matching brackets
 set showmatch
-hi MatchParen guibg=none guifg=red gui=bold
+highlight MatchParen ctermbg=none ctermfg=red cterm=bold
 set matchtime=0
 " highlight cursorline in insert mode
-highlight clear cursorline
-highlight cursorline gui=underline cterm=underline
+"highlight clear cursorline
+highlight cursorline ctermbg=none ctermfg=none cterm=underline
 autocmd InsertEnter * set cursorline
 autocmd InsertLeave * set nocursorline
 " UltiSnips config

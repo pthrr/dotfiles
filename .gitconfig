@@ -3,15 +3,17 @@
     email = pthrr@posteo.de
 
 [diff]
-    tool = vimdiff
+    tool = vimdiff3
 
 [merge]
-    tool = vimdiff
+    tool = vimdiff3
+    conflictStyle = diff3
 
 [push]
     default = simple
 
 [alias]
+    fe = fetch
     co = checkout
     cob = checkout -b
     coo = !git fetch && git checkout
