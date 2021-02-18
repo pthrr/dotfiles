@@ -38,6 +38,7 @@
     poh = push origin HEAD
     pogm = !git push origin gh-pages && git checkout master && git pull origin master && git rebase gh-pages && git push origin master && git checkout gh-pages
     pomg = !git push origin master && git checkout gh-pages && git pull origin gh-pages && git rebase master && git push origin gh-pages && git checkout master
+    pl = pull
     plo = pull origin
     plod = pull origin dev
     plos = pull origin staging

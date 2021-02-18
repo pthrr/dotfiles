@@ -70,7 +70,6 @@ set showmatch
 highlight MatchParen ctermbg=none ctermfg=red cterm=bold
 set matchtime=0
 " highlight cursorline in insert mode
-"highlight clear cursorline
 highlight cursorline ctermbg=none ctermfg=none cterm=underline
 autocmd InsertEnter * set cursorline
 autocmd InsertLeave * set nocursorline
