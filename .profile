@@ -31,6 +31,12 @@ if [ -d "$HOME/.cabal/bin" ] ; then
     export PATH="$HOME/.cabal/bin:$PATH"
 fi
 
+export PATH="/home/ps/.pyenv/bin:$PATH"
+eval "$(pyenv init -)"
+eval "$(pyenv virtualenv-init -)"
+export WORKON_HOME=~/.venvs
+export PIPENV_VENV_IN_PROJECT=1
+export LC_ALL='en_US.UTF-8'
 export LANG='de_DE.UTF-8'
 export EDITOR='nvim'
 export SUDO_ASKPASS='/usr/bin/ssh-askpass'

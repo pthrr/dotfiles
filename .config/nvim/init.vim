@@ -32,6 +32,7 @@ set noswapfile
 set nobomb
 set number
 set nowrap
+set autoread
 set hlsearch
 set title
 set hidden
@@ -57,6 +58,8 @@ set tabstop=4
 set softtabstop=4
 set shiftwidth=4
 set expandtab
+" just be a text editor
+let g:python3_host_prog = '/home/ps/.pyenv/versions/py3nvim/bin/python'
 " automatically save view, load with :loadview
 autocmd BufWinLeave *.* mkview
 " paste multiple times
@@ -67,7 +70,7 @@ set wildmenu
 set wildmode=list:longest,full
 " show matching brackets
 set showmatch
-highlight MatchParen ctermbg=none ctermfg=red cterm=bold
+highlight MatchParen ctermbg=none ctermfg=white cterm=bold
 set matchtime=0
 " highlight cursorline in insert mode
 highlight cursorline ctermbg=none ctermfg=none cterm=underline
@@ -78,4 +81,4 @@ let g:UltiSnipsExpandTrigger = '<tab>'
 let g:UltiSnipsJumpForwardTrigger = '<tab>'
 let g:UltiSnipsJumpBackwardTrigger = '<s-tab>'
 let g:UltiSnipsSnippetDirectories = [$HOME.'/Dokumente/snippets']
-let g:ultisnips_python_style = 'google'
+let g:ultisnips_python_style = 'sphinx'
