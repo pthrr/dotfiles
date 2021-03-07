@@ -58,6 +58,8 @@ set tabstop=4
 set softtabstop=4
 set shiftwidth=4
 set expandtab
+" terminal mode
+tnoremap <Esc> <C-\><C-n>
 " just be a text editor
 let g:python3_host_prog = '/home/ps/.pyenv/versions/py3nvim/bin/python'
 " automatically save view, load with :loadview

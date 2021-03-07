@@ -32,8 +32,6 @@ if [ -d "$HOME/.cabal/bin" ] ; then
 fi
 
 export PATH="/home/ps/.pyenv/bin:$PATH"
-eval "$(pyenv init -)"
-eval "$(pyenv virtualenv-init -)"
 export WORKON_HOME=~/.venvs
 export PIPENV_VENV_IN_PROJECT=1
 export LC_ALL='en_US.UTF-8'
