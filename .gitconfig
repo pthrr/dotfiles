@@ -5,6 +5,12 @@
     name = pthrr
     email = pthrr@posteo.de
 
+[http]
+    sslVerify = true
+
+[credential]
+    helper = store
+
 [diff]
     tool = vimdiff3
 
@@ -16,40 +22,74 @@
     default = simple
 
 [alias]
-    fe = fetch
+    a = add
+    aa = add -A .
+    ap = add -p
+    aacm = !git add -A . && git commit -m
+    cpi = cherry-pick
+    sa = stash apply
+    sl = stash list
+    ss = stash save
+    st = status
+    s = status -s
+    b = "!git for-each-ref --sort='-authordate' --format='%(authordate)%09%(objectname:short)%09%(refname)' refs/heads | sed -e 's-refs/heads/--'" # list branches sorted by last modified
+    br = branch
+    brD = branch -D
+    brd = branch -d
+    merged = branch --merged
+    dmerged = "git branch --merged | grep -v '\\*' | xargs -n 1 git branch -d"
+    c = commit --verbose
+    m = commit --amend --verbose
+    amend = commit --amend -m
+    ca = commit -a --verbose
+    cam = commit -a -m
+    ci = commit
+    cm = commit -m
+    cl = clone
+    cloner = clone --recursive
     co = checkout
     cob = checkout -b
     coo = !git fetch && git checkout
-    br = branch
-    brd = branch -d
-    brD = branch -D
-    merged = branch --merged
-    dmerged = "git branch --merged | grep -v '\\*' | xargs -n 1 git branch -d"
-    st = status
-    aa = add -A .
-    cm = commit -m
-    aacm = !git add -A . && git commit -m
-    cpi = cherry-pick
-    amend = commit --amend -m
     dev = !git checkout dev && git pull origin dev
     staging = !git checkout staging && git pull origin staging
     master = !git checkout master && git pull origin
-    po = push origin
-    pod = push origin dev
-    pos = push origin staging
-    pom = push origin master
-    poh = push origin HEAD
-    pogm = !git push origin gh-pages && git checkout master && git pull origin master && git rebase gh-pages && git push origin master && git checkout gh-pages
-    pomg = !git push origin master && git checkout gh-pages && git pull origin gh-pages && git rebase master && git push origin gh-pages && git checkout master
+    d = diff
+    dc = diff --cached
+    diff = diff --word-diff
+    diffr  = "!f() { git diff "$1"^.."$1"; }; f"
+    dl = "!git ll -1" # modified files in last commit
+    dlc = diff --cached HEAD^ # diff from last commit
+    dr  = "!f() { git diff "$1"^.."$1"; }; f" # full diff of commit revision
+    ds = diff --stat
+    f = "!git ls-files | grep -i" # Find a file path in codebase
+    fe = fetch
+    fl = log -u # show commits related to file
+    l = log --pretty=format:"%C(yellow)%h\\ %ad%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --date=short
+    lc  = "!f() { git ll "$1"^.."$1"; }; f"
+    ld = log --pretty=format:"%C(yellow)%h\\ %ad%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --date=relative
+    ll = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --numstat
+    ls = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate
     pl = pull
     plo = pull origin
     plod = pull origin dev
-    plos = pull origin staging
-    plom = pull origin master
     ploh = pull origin HEAD
+    plom = pull origin master
+    plos = pull origin staging
+    sui = git submodule update --init --recursive
+    su = submodule update --remote
+    ph = push --recurse-submodules=on-demand
+    po = push origin
+    pod = push origin dev
+    pogm = !git push origin gh-pages && git checkout master && git pull origin master && git rebase gh-pages && git push origin master && git checkout gh-pages
+    poh = push origin HEAD
+    pom = push origin master
+    pomg = !git push origin master && git checkout gh-pages && git pull origin gh-pages && git rebase master && git push origin gh-pages && git checkout master
+    pos = push origin staging
+    r = reset
+    r1 = reset HEAD^
+    r2 = reset HEAD^^
+    rh = reset --hard
+    rh1 = reset HEAD^ --hard
+    rh2 = reset HEAD^^ --hard
     unstage = reset --soft HEAD^
-    ls = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate
-    ll = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --numstat
-    f = "!git ls-files | grep -i"
-    gr = grep -Ii
-    la = "!git config -l | grep alias | cut -c 7-"
+    la = "!git config -l | grep alias | cut -c 7-" # list aliases

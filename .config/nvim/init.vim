@@ -13,6 +13,8 @@ if dein#load_state(s:settings.dein_dir)
     call dein#begin(s:settings.dein_dir)
     call dein#add('sirver/ultisnips')
     call dein#add('lifepillar/vim-solarized8')
+    call dein#add('overcache/NeoSolarized')
+    call dein#add('altercation/vim-colors-solarized')
     call dein#end()
     call dein#save_state()
 endif
@@ -21,8 +23,10 @@ if dein#check_install()
 endif
 syntax on
 filetype plugin indent on
-let g:solarized_use16=1
-colorscheme solarized8
+"let g:solarized_use16=1
+"colorscheme solarized8
+set termguicolors
+colorscheme NeoSolarized
 set encoding=utf-8
 set fileencoding=utf-8
 set fileencodings=utf-8
@@ -31,6 +35,7 @@ set nowritebackup
 set noswapfile
 set nobomb
 set number
+set relativenumber
 set nowrap
 set autoread
 set hlsearch
@@ -52,7 +57,20 @@ set statusline +=0x%04B\           "character under cursor
 set colorcolumn=80
 highlight ColorColumn ctermbg=darkgrey ctermfg=none cterm=none
 set textwidth=79
-set clipboard=unnamedplus
+"set clipboard=unnamedplus
+set clipboard+=unnamedplus
+let g:clipboard = {
+    \   'name':'win32yank-wsl',
+    \   'copy': {
+    \       '+': 'win32yank.exe -i --crlf',
+    \       '*': 'win32yank.exe -i --crlf',
+    \   },
+    \   'paste': {
+    \       '+': 'win32yank.exe -o --lf',
+    \       '*': 'win32yank.exe -o --lf',
+    \   },
+    \   'cache_enabled': 0,
+    \ }
 set list listchars=tab:\›\ ,trail:-,extends:>,precedes:<
 set tabstop=4
 set softtabstop=4
@@ -61,6 +79,7 @@ set expandtab
 " terminal mode
 tnoremap <Esc> <C-\><C-n>
 " just be a text editor
+let g:loaded_python_provider = 0 " disable py2
 let g:python3_host_prog = '/home/ps/.pyenv/versions/py3nvim/bin/python'
 " automatically save view, load with :loadview
 autocmd BufWinLeave *.* mkview
@@ -72,15 +91,15 @@ set wildmenu
 set wildmode=list:longest,full
 " show matching brackets
 set showmatch
-highlight MatchParen ctermbg=none ctermfg=white cterm=bold
+highlight MatchParen guibg=none guifg=white gui=bold ctermbg=none ctermfg=white cterm=bold
 set matchtime=0
 " highlight cursorline in insert mode
-highlight cursorline ctermbg=none ctermfg=none cterm=underline
+highlight cursorline guibg=none guifg=none gui=underline ctermbg=none ctermfg=none cterm=underline
 autocmd InsertEnter * set cursorline
 autocmd InsertLeave * set nocursorline
 " UltiSnips config
 let g:UltiSnipsExpandTrigger = '<tab>'
 let g:UltiSnipsJumpForwardTrigger = '<tab>'
 let g:UltiSnipsJumpBackwardTrigger = '<s-tab>'
-let g:UltiSnipsSnippetDirectories = [$HOME.'/Dokumente/snippets']
+let g:UltiSnipsSnippetDirectories = [$HOME.'/Documents/snippets']
 let g:ultisnips_python_style = 'sphinx'
