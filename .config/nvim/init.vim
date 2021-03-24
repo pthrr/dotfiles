@@ -14,7 +14,7 @@ if dein#load_state(s:settings.dein_dir)
     call dein#add('sirver/ultisnips')
     call dein#add('lifepillar/vim-solarized8')
     call dein#add('overcache/NeoSolarized')
-    call dein#add('altercation/vim-colors-solarized')
+    call dein#add('jreybert/vimagit')
     call dein#end()
     call dein#save_state()
 endif
