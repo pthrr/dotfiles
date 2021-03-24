@@ -6,7 +6,10 @@
     email = pthrr@posteo.de
 
 [http]
-    sslVerify = true
+    sslVerify = false
+
+[clean]
+    requireForce = false
 
 [credential]
     helper = store
