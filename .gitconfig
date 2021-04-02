@@ -8,11 +8,11 @@
 [http]
     sslVerify = false
 
-[clean]
-    requireForce = false
-
 [credential]
     helper = store
+
+[clean]
+    requireForce = false
 
 [diff]
     tool = vimdiff3
@@ -96,3 +96,8 @@
     rh2 = reset HEAD^^ --hard
     unstage = reset --soft HEAD^
     la = "!git config -l | grep alias | cut -c 7-" # list aliases
+[filter "lfs"]
+	required = true
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process

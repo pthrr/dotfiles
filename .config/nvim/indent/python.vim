@@ -18,7 +18,7 @@ setlocal indentexpr=GetGooglePythonIndent(v:lnum)
 
 let s:maxoff = 50 " maximum number of lines to look backwards.
 
-function GetGooglePythonIndent(lnum)
+function! GetGooglePythonIndent(lnum)
 
   " Indent inside parens.
   " Align with the open paren unless it is at the end of the line.
@@ -50,8 +50,8 @@ setlocal shiftwidth=4
 setlocal tabstop=4
 setlocal softtabstop=4
 setlocal expandtab
-setlocal colorcolumn=88
-setlocal textwidth=87
+setlocal colorcolumn=80
+setlocal textwidth=79
 setlocal wrap
 
 let pyindent_nested_paren="&sw*2"

@@ -80,7 +80,7 @@ set expandtab
 tnoremap <Esc> <C-\><C-n>
 " just be a text editor
 let g:loaded_python_provider = 0 " disable py2
-let g:python3_host_prog = '/home/ps/.pyenv/versions/py3nvim/bin/python'
+let g:python3_host_prog = '/usr/bin/python3'
 " automatically save view, load with :loadview
 autocmd BufWinLeave *.* mkview
 " paste multiple times
