@@ -15,6 +15,17 @@ snippet "^# ?[uU][tT][fF]-?8" "# encoding: UTF-8" r
 $0
 endsnippet
 
+snippet pdoc "perisens module description" b
+"""
+	Author:         Marius Vierheller
+	Company:        perisens GmbH
+	Date:           ${1}
+	Description:    ${2}
+	Developer Hint: ${3}
+"""
+$0
+endsnippet
+
 snippet ifmain "ifmain" b
 if __name__ == `!p snip.rv = get_quoting_style(snip)`__main__`!p snip.rv = get_quoting_style(snip)`:
 	${1:${VISUAL:main()}}
@@ -722,6 +733,52 @@ snippet pmdoc "pocoo style module doc string" b
 	:license: ${3:LICENSE_NAME}, see LICENSE for more details.
 """
 $0
+endsnippet
+
+snippet templ "basic module template" b
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+"""
+    Author:         Marius Vierheller
+    Company:        perisens GmbH
+    Date:           ${1}
+    Description:	${2}
+    Developer Hint: ${3}
+"""
+
+import sys
+from absl import app
+from absl import flags
+from absl import logging
+from typing import List, Dict, Tuple, Set
+
+FLAGS = flags.FLAGS
+flags.DEFINE_boolean("debug", False, "Produces debugging output.")
+
+
+def main(argv: List[str]) -> None:
+    """TODO: Docstring for main.
+
+    :param argv: TODO
+    :returns: TODO
+
+    """
+    if FLAGS.debug:
+        logging.set_verbosity(logging.DEBUG)
+
+    if logging.level_debug():
+        logging.debug(f"PATH: {sys.path}")
+        logging.debug(f"Args: {argv}")
+
+    $0
+
+    logging.info("Done.")
+    sys.exit(0)
+
+
+if __name__ == "__main__":
+    app.run(main)
 endsnippet
 
 # vim:ft=snippets:
