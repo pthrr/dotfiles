@@ -14,6 +14,7 @@ alias lsd='find . -maxdepth 6 -not -path "*/\.*" -type d'
 alias lsf='find . -maxdepth 6 -not -path "*/\.*" -type f'
 alias s='git status -s'
 alias l='git l'
+alias u='git submodule update --init --recursive'
 alias pl='git fetch --recurse-submodules && git pull --recurse-submodules'
 alias ps='git push --recurse-submodules=on-demand'
 alias fmp='black --verbose --line-length 80'
@@ -24,8 +25,9 @@ alias xdg='xdg-open'
 alias jqp='jq "."'
 alias pwgen='python -c "import secrets,pyperclip;pw=secrets.token_urlsafe(32);pyperclip.copy(pw);print(pw)"'
 source "$HOME/z.sh"
-source "$HOME/git-prompt.sh"
+#source "$HOME/git-prompt.sh"
 export PROMPT_DIRTRIM=2
-export GIT_PS1_SHOWDIRTYSTATE=1
-export PS1='\[\e[33m\]\w\[\e[31m\]$(__git_ps1 "(%s)")\[\e[0m\] % '
+#export GIT_PS1_SHOWDIRTYSTATE=1
+#export PS1='\[\e[33m\]\w\[\e[31m\]$(__git_ps1 "(%s)")\[\e[0m\] % '
+export PS1='\[\e[33m\]\w\[\e[0m\] % '
 source "$HOME/.cargo/env"

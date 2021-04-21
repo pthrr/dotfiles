@@ -740,11 +740,11 @@ snippet templ "basic module template" b
 # -*- coding: utf-8 -*-
 
 """
-    Author:         Marius Vierheller
-    Company:        perisens GmbH
-    Date:           ${1}
-    Description:	${2}
-    Developer Hint: ${3}
+	Author:         Marius Vierheller
+	Company:        perisens GmbH
+	Date:           ${1}
+	Description:    ${2}
+	Developer Hint: ${3}
 """
 
 import sys
@@ -758,27 +758,27 @@ flags.DEFINE_boolean("debug", False, "Produces debugging output.")
 
 
 def main(argv: List[str]) -> None:
-    """TODO: Docstring for main.
+	"""TODO: Docstring for main.
 
-    :param argv: TODO
-    :returns: TODO
+	:param argv: TODO
+	:returns: TODO
 
-    """
-    if FLAGS.debug:
-        logging.set_verbosity(logging.DEBUG)
+	"""
+	if FLAGS.debug:
+		logging.set_verbosity(logging.DEBUG)
 
-    if logging.level_debug():
-        logging.debug(f"PATH: {sys.path}")
-        logging.debug(f"Args: {argv}")
+	if logging.level_debug():
+		logging.debug(f"PATH: {sys.path}")
+		logging.debug(f"Args: {argv}")
 
-    $0
+	$0
 
-    logging.info("Done.")
-    sys.exit(0)
+	logging.info("Done.")
+	sys.exit(0)
 
 
 if __name__ == "__main__":
-    app.run(main)
+	app.run(main)
 endsnippet
 
 # vim:ft=snippets:
