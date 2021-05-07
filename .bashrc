@@ -5,11 +5,13 @@ alias rm='rm -Iv'
 alias ..='cd ../'
 alias ...='cd ../../'
 alias ....='cd ../../../'
+alias .....='cd ../../../../'
 alias vi='nvim'
 alias ack='ag'
 alias ls='exa'
 alias grep='rg'
-alias lsa='ls -la'
+alias lla='ls -la'
+alias ll='ls -l'
 alias lsd='find . -maxdepth 6 -not -path "*/\.*" -type d'
 alias lsf='find . -maxdepth 6 -not -path "*/\.*" -type f'
 alias s='git status -s'
@@ -17,7 +19,11 @@ alias l='git l'
 alias u='git submodule update --init --recursive'
 alias pl='git fetch --recurse-submodules && git pull --recurse-submodules'
 alias ps='git push --recurse-submodules=on-demand'
-alias fmp='black --verbose --line-length 80'
+function fmp() {
+    autoflake --in-place --ignore-init-module-imports "$@"
+    isort --atomic "$@"
+    black --verbose --target-version py37 --line-length 79 "$@"
+}
 alias fmc='clang-format -verbose -i -style=google'
 alias cl='clear'
 alias py='python3'

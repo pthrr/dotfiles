@@ -12,9 +12,9 @@ endif
 if dein#load_state(s:settings.dein_dir)
     call dein#begin(s:settings.dein_dir)
     call dein#add('sirver/ultisnips')
-    call dein#add('lifepillar/vim-solarized8')
+    "call dein#add('lifepillar/vim-solarized8')
     call dein#add('overcache/NeoSolarized')
-    call dein#add('jreybert/vimagit')
+    call dein#add('preservim/tagbar')
     call dein#end()
     call dein#save_state()
 endif
@@ -36,7 +36,6 @@ set noswapfile
 set nobomb
 set splitbelow
 set splitright
-set number
 set relativenumber
 set nowrap
 set autoread
@@ -57,8 +56,7 @@ set statusline +=/%L               "total lines
 set statusline +=%4v\              "virtual column number
 set statusline +=0x%04B\           "character under cursor
 set colorcolumn=80
-highlight ColorColumn ctermbg=darkgrey ctermfg=none cterm=none
-set textwidth=79
+"highlight ColorColumn ctermbg=darkgrey ctermfg=none cterm=none
 "set clipboard=unnamedplus
 set clipboard+=unnamedplus
 let g:clipboard = {
@@ -78,6 +76,11 @@ set tabstop=4
 set softtabstop=4
 set shiftwidth=4
 set expandtab
+set foldmethod=indent
+set foldnestmax=2
+set foldlevelstart=10
+nnoremap <space> za
+vnoremap <space> zf
 " terminal mode
 tnoremap <Esc> <C-\><C-n>
 " just be a text editor
@@ -105,3 +108,8 @@ let g:UltiSnipsJumpForwardTrigger = '<tab>'
 let g:UltiSnipsJumpBackwardTrigger = '<s-tab>'
 let g:UltiSnipsSnippetDirectories = [$HOME.'/Documents/snippets']
 let g:ultisnips_python_style = 'sphinx'
+" tagbar
+nmap <F8> :TagbarToggle<CR>
+let g:tagbar_compact = 1
+let g:tagbar_show_linenumbers = 1
+let g:tagbar_width = max([25, winwidth(0) / 4])

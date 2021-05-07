@@ -15,13 +15,13 @@ snippet "^# ?[uU][tT][fF]-?8" "# encoding: UTF-8" r
 $0
 endsnippet
 
-snippet pdoc "perisens module description" b
+snippet pdoc "basic module description" b
 """
-	Author:         Marius Vierheller
-	Company:        perisens GmbH
-	Date:           ${1}
-	Description:    ${2}
-	Developer Hint: ${3}
+	Author:         ${1}
+	Company:        ${2}
+	Date:           ${3}
+	Description:    ${4}
+	Developer Hint: ${5}
 """
 $0
 endsnippet
@@ -740,11 +740,11 @@ snippet templ "basic module template" b
 # -*- coding: utf-8 -*-
 
 """
-	Author:         Marius Vierheller
-	Company:        perisens GmbH
-	Date:           ${1}
-	Description:    ${2}
-	Developer Hint: ${3}
+	Author:         ${1}
+	Company:        ${2}
+	Date:           ${3}
+	Description:    ${4}
+	Developer Hint: ${5}
 """
 
 import sys
@@ -760,16 +760,15 @@ flags.DEFINE_boolean("debug", False, "Produces debugging output.")
 def main(argv: List[str]) -> None:
 	"""TODO: Docstring for main.
 
-	:param argv: TODO
-	:returns: TODO
+	:param argv: list of parameters
+	:returns: nothing
 
 	"""
 	if FLAGS.debug:
 		logging.set_verbosity(logging.DEBUG)
 
-	if logging.level_debug():
-		logging.debug(f"PATH: {sys.path}")
-		logging.debug(f"Args: {argv}")
+	logging.debug(f"PATH: {sys.path}")
+	logging.debug(f"Args: {argv}")
 
 	$0
 
