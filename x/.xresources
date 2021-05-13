@@ -1,4 +1,4 @@
-xterm*faceName: xft: DejaVu Sans Mono
+xterm*faceName: xft: Fira Code
 xterm*faceSize: 10
 xterm*saveLines: 2000
 xterm*VT100.Translations: #override \
