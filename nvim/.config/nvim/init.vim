@@ -57,20 +57,20 @@ set statusline +=%4v\              "virtual column number
 set statusline +=0x%04B\           "character under cursor
 set colorcolumn=80
 "highlight ColorColumn ctermbg=darkgrey ctermfg=none cterm=none
-"set clipboard=unnamedplus
-set clipboard+=unnamedplus
-let g:clipboard = {
-    \   'name':'win32yank-wsl',
-    \   'copy': {
-    \       '+': 'win32yank.exe -i --crlf',
-    \       '*': 'win32yank.exe -i --crlf',
-    \   },
-    \   'paste': {
-    \       '+': 'win32yank.exe -o --lf',
-    \       '*': 'win32yank.exe -o --lf',
-    \   },
-    \   'cache_enabled': 0,
-    \ }
+set clipboard=unnamedplus
+"set clipboard+=unnamedplus
+"let g:clipboard = {
+"    \   'name':'win32yank-wsl',
+"    \   'copy': {
+"    \       '+': 'win32yank.exe -i --crlf',
+"    \       '*': 'win32yank.exe -i --crlf',
+"    \   },
+"    \   'paste': {
+"    \       '+': 'win32yank.exe -o --lf',
+"    \       '*': 'win32yank.exe -o --lf',
+"    \   },
+"    \   'cache_enabled': 0,
+"    \ }
 set list listchars=tab:\›\ ,trail:-,extends:>,precedes:<
 set tabstop=4
 set softtabstop=4

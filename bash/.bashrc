@@ -7,6 +7,7 @@ alias ...='cd ../../'
 alias ....='cd ../../../'
 alias .....='cd ../../../../'
 alias vi='nvim'
+alias top='htop'
 alias ack='ag'
 alias ls='exa'
 alias grep='rg'
@@ -14,6 +15,9 @@ alias lla='ls -la'
 alias ll='ls -l'
 alias lsd='find . -maxdepth 6 -not -path "*/\.*" -type d'
 alias lsf='find . -maxdepth 6 -not -path "*/\.*" -type f'
+function c() {
+    curl -m 10 "https://cht.sh/$@"
+}
 alias s='git status -s'
 alias l='git l'
 alias u='git submodule update --init --recursive'
