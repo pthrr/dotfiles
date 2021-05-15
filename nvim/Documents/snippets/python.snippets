@@ -747,37 +747,63 @@ snippet templ "basic module template" b
 	Developer Hint: ${5}
 """
 
+import argparse
+import logging
 import sys
-from absl import app
-from absl import flags
-from absl import logging
-from typing import List, Dict, Tuple, Set
-
-FLAGS = flags.FLAGS
-flags.DEFINE_boolean("debug", False, "Produces debugging output.")
 
 
-def main(argv: List[str]) -> None:
+def main(args: argparse.Namespace) -> None:
 	"""TODO: Docstring for main.
 
-	:param argv: list of parameters
+	:param args: list of parameters
 	:returns: nothing
 
 	"""
-	if FLAGS.debug:
-		logging.set_verbosity(logging.DEBUG)
+	${0}
+	return 0
 
-	logging.debug(f"PATH: {sys.path}")
-	logging.debug(f"Args: {argv}")
 
-	$0
-
-	logging.info("Done.")
-	sys.exit(0)
+def str_to_bool(v):
+	if isinstance(v, bool):
+		return v
+	if v.lower() in ("yes", "true", "t", "y", "1"):
+		return True
+	elif v.lower() in ("no", "false", "f", "n", "0"):
+		return False
+	else:
+		raise argparse.ArgumentTypeError("Boolean value expected.")
 
 
 if __name__ == "__main__":
-	app.run(main)
+	parser = argparse.ArgumentParser()
+	parser.add_argument(
+		"--debug",
+		type=str_to_bool,
+		nargs="?",
+		const=True,
+		default=False,
+		help="Activate debug mode.",
+	)
+	args = parser.parse_args()
+
+	if args.debug:
+		logging_level = logging.DEBUG
+	else:
+		logging_level = logging.CRITICAL
+
+	logging_format_string = "%(asctime)s | %(levelname)s | %(module)s, %(funcName)s, %(lineno)d | %(message)s"
+	logging.basicConfig(format=logging_format_string, level=logging_level)
+	logging.debug(f"PATH: {sys.path}")
+	logging.debug(f"Args: {args}")
+	rc = 1
+
+	try:
+		rc = main(args)
+	except Exception as e:
+		logging.error(f"Exception occured: {e}")
+
+	logging.info("Done.")
+	sys.exit(rc)
 endsnippet
 
 # vim:ft=snippets:

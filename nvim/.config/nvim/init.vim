@@ -36,6 +36,7 @@ set noswapfile
 set nobomb
 set splitbelow
 set splitright
+set number
 set relativenumber
 set nowrap
 set autoread
