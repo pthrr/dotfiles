@@ -26,7 +26,7 @@ alias ps='git push --recurse-submodules=on-demand'
 function fmp() {
     autoflake --in-place --ignore-init-module-imports "$@"
     isort --atomic "$@"
-    black --verbose --target-version py37 --line-length 79 "$@"
+    black --verbose --line-length 79 "$@"
 }
 alias fmc='clang-format -verbose -i -style=google'
 alias cl='clear'

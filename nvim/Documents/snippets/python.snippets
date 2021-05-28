@@ -750,20 +750,23 @@ snippet templ "basic module template" b
 import argparse
 import logging
 import sys
+import typing
 
 
-def main(args: argparse.Namespace) -> None:
+def main(args: argparse.Namespace) -> int:
 	"""TODO: Docstring for main.
 
-	:param args: list of parameters
-	:returns: nothing
+	:param args: parsed list of parameters
+	:returns: POSIX return code
 
 	"""
 	${0}
 	return 0
 
 
-def str_to_bool(v):
+def str_to_bool(v: typing.Union[str, bool]) -> None:
+	"""TODO: Docstring for str_to_bool.
+	"""
 	if isinstance(v, bool):
 		return v
 	if v.lower() in ("yes", "true", "t", "y", "1"):
@@ -795,13 +798,7 @@ if __name__ == "__main__":
 	logging.basicConfig(format=logging_format_string, level=logging_level)
 	logging.debug(f"PATH: {sys.path}")
 	logging.debug(f"Args: {args}")
-	rc = 1
-
-	try:
-		rc = main(args)
-	except Exception as e:
-		logging.error(f"Exception occured: {e}")
-
+	rc = main(args)
 	logging.info("Done.")
 	sys.exit(rc)
 endsnippet
