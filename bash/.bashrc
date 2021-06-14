@@ -24,8 +24,8 @@ alias u='git submodule update --init --recursive'
 alias pl='git fetch --recurse-submodules && git pull --recurse-submodules'
 alias ps='git push --recurse-submodules=on-demand'
 function fmp() {
-    autoflake --in-place --ignore-init-module-imports "$@"
-    isort --atomic "$@"
+    pyflakes "$@"
+    isort --profile black --atomic --line-length 79 "$@"
     black --verbose --line-length 79 "$@"
 }
 alias fmc='clang-format -verbose -i -style=google'
