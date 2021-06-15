@@ -787,6 +787,10 @@ if __name__ == "__main__":
 		default=False,
 		help="Activate debug mode.",
 	)
+	parser.add_argument(
+		"argv",
+		nargs="*",
+	)
 	args = parser.parse_args()
 
 	if args.debug:
