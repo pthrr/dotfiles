@@ -41,3 +41,4 @@ export PS1='\[\e[33m\]\w\[\e[0m\] % '
 source "$HOME/z.sh"
 source "$HOME/key-bindings.bash"
 source "$HOME/.cargo/env"
+test -r "$HOME/.opam/opam-init/init.sh" && . "$HOME/.opam/opam-init/init.sh" > /dev/null 2> /dev/null || true
