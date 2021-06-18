@@ -30,6 +30,7 @@ function fmp() {
     isort --profile black --atomic --line-length 79 "$@"
     black --verbose --line-length 79 "$@"
 }
+alias fmo='ocamlformat --inplace'
 alias fmc='clang-format -verbose -i -style=google'
 alias cl='clear'
 alias py='python3'
