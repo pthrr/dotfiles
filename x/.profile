@@ -26,6 +26,16 @@ if [ -d "$HOME/.local/bin" ] ; then
     export PATH="$HOME/.local/bin:$PATH"
 fi
 
+#
+if [ -d "/sbin" ] ; then
+    export PATH="/sbin:$PATH"
+fi
+
+#
+if [ -d "/usr/sbin" ] ; then
+    export PATH="/usr/sbin:$PATH"
+fi
+
 # include Cabal
 if [ -d "$HOME/.cabal/bin" ] ; then
     export PATH="$HOME/.cabal/bin:$PATH"
@@ -36,4 +46,5 @@ export LANG='de_DE.UTF-8'
 export EDITOR='nvim'
 export SUDO_ASKPASS='/usr/bin/ssh-askpass'
 export _JAVA_AWT_WM_NONREPARENTING=1
+export GTK_THEME=Adwaita:dark
 source "$HOME/.cargo/env"

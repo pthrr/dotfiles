@@ -11,8 +11,8 @@ alias shutdown='systemctl poweroff'
 alias reboot='systemctl reboot'
 alias lla='ls -la'
 alias ll='ls -l'
-alias lsd='find . -maxdepth 6 -not -path "*/\.*" -type d'
-alias lsf='find . -maxdepth 6 -not -path "*/\.*" -type f'
+alias lsd='tree -d -L 6'
+alias lsf='tree -a -L 6'
 alias ..='cd ../'
 alias ...='cd ../../'
 alias ....='cd ../../../'
@@ -20,17 +20,17 @@ alias .....='cd ../../../../'
 function c() {
     curl -m 10 "https://cht.sh/$@"
 }
-alias s='git status -s'
-alias l='git l'
-alias u='git submodule update --init --recursive'
-alias pl='git fetch --recurse-submodules && git pull --recurse-submodules'
-alias ps='git push --recurse-submodules=on-demand'
+alias s='git ssb'
+alias l='git ld'
+alias u='git smuir'
+alias pl='git frs && git prs'
+alias ps='git ph'
 function fmp() {
     pyflakes "$@"
     isort --profile black --atomic --line-length 79 "$@"
     black --verbose --line-length 79 "$@"
 }
-alias fmo='ocamlformat --inplace'
+alias fmo='dune build @fmt --auto-promote'
 alias fmc='clang-format -verbose -i -style=google'
 alias cl='clear'
 alias py='python3'
