@@ -22,8 +22,8 @@ if dein#check_install()
 endif
 syntax on
 filetype plugin indent on
-"let g:solarized_use16=1
-set termguicolors
+let g:solarized_use16=1
+"set termguicolors
 colorscheme solarized8
 set encoding=utf-8
 set fileencoding=utf-8
