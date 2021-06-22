@@ -13,7 +13,6 @@ if dein#load_state(s:settings.dein_dir)
     call dein#begin(s:settings.dein_dir)
     call dein#add('sirver/ultisnips')
     call dein#add('lifepillar/vim-solarized8')
-    "call dein#add('overcache/NeoSolarized')
     call dein#add('preservim/tagbar')
     call dein#end()
     call dein#save_state()
@@ -26,7 +25,6 @@ filetype plugin indent on
 "let g:solarized_use16=1
 set termguicolors
 colorscheme solarized8
-"colorscheme NeoSolarized
 set encoding=utf-8
 set fileencoding=utf-8
 set fileencodings=utf-8
@@ -136,4 +134,4 @@ let g:ultisnips_python_style = 'sphinx'
 nmap <F8> :TagbarToggle<CR>
 let g:tagbar_compact = 1
 let g:tagbar_show_linenumbers = 1
-let g:tagbar_width = max([25, winwidth(0) / 4])
+let g:tagbar_width = max([100, winwidth(0) / 4])
