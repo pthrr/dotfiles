@@ -12,8 +12,8 @@ endif
 if dein#load_state(s:settings.dein_dir)
     call dein#begin(s:settings.dein_dir)
     call dein#add('sirver/ultisnips')
-    "call dein#add('lifepillar/vim-solarized8')
-    call dein#add('overcache/NeoSolarized')
+    call dein#add('lifepillar/vim-solarized8')
+    "call dein#add('overcache/NeoSolarized')
     call dein#add('preservim/tagbar')
     call dein#end()
     call dein#save_state()
@@ -24,15 +24,27 @@ endif
 syntax on
 filetype plugin indent on
 "let g:solarized_use16=1
-"colorscheme solarized8
 set termguicolors
-colorscheme NeoSolarized
+colorscheme solarized8
+"colorscheme NeoSolarized
 set encoding=utf-8
 set fileencoding=utf-8
 set fileencodings=utf-8
 set nobackup
 set nowritebackup
+" Let's save undo info!
+if !isdirectory($HOME."/.config")
+    call mkdir($HOME."/.config", "", 0770)
+endif
+if !isdirectory($HOME."/.config/nvim")
+    call mkdir($HOME."/.config/nvim", "", 0770)
+endif
+if !isdirectory($HOME."/.config/nvim/undo")
+    call mkdir($HOME."/.config/nvim/undo", "", 0700)
+endif
+set undodir=~/.config/nvim/undo
 set undofile
+"
 set noswapfile
 set nobomb
 set splitbelow
