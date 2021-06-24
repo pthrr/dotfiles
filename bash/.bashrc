@@ -12,7 +12,7 @@ alias reboot='systemctl reboot'
 alias lla='ls -la'
 alias ll='ls -l'
 alias lsd='tree -d -L 6'
-alias lsf='tree -a -L 6'
+alias lsf='tree -a -L 6 -I ".git"'
 alias ..='cd ../'
 alias ...='cd ../../'
 alias ....='cd ../../../'
@@ -20,6 +20,7 @@ alias .....='cd ../../../../'
 function cht() {
     curl -m 10 "https://cht.sh/$@"
 }
+alias g='git'
 alias s='g ssb'
 alias l='g ld'
 alias u='g smuir'

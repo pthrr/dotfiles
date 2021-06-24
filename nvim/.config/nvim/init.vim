@@ -134,4 +134,4 @@ let g:ultisnips_python_style = 'sphinx'
 nmap <F8> :TagbarToggle<CR>
 let g:tagbar_compact = 1
 let g:tagbar_show_linenumbers = 1
-let g:tagbar_width = max([100, winwidth(0) / 4])
+let g:tagbar_width = max([80, winwidth(0) / 4])
