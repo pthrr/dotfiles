@@ -17,14 +17,14 @@ alias ..='cd ../'
 alias ...='cd ../../'
 alias ....='cd ../../../'
 alias .....='cd ../../../../'
-function c() {
+function cht() {
     curl -m 10 "https://cht.sh/$@"
 }
-alias s='git ssb'
-alias l='git ld'
-alias u='git smuir'
-alias pl='git frs && git prs'
-alias ps='git ph'
+alias s='g ssb'
+alias l='g ld'
+alias u='g smuir'
+alias pl='g frs && git prs'
+alias ps='g ph'
 function fmp() {
     pyflakes "$@"
     isort --profile black --atomic --line-length 79 "$@"
