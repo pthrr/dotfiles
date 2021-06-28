@@ -1,4 +1,4 @@
-sudo apt-get install -y perl curl wget git gitg neovim chromium-browser nautilus
+sudo apt-get install -y perl curl wget git neovim chromium-browser nautilus exuberant-ctags stow
 sudo apt-get install -y build-essential cmake automake g++-10 gcc-10
 sudo apt-get install -y libx11-dev libxinerama-dev libxext-dev
 sudo apt-get install -y libxrandr-dev libxss-dev libxft-dev
