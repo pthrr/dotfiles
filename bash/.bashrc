@@ -39,6 +39,8 @@ alias xdg='xdg-open'
 alias jqp='jq "."'
 alias pwgen='python -c "import secrets,pyperclip;pw=secrets.token_urlsafe(32);pyperclip.copy(pw);print(pw)"'
 export HISTCONTROL=ignoreboth
+export HISTSIZE=1000
+export HISTFILESIZE=2000
 export PROMPT_DIRTRIM=2
 export PS1='\[\e[33m\]\w\[\e[0m\] \u % '
 source "$HOME/z.sh"
