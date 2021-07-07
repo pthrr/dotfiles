@@ -34,6 +34,7 @@ function fmp() {
 alias fmo='dune build @fmt --auto-promote'
 alias fmc='clang-format -verbose -i -style=google'
 alias cl='clear'
+alias vp='vi src/*.py'
 alias py='python3'
 alias xdg='xdg-open'
 alias jqp='jq "."'
@@ -42,7 +43,7 @@ export HISTCONTROL=ignoreboth
 export HISTSIZE=1000
 export HISTFILESIZE=2000
 export PROMPT_DIRTRIM=2
-export PS1='\[\e[33m\]\w\[\e[0m\] \u % '
+export PS1='\[\e[33m\]\w\[\e[0m\] \u$(if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then echo "@\h"; else echo ""; fi) % '
 source "$HOME/z.sh"
 source "$HOME/key-bindings.bash"
 source "$HOME/.cargo/env"
