@@ -47,3 +47,4 @@ export PS1='\[\e[33m\]\w\[\e[0m\] \u$(if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY"
 source "$HOME/z.sh"
 source "$HOME/key-bindings.bash"
 source "$HOME/.cargo/env"
+eval $(opam config env)

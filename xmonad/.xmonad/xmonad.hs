@@ -18,10 +18,11 @@ xmonad $ def
     { ppOutput = hPutStrLn xmproc
     , ppOrder = \(ws:_:t:_) -> [ws,t]
     }
-  , borderWidth = 3
+  , borderWidth = 2
   }
   `additionalKeys`
   [ ((mod1Mask, xK_p), spawn "exe=`dmenu_path | /home/pthrr/.cabal/bin/yeganesh -- -b -fn \"xft:DejaVu Sans Mono:size=10\"` && eval \"exec $exe\"")
+  , ((mod1Mask, xK_s), spawn "slock")
   , ((0, xF86XK_MonBrightnessUp), spawn "xbacklight +10")
   , ((0, xF86XK_MonBrightnessDown), spawn "xbacklight -10")
   , ((0, xF86XK_AudioMute), spawn "pactl set-sink-mute @DEFAULT_SINK@ toggle")

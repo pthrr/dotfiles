@@ -49,4 +49,4 @@ export _JAVA_AWT_WM_NONREPARENTING=1
 export GTK_THEME=Adwaita:dark
 export QT_QPA_PLATFORMTHEME=qt5ct
 source "$HOME/.cargo/env"
-eval $(opam env)
+eval $(opam config env)
