@@ -34,8 +34,7 @@ function fmp() {
 alias fmc='clang-format -verbose -i -style=google'
 alias fmo='dune build @fmt --auto-promote --enable-outside-detected-project'
 alias cl='clear'
-alias vp='vi src/*.py'
-alias vo='vi bin/*.ml'
+alias vo='vi src/*.*'
 alias oc='dune build && dune exec'
 alias ot='dune runtest'
 function op() {
