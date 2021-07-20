@@ -7,8 +7,8 @@ alias cp='cp -iv'
 alias mv='mv -iv'
 alias mkdir='mkdir -pv'
 alias rm='rm -Iv'
-alias shutdown='systemctl poweroff'
-alias reboot='systemctl reboot'
+alias shutdown='systemctl poweroff -i'
+alias reboot='systemctl reboot -i'
 alias lla='ls -la'
 alias ll='ls -l'
 alias lsd='tree -d -L 6'
@@ -26,6 +26,7 @@ alias l='g ld'
 alias u='g smuir'
 alias pl='g frs && git prs'
 alias ps='g ph'
+alias gc='g cleaner' # clean -fdx
 function fmp() {
     pyflakes "$@"
     isort --profile black --atomic --line-length 79 "$@"
