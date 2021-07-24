@@ -5,6 +5,7 @@ import XMonad.Hooks.DynamicLog
 import XMonad.Util.CustomKeys
 import XMonad.Util.EZConfig
 import Graphics.X11.ExtraTypes.XF86
+import XMonad.Actions.CycleWS
 
 main = do
 xmproc <- spawnPipe "xmobar"
@@ -29,4 +30,13 @@ xmonad $ def
   , ((0, xF86XK_AudioMicMute), spawn "pactl set-source-mute @DEFAULT_SOURCE@ toggle")
   , ((0, xF86XK_AudioLowerVolume), spawn "pactl set-sink-volume @DEFAULT_SINK@ -10%")
   , ((0, xF86XK_AudioRaiseVolume), spawn "pactl set-sink-volume @DEFAULT_SINK@ +10%")
+  , ((mod1Mask, xK_Right), nextWS)
+  , ((mod1Mask, xK_Left), prevWS)
+  , ((mod1Mask .|. shiftMask, xK_Right), shiftToNext)
+  , ((mod1Mask .|. shiftMask, xK_Left), shiftToPrev)
+  , ((mod1Mask, xK_Up), nextScreen)
+  , ((mod1Mask, xK_Down), prevScreen)
+  , ((mod1Mask .|. shiftMask, xK_Up), shiftNextScreen)
+  , ((mod1Mask .|. shiftMask, xK_Down), shiftPrevScreen)
+  , ((mod1Mask, xK_z), toggleWS)
   ]

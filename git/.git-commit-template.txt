@@ -109,9 +109,3 @@ Tags:
 
 ### GIT TRAILERS -- THESE MUST BE LAST IN THE COMMIT MESSAGE ###
 
-See: Description <https://example.com/...>
-See: Description <https://example.com/...>
-Co-authored-by: Name <name@example.com>
-Co-authored-by: Name <name@example.com>
-Sponsored-by: Name <name@example.com>
-Sponsored-by: Name <name@example.com>
