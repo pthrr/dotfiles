@@ -46,6 +46,7 @@ function op() {
 alias py='python3'
 alias xdg='xdg-open'
 alias jqp='jq "."'
+alias mirror='wget --mirror --convert-links --adjust-extension --page-requisites --no-parent'
 alias pc='picocom -b 115200 --echo --omap=crcrlf'
 alias pwgen='python -c "import secrets,pyperclip;pw=secrets.token_urlsafe(32);pyperclip.copy(pw);print(pw)"'
 export HISTCONTROL=ignoreboth

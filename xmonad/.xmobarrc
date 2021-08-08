@@ -33,6 +33,6 @@ Config { font = "-*-fixed-*-*-*-*-15-*-100-100-*-*-*-*"
                 ]
        , sepChar = "%"
        , alignSep = "}{"
-       , template = "%StdinReader% }{| %disku% | %coretemp% | %memory% | %battery% | %date% |"
+       , template = "%StdinReader% }{ | %disku% | %coretemp% | %memory% | %battery% | %date% |"
        }
 
