@@ -1,5 +1,6 @@
 alias vi='nvim'
 alias top='htop'
+alias ssh='mosh'
 alias ack='ag'
 alias ls='exa'
 alias grep='rg'
@@ -36,6 +37,7 @@ function fmp() {
 }
 alias fmc='clang-format -verbose -i -style=google'
 alias fmo='dune build @fmt --auto-promote --enable-outside-detected-project'
+alias fmm='cmake-format -i'
 alias cl='clear'
 alias vo='vi src/*.*'
 alias oc='dune build && dune exec'
