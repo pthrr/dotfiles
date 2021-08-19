@@ -41,6 +41,11 @@ if [ -d "$HOME/.cabal/bin" ] ; then
     export PATH="$HOME/.cabal/bin:$PATH"
 fi
 
+# include plugins
+if [ -d "$HOME/.lv2" ] ; then
+    export LV2_PATH="$HOME/.lv2:$LV2_PATH"
+fi
+
 export LC_ALL='de_DE.UTF-8'
 export LANG='de_DE.UTF-8'
 export EDITOR='nvim'

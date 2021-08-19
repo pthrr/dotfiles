@@ -1,5 +1,6 @@
 alias vi='nvim'
 alias top='htop'
+alias ssh='mosh'
 alias ack='ag'
 alias ls='exa'
 alias grep='rg'
@@ -44,6 +45,7 @@ function fmp() {
 }
 alias fmc='clang-format -verbose -i -style=google'
 alias fmo='dune build @fmt --auto-promote --enable-outside-detected-project'
+alias fmm='cmake-format -i'
 alias cl='clear'
 alias vs='vi src/*.*'
 alias oc='dune build && dune exec'
@@ -54,6 +56,7 @@ function op() {
 alias py='python3'
 alias xdg='xdg-open'
 alias jqp='jq "."'
+alias mirror='wget --mirror --convert-links --adjust-extension --page-requisites --no-parent'
 alias pc='picocom -b 115200 --echo --omap=crcrlf'
 alias pwgen='python -c "import secrets,pyperclip;pw=secrets.token_urlsafe(32);pyperclip.copy(pw);print(pw)"'
 export HISTCONTROL=ignoreboth
