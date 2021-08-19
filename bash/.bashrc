@@ -9,12 +9,14 @@ alias mkdir='mkdir -pv'
 alias rm='rm -Iv'
 alias shutdown='systemctl poweroff -i'
 alias reboot='systemctl reboot -i'
-alias lla='ls -la'
+alias services='systemctl --type=service'
+alias ports='lsof -i -P -n | grep LISTEN'
 alias untar='tar xf'
-alias h='history'
+alias lla='ls -la'
 alias ll='ls -l'
 alias lsd='tree -d -L 6'
 alias lsf='tree -a -L 6 -I ".git"'
+alias h='history'
 alias ..='cd ../'
 alias ...='cd ../../'
 alias ....='cd ../../../'
@@ -29,6 +31,12 @@ alias u='g smuir'
 alias pl='g frs && git prs'
 alias ps='g ph'
 alias gc='g cleaner' # clean -fdx
+function gmv() { # move submodule
+    mv $1 $2
+    git rm $1
+    git add $2
+    git submodule sync
+}
 function fmp() {
     pyflakes "$@"
     isort --profile black --atomic --line-length 79 "$@"
@@ -37,7 +45,7 @@ function fmp() {
 alias fmc='clang-format -verbose -i -style=google'
 alias fmo='dune build @fmt --auto-promote --enable-outside-detected-project'
 alias cl='clear'
-alias vo='vi src/*.*'
+alias vs='vi src/*.*'
 alias oc='dune build && dune exec'
 alias ot='dune runtest'
 function op() {
