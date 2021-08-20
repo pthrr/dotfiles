@@ -26,9 +26,10 @@ filetype plugin indent on
 set termguicolors
 colorscheme solarized8
 set encoding=utf-8
-set fileencoding=utf-8
-set fileencodings=utf-8
+set fileencodings=ucs-bom,utf-8,utf-16,cp1252,default,latin1
+set nobomb
 set nobackup
+set noswapfile
 set nowritebackup
 " Let's save undo info!
 if !isdirectory($HOME."/.config")
@@ -43,8 +44,6 @@ endif
 set undodir=~/.config/nvim/undo
 set undofile
 "
-set noswapfile
-set nobomb
 set splitbelow
 set splitright
 set number
@@ -60,7 +59,8 @@ set noerrorbells
 set statusline=
 set statusline +=\ %n\             "buffer number
 set statusline +=%{&ff}            "file format
-set statusline +=%y                "file type
+set statusline +=%Y                "file type
+set statusline +=%{\"[\".(&fenc==\"\"?&enc:&fenc).((exists(\"+bomb\")\ &&\ &bomb)?\",B\":\"\").\"]\"}
 set statusline +=\ %<%F            "full path
 set statusline +=%m                "modified flag
 set statusline +=%=%5l             "current line
