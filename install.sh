@@ -1,5 +1,5 @@
 sudo apt-get install -y sudo perl curl wget git neovim chromium nautilus exuberant-ctags stow
-sudo apt-get install -y build-essential cmake automake g++-10 gcc-10
+sudo apt-get install -y build-essential cmake automake g++-10 gcc-10 clang
 sudo apt-get install -y libx11-dev libxinerama-dev libxext-dev
 sudo apt-get install -y libxrandr-dev libxss-dev libxft-dev
 sudo apt-get install -y xterm suckless-tools x11-xserver-utils

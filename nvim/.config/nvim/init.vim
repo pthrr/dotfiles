@@ -59,8 +59,8 @@ set noerrorbells
 set statusline=
 set statusline +=\ %n\             "buffer number
 set statusline +=%{&ff}            "file format
-set statusline +=%Y                "file type
-set statusline +=%{\"[\".(&fenc==\"\"?&enc:&fenc).((exists(\"+bomb\")\ &&\ &bomb)?\",B\":\"\").\"]\"}
+set statusline +=%y                "file type
+set statusline +=\ %{&fenc}        "file encoding
 set statusline +=\ %<%F            "full path
 set statusline +=%m                "modified flag
 set statusline +=%=%5l             "current line
