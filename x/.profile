@@ -53,6 +53,5 @@ export SUDO_ASKPASS='/usr/bin/ssh-askpass'
 export _JAVA_AWT_WM_NONREPARENTING=1
 export GTK_THEME=Adwaita:dark
 export QT_QPA_PLATFORMTHEME=qt5ct
-export POSIXLY_CORRECT=1
 source "$HOME/.cargo/env"
 eval $(opam config env)
