@@ -7,7 +7,7 @@ alias cp='cp -iv'
 alias mv='mv -iv'
 alias mkdir='mkdir -pv'
 alias rm='rm -Iv'
-alias untar='tar xf'
+alias untar='tar vxf'
 alias lla='ls -la'
 alias ll='ls -l'
 alias lsd='tree -d -L 6'
@@ -62,6 +62,5 @@ export HISTFILESIZE=2000
 export PROMPT_DIRTRIM=2
 export PS1='\[\e[33m\]\w\[\e[0m\] \u$(if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then echo " @ \h"; else echo ""; fi) % '
 source "$HOME/z.sh"
-source "$HOME/key-bindings.bash"
 source "$HOME/.cargo/env"
 eval $(opam config env)
