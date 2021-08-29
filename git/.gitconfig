@@ -21,6 +21,9 @@
     tool = vimdiff3
     conflictStyle = diff3
 
+[pull]
+    rebase = false
+
 [push]
     default = simple
 

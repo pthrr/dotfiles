@@ -1,5 +1,6 @@
-xterm*faceName: xft: Fira Code
-xterm*faceSize: 10
+xterm*faceName: DejaVu Sans Mono
+xterm*faceSize: 9
+xterm*renderFont: true
 xterm*saveLines: 2000
 xterm*VT100.Translations: #override \
   <Btn1Up>: select-end(PRIMARY, CLIPBOARD, CUT_BUFFER0) \n\
