@@ -1,6 +1,0 @@
-xrdb -merge ~/.xresources
-xsetroot -solid black &
-redshift -O 4000 &
-stalonetray &
-nm-applet &
-nextcloud &
