@@ -14,6 +14,7 @@ if dein#load_state(s:settings.dein_dir)
     call dein#add('sirver/ultisnips')
     call dein#add('lifepillar/vim-solarized8')
     call dein#add('preservim/tagbar')
+    call dein#add('tpope/vim-fugitive')
     call dein#end()
     call dein#save_state()
 endif
@@ -69,20 +70,20 @@ set statusline +=%4v\              "virtual column number
 set statusline +=0x%04B\           "character under cursor
 set colorcolumn=80
 "highlight ColorColumn ctermbg=darkgrey ctermfg=none cterm=none
-set clipboard=unnamedplus
-"set clipboard+=unnamedplus
-"let g:clipboard = {
-"    \   'name':'win32yank-wsl',
-"    \   'copy': {
-"    \       '+': 'win32yank.exe -i --crlf',
-"    \       '*': 'win32yank.exe -i --crlf',
-"    \   },
-"    \   'paste': {
-"    \       '+': 'win32yank.exe -o --lf',
-"    \       '*': 'win32yank.exe -o --lf',
-"    \   },
-"    \   'cache_enabled': 0,
-"    \ }
+"set clipboard=unnamedplus
+set clipboard+=unnamedplus
+let g:clipboard = {
+    \   'name':'win32yank-wsl',
+    \   'copy': {
+    \       '+': 'win32yank.exe -i --crlf',
+    \       '*': 'win32yank.exe -i --crlf',
+    \   },
+    \   'paste': {
+    \       '+': 'win32yank.exe -o --lf',
+    \       '*': 'win32yank.exe -o --lf',
+    \   },
+    \   'cache_enabled': 0,
+    \ }
 set list listchars=tab:\›\ ,trail:-,extends:>,precedes:<
 set tabstop=4
 set softtabstop=4
@@ -95,9 +96,6 @@ nnoremap <space> za
 vnoremap <space> zf
 " terminal mode
 tnoremap <Esc> <C-\><C-n>
-" just be a text editor
-let g:loaded_python_provider = 0 " disable py2
-let g:python3_host_prog = '/usr/bin/python3'
 " automatically save view, load with :loadview
 autocmd BufWinLeave *.* mkview
 " paste multiple times
