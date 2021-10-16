@@ -12,6 +12,7 @@
 
   boot = {
     cleanTmpDir = true;
+    supportedFilesystems = [ "ext2" "ext3" "ext4" "fat16" "fat32" "exfat" "ntfs" ];
 
     loader = {
       timeout = 1;
@@ -27,10 +28,6 @@
         device = "nodev";
         efiSupport = true;
         enableCryptodisk = true;
-
-	memtest86 = {
-	  enable = true;
-	};
       };
 
       efi = {
@@ -46,9 +43,11 @@
     };
   };
 
+  swapDevices = [ { device = "/dev/mapper/vg-swap"; } ];
+
   fileSystems = {
     "/" = {
-      options = ["noatime" "nodiratime" "discard"];
+      options = [ "noatime" "nodiratime" "discard" ];
     };
   };
 
@@ -75,14 +74,22 @@
     #};
   };
 
-  # services.acpid.enable = true;
-
   environment = {
     homeBinInPath = true;
-    #extraInit = "";
     #extraSetup = "";
     #interactiveShellInit = "";
     #loginShellInit = "";
+
+    extraInit = ''
+      export NIX_PATH="nixos-config=/home/pthrr/.dotfiles-simple/nixos/configuration.nix"
+      export XDG_CONFIG_HOME=$HOME/.config
+      export XDG_DATA_HOME=$HOME/.local/share
+      export XDG_CACHE_HOME=$HOME/.cache
+    '';
+
+    gnome = {
+      excludePackages = [ pkgs.gnome.file-roller pkgs.gnome.geary pkgs.gnome.gnome-terminal pkgs.gnome.seahorse ];
+    };
 
 #	etc."bashrc".text =
 #      ''
@@ -106,15 +113,9 @@
 #        fi
 #      '';
 
-    #shellAliases = {
-    #  g = "git";
-    #};
-
-    #shellInit = "";
-
     variables = {
-      LC_ALL = "de_DE.UTF-8";
-      LANG = "de_DE.UTF-8";
+      LC_ALL = config.i18n.defaultLocale;
+      LANG = config.i18n.defaultLocale;
       _JAVA_AWT_WM_NONREPARENTING = "1";
       GTK_THEME = "Adwaita:dark";
       QT_QPA_PLATFORMTHEME = "qt5ct";
@@ -122,31 +123,44 @@
       QT_ACCESSIBILITY = "0";
       NO_AT_BRIDGE = "1";
       QT_LINUX_ACCESSIBILITY_ALWAYS_ON = "0";
+      LV2_PATH = "$HOME/.lv2:$LV2_PATH";
+      #EDITOR = "nvim";
+      #TERM = "xterm-256color";
+      TERMINAL = "xterm-256color";
+      BROWSER = "chromium";
     };
 
-    #shells = [ pkgs.bash ];
+    shells = [ pkgs.bash ];
 
     systemPackages = with pkgs; [
       perl # system
+      binutils
+      coreutils-full
+      util-linux
       man-pages
-      gnome.gnome-themes-extra
       nmap
+      fzf
       rsync
       which
-      whois
       wget
+      file
+      jre8
       curl
+      htop
+      silver-searcher
       feh
+      #neovim
+      gdb
+      appimage-run
+      steam-run
       libnotify
       lxqt.lxqt-notificationd
       killall
       gnum4
       qt5ct
       zip
-      binutils
       tree
       unzip
-      #sudo
       stow
       nettools
       microcodeIntel
@@ -157,54 +171,47 @@
       xfontsel
       xlsfonts
       xclip
-      dejavu_fonts
-      ubuntu_font_family
-      inconsolata
-      fira-mono
-      fira-code
       x11_ssh_askpass
-      networkmanager
       jq
       p7zip
-      gnupg
-      openssh
-      slock
+      #gnupg
+      #openssh
       universal-ctags # vi
-      #neovim
       fzf # tools
-      #bash
+      qtpass
       xcircuit
+      keepassxc
       xlog
       xarchiver
       ipe
-      #qutebrowser
+      zathura
       chromium
-      surf
-      tabbed
       nextcloud-client
       git
       xterm
       vlc
       wirelesstools
       pass
-      #xpdf
-      epdfview
       spotify
-      #tmux
-      #networkmanagerapplet
-      htop
-      silver-searcher
+      thunderbird
+      #syncthing
       gnome.nautilus
-      blueman
+      #blueman
       lsof # diag
       strace
       gnumake # dev
       cmake
       automake
+      autoconf
       ninja
+      cabal-install
       clang_12
       gcc11
       python39
+      python39Packages.pynvim
+      python39Packages.pip
+      python39Packages.setuptools
+      python39Packages.wheel
       cargo
       ocaml
       opam
@@ -218,64 +225,246 @@
       pciutils
       lm_sensors
       pavucontrol
-      #pulseaudioFull
       psensor
       stalonetray # wm
       dmenu
-      cabal-install
-      #redshift
       haskellPackages.yeganesh
       haskellPackages.xmobar
-      haskellPackages.xmonad
-      haskellPackages.xmonad-contrib
-      haskellPackages.xmonad-extras
-      #lightdm
       #xorg.xinit
-      #xorg.xorgserver
+      xorg.xorgserver
     ];
   };
-#  boot.initrd.availableKernelModules =
-#    [ "xhci_pci" "ehci_pci" "ahci" "sd_mod" "sdhci_pci" ];
-#  boot.initrd.kernelModules = [ "dm-snapshot" ];
-#  boot.kernelModules = [ "kvm-intel" ];
-#  boot.extraModulePackages = [ ];
 
-#  nix.maxJobs = lib.mkDefault 4;
-#  powerManagement.cpuFreqGovernor = lib.mkDefault "conservative";
-  # Firmware updates
-#  services.fwupd.enable = true;
-
-  #powerManagement = {
-  #  scsiLinkPolicy = "max_performance";
-  #};
+  powerManagement = {
+    enable = true;
+  };
 
   programs = {
-    bash = {
-      enableCompletion = true;
-      enableLsColors = true;
+    #git = {
+    #  enable = true;
+    #  userName  = "pthrr";
+    #  userEmail = "pthrr@posteo.de";
 
-      interactiveShellInit = ''
-        export LV2_PATH="$HOME/.lv2:$LV2_PATH";
-        eval $(opam config env)
-      '';
+   #   aliases = {
+   #     a = "add";
+   #   };
 
-      #loginShellInit = "";
-      #promptInit = "";
-
-      shellAliases = {
-        top = "htop";
-	#ssp = "surf https://www.startpage.com/do/mypage.pl?prfe=f242a59967ba7e9847b309593d1abbe034e2efc8b5780ff7c4ae592d21a509f36cfafb368bbb7f41735c3dd65a9654f7df5fe776bbb81d6597c38455b668278e14d6357f58f2a5ad196bfae683c791";
-      };
-
-      #shellInit = ''
-      #'';
-    };
+   #   extraConfig = {
+   #     core = {
+   #       editor = "nvim";
+   #     };
+   #   };
+   # };
 
     neovim = {
       enable = true;
       defaultEditor = true;
       viAlias = true;
       vimAlias = true;
+
+      configure = {
+        customRC = ''
+            syntax on
+            filetype plugin indent on
+            set termguicolors
+            colorscheme NeoSolarized
+            set encoding=utf-8
+            set fileencodings=ucs-bom,utf-8,utf-16,cp1252,default,latin1
+            set nobomb
+            set nobackup
+            set noswapfile
+            set nowritebackup
+            if !isdirectory($HOME."/.config")
+                call mkdir($HOME."/.config", "", 0770)
+            endif
+            if !isdirectory($HOME."/.config/nvim")
+                call mkdir($HOME."/.config/nvim", "", 0770)
+            endif
+            if !isdirectory($HOME."/.config/nvim/undo")
+                call mkdir($HOME."/.config/nvim/undo", "", 0700)
+            endif
+            set undodir=~/.config/nvim/undo
+            set undofile
+            set splitbelow
+            set splitright
+            set number
+            set relativenumber
+            set nowrap
+            set autoread
+            set hlsearch
+            set title
+            set hidden
+            set noshowmode
+            set novisualbell
+            set noerrorbells
+            set statusline=
+            set statusline +=\ %n\             "buffer number
+            set statusline +=%{&ff}            "file format
+            set statusline +=%y                "file type
+            set statusline +=\ %{&fenc}        "file encoding
+            set statusline +=\ %<%F            "full path
+            set statusline +=%m                "modified flag
+            set statusline +=%=%5l             "current line
+            set statusline +=/%L               "total lines
+            set statusline +=%4v\              "virtual column number
+            set statusline +=0x%04B\           "character under cursor
+            set colorcolumn=80
+            set clipboard=unnamedplus
+            set list listchars=tab:\›\ ,trail:-,extends:>,precedes:<
+            set tabstop=4
+            set softtabstop=4
+            set shiftwidth=4
+            set expandtab
+            set foldmethod=indent
+            set foldnestmax=2
+            set foldlevelstart=10
+            nnoremap <space> za
+            vnoremap <space> zf
+            tnoremap <Esc> <C-\><C-n> " escape from terminal tabs
+            " just be a text editor
+            let g:loaded_python_provider = 0 " disable py2
+            let g:python3_host_prog = '/run/current-system/sw/bin/python'
+            " automatically save view, load with :loadview
+            autocmd BufWinLeave *.* mkview
+            " paste multiple times
+            xnoremap p pgvy
+            " add all subfolders to path
+            set path=$PWD/**
+            set wildmenu
+            set wildmode=list:longest,full
+            set wildignore+=.git,.hg,.svn
+            set wildignore+=*.aux,*.out,*.toc
+            set wildignore+=*.o,*.obj,*.exe,*.dll,*.manifest,*.rbc,*.class
+            set wildignore+=*.ai,*.bmp,*.gif,*.ico,*.jpg,*.jpeg,*.png,*.psd,*.webp
+            set wildignore+=*.avi,*.divx,*.mp4,*.webm,*.mov,*.m2ts,*.mkv,*.vob,*.mpg,*.mpeg
+            set wildignore+=*.mp3,*.oga,*.ogg,*.wav,*.flac
+            set wildignore+=*.eot,*.otf,*.ttf,*.woff
+            set wildignore+=*.doc,*.pdf,*.cbr,*.cbz
+            set wildignore+=*.zip,*.tar.gz,*.tar.bz2,*.rar,*.tar.xz,*.kgb
+            set wildignore+=*.swp,.lock,.DS_Store,._*
+            " show matching brackets
+            set showmatch
+            highlight MatchParen guibg=none guifg=white gui=bold ctermbg=none ctermfg=white cterm=bold
+            set matchtime=0
+            " highlight cursorline in insert mode
+            highlight cursorline guibg=none guifg=none gui=underline ctermbg=none ctermfg=none cterm=underline
+            autocmd InsertEnter * set cursorline
+            autocmd InsertLeave * set nocursorline
+            " ultisnips
+            let g:UltiSnipsExpandTrigger = '<tab>'
+            let g:UltiSnipsJumpForwardTrigger = '<tab>'
+            let g:UltiSnipsJumpBackwardTrigger = '<s-tab>'
+            let g:UltiSnipsSnippetDirectories = [$HOME.'/Documents/snippets']
+            let g:ultisnips_python_style = 'sphinx'
+            " tagbar
+            nmap <F8> :TagbarToggle<CR>
+            let g:tagbar_compact = 1
+            let g:tagbar_show_linenumbers = 1
+            let g:tagbar_width = max([80, winwidth(0) / 4])
+            " c/cpp syntax highlighting options
+            let g:cpp_member_highlight = 1
+            let g:cpp_attributes_highlight = 1
+        '';
+
+        packages.nix = with pkgs.vimPlugins; {
+          start = [
+            NeoSolarized
+            tagbar
+            #plenary-nvim
+            #neogit
+            ultisnips
+          ];
+        };
+      };
+    };
+
+    slock = {
+      enable = true;
+    };
+
+    bash = {
+      enableCompletion = true;
+      enableLsColors = true;
+
+      shellInit = ''
+        HISTCONTROL=ignoreboth
+        HISTSIZE=1000
+        HISTFILESIZE=2000
+      '';
+
+      interactiveShellInit = ''
+        function cht() {
+            curl -m 10 "https://cht.sh/$@"
+        }
+        function gmv() { # move submodule
+            mv $1 $2
+            git rm $1
+            git add $2
+            git submodule sync
+        }
+        function fmp() {
+            pyflakes "$@"
+            isort --profile black --atomic --line-length 79 "$@"
+            black --verbose --line-length 79 "$@"
+        }
+        function op() {
+            dune init proj $@ --libs base,stdio,owl,owl-top,owl-base,owl-plplot,owl-zoo
+        }
+        source "$HOME/z.sh"
+        source "$HOME/key-bindings.bash"
+        #source "$HOME/.cargo/env"
+        eval $(opam config env)
+      '';
+
+      #loginShellInit = "";
+
+      promptInit = ''
+        PROMPT_DIRTRIM=2
+        PS1='\[\e[33m\]\w\[\e[0m\] \u$(if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then echo " @ \h"; else echo ""; fi) % '
+      '';
+
+      shellAliases = {
+        top = "htop";
+        ack = "ag";
+        ls = "exa";
+        grep = "rg";
+        cp = "cp -iv";
+        mv = "mv -iv";
+        mkdir = "mkdir -pv";
+        rm = "rm -Iv";
+        untar = "tar vxf";
+        lla = "ls -la";
+        ll = "ls -l";
+        lsd = "tree -d -L 6";
+        lsf = "tree -a -L 6 -I '.git'";
+        h = "history";
+        cl = "clear";
+        ".." = "cd ../";
+        "..." = "cd ../../";
+        "...." = "cd ../../../";
+        "....." = "cd ../../../../";
+        g = "git";
+        s = "g ssb";
+        l = "g ld";
+        u = "h smuir";
+        pl = "g frs && g prs";
+        ph = "g ph";
+        gc = "g cleaner"; # clean -fdx
+        fmc = "clang-format -verbose -i -style=google";
+        fmo = "dune build @fmt --auto-promote --enable-outside-detected-project";
+        fmm = "cmake-format -i";
+        vs = "vi src/*.*";
+        oc = "dune build && dune exec";
+        ot = "dune runtest";
+        py = "python3";
+        xdg = "xdg-open";
+        jqp = "jq '.'";
+        lrts="sudo watch -n 1 'journalctl -u rts -u lxi -u nginx -u mdns | tail -n $(($LINES - 15))'";
+        mirror="wget --mirror --convert-links --adjust-extension --page-requisites --no-parent";
+        pc="picocom -b 115200 --echo --omap=crcrlf";
+        ports="lsof -i -P -n | grep LISTEN";
+        pwgen="python -c 'import secrets,pyperclip;pw=secrets.token_urlsafe(32);pyperclip.copy(pw);print(pw)'";
+      };
     };
 
     nm-applet = {
@@ -284,13 +473,29 @@
 
     tmux = {
       enable = true;
+
+      extraConfig = ''
+        set -g status-position bottom
+        set -g status-bg colour234
+        set -g status-fg colour137
+        set -g status-left ""
+        set -g status-right ""
+        set -g status-right-length 50
+        set -g status-left-length 20
+        setw -g window-status-current-format " #I#[fg=colour250]:#[fg=colour255]#W#[fg=colour50]#F "
+        setw -g window-status-format " #I#[fg=colour237]:#[fg=colour250]#W#[fg=colour244]#F "
+        setw -g mode-keys vi
+        set-option -g history-limit 5000
+        set -g base-index 1
+        setw -g pane-base-index 1
+        set-option -ga terminal-overrides ",xterm-256color:Tc"
+      '';
     };
   };
 
   nixpkgs = {
     config = {
       allowUnfree = true;
-      #permittedInsecurePackages = [ "xpdf-4.03" ];
     };
   };
 
@@ -332,7 +537,7 @@
 
     networkmanager = {
       enable = true;
-      #packages = [ pkgs.networkmanager_openvpn ];
+      packages = [ pkgs.networkmanager-openvpn ];
     };
 
     interfaces = {
@@ -371,19 +576,44 @@
     #useXkbConfig = true;
   };
 
-  systemd = {
-    services = {
-      upower = {
-        enable = true;
-      };
+  #systemd = {
+  #  services = {
+     # upower = {
+     #   enable = true;
+      #};
+  #  };
+  #};
+
+  xdg = {
+    mime = {
+      enable = true;
     };
   };
 
-  xdg = {
-    mime.enable = true;
-  };
-
   services = {
+    #syncthing = {
+    #  enable = true;
+    #  user = "pthrr";
+    #  dataDir = "/home/pthrr/Syncthing";
+    #  configDir = "/home/pthrr/Syncthing/.config/syncthing";
+    #};
+
+    cron = {
+      enable = true;
+    };
+
+    openssh = {
+      enable = true;
+    };
+
+    fwupd = {
+      enable = true;
+    };
+
+    acpid = {
+      enable = true;
+    };
+
     dbus = {
       enable = true;
     };
@@ -393,22 +623,22 @@
       nssmdns = false;
     };
 
-    tlp = {
-      enable = true;
+    #tlp = {
+    #  enable = true;
 
-      settings = {
-        SATA_LINKPWR_ON_AC = true;
-        SATA_LINKPWR_ON_BAT = true;
-      };
-    };
+    #  settings = {
+    #    SATA_LINKPWR_ON_AC = true;
+    #    SATA_LINKPWR_ON_BAT = true;
+    #  };
+    #};
 
     timesyncd = {
       enable = true;
       servers = [
-      "0.ch.pool.ntp.org"
-      "1.ch.pool.ntp.org"
-      "2.ch.pool.ntp.org"
-      "3.ch.pool.ntp.org"
+        "0.ch.pool.ntp.org"
+        "1.ch.pool.ntp.org"
+        "2.ch.pool.ntp.org"
+        "3.ch.pool.ntp.org"
       ];
     };
 
@@ -416,9 +646,9 @@
       extraConfig = "SystemMaxUse=500M";
     };
 
-    upower = {
-      enable = true;
-    };
+    #upower = {
+    #  enable = true;
+    #};
 
     redshift = {
       enable = true;
@@ -430,79 +660,68 @@
     };
 
     gnome = {
-      gnome-keyring = {
+      core-utilities = {
+        enable = false;
+      };
+
+      core-developer-tools = {
+        enable = false;
+      };
+
+      core-os-services = {
         enable = true;
+      };
+
+      core-shell = {
+        enable = true;
+      };
+
+      games = {
+        enable = false;
       };
     };
 
     xserver = {
       enable = true;
       autorun = true;
-      exportConfiguration = false;
+      exportConfiguration = true;
       layout = "de";
       xkbOptions = "eurosign:e";
-
-      #synaptics = {
-      #  enable = true;
-#	twoFingerScroll = true;
-#	palmDetect = true;
-#	horizontalScroll = true;
-#      };
-
-      libinput = {
-        enable = true;
-      };
+      #videoDrivers = [ "amdgpu" ];
 
       desktopManager = {
         gnome = {
+          enable = true;
+        };
+
+        xterm = {
           enable = false;
         };
 
-	xterm = {
-	  enable = false;
-	};
-
-	session = [
-	  { name = "custom";
-	    start = ''
-	    /run/current-system/sw/bin/xrdb -merge ~/.xresources
-            /run/current-system/sw/bin/xsetroot -solid black &
-            /run/current-system/sw/bin/stalonetray &
-            /run/current-system/sw/bin/nm-applet &
-            /run/current-system/sw/bin/nextcloud &
-	    '';
-	  }
-	];
+        session = [
+          { name = "custom";
+            start = ''
+              /run/current-system/sw/bin/xrdb -merge ~/.xresources
+              /run/current-system/sw/bin/xsetroot -solid black &
+              /run/current-system/sw/bin/stalonetray &
+              /run/current-system/sw/bin/nm-applet &
+              /run/current-system/sw/bin/nextcloud &
+            '';
+          }
+        ];
       };
 
       displayManager = {
         defaultSession = "custom+xmonad";
 
-        startx = {
-          enable = false;
-        };
-
-        gdm = {
-          enable = false;
-        };
-
-        lightdm = {
+        sddm = {
           enable = true;
-
-	  #greeters = {
-          #  mini = {
-          #    enable = true;
-          #    user = "pthrr";
-	  #    extraConfig = ''
-	  #      [greeter]
-	#	show-password-label = false
-         #       show-sys-info = true
-	#	[greeter-theme]
-	#	background-color = "#000000"
-	#	background-image = ""
-	 #     '';
-	  #  };
-	 # };
+          theme = "${(pkgs.fetchFromGitHub {
+            owner = "pthrr";
+            repo = "minimal-sddm-theme";
+            rev = "504a9eed78118d09c67c93d3c9af712c3e292864";
+            sha256 = "0d8lyhl1znkkqznv075j7xj32hvhjx2d83yv4409yxdn0i2apbk8";
+            })}";
         };
       };
 
@@ -510,15 +729,78 @@
         xmonad = {
           enable = true;
           enableContribAndExtras = true;
-          extraPackages = hpkgs: [ hpkgs.xmonad hpkgs.xmonad-contrib hpkgs.xmonad-extras ];
+          extraPackages = haskellPackages: [ haskellPackages.yeganesh haskellPackages.xmobar ];
+
+          config = ''
+            import XMonad
+            import XMonad.Hooks.ManageDocks
+            import XMonad.Util.Run
+            import XMonad.Hooks.DynamicLog
+            import XMonad.Util.CustomKeys
+            import XMonad.Util.EZConfig
+            import Graphics.X11.ExtraTypes.XF86
+            import XMonad.Actions.CycleWS
+
+            import Control.Monad (when)
+            import Text.Printf (printf)
+            import System.Posix.Process (executeFile)
+            import System.Info (arch,os)
+            import System.Environment (getArgs)
+            import System.FilePath ((</>))
+
+         --   compiledConfig = printf "xmonad-%s-%s" arch os
+
+           -- main = launch defaultConfig
+            --    { modMask = mod4Mask -- Use Super instead of Alt
+            --    , terminal = "urxvt" }
+            --    `additionalKeys`
+           --    [ ( (mod4Mask,xK_r), compileRestart True)
+             --   , ( (mod4Mask,xK_q), restart "xmonad" True ) ]
+
+            main = do
+            --main = launch defaultConfig
+            xmproc <- spawnPipe "xmobar"
+            xmonad $ def
+              { terminal = "xterm"
+              , manageHook = manageDocks <+> manageHook def
+              , layoutHook = avoidStruts $ layoutHook def
+              , focusFollowsMouse = False
+              , handleEventHook = handleEventHook def <+> docksEventHook
+              , logHook = dynamicLogWithPP $ def
+                { ppOutput = hPutStrLn xmproc
+                , ppOrder = \(ws:_:t:_) -> [ws,t]
+                }
+              , borderWidth = 2
+              }
+              `additionalKeys`
+              [ ((mod1Mask, xK_p), spawn "exe=`dmenu_path | yeganesh -- -b -fn \"xft:DejaVu Sans Mono:size=10\"` && eval \"exec $exe\"")
+              , ((mod1Mask, xK_s), spawn "slock")
+              , ((0, xF86XK_MonBrightnessUp), spawn "xbacklight +10")
+              , ((0, xF86XK_MonBrightnessDown), spawn "xbacklight -10")
+              , ((0, xF86XK_AudioMute), spawn "pactl set-sink-mute @DEFAULT_SINK@ toggle")
+              , ((0, xF86XK_AudioMicMute), spawn "pactl set-source-mute @DEFAULT_SOURCE@ toggle")
+              , ((0, xF86XK_AudioLowerVolume), spawn "pactl set-sink-volume @DEFAULT_SINK@ -10%")
+              , ((0, xF86XK_AudioRaiseVolume), spawn "pactl set-sink-volume @DEFAULT_SINK@ +10%")
+              , ((mod1Mask, xK_Right), nextWS)
+              , ((mod1Mask, xK_Left), prevWS)
+              , ((mod1Mask .|. shiftMask, xK_Right), shiftToNext)
+              , ((mod1Mask .|. shiftMask, xK_Left), shiftToPrev)
+              , ((mod1Mask, xK_Up), nextScreen)
+              , ((mod1Mask, xK_Down), prevScreen)
+              , ((mod1Mask .|. shiftMask, xK_Up), shiftNextScreen)
+              , ((mod1Mask .|. shiftMask, xK_Down), shiftPrevScreen)
+              , ((mod1Mask, xK_z), toggleWS)
+              , ((mod1Mask, xK_q), restart "/run/current-system/sw/bin/xmonad" True)
+              ]
+          '';
         };
       };
     };
   };
 
   location = {
-    latitude = 39.0;
-    longitude = -77.0;
+    latitude = 48.1;
+    longitude = 11.5;
   };
 
   sound = {
@@ -537,10 +819,6 @@
       package = pkgs.pulseaudioFull;
     };
 
-    bluetooth = {
-      enable = true;
-    };
-
     opengl = {
       enable = true;
       driSupport = true;
@@ -556,14 +834,13 @@
 
   users = {
     mutableUsers = true;
-    defaultUserShell = "/run/current-system/sw/bin/bash";
 
     extraUsers = {
       pthrr = {
         description = "pthrr";
         isNormalUser = true;
-	uid = 1000;
-        extraGroups = [ "wheel" "networkmanager" ]; # Enable ‘sudo’ for the user.
+        uid = 1000;
+        extraGroups = [ "wheel" "networkmanager" ];
       };
     };
   };
