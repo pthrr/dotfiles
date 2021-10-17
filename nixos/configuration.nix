@@ -64,7 +64,7 @@
       enable = true;
       allowReboot = true;
       channel = "https://nixos.org/channels/nixos-21.05";
-      dates = "04:30";
+      dates = "daily";
     };
 
     #activationScripts = {
@@ -81,14 +81,13 @@
     #loginShellInit = "";
 
     extraInit = ''
-      export NIX_PATH="nixos-config=/home/pthrr/.dotfiles-simple/nixos/configuration.nix"
       export XDG_CONFIG_HOME=$HOME/.config
       export XDG_DATA_HOME=$HOME/.local/share
       export XDG_CACHE_HOME=$HOME/.cache
     '';
 
     gnome = {
-      excludePackages = [ pkgs.gnome.file-roller pkgs.gnome.geary pkgs.gnome.gnome-terminal pkgs.gnome.seahorse ];
+      excludePackages = [ pkgs.gnome.file-roller pkgs.gnome.gnome-terminal pkgs.gnome.seahorse ];
     };
 
 #	etc."bashrc".text =
@@ -124,8 +123,6 @@
       NO_AT_BRIDGE = "1";
       QT_LINUX_ACCESSIBILITY_ALWAYS_ON = "0";
       LV2_PATH = "$HOME/.lv2:$LV2_PATH";
-      #EDITOR = "nvim";
-      #TERM = "xterm-256color";
       TERMINAL = "xterm-256color";
       BROWSER = "chromium";
     };
@@ -149,7 +146,6 @@
       htop
       silver-searcher
       feh
-      #neovim
       gdb
       appimage-run
       steam-run
@@ -165,6 +161,7 @@
       nettools
       microcodeIntel
       exa
+      bat
       neofetch
       ripgrep
       unrar
@@ -174,8 +171,6 @@
       x11_ssh_askpass
       jq
       p7zip
-      #gnupg
-      #openssh
       universal-ctags # vi
       fzf # tools
       qtpass
@@ -193,8 +188,8 @@
       wirelesstools
       pass
       spotify
-      thunderbird
-      #syncthing
+      gnome.geary
+      obsidian
       gnome.nautilus
       #blueman
       lsof # diag
@@ -207,11 +202,7 @@
       cabal-install
       clang_12
       gcc11
-      python39
-      python39Packages.pynvim
-      python39Packages.pip
-      python39Packages.setuptools
-      python39Packages.wheel
+      (python39.withPackages(ps: with ps; [ pynvim pip setuptools wheel isort black mypy pyflakes ]))
       cargo
       ocaml
       opam
@@ -224,6 +215,7 @@
       xorg.xf86videonouveau
       pciutils
       lm_sensors
+      #auto-cpufreq
       pavucontrol
       psensor
       stalonetray # wm
@@ -427,6 +419,7 @@
         top = "htop";
         ack = "ag";
         ls = "exa";
+        cat = "bat";
         grep = "rg";
         cp = "cp -iv";
         mv = "mv -iv";
@@ -513,7 +506,7 @@
 
     gc = {
       automatic = true;
-      dates = "4:30";
+      dates = "daily";
       options = "--delete-older-than 30d";
     };
   };
@@ -559,6 +552,8 @@
     };
 
     fonts = with pkgs; [
+      corefonts
+      dejavu_fonts
       inconsolata
       fira-mono
       fira-code
@@ -604,6 +599,7 @@
 
     openssh = {
       enable = true;
+      permitRootLogin = "no";
     };
 
     fwupd = {
@@ -620,7 +616,6 @@
 
     avahi = {
       enable = false;
-      nssmdns = false;
     };
 
     #tlp = {
@@ -705,7 +700,7 @@
               /run/current-system/sw/bin/xsetroot -solid black &
               /run/current-system/sw/bin/stalonetray &
               /run/current-system/sw/bin/nm-applet &
-              /run/current-system/sw/bin/nextcloud &
+              #/run/current-system/sw/bin/nextcloud &
             '';
           }
         ];
