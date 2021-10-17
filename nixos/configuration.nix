@@ -67,11 +67,17 @@
       dates = "daily";
     };
 
-    #activationScripts = {
-    #  media = ''
-    #  mkdir /home/pthrr/opt
-    #  '';
-    #};
+    activationScripts = {
+       dirs.text = ''
+         mkdir -p ~/opt/
+         mkdir -p ~/tmp/
+         mkdir -p ~/bin/
+         mkdir -p ~/.config/nvim/undo/
+         mkdir -p ~/.config/nvim/after/
+         mkdir -p ~/.config/nvim/syntax/
+         mkdir -p ~/.config/zathura/
+       '';
+    };
   };
 
   environment = {
@@ -147,6 +153,7 @@
       silver-searcher
       feh
       gdb
+      rr
       appimage-run
       steam-run
       libnotify
@@ -180,10 +187,12 @@
       xarchiver
       ipe
       zathura
-      chromium
+      ungoogled-chromium
       nextcloud-client
       git
       xterm
+      wine
+      winetricks
       vlc
       wirelesstools
       pass
@@ -266,15 +275,6 @@
             set nobackup
             set noswapfile
             set nowritebackup
-            if !isdirectory($HOME."/.config")
-                call mkdir($HOME."/.config", "", 0770)
-            endif
-            if !isdirectory($HOME."/.config/nvim")
-                call mkdir($HOME."/.config/nvim", "", 0770)
-            endif
-            if !isdirectory($HOME."/.config/nvim/undo")
-                call mkdir($HOME."/.config/nvim/undo", "", 0700)
-            endif
             set undodir=~/.config/nvim/undo
             set undofile
             set splitbelow
@@ -404,7 +404,6 @@
         }
         source "$HOME/z.sh"
         source "$HOME/key-bindings.bash"
-        #source "$HOME/.cargo/env"
         eval $(opam config env)
       '';
 
