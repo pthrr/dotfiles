@@ -67,16 +67,16 @@
       dates = "daily";
     };
 
-    activationScripts = {
-       dirs.text = ''
-         mkdir -p ~/opt/
-         mkdir -p ~/tmp/
-         mkdir -p ~/bin/
-         mkdir -p ~/.config/nvim/undo/
-         mkdir -p ~/.config/nvim/after/
-         mkdir -p ~/.config/nvim/syntax/
-         mkdir -p ~/.config/zathura/
-       '';
+  activationScripts = {
+    dirs.text = ''
+        mkdir -p ~/opt/
+        mkdir -p ~/tmp/
+        mkdir -p ~/bin/
+        mkdir -p ~/.config/nvim/undo/
+        mkdir -p ~/.config/nvim/after/
+        mkdir -p ~/.config/nvim/syntax/
+        mkdir -p ~/.config/zathura/
+      '';
     };
   };
 
@@ -95,28 +95,6 @@
     gnome = {
       excludePackages = [ pkgs.gnome.file-roller pkgs.gnome.gnome-terminal pkgs.gnome.seahorse ];
     };
-
-#	etc."bashrc".text =
-#      ''
-#        # /etc/bashrc: DO NOT EDIT -- this file has been generated automatically.
-#        # Only execute this file once per shell.
-#        if [ -n "$__ETC_BASHRC_SOURCED" -o -n "$NOSYSBASHRC" ]; then return; fi
-#        __ETC_BASHRC_SOURCED=1
-#        # If the profile was not loaded in a parent process, source
-#        # it.  But otherwise don't do it because we don't want to
-#        # clobber overridden values of $PATH, etc.
-#        if [ -z "$__ETC_PROFILE_DONE" ]; then
-#            . /etc/profile
-#        fi
-#        # We are not always an interactive shell.
-#        if [ -n "$PS1" ]; then
-#          ${cfg.interactiveShellInit}
-#        fi
-#        # Read system-wide modifications.
-#        if test -f /etc/bashrc.local; then
-#          . /etc/bashrc.local
-#        fi
-#      '';
 
     variables = {
       LC_ALL = config.i18n.defaultLocale;
@@ -198,6 +176,7 @@
       pass
       spotify
       gnome.geary
+      tectonic
       obsidian
       gnome.nautilus
       #blueman
@@ -211,27 +190,24 @@
       cabal-install
       clang_12
       gcc11
-      (python39.withPackages(ps: with ps; [ pynvim pip setuptools wheel isort black mypy pyflakes ]))
+      (python39.withPackages(ps: with ps; [ pyserial numpy scipy pyperclip pynvim pip setuptools wheel isort black mypy pyflakes ]))
       cargo
       ocaml
       opam
       xorg.xbacklight # hw
       xorg.xrandr
-      #xorg.xf86inputsynaptics
       xorg.xf86inputevdev
       xorg.xf86inputlibinput
       xorg.xf86videointel
       xorg.xf86videonouveau
       pciutils
       lm_sensors
-      #auto-cpufreq
       pavucontrol
       psensor
       stalonetray # wm
       dmenu
       haskellPackages.yeganesh
       haskellPackages.xmobar
-      #xorg.xinit
       xorg.xorgserver
     ];
   };
@@ -241,22 +217,6 @@
   };
 
   programs = {
-    #git = {
-    #  enable = true;
-    #  userName  = "pthrr";
-    #  userEmail = "pthrr@posteo.de";
-
-   #   aliases = {
-   #     a = "add";
-   #   };
-
-   #   extraConfig = {
-   #     core = {
-   #       editor = "nvim";
-   #     };
-   #   };
-   # };
-
     neovim = {
       enable = true;
       defaultEditor = true;
@@ -506,7 +466,7 @@
     gc = {
       automatic = true;
       dates = "daily";
-      options = "--delete-older-than 30d";
+      options = "--delete-older-than 7d";
     };
   };
 
@@ -585,13 +545,6 @@
   };
 
   services = {
-    #syncthing = {
-    #  enable = true;
-    #  user = "pthrr";
-    #  dataDir = "/home/pthrr/Syncthing";
-    #  configDir = "/home/pthrr/Syncthing/.config/syncthing";
-    #};
-
     cron = {
       enable = true;
     };
@@ -637,7 +590,7 @@
     };
 
     journald = {
-      extraConfig = "SystemMaxUse=500M";
+      extraConfig = "SystemMaxUse=100M";
     };
 
     #upower = {
