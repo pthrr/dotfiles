@@ -14,7 +14,6 @@ if dein#load_state(s:settings.dein_dir)
     call dein#add('sirver/ultisnips')
     call dein#add('lifepillar/vim-solarized8')
     call dein#add('preservim/tagbar')
-    call dein#add('tpope/vim-fugitive')
     call dein#end()
     call dein#save_state()
 endif
@@ -69,21 +68,7 @@ set statusline +=/%L               "total lines
 set statusline +=%4v\              "virtual column number
 set statusline +=0x%04B\           "character under cursor
 set colorcolumn=80
-"highlight ColorColumn ctermbg=darkgrey ctermfg=none cterm=none
-"set clipboard=unnamedplus
-set clipboard+=unnamedplus
-let g:clipboard = {
-    \   'name':'win32yank-wsl',
-    \   'copy': {
-    \       '+': 'win32yank.exe -i --crlf',
-    \       '*': 'win32yank.exe -i --crlf',
-    \   },
-    \   'paste': {
-    \       '+': 'win32yank.exe -o --lf',
-    \       '*': 'win32yank.exe -o --lf',
-    \   },
-    \   'cache_enabled': 0,
-    \ }
+set clipboard=unnamedplus
 set list listchars=tab:\›\ ,trail:-,extends:>,precedes:<
 set tabstop=4
 set softtabstop=4
@@ -94,7 +79,7 @@ set foldnestmax=2
 set foldlevelstart=10
 nnoremap <space> za
 vnoremap <space> zf
-" terminal mode
+" leave terminal mode
 tnoremap <Esc> <C-\><C-n>
 " automatically save view, load with :loadview
 autocmd BufWinLeave *.* mkview
@@ -117,6 +102,7 @@ set wildignore+=*.swp,.lock,.DS_Store,._*
 " show matching brackets
 set showmatch
 highlight MatchParen guibg=none guifg=white gui=bold ctermbg=none ctermfg=white cterm=bold
+"highlight ColorColumn ctermbg=darkgrey ctermfg=none cterm=none
 set matchtime=0
 " highlight cursorline in insert mode
 highlight cursorline guibg=none guifg=none gui=underline ctermbg=none ctermfg=none cterm=underline
