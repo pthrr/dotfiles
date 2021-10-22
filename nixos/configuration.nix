@@ -43,7 +43,9 @@
     };
   };
 
-  swapDevices = [ { device = "/dev/mapper/vg-swap"; } ];
+  swapDevices = [
+    { device = "/dev/disk/by-uuid/e08a2b6f-dfe1-4641-b823-d5cbdb156eba"; }
+  ];
 
   fileSystems = {
     "/" = {
@@ -62,13 +64,13 @@
 
     autoUpgrade = {
       enable = true;
-      allowReboot = true;
+      allowReboot = false;
       channel = "https://nixos.org/channels/nixos-21.05";
       dates = "daily";
     };
 
-  activationScripts = {
-    dirs.text = ''
+    userActivationScripts = {
+      dirs.text = ''
         mkdir -p ~/opt/
         mkdir -p ~/tmp/
         mkdir -p ~/bin/
@@ -143,6 +145,7 @@
       tree
       unzip
       stow
+      libwebp
       nettools
       microcodeIntel
       exa
@@ -154,12 +157,14 @@
       xlsfonts
       xclip
       x11_ssh_askpass
+      gnupg
       jq
       p7zip
       universal-ctags # vi
       fzf # tools
       qtpass
       xcircuit
+      ngspice
       keepassxc
       xlog
       xarchiver
@@ -173,16 +178,28 @@
       winetricks
       vlc
       wirelesstools
+      brightnessctl
       pass
       spotify
       gnome.geary
       tectonic
       obsidian
+      kicad
+      qucs
+      flatcam
+      avrdude
+      verilator
+      ngspice
+      gnuradio
+      gnucap
+      picocom
       gnome.nautilus
       #blueman
       lsof # diag
       strace
+      pprof
       gnumake # dev
+      gnuplot
       cmake
       automake
       autoconf
@@ -190,7 +207,24 @@
       cabal-install
       clang_12
       gcc11
-      (python39.withPackages(ps: with ps; [ pyserial numpy scipy pyperclip pynvim pip setuptools wheel isort black mypy pyflakes ]))
+      (python38.withPackages(ps: with ps; [
+        pyqt4
+        sip
+        qtpy
+        pyserial
+        numpy
+        scipy
+        pyperclip
+        pynvim
+        pip
+        setuptools
+        wheel
+        isort
+        black
+        mypy
+        pyflakes
+      ]))
+      qt4
       cargo
       ocaml
       opam
@@ -322,8 +356,7 @@
           start = [
             NeoSolarized
             tagbar
-            #plenary-nvim
-            #neogit
+            vimagit
             ultisnips
           ];
         };
@@ -530,13 +563,30 @@
     #useXkbConfig = true;
   };
 
-  #systemd = {
+  systemd = {
+    targets = {
+      sleep = {
+        enable = false;
+      };
+
+      suspend = {
+        enable = false;
+      };
+
+      hibernate = {
+        enable = false;
+      };
+
+      hybrid-sleep = {
+        enable = false;
+      };
+    };
   #  services = {
      # upower = {
      #   enable = true;
       #};
   #  };
-  #};
+  };
 
   xdg = {
     mime = {
@@ -634,7 +684,6 @@
       exportConfiguration = true;
       layout = "de";
       xkbOptions = "eurosign:e";
-      #videoDrivers = [ "amdgpu" ];
 
       desktopManager = {
         gnome = {
@@ -695,17 +744,7 @@
             import System.Environment (getArgs)
             import System.FilePath ((</>))
 
-         --   compiledConfig = printf "xmonad-%s-%s" arch os
-
-           -- main = launch defaultConfig
-            --    { modMask = mod4Mask -- Use Super instead of Alt
-            --    , terminal = "urxvt" }
-            --    `additionalKeys`
-           --    [ ( (mod4Mask,xK_r), compileRestart True)
-             --   , ( (mod4Mask,xK_q), restart "xmonad" True ) ]
-
             main = do
-            --main = launch defaultConfig
             xmproc <- spawnPipe "xmobar"
             xmonad $ def
               { terminal = "xterm"
