@@ -75,6 +75,7 @@
         mkdir -p ~/tmp/
         mkdir -p ~/bin/
         mkdir -p ~/.config/nvim/undo/
+        mkdir -p ~/.config/nvim/ctags/
         mkdir -p ~/.config/nvim/after/
         mkdir -p ~/.config/nvim/syntax/
         mkdir -p ~/.config/zathura/
@@ -193,6 +194,7 @@
       gnuradio
       gnucap
       picocom
+      imagemagick
       gnome.nautilus
       #blueman
       lsof # diag
@@ -227,6 +229,12 @@
       qt4
       cargo
       ocaml
+      ocamlPackages.owl
+      ocamlPackages.owl-base
+      ocamlPackages.core
+      ocamlPackages.opam-core
+      ocamlPackages.base
+      ocamlPackages.findlib
       opam
       xorg.xbacklight # hw
       xorg.xrandr
@@ -269,7 +277,7 @@
             set nobackup
             set noswapfile
             set nowritebackup
-            set undodir=~/.config/nvim/undo
+            set undodir="~/.config/nvim/undo"
             set undofile
             set splitbelow
             set splitright
@@ -350,12 +358,73 @@
             " c/cpp syntax highlighting options
             let g:cpp_member_highlight = 1
             let g:cpp_attributes_highlight = 1
+            " gutentags
+            let g:gutentags_modules = ['ctags']
+            let g:gutentags_add_default_project_roots = 0
+            let g:gutentags_project_root = ['requirements.txt', '.git', '.project']
+            let g:gutentags_cache_dir='~/.config/nvim/ctags'
+            let g:gutentags_generate_on_new = 1
+            let g:gutentags_generate_on_missing = 1
+            let g:gutentags_generate_on_write = 1
+            let g:gutentags_generate_on_empty_buffer = 0
+            let g:gutentags_ctags_extra_args = [
+                  \ '--tag-relative=yes',
+                  \ '--fields=+ailmnS',
+                  \ ]
+            let g:gutentags_ctags_exclude = [
+                  \ '*.git', '*.svg', '*.hg',
+                  \ '*/tests/*',
+                  \ 'build',
+                  \ 'dist',
+                  \ '*sites/*/files/*',
+                  \ 'bin',
+                  \ 'node_modules',
+                  \ 'bower_components',
+                  \ 'cache',
+                  \ 'compiled',
+                  \ 'docs',
+                  \ 'example',
+                  \ 'bundle',
+                  \ 'vendor',
+                  \ '*.md',
+                  \ '*-lock.json',
+                  \ '*.lock',
+                  \ '*bundle*.js',
+                  \ '*build*.js',
+                  \ '.*rc*',
+                  \ '*.json',
+                  \ '*.min.*',
+                  \ '*.map',
+                  \ '*.bak',
+                  \ '*.zip',
+                  \ '*.pyc',
+                  \ '*.class',
+                  \ '*.sln',
+                  \ '*.Master',
+                  \ '*.csproj',
+                  \ '*.tmp',
+                  \ '*.csproj.user',
+                  \ '*.cache',
+                  \ '*.pdb',
+                  \ 'tags*',
+                  \ 'cscope.*',
+                  \ '*.css',
+                  \ '*.less',
+                  \ '*.scss',
+                  \ '*.exe', '*.dll',
+                  \ '*.mp3', '*.ogg', '*.flac',
+                  \ '*.swp', '*.swo',
+                  \ '*.bmp', '*.gif', '*.ico', '*.jpg', '*.png',
+                  \ '*.rar', '*.zip', '*.tar', '*.tar.gz', '*.tar.xz', '*.tar.bz2',
+                  \ '*.pdf', '*.doc', '*.docx', '*.ppt', '*.pptx',
+                  \ ]
         '';
 
         packages.nix = with pkgs.vimPlugins; {
           start = [
             NeoSolarized
             tagbar
+            vim-gutentags
             vimagit
             ultisnips
           ];
@@ -620,6 +689,10 @@
       enable = false;
     };
 
+    blueman = {
+      enable = true;
+    };
+
     #tlp = {
     #  enable = true;
 
@@ -701,7 +774,8 @@
               /run/current-system/sw/bin/xsetroot -solid black &
               /run/current-system/sw/bin/stalonetray &
               /run/current-system/sw/bin/nm-applet &
-              #/run/current-system/sw/bin/nextcloud &
+              /run/current-system/sw/bin/blueman-applet &
+              /run/current-system/sw/bin/nextcloud &
             '';
           }
         ];
@@ -715,8 +789,8 @@
           theme = "${(pkgs.fetchFromGitHub {
             owner = "pthrr";
             repo = "minimal-sddm-theme";
-            rev = "504a9eed78118d09c67c93d3c9af712c3e292864";
-            sha256 = "0d8lyhl1znkkqznv075j7xj32hvhjx2d83yv4409yxdn0i2apbk8";
+            rev = "f8c63eb135f39a8afb78474a563506c0fa673a20";
+            sha256 = "093yfhk6lm758hahb79r36248gyx3j1dkbkf33iqvqywxwjfc3h1";
             })}";
         };
       };
@@ -800,8 +874,13 @@
   hardware = {
     enableRedistributableFirmware = true;
 
+    bluetooth = {
+      enable = true;
+    };
+
     pulseaudio = {
       enable = true;
+      extraModules = [ pkgs.pulseaudio-modules-bt ];
       package = pkgs.pulseaudioFull;
     };
 
