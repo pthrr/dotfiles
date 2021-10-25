@@ -14,6 +14,8 @@ if dein#load_state(s:settings.dein_dir)
     call dein#add('sirver/ultisnips')
     call dein#add('lifepillar/vim-solarized8')
     call dein#add('preservim/tagbar')
+    call dein#add('jreybert/vimagit')
+    call dein#add('ludovicchabant/vim-gutentags')
     call dein#end()
     call dein#save_state()
 endif
@@ -119,6 +121,69 @@ nmap <F8> :TagbarToggle<CR>
 let g:tagbar_compact = 1
 let g:tagbar_show_linenumbers = 1
 let g:tagbar_width = max([80, winwidth(0) / 4])
+" magit
+let g:magit_default_fold_level = 0
+nmap <F7> :MagitOnly<CR>
 " c/cpp highlighting options
 let g:cpp_member_highlight = 1
 let g:cpp_attributes_highlight = 1
+" gutentags
+let g:gutentags_modules = ['ctags']
+let g:gutentags_add_default_project_roots = 0
+let g:gutentags_project_root = ['requirements.txt', '.git', '.project']
+let g:gutentags_cache_dir='~/.config/nvim/ctags'
+let g:gutentags_generate_on_new = 1
+let g:gutentags_generate_on_missing = 1
+let g:gutentags_generate_on_write = 1
+let g:gutentags_generate_on_empty_buffer = 0
+let g:gutentags_ctags_extra_args = [
+      \ '--tag-relative=yes',
+      \ '--fields=+ailmnS',
+      \ ]
+let g:gutentags_ctags_exclude = [
+      \ '*.git', '*.svg', '*.hg',
+      \ '*/tests/*',
+      \ 'build',
+      \ 'dist',
+      \ '*sites/*/files/*',
+      \ 'bin',
+      \ 'node_modules',
+      \ 'bower_components',
+      \ 'cache',
+      \ 'compiled',
+      \ 'docs',
+      \ 'example',
+      \ 'bundle',
+      \ 'vendor',
+      \ '*.md',
+      \ '*-lock.json',
+      \ '*.lock',
+      \ '*bundle*.js',
+      \ '*build*.js',
+      \ '.*rc*',
+      \ '*.json',
+      \ '*.min.*',
+      \ '*.map',
+      \ '*.bak',
+      \ '*.zip',
+      \ '*.pyc',
+      \ '*.class',
+      \ '*.sln',
+      \ '*.Master',
+      \ '*.csproj',
+      \ '*.tmp',
+      \ '*.csproj.user',
+      \ '*.cache',
+      \ '*.pdb',
+      \ 'tags*',
+      \ 'cscope.*',
+      \ '*.css',
+      \ '*.less',
+      \ '*.scss',
+      \ '*.exe', '*.dll',
+      \ '*.mp3', '*.ogg', '*.flac',
+      \ '*.swp', '*.swo',
+      \ '*.bmp', '*.gif', '*.ico', '*.jpg', '*.png',
+      \ '*.rar', '*.zip', '*.tar', '*.tar.gz', '*.tar.xz', '*.tar.bz2',
+      \ '*.pdf', '*.doc', '*.docx', '*.ppt', '*.pptx',
+      \ ]
