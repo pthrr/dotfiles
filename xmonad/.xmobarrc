@@ -1,7 +1,7 @@
 Config { font = "-*-fixed-*-*-*-*-15-*-100-100-*-*-*-*"
        , bgColor = "black"
        , fgColor = "#646464"
-       , position = TopP 0 65
+       , position = TopP 0 100
        , border = NoBorder
        , lowerOnStart = False    -- send to bottom of window stack on start
        , hideOnStart =  False   -- start with window unmapped (hidden)

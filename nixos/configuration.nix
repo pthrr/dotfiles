@@ -197,6 +197,7 @@
       imagemagick
       gnome.nautilus
       #blueman
+      #networkmanager
       lsof # diag
       strace
       pprof
@@ -376,6 +377,7 @@
                   \ '*/tests/*',
                   \ 'build',
                   \ 'dist',
+                  \ '*/venv/*', '*/.venv/*',
                   \ '*sites/*/files/*',
                   \ 'bin',
                   \ 'node_modules',
@@ -773,8 +775,8 @@
               /run/current-system/sw/bin/xrdb -merge ~/.xresources
               /run/current-system/sw/bin/xsetroot -solid black &
               /run/current-system/sw/bin/stalonetray &
-              /run/current-system/sw/bin/nm-applet &
               /run/current-system/sw/bin/blueman-applet &
+              #/run/current-system/sw/bin/nm-applet &
               /run/current-system/sw/bin/nextcloud &
             '';
           }
