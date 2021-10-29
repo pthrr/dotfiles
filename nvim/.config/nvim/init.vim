@@ -16,6 +16,7 @@ if dein#load_state(s:settings.dein_dir)
     call dein#add('preservim/tagbar')
     call dein#add('jreybert/vimagit')
     call dein#add('ludovicchabant/vim-gutentags')
+    call dein#add('junegunn/fzf.vim')
     call dein#end()
     call dein#save_state()
 endif
@@ -79,8 +80,12 @@ set expandtab
 set foldmethod=indent
 set foldnestmax=2
 set foldlevelstart=10
+" map folding
 nnoremap <space> za
 vnoremap <space> zf
+" just be a text editor
+let g:loaded_python_provider = 0 " disable py2
+let g:python3_host_prog = '/usr/bin/python3'
 " leave terminal mode
 tnoremap <Esc> <C-\><C-n>
 " automatically save view, load with :loadview
@@ -119,6 +124,8 @@ let g:ultisnips_python_style = 'sphinx'
 " tagbar
 nmap <F8> :TagbarToggle<CR>
 let g:tagbar_compact = 1
+let g:tagbar_sort = 1
+let g:tagbar_foldlevel = 1
 let g:tagbar_show_linenumbers = 1
 let g:tagbar_width = max([80, winwidth(0) / 4])
 " magit
@@ -128,10 +135,12 @@ nmap <F7> :MagitOnly<CR>
 let g:cpp_member_highlight = 1
 let g:cpp_attributes_highlight = 1
 " gutentags
+map oo <C-]>
+set tags=~/.config/nvim/tags
 let g:gutentags_modules = ['ctags']
 let g:gutentags_add_default_project_roots = 0
-let g:gutentags_project_root = ['requirements.txt', '.git', '.project']
-let g:gutentags_cache_dir='~/.config/nvim/ctags'
+let g:gutentags_project_root = ['requirements.txt', '.git', 'README.md']
+let g:gutentags_cache_dir='~/.config/nvim/tags'
 let g:gutentags_generate_on_new = 1
 let g:gutentags_generate_on_missing = 1
 let g:gutentags_generate_on_write = 1
@@ -152,6 +161,7 @@ let g:gutentags_ctags_exclude = [
       \ 'cache',
       \ 'compiled',
       \ 'docs',
+      \ '*/venv/*', '*/.venv/*',
       \ 'example',
       \ 'bundle',
       \ 'vendor',
