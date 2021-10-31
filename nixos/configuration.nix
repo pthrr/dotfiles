@@ -166,6 +166,7 @@
       p7zip
       universal-ctags # vi
       qtpass
+      pinentry-curses
       xcircuit
       ngspice
       keepassxc
@@ -263,6 +264,13 @@
   };
 
   programs = {
+    gnupg = {
+      agent = {
+        enable = true;
+        pinentryFlavor = "curses";
+      };
+    };
+
     neovim = {
       enable = true;
       defaultEditor = true;
@@ -271,10 +279,13 @@
 
       configure = {
         customRC = ''
-            "
+            " OS dependent
             set termguicolors
             colorscheme NeoSolarized
-            "
+            " just be a text editor
+            let g:loaded_python_provider = 0 " disable py2
+            let g:python3_host_prog = '/run/current-system/sw/bin/python'
+            " generic
             syntax on
             filetype plugin indent on
             set encoding=utf-8
@@ -342,9 +353,6 @@
             tnoremap jk <C-\><C-n>
             " change leader key
             let mapleader = "'"
-            " just be a text editor
-            let g:loaded_python_provider = 0 " disable py2
-            let g:python3_host_prog = '/run/current-system/sw/bin/python'
             " automatically save view, load with :loadview
             autocmd BufWinLeave *.* mkview
             " paste multiple times
@@ -450,6 +458,7 @@
           start = [
             NeoSolarized
             tagbar
+            vim-nix
             fzf-vim
             vim-gutentags
             vimagit
