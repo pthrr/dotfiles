@@ -75,7 +75,7 @@
         mkdir -p ~/tmp/
         mkdir -p ~/bin/
         mkdir -p ~/.config/nvim/undo/
-        mkdir -p ~/.config/nvim/ctags/
+        mkdir -p ~/.config/nvim/tags/
         mkdir -p ~/.config/nvim/after/
         mkdir -p ~/.config/nvim/syntax/
         mkdir -p ~/.config/zathura/
@@ -175,6 +175,8 @@
       ipe
       zathura
       ungoogled-chromium
+      firefox
+      #tor-browser-bundle-bin
       nextcloud-client
       git
       delta
@@ -184,6 +186,7 @@
       vlc
       wirelesstools
       #brightnessctl
+      nodePackages.npm
       pass
       spotify
       gnome.geary
@@ -214,6 +217,7 @@
       cabal-install
       clang_12
       gcc11
+      docker
       (python38.withPackages(ps: with ps; [
         pyqt4
         sip
@@ -280,6 +284,7 @@
       configure = {
         customRC = ''
             " OS dependent
+            set background=dark
             set termguicolors
             colorscheme NeoSolarized
             " just be a text editor
@@ -344,7 +349,6 @@
             set foldmethod=indent
             set foldnestmax=2
             set foldlevelstart=10
-            set grepprg=rg\ --vimgrep\ --smart-case\ --follow
             " map folding
             nnoremap <space> za
             vnoremap <space> zf
@@ -366,6 +370,7 @@
             autocmd InsertEnter * set cursorline
             autocmd InsertLeave * set nocursorline
             " fzf
+            set grepprg=rg\ --vimgrep\ --smart-case\ --follow
             nnoremap <silent> <C-f> :Files<CR>
             nnoremap <silent> <Leader>f :Ag<CR>
             nnoremap <silent> <Leader>b :Buffers<CR>
@@ -385,12 +390,18 @@
             " tagbar
             nmap <F8> :TagbarToggle<CR>
             let g:tagbar_compact = 1
+            let g:tagbar_sort = 1
+            let g:tagbar_foldlevel = 1
             let g:tagbar_show_linenumbers = 1
             let g:tagbar_width = max([80, winwidth(0) / 4])
+            " magit
+            let g:magit_default_fold_level = 0
+            nmap <F7> :MagitOnly<CR>
             " c/cpp syntax highlighting options
             let g:cpp_member_highlight = 1
             let g:cpp_attributes_highlight = 1
             " gutentags
+            map oo <C-]>
             set tags=~/.config/nvim/tags
             let g:gutentags_modules = ['ctags']
             let g:gutentags_add_default_project_roots = 0
@@ -950,6 +961,12 @@
         isNormalUser = true;
         uid = 1000;
         extraGroups = [ "wheel" "networkmanager" ];
+      };
+
+      hacknmake = {
+        description = "hacknmake";
+        isNormalUser = true;
+        extraGroups = [ "networkmanager" ];
       };
     };
   };
