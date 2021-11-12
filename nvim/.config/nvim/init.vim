@@ -1,4 +1,4 @@
-" bootstrap dein and install plugins
+" OS dependent
 let s:settings = {}
 let s:settings.cache_dir = expand('~/.config/nvim/cache')
 let s:settings.dein_dir = s:settings.cache_dir . '/dein'
@@ -12,7 +12,7 @@ endif
 if dein#load_state(s:settings.dein_dir)
     call dein#begin(s:settings.dein_dir)
     call dein#add('sirver/ultisnips')
-    call dein#add('lifepillar/vim-solarized8')
+    call dein#add('overcache/NeoSolarized')
     call dein#add('preservim/tagbar')
     call dein#add('jreybert/vimagit')
     call dein#add('ludovicchabant/vim-gutentags')
@@ -23,17 +23,6 @@ endif
 if dein#check_install()
     call dein#install()
 endif
-syntax on
-filetype plugin indent on
-"let g:solarized_use16=1
-set termguicolors
-colorscheme solarized8
-set encoding=utf-8
-set fileencodings=ucs-bom,utf-8,utf-16,cp1252,default,latin1
-set nobomb
-set nobackup
-set noswapfile
-set nowritebackup
 " Let's save undo info!
 if !isdirectory($HOME."/.config")
     call mkdir($HOME."/.config", "", 0770)
@@ -44,9 +33,26 @@ endif
 if !isdirectory($HOME."/.config/nvim/undo")
     call mkdir($HOME."/.config/nvim/undo", "", 0700)
 endif
+if !isdirectory($HOME."/.config/nvim/tags")
+    call mkdir($HOME."/.config/nvim/tags", "", 0700)
+endif
+set background=dark
+set termguicolors
+colorscheme NeoSolarized
+" just be a text editor
+let g:loaded_python_provider = 0 " disable py2
+let g:python3_host_prog = '/usr/bin/python3'
+" generic
+syntax on
+filetype plugin indent on
+set encoding=utf-8
+set fileencodings=ucs-bom,utf-8,utf-16,cp1252,default,latin1
+set nobomb
+set nobackup
+set noswapfile
+set nowritebackup
 set undodir=~/.config/nvim/undo
 set undofile
-"
 set splitbelow
 set splitright
 set number
@@ -54,6 +60,8 @@ set relativenumber
 set nowrap
 set autoread
 set hlsearch
+set ignorecase
+set incsearch
 set title
 set hidden
 set noshowmode
@@ -70,6 +78,19 @@ set statusline +=%=%5l             "current line
 set statusline +=/%L               "total lines
 set statusline +=%4v\              "virtual column number
 set statusline +=0x%04B\           "character under cursor
+set path=$PWD/**
+set wildmenu
+set wildmode=list:longest,full
+set wildignore +=.git,.hg,.svn
+set wildignore +=*.aux,*.out,*.toc
+set wildignore +=*.o,*.obj,*.exe,*.dll,*.manifest,*.rbc,*.class
+set wildignore +=*.ai,*.bmp,*.gif,*.ico,*.jpg,*.jpeg,*.png,*.psd,*.webp
+set wildignore +=*.avi,*.divx,*.mp4,*.webm,*.mov,*.m2ts,*.mkv,*.vob,*.mpg,*.mpeg
+set wildignore +=*.mp3,*.oga,*.ogg,*.wav,*.flac
+set wildignore +=*.eot,*.otf,*.ttf,*.woff
+set wildignore +=*.doc,*.pdf,*.cbr,*.cbz
+set wildignore +=*.zip,*.tar.gz,*.tar.bz2,*.rar,*.tar.xz,*.kgb
+set wildignore +=*.swp,.lock,.DS_Store,._*
 set colorcolumn=80
 set clipboard=unnamedplus
 set list listchars=tab:\›\ ,trail:-,extends:>,precedes:<
@@ -83,39 +104,36 @@ set foldlevelstart=10
 " map folding
 nnoremap <space> za
 vnoremap <space> zf
-" just be a text editor
-let g:loaded_python_provider = 0 " disable py2
-let g:python3_host_prog = '/usr/bin/python3'
-" leave terminal mode
-tnoremap <Esc> <C-\><C-n>
+" map ESC
+inoremap jk <ESC>
+tnoremap jk <C-\><C-n>
+" change leader key
+let mapleader = "'"
 " automatically save view, load with :loadview
 autocmd BufWinLeave *.* mkview
 " paste multiple times
 xnoremap p pgvy
-" add all subfolders to path
-set path=$PWD/**
-set wildmenu
-set wildmode=list:longest,full
-set wildignore+=.git,.hg,.svn
-set wildignore+=*.aux,*.out,*.toc
-set wildignore+=*.o,*.obj,*.exe,*.dll,*.manifest,*.rbc,*.class
-set wildignore+=*.ai,*.bmp,*.gif,*.ico,*.jpg,*.jpeg,*.png,*.psd,*.webp
-set wildignore+=*.avi,*.divx,*.mp4,*.webm,*.mov,*.m2ts,*.mkv,*.vob,*.mpg,*.mpeg
-set wildignore+=*.mp3,*.oga,*.ogg,*.wav,*.flac
-set wildignore+=*.eot,*.otf,*.ttf,*.woff
-set wildignore+=*.doc,*.pdf,*.cbr,*.cbz
-set wildignore+=*.zip,*.tar.gz,*.tar.bz2,*.rar,*.tar.xz,*.kgb
-set wildignore+=*.swp,.lock,.DS_Store,._*
 " show matching brackets
 set showmatch
 highlight MatchParen guibg=none guifg=white gui=bold ctermbg=none ctermfg=white cterm=bold
-"highlight ColorColumn ctermbg=darkgrey ctermfg=none cterm=none
 set matchtime=0
 " highlight cursorline in insert mode
 highlight cursorline guibg=none guifg=none gui=underline ctermbg=none ctermfg=none cterm=underline
 autocmd InsertEnter * set cursorline
 autocmd InsertLeave * set nocursorline
-" UltiSnips config
+" fzf
+set grepprg=rg\ --vimgrep\ --smart-case\ --follow
+nnoremap <silent> <C-f> :Files<CR>
+nnoremap <silent> <Leader>f :Ag<CR>
+nnoremap <silent> <Leader>b :Buffers<CR>
+nnoremap <silent> <Leader>/ :BLines<CR>
+nnoremap <silent> <Leader>' :Marks<CR>
+nnoremap <silent> <Leader>g :Commits<CR>
+nnoremap <silent> <Leader>H :Helptags<CR>
+nnoremap <silent> <Leader>hh :History<CR>
+nnoremap <silent> <Leader>h: :History:<CR>
+nnoremap <silent> <Leader>h/ :History/<CR> 
+" ultisnips
 let g:UltiSnipsExpandTrigger = '<tab>'
 let g:UltiSnipsJumpForwardTrigger = '<tab>'
 let g:UltiSnipsJumpBackwardTrigger = '<s-tab>'
@@ -131,7 +149,7 @@ let g:tagbar_width = max([80, winwidth(0) / 4])
 " magit
 let g:magit_default_fold_level = 0
 nmap <F7> :MagitOnly<CR>
-" c/cpp highlighting options
+" c/cpp syntax highlighting options
 let g:cpp_member_highlight = 1
 let g:cpp_attributes_highlight = 1
 " gutentags
