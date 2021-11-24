@@ -16,7 +16,8 @@ if dein#load_state(s:settings.dein_dir)
     call dein#add('preservim/tagbar')
     call dein#add('jreybert/vimagit')
     call dein#add('ludovicchabant/vim-gutentags')
-    call dein#add('junegunn/fzf.vim')
+    call dein#add('junegunn/fzf', { 'build': './install', 'merged': 0 })
+    call dein#add('junegunn/fzf.vim', { 'depends': 'fzf' })
     call dein#end()
     call dein#save_state()
 endif
@@ -60,7 +61,6 @@ set relativenumber
 set nowrap
 set autoread
 set hlsearch
-set ignorecase
 set incsearch
 set title
 set hidden
