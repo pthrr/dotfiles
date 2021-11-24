@@ -66,7 +66,7 @@
       enable = true;
       allowReboot = false;
       channel = "https://nixos.org/channels/nixos-21.05";
-      dates = "daily";
+      dates = "weekly";
     };
 
     userActivationScripts = {
@@ -123,6 +123,7 @@
       perl # system
       binutils
       coreutils-full
+      nomacs
       util-linux
       man-pages
       nmap
