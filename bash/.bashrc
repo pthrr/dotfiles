@@ -35,9 +35,9 @@ function gmv() { # move submodule
     git submodule sync
 }
 function fmp() {
-    pyflakes "$@"
     isort --profile black --atomic --line-length 79 "$@"
     black --verbose --line-length 79 "$@"
+    pyflakes "$@"
 }
 alias fmc='clang-format -verbose -i -style=google'
 alias fmo='dune build @fmt --auto-promote --enable-outside-detected-project'
