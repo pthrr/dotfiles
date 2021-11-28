@@ -234,6 +234,7 @@
         isort
         black
         mypy
+        pylint
         pyflakes
       ]))
       qt4
