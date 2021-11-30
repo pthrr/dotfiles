@@ -1,0 +1,27 @@
+[MASTER]
+persistent=no
+jobs=4
+unsafe-load-any-extension=no
+
+[MESSAGES CONTROL]
+disable= missing-function-docstring,
+    missing-module-docstring,
+    missing-class-docstring,
+    line-too-long,
+    too-many-lines,
+    import-error,
+    ungrouped-imports,
+    wrong-import-order,
+    wrong-import-position
+output-format=text
+files-output=no
+reports=no
+
+[BASIC]
+bad-names=foo,bar,x,y,z,i,j,k,m,n
+max-line-length=79
+indent-string='    '
+indent-after-paren=8
+
+[MISCELLANEOUS]
+notes=FIXME,TODO

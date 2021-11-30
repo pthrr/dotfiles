@@ -37,7 +37,7 @@ function gmv() { # move submodule
 function fmp() {
     isort --profile black --atomic --line-length 79 "$@"
     black --verbose --line-length 79 "$@"
-    pyflakes "$@"
+    pylint "$@"
 }
 alias fmc='clang-format -verbose -i -style=google'
 alias fmo='dune build @fmt --auto-promote --enable-outside-detected-project'
