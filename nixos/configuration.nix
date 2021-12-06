@@ -43,6 +43,8 @@
     };
   };
 
+  boot.kernel.sysctl = { "vm.swappiness" = 95;};
+
   swapDevices = [
     { device = "/dev/disk/by-uuid/e08a2b6f-dfe1-4641-b823-d5cbdb156eba"; }
   ];
@@ -235,7 +237,6 @@
         black
         mypy
         pylint
-        pyflakes
       ]))
       qt4
       cargo
@@ -506,9 +507,9 @@
             git submodule sync
         }
         function fmp() {
-            pyflakes "$@"
             isort --profile black --atomic --line-length 79 "$@"
             black --verbose --line-length 79 "$@"
+            pylint "$@"
         }
         function op() {
             dune init proj $@ --libs base,stdio,owl,owl-top,owl-base,owl-plplot,owl-zoo
@@ -549,20 +550,16 @@
         g = "git";
         s = "g ssb";
         l = "g ld";
-        u = "g smuir";
-        pl = "g frs && g prs";
-        ph = "g ph";
-        gc = "g cleaner"; # clean -fdx
         fmc = "clang-format -verbose -i -style=google";
         fmo = "dune build @fmt --auto-promote --enable-outside-detected-project";
         fmm = "cmake-format -i";
-        vs = "vi src/*.*";
+        vp = "vi src/*.py";
+        vc = "vi src/*.c src/*.cc";
+        vo = "vi src/*.ml";
         oc = "dune build && dune exec";
         ot = "dune runtest";
         py = "python3";
         xdg = "xdg-open";
-        jqp = "jq '.'";
-        lrts="sudo watch -n 1 'journalctl -u rts -u lxi -u nginx -u mdns | tail -n $(($LINES - 15))'";
         mirror="wget --mirror --convert-links --adjust-extension --page-requisites --no-parent";
         pc="picocom -b 115200 --echo --omap=crcrlf";
         ports="lsof -i -P -n | grep LISTEN";
