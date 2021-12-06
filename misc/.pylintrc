@@ -6,10 +6,28 @@ unsafe-load-any-extension=no
 [MESSAGES CONTROL]
 disable= missing-function-docstring,
     missing-module-docstring,
+    missing-class-docstring,
+    line-too-long,
+    too-many-lines,
+    broad-except,
+    unused-variable,
     import-error,
     ungrouped-imports,
     wrong-import-order,
-    wrong-import-position
+    wrong-import-position,
+    pointless-string-statement,
+    fixme,
+    no-else-return,
+    no-else-raise,
+    too-many-arguments,
+    too-many-public-methods,
+    too-many-locals,
+    too-many-instance-attributes,
+    too-many-statements,
+    too-many-branches,
+    too-many-nested-blocks,
+    no-self-use,
+    raise-missing-from
 output-format=text
 files-output=no
 reports=no
