@@ -5,6 +5,8 @@ unsafe-load-any-extension=no
 
 [MESSAGES CONTROL]
 disable= missing-function-docstring,
+    redefined-outer-name,
+    chained-comparison,
     missing-module-docstring,
     missing-class-docstring,
     line-too-long,
