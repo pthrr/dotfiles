@@ -22,12 +22,6 @@ function cht() {
     curl -m 10 "https://cht.sh/$@"
 }
 alias g='git'
-alias s='g ssb'
-alias l='g ld'
-alias u='g smuir'
-alias pl='g frs && git prs'
-alias ph='g ph'
-alias gc='g cleaner' # clean -fdx
 function gmv() { # move submodule
     mv $1 $2
     git rm $1
@@ -42,7 +36,9 @@ function fmp() {
 alias fmc='clang-format -verbose -i -style=google'
 alias fmo='dune build @fmt --auto-promote --enable-outside-detected-project'
 alias fmm='cmake-format -i'
-alias vs='vi src/*.*'
+alias vp='vi src/*.py'
+alias vc='vi src/*.c src/*.cc'
+alias vo='vi src/*.ml'
 alias oc='dune build && dune exec'
 alias ot='dune runtest'
 function op() {

@@ -113,6 +113,12 @@ let mapleader = "'"
 autocmd BufWinLeave *.* mkview
 " paste multiple times
 xnoremap p pgvy
+" delete without yanking
+nnoremap <leader>d "_d
+vnoremap <leader>d "_d
+" replace currently selected text with default register
+" without yanking it
+vnoremap <leader>p "_dP
 " show matching brackets
 set showmatch
 highlight MatchParen guibg=none guifg=white gui=bold ctermbg=none ctermfg=white cterm=bold
