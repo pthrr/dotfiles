@@ -548,8 +548,6 @@
         "...." = "cd ../../../";
         "....." = "cd ../../../../";
         g = "git";
-        s = "g ssb";
-        l = "g ld";
         fmc = "clang-format -verbose -i -style=google";
         fmo = "dune build @fmt --auto-promote --enable-outside-detected-project";
         fmm = "cmake-format -i";
