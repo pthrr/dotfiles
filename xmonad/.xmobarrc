@@ -1,29 +1,33 @@
 Config { font = "-*-fixed-*-*-*-*-15-*-100-100-*-*-*-*"
        , bgColor = "black"
-       , fgColor = "grey"
-       , position = TopP 0 65
+       , fgColor = "#646464"
+       , position = TopP 0 180
        , border = NoBorder
-       , allDesktops = True
-       , persistent = True
+       , lowerOnStart = False    -- send to bottom of window stack on start
+       , hideOnStart =  False   -- start with window unmapped (hidden)
+       , allDesktops =  True    -- show on all desktops
+       , overrideRedirect = True    -- set the Override Redirect flag (Xlib)
+       , pickBroadest = False   -- choose widest display (multi-monitor)
+       , persistent =   True    -- enable/disable hiding (True = disabled)
        , commands = [ Run Date "%a, KW %V, %d.%m.%y - %H:%M" "date" 60
                 , Run Battery ["--template", "Bat <timeleft>h"
                         , "--Low", "5"
                         , "--High", "20"
                         , "--low", "red"
                         , "--normal", "yellow"
-                        , "--high", "grey"
+                        , "--high", "#646464"
                         ] 60
                 , Run Memory ["--template", "Mem <usedratio>%"
                         , "--Low", "80"
                         , "--High", "90"
-                        , "--low", "grey"
+                        , "--low", "#646464"
                         , "--normal", "yellow"
                         , "--high", "red"
                         ] 10
                 , Run CoreTemp ["--template", "CPU <core0>°C <core1>°C"
                         , "--Low", "70"
                         , "--High", "80"
-                        , "--low", "grey"
+                        , "--low", "#646464"
                         , "--normal", "yellow"
                         , "--high", "red"
                         ] 60
