@@ -861,6 +861,8 @@
             import XMonad.Util.EZConfig
             import Graphics.X11.ExtraTypes.XF86
             import XMonad.Actions.CycleWS
+            import XMonad.Layout.NoBorders
+            import XMonad.Hooks.ManageDocks
 
             import Control.Monad (when)
             import Text.Printf (printf)
@@ -871,12 +873,11 @@
 
             main = do
             xmproc <- spawnPipe "xmobar"
-            xmonad $ def
+            xmonad $ docks $ def
               { terminal = "xterm"
               , manageHook = manageDocks <+> manageHook def
-              , layoutHook = avoidStruts $ layoutHook def
+              , layoutHook = avoidStruts $ smartBorders $ layoutHook def
               , focusFollowsMouse = False
-              , handleEventHook = handleEventHook def <+> docksEventHook
               , logHook = dynamicLogWithPP $ def
                 { ppOutput = hPutStrLn xmproc
                 , ppOrder = \(ws:_:t:_) -> [ws,t]
