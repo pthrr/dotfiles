@@ -24,7 +24,7 @@ Config { font = "-*-fixed-*-*-*-*-15-*-100-100-*-*-*-*"
                         , "--normal", "yellow"
                         , "--high", "red"
                         ] 10
-                , Run CoreTemp ["--template", "CPU <core0>°C <core1>°C"
+                , Run CoreTemp ["--template", "CPU <core0>°C <core1>°C <core2>°C <core3>°C"
                         , "--Low", "70"
                         , "--High", "80"
                         , "--low", "#646464"
