@@ -51,7 +51,7 @@
 
   fileSystems = {
     "/" = {
-      options = [ "noatime" "nodiratime" "discard" ];
+      options = [ "noatime" ];
     };
   };
 
