@@ -45,10 +45,6 @@
 
   boot.kernel.sysctl = { "vm.swappiness" = 95;};
 
-  swapDevices = [
-    { device = "/dev/disk/by-uuid/e08a2b6f-dfe1-4641-b823-d5cbdb156eba"; }
-  ];
-
   fileSystems = {
     "/" = {
       options = [ "noatime" ];
@@ -929,6 +925,11 @@
   hardware = {
     enableRedistributableFirmware = true;
 
+    trackpoint = {
+      enable = true;
+      emulateWheel = true;
+    };
+
     bluetooth = {
       enable = true;
     };
@@ -943,6 +944,12 @@
       enable = true;
       driSupport = true;
       driSupport32Bit = true;
+      extraPackages = with pkgs; [
+          vaapiIntel
+          vaapiVdpau
+          libvdpau-va-gl
+          intel-media-driver
+        ];
     };
 
     cpu = {
