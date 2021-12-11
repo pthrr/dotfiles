@@ -1,4 +1,5 @@
-sudo apt-get install -y sudo perl tree curl wget git neovim chromium nautilus universal-ctags stow
+sudo apt-get install -y sudo perl tree curl wget git neovim chromium vlc nautilus universal-ctags stow
+sudo apt-get install -y fonts-firacode fonts-dejavu fonts-ubuntu fonts-font-awesome
 sudo apt-get install -y net-tools build-essential cmake automake g++-10 gcc-10 clang xserver-xorg-input-synaptics laptop-mode-tools firmware-misc-nonfree intel-microcode
 sudo apt-get install -y libx11-dev libxinerama-dev libxext-dev
 sudo apt-get install -y libxrandr-dev libxss-dev libxft-dev
