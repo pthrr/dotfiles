@@ -102,7 +102,7 @@
       LANG = config.i18n.defaultLocale;
       _JAVA_AWT_WM_NONREPARENTING = "1";
       GTK_THEME = "Adwaita:dark";
-      QT_QPA_PLATFORMTHEME = "qt5ct";
+      #QT_QPA_PLATFORMTHEME = "qt5ct";
       GNOME_ACCESSIBILITY = "0";
       QT_ACCESSIBILITY = "0";
       NO_AT_BRIDGE = "1";
@@ -164,7 +164,6 @@
       jq
       p7zip
       universal-ctags # vi
-      qtpass
       pinentry-curses
       xcircuit
       ngspice
@@ -174,7 +173,8 @@
       ipe
       zathura
       ungoogled-chromium
-      firefox
+      claws-mail
+      #spamassassin
       #tor-browser-bundle-bin
       nextcloud-client
       git
@@ -185,8 +185,9 @@
       vlc
       wirelesstools
       #brightnessctl
+      nodejs
       nodePackages.npm
-      pass
+      nodePackages.node2nix
       spotify
       gnome.geary
       tectonic
@@ -215,7 +216,7 @@
       ninja
       cabal-install
       clang_12
-      gcc11
+      #gcc11
       docker
       (python38.withPackages(ps: with ps; [
         pyqt4
@@ -723,6 +724,15 @@
       enable = true;
       permitRootLogin = "no";
     };
+
+    #spamassassin = {
+    #  enable = true;
+    #  config = ''
+    #    OPTIONS="--create-prefs --max-children=5 --helper-home-dir"
+    #    PIDFILE="/var/run/spamd.pid"
+    #    CRON=1
+    #  '';
+    #};
 
     fwupd = {
       enable = true;
