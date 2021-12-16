@@ -127,6 +127,8 @@ set matchtime=0
 highlight cursorline guibg=none guifg=none gui=underline ctermbg=none ctermfg=none cterm=underline
 autocmd InsertEnter * set cursorline
 autocmd InsertLeave * set nocursorline
+" gather TODO and FIXME
+command! -bar LocalTodo :lvimgrep /\v\CTODO|FIXME|HACK|DEV/g % <bar> normal <F4>
 " fzf
 set grepprg=rg\ --vimgrep\ --smart-case\ --follow
 nnoremap <silent> <C-f> :Files<CR>

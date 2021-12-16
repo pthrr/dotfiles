@@ -735,7 +735,7 @@ snippet pmdoc "pocoo style module doc string" b
 $0
 endsnippet
 
-snippet templ "basic module template" b
+snippet scripttemp "basic script template" b
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
@@ -754,24 +754,16 @@ import typing
 
 
 def main(args: argparse.Namespace) -> int:
-	"""TODO: Docstring for main.
-
-	:param args: parsed list of parameters
-	:returns: POSIX return code
-
-	"""
 	${0}
 	return 0
 
 
-def str_to_bool(v: typing.Union[str, bool]) -> None:
-	"""TODO: Docstring for str_to_bool.
-	"""
-	if isinstance(v, bool):
-		return v
-	if v.lower() in ("yes", "true", "t", "y", "1"):
+def str_to_bool(value: typing.Union[str, bool]) -> None:
+	if isinstance(value, bool):
+		return value
+	if value.lower() in ("yes", "true", "t", "y", "1"):
 		return True
-	elif v.lower() in ("no", "false", "f", "n", "0"):
+	elif value.lower() in ("no", "false", "f", "n", "0"):
 		return False
 	else:
 		raise argparse.ArgumentTypeError("Boolean value expected.")
@@ -794,17 +786,20 @@ if __name__ == "__main__":
 	args = parser.parse_args()
 
 	if args.debug:
-		logging_level = logging.DEBUG
+		LOGGING_LEVEL = logging.DEBUG
 	else:
-		logging_level = logging.CRITICAL
+		LOGGING_LEVEL = logging.CRITICAL
 
-	logging_format_string = "%(asctime)s | %(levelname)s | %(module)s, %(funcName)s, %(lineno)d | %(message)s"
-	logging.basicConfig(format=logging_format_string, level=logging_level)
-	logging.debug(f"PATH: {sys.path}")
-	logging.debug(f"Args: {args}")
-	rc = main(args)
+	LOGGING_FORMAT_STRING = "%(asctime)s | %(name)s | %(levelname)s | %(module)s, %(threadName)s, %(funcName)s, %(lineno)d | %(message)s"
+	logging.basicConfig(format=LOGGING_FORMAT_STRING, level=LOGGING_LEVEL)
+	logging.debug("PATH: %s", sys.path)
+	logging.debug("args: %s", args)
+	return_code = main(args)
 	logging.info("Done.")
-	sys.exit(rc)
+	sys.exit(return_code)
+endsnippet
+
+snippet moduletemp "basic module template" b
 endsnippet
 
 # vim:ft=snippets:
