@@ -130,7 +130,28 @@ highlight cursorline guibg=none guifg=none gui=underline ctermbg=none ctermfg=no
 autocmd InsertEnter * set cursorline
 autocmd InsertLeave * set nocursorline
 " todo-comments
-lua require("todo-comments").setup {}
+lua << EOF
+  require("todo-comments").setup {
+    highlight = {
+        before = "", -- "fg" or "bg" or empty
+        keyword = "fg", -- "fg", "bg", "wide" or empty
+        after = "", -- "fg" or "bg" or empty
+        pattern = [[.*<(KEYWORDS)\s*:]],
+        comments_only = true,
+        max_line_len = 400,
+        exclude = {},
+    },
+    keywords = {
+        FIXME = { icon = "> ", color = "error" },
+        TODO = { icon = "+ ", color = "info" },
+        HACK = { icon = "* ", color = "warning" },
+        WARN = { icon = "# ", color = "warning" },
+        PERF = { icon = "$ ", color = "default" },
+        NOTE = { icon = "- ", color = "hint" },
+    },
+    pattern = [[\b(KEYWORDS)]],
+  }
+EOF
 nmap <F5> :TodoQuickFix cwd=.<CR>
 " fzf
 set grepprg=rg\ --vimgrep\ --smart-case\ --follow
