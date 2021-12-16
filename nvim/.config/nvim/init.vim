@@ -136,19 +136,20 @@ lua << EOF
         before = "", -- "fg" or "bg" or empty
         keyword = "fg", -- "fg", "bg", "wide" or empty
         after = "", -- "fg" or "bg" or empty
-        pattern = [[.*<(KEYWORDS)\s*:]],
+        pattern = [[.*<(KEYWORDS)\s*]],
         comments_only = true,
         max_line_len = 400,
         exclude = {},
     },
     keywords = {
-        FIXME = { icon = "> ", color = "error" },
+        FIXME = { icon = "! ", color = "error" },
         TODO = { icon = "+ ", color = "info" },
         HACK = { icon = "* ", color = "warning" },
         WARN = { icon = "# ", color = "warning" },
         PERF = { icon = "$ ", color = "default" },
-        NOTE = { icon = "- ", color = "hint" },
+        NOTE = { icon = "> ", color = "hint" },
     },
+    merge_keywords = false,
     pattern = [[\b(KEYWORDS)]],
   }
 EOF
