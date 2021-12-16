@@ -33,7 +33,10 @@ function fmp() {
     black --verbose --line-length 79 "$@"
     pylint "$@"
 }
-alias fmc='clang-format -verbose -i -style=google'
+function fmc() {
+    clang-format -verbose -i -style=google "$@"
+    cpplint "$@"
+}
 alias fmo='dune build @fmt --auto-promote --enable-outside-detected-project'
 alias fmm='cmake-format -i'
 alias vp='vi src/*.py'

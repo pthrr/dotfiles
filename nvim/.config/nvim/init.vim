@@ -15,6 +15,8 @@ if dein#load_state(s:settings.dein_dir)
     call dein#add('overcache/NeoSolarized')
     call dein#add('preservim/tagbar')
     call dein#add('jreybert/vimagit')
+    call dein#add('nvim-lua/plenary.nvim')
+    call dein#add('folke/todo-comments.nvim', { 'depends': 'plenary' })
     call dein#add('ludovicchabant/vim-gutentags')
     call dein#add('junegunn/fzf', { 'build': './install', 'merged': 0 })
     call dein#add('junegunn/fzf.vim', { 'depends': 'fzf' })
@@ -71,9 +73,9 @@ set statusline=
 set statusline +=\ %n\             "buffer number
 set statusline +=%{&ff}            "file format
 set statusline +=%y                "file type
-set statusline +=\ %{&fenc}        "file encoding
 set statusline +=\ %<%F            "full path
 set statusline +=%m                "modified flag
+set statusline +=\ %{&fenc}        "file encoding
 set statusline +=%=%5l             "current line
 set statusline +=/%L               "total lines
 set statusline +=%4v\              "virtual column number
@@ -127,8 +129,9 @@ set matchtime=0
 highlight cursorline guibg=none guifg=none gui=underline ctermbg=none ctermfg=none cterm=underline
 autocmd InsertEnter * set cursorline
 autocmd InsertLeave * set nocursorline
-" gather TODO and FIXME
-command! -bar LocalTodo :lvimgrep /\v\CTODO|FIXME|HACK|DEV/g % <bar> normal <F4>
+" todo-comments
+lua require("todo-comments").setup {}
+nmap <F5> :TodoQuickFix cwd=.<CR>
 " fzf
 set grepprg=rg\ --vimgrep\ --smart-case\ --follow
 nnoremap <silent> <C-f> :Files<CR>

@@ -9,6 +9,7 @@ sudo apt-get install -y xarchiver xpdf xcircuit xlog xfig xbacklight xfe x11-app
 sudo apt-get install -y tmux ssh-askpass network-manager-gnome libssl-dev libicu-dev libgraphite2-dev libfreetype6-dev libfontconfig1-dev
 sudo apt-get install -y exa ripgrep silversearcher-ag htop fzf opam lm-sensors
 sudo apt-get install -y stalonetray pulseaudio-utils pavucontrol redshift
+sudo apt-get install -y python3-pip python3
 sudo apt-get install -y cabal-install && cabal update
 cabal install xmonad xmonad-contrib xmobar yeganesh
 curl https://sh.rustup.rs -sSf | sh
