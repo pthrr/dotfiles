@@ -174,6 +174,7 @@
       zathura
       ungoogled-chromium
       claws-mail
+      bogofilter
       #spamassassin
       #tor-browser-bundle-bin
       nextcloud-client
@@ -192,6 +193,7 @@
       gnome.geary
       tectonic
       obsidian
+      lv2
       kicad
       qucs
       flatcam
@@ -216,7 +218,8 @@
       ninja
       cabal-install
       clang_12
-      #gcc11
+      clang-tools
+      valgrind
       docker
       (python38.withPackages(ps: with ps; [
         pyqt4
