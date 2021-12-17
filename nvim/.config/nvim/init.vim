@@ -70,12 +70,12 @@ set noshowmode
 set novisualbell
 set noerrorbells
 set statusline=
-set statusline +=\ %n\             "buffer number
-set statusline +=%{&ff}            "file format
-set statusline +=%y                "file type
+set statusline +=\ %n              "buffer number
+set statusline +=\ %y              "file type
+set statusline +=\ %{&fenc}        "file encoding
+set statusline +=\[%{&fileformat}\]
 set statusline +=\ %<%F            "full path
 set statusline +=%m                "modified flag
-set statusline +=\ %{&fenc}        "file encoding
 set statusline +=%=%5l             "current line
 set statusline +=/%L               "total lines
 set statusline +=%4v\              "virtual column number
