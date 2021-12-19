@@ -49,6 +49,7 @@ fi
 export LC_ALL='de_DE.UTF-8'
 export LANG='de_DE.UTF-8'
 export EDITOR='nvim'
+export BROWSER='chromium'
 export SUDO_ASKPASS='/usr/bin/ssh-askpass'
 export _JAVA_AWT_WM_NONREPARENTING=1
 export GTK_THEME=Adwaita:dark

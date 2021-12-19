@@ -18,24 +18,24 @@ alias ..='cd ../'
 alias ...='cd ../../'
 alias ....='cd ../../../'
 alias .....='cd ../../../../'
+alias g='git'
 function cht() {
     curl -m 10 "https://cht.sh/$@"
 }
-alias g='git'
 function gmv() { # move submodule
     mv $1 $2
     git rm $1
     git add $2
     git submodule sync
 }
-function fmp() {
+function fpy() {
     isort --profile black --atomic --line-length 79 "$@"
     black --verbose --line-length 79 "$@"
     pylint "$@"
 }
-function fmc() {
+function fcc() {
     clang-format -verbose -i -style=google "$@"
-    cpplint "$@"
+    clang-tidy "$@"
 }
 alias fmo='dune build @fmt --auto-promote --enable-outside-detected-project'
 alias fmm='cmake-format -i'
@@ -55,7 +55,7 @@ alias mirror='wget --mirror --convert-links --adjust-extension --page-requisites
 alias pc='picocom -b 115200 --echo --omap=crcrlf'
 alias ports='lsof -i -P -n | grep LISTEN'
 alias pwgen='python -c "import secrets,pyperclip;pw=secrets.token_urlsafe(32);pyperclip.copy(pw);print(pw)"'
-export HISTCONTROL=ignoreboth
+export HISTCONTROL=ignoreboth:erasedups
 export HISTSIZE=1000
 export HISTFILESIZE=2000
 export PROMPT_DIRTRIM=2
