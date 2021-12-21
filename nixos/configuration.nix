@@ -102,7 +102,7 @@
       LANG = config.i18n.defaultLocale;
       _JAVA_AWT_WM_NONREPARENTING = "1";
       GTK_THEME = "Adwaita:dark";
-      #QT_QPA_PLATFORMTHEME = "qt5ct";
+      QT_QPA_PLATFORMTHEME = pkgs.lib.mkForce "qt5ct";
       GNOME_ACCESSIBILITY = "0";
       QT_ACCESSIBILITY = "0";
       NO_AT_BRIDGE = "1";
