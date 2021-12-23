@@ -133,7 +133,6 @@
       jre8
       curl
       htop
-      silver-searcher
       feh
       gdb
       rr
@@ -145,7 +144,6 @@
       gnum4
       qt5ct
       zip
-      tree
       unzip
       stow
       libwebp
@@ -192,6 +190,8 @@
       spotify
       gnome.geary
       tectonic
+      bibtool
+      zotero
       obsidian
       lv2
       kicad
@@ -205,8 +205,6 @@
       picocom
       imagemagick
       gnome.nautilus
-      #blueman
-      #networkmanager
       lsof # diag
       strace
       pprof
@@ -321,11 +319,11 @@
             set statusline=
             set statusline +=\ %n\             "buffer number
             set statusline +=%{&ff}            "file format
-            set statusline +=%y                "file type
-            set statusline +=\ %{&fenc}        "file encoding
-            set statusline +=\ %<%F            "full path
+            set statusline +=%y\                "file type
+            set statusline +=%<%F            "full path
             set statusline +=%m                "modified flag
-            set statusline +=%=%5l             "current line
+            set statusline +=%=%{&fenc}\          "file encoding
+            set statusline +=%5l             "current line
             set statusline +=/%L               "total lines
             set statusline +=%4v\              "virtual column number
             set statusline +=0x%04B\           "character under cursor
@@ -528,20 +526,19 @@
 
       shellAliases = {
         top = "htop";
-        ack = "ag";
         ls = "exa";
         cat = "bat";
         grep = "rg";
+        less = "less -r";
         cp = "cp -iv";
         mv = "mv -iv";
         mkdir = "mkdir -pv";
         rm = "rm -Iv";
         untar = "tar vxf";
-        lla = "ls -la";
-        ll = "ls -l";
-        lsd = "tree -d -L 6 | less";
-        lsf = "tree -a -L 6 -I '.git' | less";
-        h = "history | less";
+        lla = "ls -la --git";
+        ll = "ls -l --git";
+        lsd = "exa --tree --long --git --color=always --level 6 -D | less";
+        lsf = "exa --tree --long --git --color=always --level 6 -a -I '.git' | less";
         cl = "clear";
         ".." = "cd ../";
         "..." = "cd ../../";
