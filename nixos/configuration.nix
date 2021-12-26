@@ -133,9 +133,9 @@
       jre8
       curl
       htop
-      feh
       gdb
       rr
+      fd
       appimage-run
       steam-run
       libnotify
@@ -167,14 +167,14 @@
       ngspice
       keepassxc
       xlog
+      xlife
       xarchiver
       ipe
       zathura
       ungoogled-chromium
       claws-mail
       bogofilter
-      #spamassassin
-      #tor-browser-bundle-bin
+      tor-browser-bundle-bin
       nextcloud-client
       git
       delta
@@ -252,6 +252,7 @@
       xorg.xf86inputlibinput
       xorg.xf86videointel
       xorg.xf86videonouveau
+      xlockmore
       pciutils
       lm_sensors
       pavucontrol
@@ -478,10 +479,6 @@
           ];
         };
       };
-    };
-
-    slock = {
-      enable = true;
     };
 
     bash = {
@@ -725,15 +722,6 @@
       permitRootLogin = "no";
     };
 
-    #spamassassin = {
-    #  enable = true;
-    #  config = ''
-    #    OPTIONS="--create-prefs --max-children=5 --helper-home-dir"
-    #    PIDFILE="/var/run/spamd.pid"
-    #    CRON=1
-    #  '';
-    #};
-
     fwupd = {
       enable = true;
     };
@@ -896,7 +884,7 @@
               }
               `additionalKeys`
               [ ((mod1Mask, xK_p), spawn "exe=`dmenu_path | yeganesh -- -b -fn \"xft:DejaVu Sans Mono:size=10\"` && eval \"exec $exe\"")
-              , ((mod1Mask, xK_s), spawn "slock")
+              , ((mod1Mask, xK_s), spawn "xlock")
               , ((0, xF86XK_MonBrightnessUp), spawn "xbacklight +10")
               , ((0, xF86XK_MonBrightnessDown), spawn "xbacklight -10")
               , ((0, xF86XK_AudioMute), spawn "pactl set-sink-mute @DEFAULT_SINK@ toggle")
