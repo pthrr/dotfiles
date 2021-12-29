@@ -135,7 +135,6 @@
       htop
       gdb
       rr
-      fd
       appimage-run
       steam-run
       libnotify
@@ -172,8 +171,7 @@
       ipe
       zathura
       ungoogled-chromium
-      claws-mail
-      bogofilter
+      evolution
       tor-browser-bundle-bin
       nextcloud-client
       git
@@ -188,7 +186,6 @@
       nodePackages.npm
       nodePackages.node2nix
       spotify
-      gnome.geary
       tectonic
       bibtool
       zotero
