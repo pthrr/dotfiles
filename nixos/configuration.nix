@@ -360,6 +360,12 @@
             autocmd BufWinLeave *.* mkview
             " paste multiple times
             xnoremap p pgvy
+            " delete without yanking
+            nnoremap <leader>d "_d
+            vnoremap <leader>d "_d
+            " replace currently selected text with default register
+            " without yanking it
+            vnoremap <leader>p "_dP
             " show matching brackets
             set showmatch
             highlight MatchParen guibg=none guifg=white gui=bold ctermbg=none ctermfg=white cterm=bold
@@ -368,6 +374,31 @@
             highlight cursorline guibg=none guifg=none gui=underline ctermbg=none ctermfg=none cterm=underline
             autocmd InsertEnter * set cursorline
             autocmd InsertLeave * set nocursorline
+            " todo-comments
+            lua << EOF
+              require("todo-comments").setup {
+                highlight = {
+                    before = "", -- "fg" or "bg" or empty
+                    keyword = "fg", -- "fg", "bg", "wide" or empty
+                    after = "", -- "fg" or "bg" or empty
+                    pattern = [[.*<(KEYWORDS)\s*]],
+                    comments_only = true,
+                    max_line_len = 400,
+                    exclude = {},
+                },
+                keywords = {
+                    FIXME = { icon = "! ", color = "error" },
+                    TODO = { icon = "+ ", color = "info" },
+                    HACK = { icon = "* ", color = "warning" },
+                    WARN = { icon = "# ", color = "warning" },
+                    PERF = { icon = "$ ", color = "default" },
+                    NOTE = { icon = "> ", color = "hint" },
+                },
+                merge_keywords = false,
+                pattern = [[\b(KEYWORDS)]],
+              }
+            EOF
+            nmap <F5> :TodoQuickFix cwd=.<CR>
             " fzf
             set grepprg=rg\ --vimgrep\ --smart-case\ --follow
             nnoremap <silent> <C-f> :Files<CR>
@@ -470,6 +501,7 @@
             tagbar
             vim-nix
             fzf-vim
+            todo-comments-nvim
             vim-gutentags
             vimagit
             ultisnips
@@ -483,7 +515,7 @@
       enableLsColors = true;
 
       shellInit = ''
-        HISTCONTROL=ignoreboth
+        HISTCONTROL=ignoreboth:erasedups
         HISTSIZE=1000
         HISTFILESIZE=2000
       '';
@@ -498,10 +530,14 @@
             git add $2
             git submodule sync
         }
-        function fmp() {
+        function fpy() {
             isort --profile black --atomic --line-length 79 "$@"
             black --verbose --line-length 79 "$@"
             pylint "$@"
+        }
+        function fcc() {
+            clang-format -verbose -i -style=google "$@"
+            clang-tidy "$@"
         }
         function op() {
             dune init proj $@ --libs base,stdio,owl,owl-top,owl-base,owl-plplot,owl-zoo
@@ -539,7 +575,6 @@
         "...." = "cd ../../../";
         "....." = "cd ../../../../";
         g = "git";
-        fmc = "clang-format -verbose -i -style=google";
         fmo = "dune build @fmt --auto-promote --enable-outside-detected-project";
         fmm = "cmake-format -i";
         vp = "vi src/*.py";
