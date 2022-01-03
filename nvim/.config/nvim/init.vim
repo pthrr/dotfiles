@@ -63,6 +63,7 @@ set relativenumber
 set nowrap
 set autoread
 set hlsearch
+set ignorecase
 set incsearch
 set title
 set hidden
@@ -70,13 +71,13 @@ set noshowmode
 set novisualbell
 set noerrorbells
 set statusline=
-set statusline +=\ %n              "buffer number
-set statusline +=\ %y              "file type
-set statusline +=\ %{&fenc}        "file encoding
-set statusline +=\[%{&fileformat}\]
-set statusline +=\ %<%F            "full path
+set statusline +=\ %n\             "buffer number
+set statusline +=%{&ff}            "file format
+set statusline +=%y\                "file type
+set statusline +=%<%F            "full path
 set statusline +=%m                "modified flag
-set statusline +=%=%5l             "current line
+set statusline +=%=%{&fenc}\          "file encoding
+set statusline +=%5l             "current line
 set statusline +=/%L               "total lines
 set statusline +=%4v\              "virtual column number
 set statusline +=0x%04B\           "character under cursor
@@ -205,6 +206,7 @@ let g:gutentags_ctags_exclude = [
       \ '*/tests/*',
       \ 'build',
       \ 'dist',
+      \ '*/venv/*', '*/.venv/*',
       \ '*sites/*/files/*',
       \ 'bin',
       \ 'node_modules',
@@ -212,7 +214,6 @@ let g:gutentags_ctags_exclude = [
       \ 'cache',
       \ 'compiled',
       \ 'docs',
-      \ '*/venv/*', '*/.venv/*',
       \ 'example',
       \ 'bundle',
       \ 'vendor',
