@@ -68,7 +68,6 @@ sudo apt-get install -y \
     libfontconfig1-dev \
     exa \
     ripgrep \
-    silversearcher-ag \
     htop \
     fzf \
     opam \
