@@ -185,7 +185,9 @@
       nodejs
       nodePackages.npm
       nodePackages.node2nix
+      ghidra-bin
       spotify
+      tdesktop
       tectonic
       bibtool
       zotero
@@ -565,10 +567,10 @@
         mkdir = "mkdir -pv";
         rm = "rm -Iv";
         untar = "tar vxf";
-        lla = "ls -la --git";
-        ll = "ls -l --git";
-        lsd = "exa --tree --long --git --color=always --level 6 -D | less";
-        lsf = "exa --tree --long --git --color=always --level 6 -a -I '.git' | less";
+        lla = "exa -la --git --color=always | less -r -e -F";
+        ll = "exa -l --git --color=always | less -r -e F";
+        lsd = "exa --tree --long --git --color=always --level 6 -D | less -r -e -F";
+        lsf = "exa --tree --long --git --color=always --level 6 -a -I '.git' | less -r -e -F";
         cl = "clear";
         ".." = "cd ../";
         "..." = "cd ../../";
