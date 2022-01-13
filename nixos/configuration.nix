@@ -43,7 +43,7 @@
     };
   };
 
-  boot.kernel.sysctl = { "vm.swappiness" = 95;};
+  boot.kernel.sysctl = { "vm.swappiness" = 95; };
 
   fileSystems = {
     "/" = {
@@ -71,6 +71,7 @@
       dirs.text = ''
         mkdir -p ~/opt/
         mkdir -p ~/tmp/
+        mkdir -p ~/mnt/
         mkdir -p ~/bin/
         mkdir -p ~/.config/nvim/undo/
         mkdir -p ~/.config/nvim/tags/
@@ -118,11 +119,12 @@
     shells = [ pkgs.bash ];
 
     systemPackages = with pkgs; [
-      perl # system
+      perl
       binutils
+      usbutils
       coreutils-full
-      nomacs
       util-linux
+      nomacs
       man-pages
       nmap
       fzf
@@ -160,13 +162,13 @@
       gnupg
       jq
       p7zip
-      universal-ctags # vi
-      pinentry-curses
+      universal-ctags
       xcircuit
       ngspice
       keepassxc
       xlog
       xlife
+      xlockmore
       xarchiver
       ipe
       zathura
@@ -179,17 +181,19 @@
       xterm
       wine
       winetricks
+      android-file-transfer
+      go-mtpfs
       vlc
       wirelesstools
-      #brightnessctl
       nodejs
       nodePackages.npm
       nodePackages.node2nix
       ghidra-bin
       spotify
       tdesktop
+      element-desktop
+      weechat
       tectonic
-      bibtool
       zotero
       obsidian
       lv2
@@ -204,10 +208,10 @@
       picocom
       imagemagick
       gnome.nautilus
-      lsof # diag
+      lsof
       strace
       pprof
-      gnumake # dev
+      gnumake
       gnuplot
       cmake
       automake
@@ -237,26 +241,19 @@
       ]))
       qt4
       cargo
-      ocaml
-      ocamlPackages.owl
-      ocamlPackages.owl-base
-      ocamlPackages.core
-      ocamlPackages.opam-core
-      ocamlPackages.base
-      ocamlPackages.findlib
+      ocamlformat
       opam
-      xorg.xbacklight # hw
+      acpilight
       xorg.xrandr
       xorg.xf86inputevdev
       xorg.xf86inputlibinput
       xorg.xf86videointel
       xorg.xf86videonouveau
-      xlockmore
       pciutils
       lm_sensors
       pavucontrol
       psensor
-      stalonetray # wm
+      stalonetray
       dmenu
       haskellPackages.yeganesh
       haskellPackages.xmobar
@@ -272,7 +269,6 @@
     gnupg = {
       agent = {
         enable = true;
-        pinentryFlavor = "curses";
       };
     };
 
@@ -502,6 +498,7 @@
             NeoSolarized
             tagbar
             vim-nix
+            vim-ocaml
             fzf-vim
             todo-comments-nvim
             vim-gutentags
@@ -541,8 +538,47 @@
             clang-format -verbose -i -style=google "$@"
             clang-tidy "$@"
         }
-        function op() {
-            dune init proj $@ --libs base,stdio,owl,owl-top,owl-base,owl-plplot,owl-zoo
+        function fcm() {
+            cmake-format -i "$@"
+        }
+        function foc() {
+            ocamlformat --inplace --enable-outside-detected-project "$@"
+        }
+        function ioc() {
+            dune init proj "$@" --libs "base,stdio,owl,owl-top,owl-base,owl-plplot"
+        }
+        function roc() {
+            dune build && dune exec "$@"
+        }
+        function toc() {
+            dune test "$@"
+        }
+        function lla() {
+            exa -la --git --color=always "$@" | less -r -e -F
+        }
+        function ll() {
+            exa -l --git --color=always "$@" | less -r -e F
+        }
+        function lsd() {
+            exa --tree --long --git --color=always --level 6 -D "$@" | less -r -e -F
+        }
+        function lsf() {
+            exa --tree --long --git --color=always --level 6 -a -I '.git' "$@" | less -r -e -F
+        }
+        function vp() {
+            shopt -s nullglob
+            vi src/*.py "$@"
+            shopt -u nullglob
+        }
+        function vc() {
+            shopt -s nullglob
+            vi src/*.c src/*.cc "$@"
+            shopt -u nullglob
+        }
+        function vo() {
+            shopt -s nullglob
+            vi bin/*.ml lib/*.ml test/*.ml "$@"
+            shopt -u nullglob
         }
         source "$HOME/z.sh"
         source "$HOME/key-bindings.bash"
@@ -557,6 +593,7 @@
       '';
 
       shellAliases = {
+        g = "git";
         top = "htop";
         ls = "exa";
         cat = "bat";
@@ -567,27 +604,15 @@
         mkdir = "mkdir -pv";
         rm = "rm -Iv";
         untar = "tar vxf";
-        lla = "exa -la --git --color=always | less -r -e -F";
-        ll = "exa -l --git --color=always | less -r -e F";
-        lsd = "exa --tree --long --git --color=always --level 6 -D | less -r -e -F";
-        lsf = "exa --tree --long --git --color=always --level 6 -a -I '.git' | less -r -e -F";
         cl = "clear";
         ".." = "cd ../";
         "..." = "cd ../../";
         "...." = "cd ../../../";
         "....." = "cd ../../../../";
-        g = "git";
-        fmo = "dune build @fmt --auto-promote --enable-outside-detected-project";
-        fmm = "cmake-format -i";
-        vp = "vi src/*.py";
-        vc = "vi src/*.c src/*.cc";
-        vo = "vi src/*.ml";
-        oc = "dune build && dune exec";
-        ot = "dune runtest";
         py = "python3";
         xdg = "xdg-open";
         mirror="wget --mirror --convert-links --adjust-extension --page-requisites --no-parent";
-        pc="picocom -b 115200 --echo --omap=crcrlf";
+        com="picocom -b 115200 --echo --omap=crcrlf";
         ports="lsof -i -P -n | grep LISTEN";
         pwgen="python -c 'import secrets,pyperclip;pw=secrets.token_urlsafe(32);pyperclip.copy(pw);print(pw)'";
       };
@@ -601,6 +626,8 @@
       enable = true;
 
       extraConfig = ''
+        set -g mouse on
+        set -g escape-time 1
         set -g status-position bottom
         set -g status-bg colour234
         set -g status-fg colour137
@@ -691,16 +718,24 @@
   fonts = {
     enableGhostscriptFonts = true;
 
+    fontconfig = {
+      enable = true;
+    };
+
     fontDir = {
       enable = true;
     };
 
     fonts = with pkgs; [
+      lmodern
+      font-awesome
+      font-awesome_4
       corefonts
       dejavu_fonts
       inconsolata
       fira-mono
       fira-code
+      fira-code-symbols
       ubuntu_font_family
     ];
   };
@@ -710,9 +745,8 @@
   };
 
   console = {
-    font = "Lat2-Terminus16"; #"${pkgs.terminus_font}/share/consolefonts/ter-v16n.psf.gz";
+    font = "Lat2-Terminus16";
     keyMap = "de";
-    #useXkbConfig = true;
   };
 
   systemd = {
@@ -747,6 +781,14 @@
   };
 
   services = {
+    udev = {
+      packages = [ pkgs.android-udev-rules ];
+    };
+
+    gvfs = {
+      enable = true;
+    };
+
     cron = {
       enable = true;
     };
@@ -857,8 +899,9 @@
               /run/current-system/sw/bin/xsetroot -solid black &
               /run/current-system/sw/bin/stalonetray &
               /run/current-system/sw/bin/blueman-applet &
-              #/run/current-system/sw/bin/nm-applet &
+              /run/current-system/sw/bin/nm-applet &
               /run/current-system/sw/bin/nextcloud &
+              /run/current-system/sw/bin/telegram-desktop -startintray &
             '';
           }
         ];
@@ -872,8 +915,8 @@
           theme = "${(pkgs.fetchFromGitHub {
             owner = "pthrr";
             repo = "minimal-sddm-theme";
-            rev = "f8c63eb135f39a8afb78474a563506c0fa673a20";
-            sha256 = "093yfhk6lm758hahb79r36248gyx3j1dkbkf33iqvqywxwjfc3h1";
+            rev = "cdeefa8cefd8d216d1836a7a94ccc6cfa843c2cd";
+            sha256 = "01n5zaa6a87scq190lmq3bb476ip6xgxl2iqqlldkjm0v134z684";
             })}";
         };
       };
@@ -956,7 +999,7 @@
   };
 
   hardware = {
-    enableRedistributableFirmware = true;
+    enableAllFirmware = true;
 
     trackpoint = {
       enable = true;
@@ -965,11 +1008,19 @@
 
     bluetooth = {
       enable = true;
+      settings = {
+        General = {
+          Enable = "Source,Sink,Media,Socket";
+        };
+      };
     };
 
     pulseaudio = {
       enable = true;
       extraModules = [ pkgs.pulseaudio-modules-bt ];
+      extraConfig = "
+        load-module module-switch-on-connect
+      ";
       package = pkgs.pulseaudioFull;
     };
 
@@ -1000,13 +1051,13 @@
         description = "pthrr";
         isNormalUser = true;
         uid = 1000;
-        extraGroups = [ "wheel" "networkmanager" ];
+        extraGroups = [ "wheel" "video" "networkmanager" ];
       };
 
       hacknmake = {
         description = "hacknmake";
         isNormalUser = true;
-        extraGroups = [ "networkmanager" ];
+        extraGroups = [ "video" "networkmanager" ];
       };
     };
   };
