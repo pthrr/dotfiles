@@ -783,6 +783,9 @@
   services = {
     udev = {
       packages = [ pkgs.android-udev-rules ];
+      extraRules = ''
+        ACTION=="add", SUBSYSTEM=="backlight", RUN+="${pkgs.coreutils}/bin/chgrp video %S%p/brightness", RUN+="${pkgs.coreutils}/bin/chmod g+w %S%p/brightness"
+      '';
     };
 
     gvfs = {
