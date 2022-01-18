@@ -41,9 +41,13 @@
         preLVM = true;
       };
     };
-  };
 
-  boot.kernel.sysctl = { "vm.swappiness" = 95; };
+    kernel = {
+      sysctl = {
+        "vm.swappiness" = 95;
+      };
+    };
+  };
 
   fileSystems = {
     "/" = {
@@ -291,7 +295,7 @@
             syntax on
             filetype plugin indent on
             set encoding=utf-8
-            set fileencodings=ucs-bom,utf-8,utf-16,cp1252,default,latin1
+            set fileencodings=ucs-bom,utf-8,latin1,cp1252,default
             set nobomb
             set nobackup
             set noswapfile
@@ -379,7 +383,7 @@
                     before = "", -- "fg" or "bg" or empty
                     keyword = "fg", -- "fg", "bg", "wide" or empty
                     after = "", -- "fg" or "bg" or empty
-                    pattern = [[.*<(KEYWORDS)\s*]],
+                    pattern = [[.*<(KEYWORDS)\s*:]],
                     comments_only = true,
                     max_line_len = 400,
                     exclude = {},
@@ -393,7 +397,7 @@
                     NOTE = { icon = "> ", color = "hint" },
                 },
                 merge_keywords = false,
-                pattern = [[\b(KEYWORDS)]],
+                pattern = [[\b(KEYWORDS):]],
               }
             EOF
             nmap <F5> :TodoQuickFix cwd=.<CR>
@@ -604,6 +608,7 @@
         mkdir = "mkdir -pv";
         rm = "rm -Iv";
         untar = "tar vxf";
+        un7z = "7z x";
         cl = "clear";
         ".." = "cd ../";
         "..." = "cd ../../";
