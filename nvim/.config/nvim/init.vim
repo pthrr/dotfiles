@@ -49,7 +49,7 @@ let g:python3_host_prog = '/usr/bin/python3'
 syntax on
 filetype plugin indent on
 set encoding=utf-8
-set fileencodings=ucs-bom,utf-8,utf-16,cp1252,default,latin1
+set fileencodings=ucs-bom,utf-8,latin1,cp1252,default
 set nobomb
 set nobackup
 set noswapfile
@@ -137,7 +137,7 @@ lua << EOF
         before = "", -- "fg" or "bg" or empty
         keyword = "fg", -- "fg", "bg", "wide" or empty
         after = "", -- "fg" or "bg" or empty
-        pattern = [[.*<(KEYWORDS)\s*]],
+        pattern = [[.*<(KEYWORDS)\s*:]],
         comments_only = true,
         max_line_len = 400,
         exclude = {},
@@ -151,7 +151,7 @@ lua << EOF
         NOTE = { icon = "> ", color = "hint" },
     },
     merge_keywords = false,
-    pattern = [[\b(KEYWORDS)]],
+    pattern = [[\b(KEYWORDS):]],
   }
 EOF
 nmap <F5> :TodoQuickFix cwd=.<CR>
