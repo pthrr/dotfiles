@@ -838,10 +838,10 @@
     timesyncd = {
       enable = true;
       servers = [
-        "0.ch.pool.ntp.org"
-        "1.ch.pool.ntp.org"
-        "2.ch.pool.ntp.org"
-        "3.ch.pool.ntp.org"
+        "0.pool.ntp.org"
+        "1.pool.ntp.org"
+        "2.pool.ntp.org"
+        "3.pool.ntp.org"
       ];
     };
 
@@ -897,7 +897,7 @@
         };
 
         xterm = {
-          enable = false;
+          enable = false; # login manager
         };
 
         session = [
