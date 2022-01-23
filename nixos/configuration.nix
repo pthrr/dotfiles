@@ -347,6 +347,8 @@
             set foldmethod=indent
             set foldnestmax=2
             set foldlevelstart=10
+            set shell=bash
+            set lazyredraw
             " automatically save view, load with :loadview
             autocmd BufWinLeave *.* mkview
             " show matching brackets
