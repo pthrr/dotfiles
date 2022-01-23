@@ -13,6 +13,7 @@
   boot = {
     cleanTmpDir = true;
     supportedFilesystems = [ "ext2" "ext3" "ext4" "fat16" "fat32" "exfat" "ntfs" ];
+    kernelParams = [ "efivars.pstore_disable=y" ];
 
     loader = {
       timeout = 1;
@@ -317,12 +318,13 @@
             set novisualbell
             set noerrorbells
             set statusline=
-            set statusline +=\ %n\             "buffer number
+            set statusline +=%m\               "modified flag
+            set statusline +=%n\               "buffer number
             set statusline +=%f                "relative path
-            set statusline +=%m                "modified flag
             set statusline +=%=%{&fenc}\       "file encoding
+            set statusline +=%{&ff}\           "file format
             set statusline +=%L\               "total lines
-            set path=$PWD/**
+            set path+=**
             set wildmenu
             set wildmode=list:longest,full
             set wildignore +=.git,.hg,.svn
@@ -396,17 +398,17 @@
             EOF
             nmap <F5> :TodoQuickFix cwd=.<CR>
             " fzf
-            set grepprg=rg\ --vimgrep\ --smart-case\ --follow
-            nnoremap <silent> <C-f> :Files<CR>
-            nnoremap <silent> <Leader>f :Ag<CR>
-            nnoremap <silent> <Leader>b :Buffers<CR>
-            nnoremap <silent> <Leader>/ :BLines<CR>
-            nnoremap <silent> <Leader>' :Marks<CR>
-            nnoremap <silent> <Leader>g :Commits<CR>
-            nnoremap <silent> <Leader>H :Helptags<CR>
-            nnoremap <silent> <Leader>hh :History<CR>
-            nnoremap <silent> <Leader>h: :History:<CR>
-            nnoremap <silent> <Leader>h/ :History/<CR> 
+            "set grepprg=rg\ --vimgrep\ --smart-case\ --follow
+            "nnoremap <silent> <C-f> :Files<CR>
+            "nnoremap <silent> <Leader>f :Ag<CR>
+            "nnoremap <silent> <Leader>b :Buffers<CR>
+            "nnoremap <silent> <Leader>/ :BLines<CR>
+            "nnoremap <silent> <Leader>' :Marks<CR>
+            "nnoremap <silent> <Leader>g :Commits<CR>
+            "nnoremap <silent> <Leader>H :Helptags<CR>
+            "nnoremap <silent> <Leader>hh :History<CR>
+            "nnoremap <silent> <Leader>h: :History:<CR>
+            "nnoremap <silent> <Leader>h/ :History/<CR> 
             " ultisnips
             let g:UltiSnipsExpandTrigger = '<tab>'
             let g:UltiSnipsJumpForwardTrigger = '<tab>'
@@ -428,6 +430,8 @@
             let g:cpp_attributes_highlight = 1
             " gutentags
             map oo <C-]>
+            map OO <C-T>
+            map <C-O> g]
             set tags=~/.config/nvim/tags
             let g:gutentags_modules = ['ctags']
             let g:gutentags_add_default_project_roots = 0
@@ -493,15 +497,15 @@
 
         packages.nix = with pkgs.vimPlugins; {
           start = [
-            NeoSolarized
-            tagbar
             vim-nix
             vim-ocaml
-            fzf-vim
-            todo-comments-nvim
+            NeoSolarized
+            tagbar
             vim-gutentags
-            vimagit
             ultisnips
+            vimagit
+            #fzf-vim
+            todo-comments-nvim
           ];
         };
       };
@@ -785,6 +789,10 @@
       extraRules = ''
         ACTION=="add", SUBSYSTEM=="backlight", RUN+="${pkgs.coreutils}/bin/chgrp video %S%p/brightness", RUN+="${pkgs.coreutils}/bin/chmod g+w %S%p/brightness"
       '';
+    };
+
+    fstrim = {
+      enable = true;
     };
 
     gvfs = {
