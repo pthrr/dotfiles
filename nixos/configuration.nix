@@ -285,11 +285,11 @@
       configure = {
         customRC = ''
             " OS dependent
-            set background=dark
             set termguicolors
+            set background=dark
             colorscheme NeoSolarized
-            " just be a text editor
-            let g:loaded_python_provider = 0 " disable py2
+            " disable py2
+            let g:loaded_python_provider = 0
             let g:python3_host_prog = '/run/current-system/sw/bin/python'
             " generic
             syntax on
@@ -318,15 +318,10 @@
             set noerrorbells
             set statusline=
             set statusline +=\ %n\             "buffer number
-            set statusline +=%{&ff}            "file format
-            set statusline +=%y\                "file type
-            set statusline +=%<%F            "full path
+            set statusline +=%f                "relative path
             set statusline +=%m                "modified flag
-            set statusline +=%=%{&fenc}\          "file encoding
-            set statusline +=%5l             "current line
-            set statusline +=/%L               "total lines
-            set statusline +=%4v\              "virtual column number
-            set statusline +=0x%04B\           "character under cursor
+            set statusline +=%=%{&fenc}\       "file encoding
+            set statusline +=%L\               "total lines
             set path=$PWD/**
             set wildmenu
             set wildmode=list:longest,full
@@ -350,24 +345,8 @@
             set foldmethod=indent
             set foldnestmax=2
             set foldlevelstart=10
-            " map folding
-            nnoremap <space> za
-            vnoremap <space> zf
-            " map ESC
-            inoremap jk <ESC>
-            tnoremap jk <C-\><C-n>
-            " change leader key
-            let mapleader = "'"
             " automatically save view, load with :loadview
             autocmd BufWinLeave *.* mkview
-            " paste multiple times
-            xnoremap p pgvy
-            " delete without yanking
-            nnoremap <leader>d "_d
-            vnoremap <leader>d "_d
-            " replace currently selected text with default register
-            " without yanking it
-            vnoremap <leader>p "_dP
             " show matching brackets
             set showmatch
             highlight MatchParen guibg=none guifg=white gui=bold ctermbg=none ctermfg=white cterm=bold
@@ -376,6 +355,21 @@
             highlight cursorline guibg=none guifg=none gui=underline ctermbg=none ctermfg=none cterm=underline
             autocmd InsertEnter * set cursorline
             autocmd InsertLeave * set nocursorline
+            " change leader key
+            let mapleader = "'"
+            " map folding
+            nnoremap <space> za
+            vnoremap <space> zf
+            " map ESC
+            inoremap jk <ESC>
+            tnoremap jk <C-\><C-n>
+            " paste multiple times
+            xnoremap p pgvy
+            " delete without yanking
+            nnoremap <leader>d "_d
+            vnoremap <leader>d "_d
+            " replace currently selected text without yanking it
+            vnoremap <leader>p "_dP
             " todo-comments
             lua << EOF
               require("todo-comments").setup {
