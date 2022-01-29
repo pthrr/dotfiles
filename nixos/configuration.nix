@@ -89,9 +89,6 @@
 
   environment = {
     homeBinInPath = true;
-    #extraSetup = "";
-    #interactiveShellInit = "";
-    #loginShellInit = "";
 
     extraInit = ''
       export XDG_CONFIG_HOME=$HOME/.config
@@ -574,8 +571,6 @@
         eval $(opam config env)
       '';
 
-      #loginShellInit = "";
-
       promptInit = ''
         PROMPT_DIRTRIM=2
         PS1='\[\e[33m\]\w\[\e[0m\] \u$(if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then echo " @ \h"; else echo ""; fi) % '
@@ -627,6 +622,7 @@
         set-option -g status-interval 5
         set-option -g automatic-rename on
         set-option -g automatic-rename-format '#{b:pane_current_path}'
+        set -g renumber-windows on
         setw -g window-status-current-format " #I#[fg=colour250]:#[fg=colour255]#W#[fg=colour50]#F "
         setw -g window-status-format " #I#[fg=colour237]:#[fg=colour250]#W#[fg=colour244]#F "
         setw -g mode-keys vi
