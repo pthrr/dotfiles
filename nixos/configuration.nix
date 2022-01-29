@@ -119,6 +119,7 @@
       BROWSER = "chromium";
       FZF_DEFAULT_COMMAND = "rg --files";
       FZF_DEFAULT_OPTS = "-m --height 50% --border";
+      LESS = "-r";
     };
 
     shells = [ pkgs.bash ];
@@ -320,7 +321,7 @@
             set statusline=
             set statusline +=%m\               "modified flag
             set statusline +=%n\               "buffer number
-            set statusline +=%f                "relative path
+            set statusline +=%f\               "relative path
             set statusline +=%=%{&fenc}\       "file encoding
             set statusline +=%{&ff}\           "file format
             set statusline +=%L\               "total lines
@@ -504,13 +505,10 @@
       enableCompletion = true;
       enableLsColors = true;
 
-      shellInit = ''
-        HISTCONTROL=ignoreboth:erasedups
+      interactiveShellInit = ''
+        HISTCONTROL=ignorespace:erasedups
         HISTSIZE=1000
         HISTFILESIZE=2000
-      '';
-
-      interactiveShellInit = ''
         function cht() {
             curl -m 10 "https://cht.sh/$@"
         }
@@ -545,16 +543,16 @@
             dune test "$@"
         }
         function lla() {
-            exa -la --git --color=always "$@" | less -r -e -F
+            exa -la --git --color=always "$@" | less
         }
         function ll() {
-            exa -l --git --color=always "$@" | less -r -e F
+            exa -l --git --color=always "$@" | less
         }
         function lsd() {
-            exa --tree --long --git --color=always --level 6 -D "$@" | less -r -e -F
+            exa --tree --long --git --color=always --level 6 -D "$@" | less
         }
         function lsf() {
-            exa --tree --long --git --color=always --level 6 -a -I '.git' "$@" | less -r -e -F
+            exa --tree --long --git --color=always --level 6 -a -I '.git' "$@" | less
         }
         function vp() {
             shopt -s nullglob
@@ -589,7 +587,6 @@
         ls = "exa";
         cat = "bat";
         grep = "rg";
-        less = "less -r";
         cp = "cp -iv";
         mv = "mv -iv";
         mkdir = "mkdir -pv";
@@ -605,7 +602,7 @@
         xdg = "xdg-open";
         mirror="wget --mirror --convert-links --adjust-extension --page-requisites --no-parent";
         com="picocom -b 115200 --echo --omap=crcrlf";
-        ports="lsof -i -P -n | grep LISTEN";
+        ports="sudo netstat -pln";
         pwgen="python -c 'import secrets,pyperclip;pw=secrets.token_urlsafe(32);pyperclip.copy(pw);print(pw)'";
       };
     };
