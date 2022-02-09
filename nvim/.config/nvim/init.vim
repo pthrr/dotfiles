@@ -18,8 +18,6 @@ if dein#load_state(s:settings.dein_dir)
     call dein#add('nvim-lua/plenary.nvim')
     call dein#add('folke/todo-comments.nvim', { 'depends': 'plenary' })
     call dein#add('ludovicchabant/vim-gutentags')
-    call dein#add('junegunn/fzf', { 'build': './install', 'merged': 0 })
-    call dein#add('junegunn/fzf.vim', { 'depends': 'fzf' })
     call dein#end()
     call dein#save_state()
 endif
@@ -39,11 +37,11 @@ endif
 if !isdirectory($HOME."/.config/nvim/tags")
     call mkdir($HOME."/.config/nvim/tags", "", 0700)
 endif
-set background=dark
 set termguicolors
+set background=dark
 colorscheme NeoSolarized
-" just be a text editor
-let g:loaded_python_provider = 0 " disable py2
+" disable py2
+let g:loaded_python_provider = 0
 let g:python3_host_prog = '/usr/bin/python3'
 " generic
 syntax on
@@ -71,17 +69,13 @@ set noshowmode
 set novisualbell
 set noerrorbells
 set statusline=
-set statusline +=\ %n\             "buffer number
-set statusline +=%{&ff}            "file format
-set statusline +=%y\                "file type
-set statusline +=%<%F            "full path
-set statusline +=%m                "modified flag
-set statusline +=%=%{&fenc}\          "file encoding
-set statusline +=%5l             "current line
-set statusline +=/%L               "total lines
-set statusline +=%4v\              "virtual column number
-set statusline +=0x%04B\           "character under cursor
-set path=$PWD/**
+set statusline +=%m\               "modified flag
+set statusline +=%n\               "buffer number
+set statusline +=%f\               "relative path
+set statusline +=%=%{&fenc}\       "file encoding
+set statusline +=%{&ff}\           "file format
+set statusline +=%L\               "total lines
+set path+=**
 set wildmenu
 set wildmode=list:longest,full
 set wildignore +=.git,.hg,.svn
@@ -104,24 +98,10 @@ set expandtab
 set foldmethod=indent
 set foldnestmax=2
 set foldlevelstart=10
-" map folding
-nnoremap <space> za
-vnoremap <space> zf
-" map ESC
-inoremap jk <ESC>
-tnoremap jk <C-\><C-n>
-" change leader key
-let mapleader = "'"
+set shell=bash
+set lazyredraw
 " automatically save view, load with :loadview
 autocmd BufWinLeave *.* mkview
-" paste multiple times
-xnoremap p pgvy
-" delete without yanking
-nnoremap <leader>d "_d
-vnoremap <leader>d "_d
-" replace currently selected text with default register
-" without yanking it
-vnoremap <leader>p "_dP
 " show matching brackets
 set showmatch
 highlight MatchParen guibg=none guifg=white gui=bold ctermbg=none ctermfg=white cterm=bold
@@ -130,6 +110,21 @@ set matchtime=0
 highlight cursorline guibg=none guifg=none gui=underline ctermbg=none ctermfg=none cterm=underline
 autocmd InsertEnter * set cursorline
 autocmd InsertLeave * set nocursorline
+" change leader key
+let mapleader = "'"
+" map folding
+nnoremap <space> za
+vnoremap <space> zf
+" map ESC
+inoremap jk <ESC>
+tnoremap jk <C-\><C-n>
+" paste multiple times
+xnoremap p pgvy
+" delete without yanking
+nnoremap <leader>d "_d
+vnoremap <leader>d "_d
+" replace currently selected text without yanking it
+vnoremap <leader>p "_dP
 " todo-comments
 lua << EOF
   require("todo-comments").setup {
@@ -155,18 +150,6 @@ lua << EOF
   }
 EOF
 nmap <F5> :TodoQuickFix cwd=.<CR>
-" fzf
-set grepprg=rg\ --vimgrep\ --smart-case\ --follow
-nnoremap <silent> <C-f> :Files<CR>
-nnoremap <silent> <Leader>f :Ag<CR>
-nnoremap <silent> <Leader>b :Buffers<CR>
-nnoremap <silent> <Leader>/ :BLines<CR>
-nnoremap <silent> <Leader>' :Marks<CR>
-nnoremap <silent> <Leader>g :Commits<CR>
-nnoremap <silent> <Leader>H :Helptags<CR>
-nnoremap <silent> <Leader>hh :History<CR>
-nnoremap <silent> <Leader>h: :History:<CR>
-nnoremap <silent> <Leader>h/ :History/<CR> 
 " ultisnips
 let g:UltiSnipsExpandTrigger = '<tab>'
 let g:UltiSnipsJumpForwardTrigger = '<tab>'
@@ -188,6 +171,8 @@ let g:cpp_member_highlight = 1
 let g:cpp_attributes_highlight = 1
 " gutentags
 map oo <C-]>
+map OO <C-T>
+map <C-O> g]
 set tags=~/.config/nvim/tags
 let g:gutentags_modules = ['ctags']
 let g:gutentags_add_default_project_roots = 0

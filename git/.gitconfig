@@ -24,8 +24,15 @@
 [interactive]
     diffFilter = delta --color-only --features=interactive
 
+[status]
+    submoduleSummary = true
+
+[submodule]
+    recurse = true
+
 [diff]
     tool = vimdiff3
+    submodule = log
 
 [merge]
     tool = vimdiff3
@@ -36,6 +43,7 @@
 
 [push]
     default = simple
+    recurseSubmodules = on-demand
 
 [filter "lfs"]
     required = true

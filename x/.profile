@@ -46,9 +46,14 @@ if [ -d "$HOME/.lv2" ] ; then
     export LV2_PATH="$HOME/.lv2:$LV2_PATH"
 fi
 
+export LV2_PATH='$HOME/.lv2:$LV2_PATH'
+export FZF_DEFAULT_COMMAND='rg --files'
+export FZF_DEFAULT_OPTS='-m --height 50% --border'
 export LC_ALL='de_DE.UTF-8'
 export LANG='de_DE.UTF-8'
 export EDITOR='nvim'
+export TERMINAL='xterm-256color'
+export TERM='xterm-256color'
 export BROWSER='chromium'
 export SUDO_ASKPASS='/usr/bin/ssh-askpass'
 export _JAVA_AWT_WM_NONREPARENTING=1
@@ -58,5 +63,6 @@ export GNOME_ACCESSIBILITY=0
 export QT_ACCESSIBILITY=0
 export NO_AT_BRIDGE=1
 export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=0
+export LESS='-r'
 source "$HOME/.cargo/env"
 eval $(opam config env)

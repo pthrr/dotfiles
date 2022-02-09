@@ -1,25 +1,8 @@
-alias vi='nvim'
-alias top='htop'
-alias ls='exa'
-alias cat='bat'
-alias grep='rg'
-alias less='less -r'
-alias cp='cp -iv'
-alias mv='mv -iv'
-alias mkdir='mkdir -pv'
-alias rm='rm -Iv'
-alias untar='tar vxf'
-alias un7z='7z x'
-alias lla='ls -la --git'
-alias ll='ls -l --git'
-alias lsd='exa --tree --long --git --color=always --level 6 -D | less'
-alias lsf='exa --tree --long --git --color=always --level 6 -a -I '.git' | less'
-alias cl='clear'
-alias ..='cd ../'
-alias ...='cd ../../'
-alias ....='cd ../../../'
-alias .....='cd ../../../../'
-alias g='git'
+export HISTCONTROL=ignorespace:erasedups
+export HISTSIZE=1000
+export HISTFILESIZE=2000
+export PROMPT_DIRTRIM=2
+export PS1='\[\e[33m\]\w\[\e[0m\] \u$(if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then echo " @ \h"; else echo ""; fi) % '
 function cht() {
     curl -m 10 "https://cht.sh/$@"
 }
@@ -38,27 +21,71 @@ function fcc() {
     clang-format -verbose -i -style=google "$@"
     clang-tidy "$@"
 }
-alias fmo='dune build @fmt --auto-promote --enable-outside-detected-project'
-alias fmm='cmake-format -i'
-alias vp='vi src/*.py'
-alias vc='vi src/*.c src/*.cc'
-alias vo='vi src/*.ml'
-alias oc='dune build && dune exec'
-alias ot='dune runtest'
-function op() {
-    dune init proj $@ --libs base,stdio,owl,owl-top,owl-base,owl-plplot,owl-zoo
+function fcm() {
+    cmake-format -i "$@"
 }
+function foc() {
+    ocamlformat --inplace --enable-outside-detected-project "$@"
+}
+function ioc() {
+    dune init proj "$@" --libs "base,stdio,owl,owl-top,owl-base,owl-plplot"
+}
+function roc() {
+    dune build && dune exec "$@"
+}
+function toc() {
+    dune test "$@"
+}
+function lla() {
+    exa -la --git --color=always "$@" | less
+}
+function ll() {
+    exa -l --git --color=always "$@" | less
+}
+function lsd() {
+    exa --tree --long --git --color=always --level 6 -D "$@" | less
+}
+function lsf() {
+    exa --tree --long --git --color=always --level 6 -a -I '.git' "$@" | less
+}
+function vp() {
+    shopt -s nullglob
+    vi src/*.py "$@"
+    shopt -u nullglob
+}
+function vc() {
+    shopt -s nullglob
+    vi src/*.c src/*.cc "$@"
+    shopt -u nullglob
+}
+function vo() {
+    shopt -s nullglob
+    vi bin/*.ml lib/*.ml test/*.ml "$@"
+    shopt -u nullglob
+}
+alias vi='nvim'
+alias g='git'
+alias top='htop'
+alias ls='exa'
+alias cat='bat'
+alias grep='rg'
+alias cp='cp -iv'
+alias mv='mv -iv'
+alias mkdir='mkdir -pv'
+alias rm='rm -Iv'
+alias untar='tar vxf'
+alias un7z='7z x'
+alias cl='clear'
+alias ..='cd ../'
+alias ...='cd ../../'
+alias ....='cd ../../../'
+alias .....='cd ../../../../'
 alias py='python3'
 alias xdg='xdg-open'
 alias mirror='wget --mirror --convert-links --adjust-extension --page-requisites --no-parent'
-alias pc='picocom -b 115200 --echo --omap=crcrlf'
-alias ports='lsof -i -P -n | grep LISTEN'
-alias pwgen='python -c "import secrets,pyperclip;pw=secrets.token_urlsafe(32);pyperclip.copy(pw);print(pw)"'
-export HISTCONTROL=ignoreboth:erasedups
-export HISTSIZE=1000
-export HISTFILESIZE=2000
-export PROMPT_DIRTRIM=2
-export PS1='\[\e[33m\]\w\[\e[0m\] \u$(if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then echo " @ \h"; else echo ""; fi) % '
+alias com='picocom -b 115200 --echo --omap=crcrlf'
+alias ports='sudo netstat -pln'
+alias pwgen="python -c 'import secrets,pyperclip;pw=secrets.token_urlsafe(32);pyperclip.copy(pw);print(pw)'"
 source "$HOME/z.sh"
 source "$HOME/key-bindings.bash"
 source "$HOME/.cargo/env"

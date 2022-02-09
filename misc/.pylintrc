@@ -76,7 +76,7 @@ disable=abstract-method,
         execfile-builtin,
         file-builtin,
         filter-builtin-not-iterating,
-        #fixme,
+        fixme,
         getslice-method,
         global-statement,
         hex-method,
@@ -150,12 +150,13 @@ disable=abstract-method,
         using-cmp-argument,
         wrong-import-order,
         xrange-builtin,
-        zip-builtin-not-iterating,
+        zip-builtin-not-iterating
+        #missing-function-docstring,
         #redefined-outer-name,
         #chained-comparison,
         #missing-module-docstring,
         #missing-class-docstring,
-        line-too-long,
+        #line-too-long,
         #too-many-lines,
         #broad-except,
         #unused-variable,
@@ -176,7 +177,7 @@ disable=abstract-method,
         #too-many-branches,
         #too-many-nested-blocks,
         #no-self-use,
-        raise-missing-from
+        #raise-missing-from
 
 
 [REPORTS]
@@ -208,6 +209,8 @@ evaluation=10.0 - ((float(5 * error + warning + refactor + convention) / stateme
 
 
 [BASIC]
+
+indent-string='    '
 
 # Good variable names which should always be accepted, separated by a comma
 good-names=main,_
@@ -323,10 +326,10 @@ max-module-lines=99999
 # spaces.  Google's externaly-published style guide says 4, consistent with
 # PEP 8.  Here, we use 2 spaces, for conformity with many open-sourced Google
 # projects (like TensorFlow).
-indent-string='    '
+indent-string='  '
 
 # Number of spaces of indent required inside a hanging  or continued line.
-indent-after-paren=8
+indent-after-paren=4
 
 # Expected format of line ending, e.g. empty (any line ending), LF or CRLF.
 expected-line-ending-format=
@@ -335,9 +338,9 @@ expected-line-ending-format=
 [MISCELLANEOUS]
 
 # List of note tags to take in consideration, separated by a comma.
-notes=FIXME,
-    HACK,
-    PERF
+notes=TODO,
+    WARN,
+    NOTE
 
 
 [STRING]
