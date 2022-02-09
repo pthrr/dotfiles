@@ -156,6 +156,7 @@
       exa
       bat
       neofetch
+      gnumeric
       ripgrep
       unrar
       xfontsel
@@ -194,7 +195,7 @@
       ghidra-bin
       spotify
       tdesktop
-      element-desktop
+      #element-desktop
       weechat
       tectonic
       zotero
@@ -321,7 +322,7 @@
             set statusline +=%f\               "relative path
             set statusline +=%=%{&fenc}\       "file encoding
             set statusline +=%{&ff}\           "file format
-            set statusline +=%L\               "total lines
+            set statusline +=%{&filetype}\     "file type
             set path+=**
             set wildmenu
             set wildmode=list:longest,full
@@ -553,17 +554,17 @@
         }
         function vp() {
             shopt -s nullglob
-            vi src/*.py "$@"
+            nvim src/*.py "$@"
             shopt -u nullglob
         }
         function vc() {
             shopt -s nullglob
-            vi src/*.c src/*.cc "$@"
+            nvim src/*.c src/*.cc "$@"
             shopt -u nullglob
         }
         function vo() {
             shopt -s nullglob
-            vi bin/*.ml lib/*.ml test/*.ml "$@"
+            nvim bin/*.ml lib/*.ml test/*.ml "$@"
             shopt -u nullglob
         }
         source "$HOME/z.sh"

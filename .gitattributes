@@ -1,0 +1,8 @@
+*.sh            text eol=lf
+*.bash          text eol=lf
+*.vim           text eol=lf
+*.snippets      text eol=lf
+.tmux.conf      text eol=lf
+.bashrc         text eol=lf
+.profile        text eol=lf
+.gitconfig      text eol=lf
