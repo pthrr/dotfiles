@@ -74,7 +74,7 @@ set statusline +=%n\               "buffer number
 set statusline +=%f\               "relative path
 set statusline +=%=%{&fenc}\       "file encoding
 set statusline +=%{&ff}\           "file format
-set statusline +=%L\               "total lines
+set statusline +=%{&filetype}\     "file type
 set path+=**
 set wildmenu
 set wildmode=list:longest,full

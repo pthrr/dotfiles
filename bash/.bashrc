@@ -50,17 +50,17 @@ function lsf() {
 }
 function vp() {
     shopt -s nullglob
-    vi src/*.py "$@"
+    nvim src/*.py "$@"
     shopt -u nullglob
 }
 function vc() {
     shopt -s nullglob
-    vi src/*.c src/*.cc "$@"
+    nvim src/*.c src/*.cc "$@"
     shopt -u nullglob
 }
 function vo() {
     shopt -s nullglob
-    vi bin/*.ml lib/*.ml test/*.ml "$@"
+    nvim bin/*.ml lib/*.ml test/*.ml "$@"
     shopt -u nullglob
 }
 alias vi='nvim'
