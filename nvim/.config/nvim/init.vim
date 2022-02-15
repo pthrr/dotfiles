@@ -17,6 +17,7 @@ if dein#load_state(s:settings.dein_dir)
     call dein#add('jreybert/vimagit')
     call dein#add('nvim-lua/plenary.nvim')
     call dein#add('folke/todo-comments.nvim', { 'depends': 'plenary' })
+    call dein#add('hoschi/yode-nvim', { 'depends': 'plenary' })
     call dein#add('ludovicchabant/vim-gutentags')
     call dein#end()
     call dein#save_state()
@@ -169,6 +170,16 @@ nmap <F7> :MagitOnly<CR>
 " c/cpp syntax highlighting options
 let g:cpp_member_highlight = 1
 let g:cpp_attributes_highlight = 1
+" yode
+lua require('yode-nvim').setup({})
+map <Leader>yc :YodeCreateSeditorFloating<CR>
+map <Leader>yr :YodeCreateSeditorReplace<CR>
+nmap <Leader>bd :YodeBufferDelete<cr>
+imap <Leader>bd <esc>:YodeBufferDelete<cr>
+map <C-W>r :YodeLayoutShiftWinDown<CR>
+map <C-W>R :YodeLayoutShiftWinUp<CR>
+map <C-W>J :YodeLayoutShiftWinBottom<CR>
+map <C-W>K :YodeLayoutShiftWinTop<CR>
 " gutentags
 map oo <C-]>
 map OO <C-T>

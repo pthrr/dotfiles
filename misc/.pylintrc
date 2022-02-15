@@ -150,14 +150,13 @@ disable=abstract-method,
         using-cmp-argument,
         wrong-import-order,
         xrange-builtin,
-        zip-builtin-not-iterating
-        #missing-function-docstring,
-        #redefined-outer-name,
+        zip-builtin-not-iterating,
+        redefined-outer-name,
         #chained-comparison,
-        #missing-module-docstring,
-        #missing-class-docstring,
-        #line-too-long,
-        #too-many-lines,
+        #missing-module-docstring
+        missing-class-docstring,
+        line-too-long,
+        too-many-lines,
         #broad-except,
         #unused-variable,
         #import-error,
@@ -326,7 +325,7 @@ max-module-lines=99999
 # spaces.  Google's externaly-published style guide says 4, consistent with
 # PEP 8.  Here, we use 2 spaces, for conformity with many open-sourced Google
 # projects (like TensorFlow).
-indent-string='  '
+indent-string='    '
 
 # Number of spaces of indent required inside a hanging  or continued line.
 indent-after-paren=4
