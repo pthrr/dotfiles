@@ -55,6 +55,8 @@ set noswapfile
 set nowritebackup
 set undodir=~/.config/nvim/undo
 set undofile
+set undolevels=1000
+set undoreload=10000
 set splitbelow
 set splitright
 set number
