@@ -57,6 +57,18 @@ set undodir=~/.config/nvim/undo
 set undofile
 set undolevels=1000
 set undoreload=10000
+set complete-=i
+set ttimeout
+set ttimeoutlen=100
+set scrolloff=1
+set sidescrolloff=5
+set list
+set listchars=tab:\›\ ,trail:-,extends:>,precedes:<,nbsp:+
+set shell=/usr/bin/env\ bash
+set history=1000
+set tabpagemax=50
+set textwidth=72
+set whichwrap=<,>,h,l
 set splitbelow
 set splitright
 set number
@@ -93,7 +105,6 @@ set wildignore +=*.zip,*.tar.gz,*.tar.bz2,*.rar,*.tar.xz,*.kgb
 set wildignore +=*.swp,.lock,.DS_Store,._*
 set colorcolumn=80
 set clipboard=unnamedplus
-set list listchars=tab:\›\ ,trail:-,extends:>,precedes:<
 set tabstop=4
 set softtabstop=4
 set shiftwidth=4
@@ -101,7 +112,6 @@ set expandtab
 set foldmethod=indent
 set foldnestmax=2
 set foldlevelstart=10
-set shell=bash
 set lazyredraw
 " automatically save view, load with :loadview
 autocmd BufWinLeave *.* mkview
