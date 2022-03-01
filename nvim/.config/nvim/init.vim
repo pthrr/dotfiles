@@ -67,8 +67,6 @@ set listchars=tab:\›\ ,trail:-,extends:>,precedes:<,nbsp:+
 set shell=/usr/bin/env\ bash
 set history=1000
 set tabpagemax=50
-set textwidth=72
-set whichwrap=<,>,h,l
 set splitbelow
 set splitright
 set number
