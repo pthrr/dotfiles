@@ -43,10 +43,10 @@ function ll() {
     exa -l --git --color=always "$@" | less
 }
 function lsd() {
-    exa --tree --long --git --git-ignore --color=always --level 6 -D -I ".git|venv|__pycache__" "$@" | less
+    exa --tree --long --git --color=always --level 6 -D -I ".git|venv|__pycache__" "$@" | less
 }
 function lsf() {
-    exa --tree --long --git --git-ignore --color=always --level 6 -a -I ".git|venv|__pycache__" "$@" | less
+    exa --tree --long --git --color=always --level 6 -a -I ".git|venv|__pycache__" "$@" | less
 }
 function vp() {
     shopt -s nullglob

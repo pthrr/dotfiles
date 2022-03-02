@@ -74,7 +74,6 @@ set relativenumber
 set nowrap
 set autoread
 set hlsearch
-set ignorecase
 set incsearch
 set title
 set hidden
