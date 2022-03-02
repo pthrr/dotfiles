@@ -43,10 +43,10 @@ function ll() {
     exa -l --git --color=always "$@" | less
 }
 function lsd() {
-    exa --tree --long --git --color=always --level 6 -D "$@" | less
+    exa --tree --long --git --git-ignore --color=always --level 6 -D -I ".git|venv|__pycache__" "$@" | less
 }
 function lsf() {
-    exa --tree --long --git --color=always --level 6 -a -I '.git' "$@" | less
+    exa --tree --long --git --git-ignore --color=always --level 6 -a -I ".git|venv|__pycache__" "$@" | less
 }
 function vp() {
     shopt -s nullglob
@@ -84,6 +84,7 @@ alias py='python3'
 alias xdg='xdg-open'
 alias mirror='wget --mirror --convert-links --adjust-extension --page-requisites --no-parent'
 alias com='picocom -b 115200 --echo --omap=crcrlf'
+alias procs='ps -aux'
 alias ports='sudo netstat -pln'
 alias pwgen="python -c 'import secrets,pyperclip;pw=secrets.token_urlsafe(32);pyperclip.copy(pw);print(pw)'"
 source "$HOME/z.sh"
