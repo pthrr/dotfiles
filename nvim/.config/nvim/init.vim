@@ -19,6 +19,7 @@ if dein#load_state(s:settings.dein_dir)
     call dein#add('folke/todo-comments.nvim', { 'depends': 'plenary' })
     call dein#add('hoschi/yode-nvim', { 'depends': 'plenary' })
     call dein#add('ludovicchabant/vim-gutentags')
+    call dein#add('dense-analysis/ale')
     call dein#end()
     call dein#save_state()
 endif
@@ -254,3 +255,19 @@ let g:gutentags_ctags_exclude = [
       \ '*.rar', '*.zip', '*.tar', '*.tar.gz', '*.tar.xz', '*.tar.bz2',
       \ '*.pdf', '*.doc', '*.docx', '*.ppt', '*.pptx',
       \ ]
+" ale
+nmap <F6> :ALEFix<CR>
+let g:ale_linters = {
+    \ 'python': ['pylint'],
+    \ 'cpp': ['clangtidy'],
+    \ 'c': ['clangtidy'],
+    \}
+let g:ale_fixers = {
+    \ 'python': ['black', 'isort'],
+    \ 'cpp': ['clangformat'],
+    \ 'c': ['clangformat'],
+    \ '*': ['remove_trailing_lines', 'trim_whitespace'],
+    \}
+let g:ale_python_black_options = '--line-length 79'
+let g:ale_python_isort_options = '--profile black --atomic --line-length 79'
+let g:ale_fix_on_save = 0
