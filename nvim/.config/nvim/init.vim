@@ -270,4 +270,13 @@ let g:ale_fixers = {
     \}
 let g:ale_python_black_options = '--line-length 79'
 let g:ale_python_isort_options = '--profile black --atomic --line-length 79'
+let g:ale_cpp_clangformat_options = '-i'
+let g:ale_cpp_clangformat_style_option = 'google'
+let g:ale_c_clangformat_options = '-i'
+let g:ale_c_clangformat_style_option = 'google'
 let g:ale_fix_on_save = 0
+let g:ale_lint_on_enter = 0
+let g:ale_lint_on_filetype_changed = 0
+let g:ale_lint_on_insert_leave = 0
+let g:ale_lint_on_text_changed = 0
+let g:ale_lint_on_save = 1
