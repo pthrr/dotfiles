@@ -270,8 +270,8 @@ let g:ale_fixers = {
     \}
 let g:ale_python_black_options = '--line-length 79'
 let g:ale_python_isort_options = '--profile black --atomic --line-length 79'
-let g:ale_cpp_clangformat_style_option = 'google'
-let g:ale_c_clangformat_style_option = 'google'
+let g:ale_cpp_clangformat_style_option = 'chromium'
+let g:ale_c_clangformat_style_option = 'webkit'
 let g:ale_cpp_clangtidy_checks = [
     \ 'bugprone-*',
     \ 'cppcoreguidelines-*',
