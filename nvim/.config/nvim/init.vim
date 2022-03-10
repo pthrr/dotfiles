@@ -111,6 +111,9 @@ set foldmethod=indent
 set foldnestmax=2
 set foldlevelstart=10
 set lazyredraw
+" move among buffers with CTRL
+map <C-J> :bnext<CR>
+map <C-K> :bprev<CR>
 " automatically save view, load with :loadview
 autocmd BufWinLeave *.* mkview
 " show matching brackets
