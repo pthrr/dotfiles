@@ -121,8 +121,8 @@ set showmatch
 highlight MatchParen guibg=none guifg=white gui=bold ctermbg=none ctermfg=white cterm=bold
 set matchtime=0
 " highlight cursorline in insert mode
-set cursorline
-highlight cursorline guibg=#073642 guifg=none gui=none ctermbg=none ctermfg=none cterm=none
+au BufEnter * setlocal cursorline
+au BufLeave * setlocal nocursorline
 autocmd InsertEnter * highlight cursorline guibg=none guifg=none gui=underline ctermbg=none ctermfg=none cterm=underline
 autocmd InsertLeave * highlight cursorline guibg=#073642 guifg=none gui=none ctermbg=none ctermfg=none cterm=none
 " change leader key
