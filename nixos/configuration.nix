@@ -347,8 +347,6 @@
           set foldmethod=indent
           set foldnestmax=2
           set foldlevelstart=10
-          " disable py2
-          let g:loaded_python_provider = 0
           " automatically save view, load with :loadview
           autocmd BufWinLeave *.* mkview
           " show matching brackets
@@ -646,26 +644,23 @@
       enable = true;
 
       extraConfig = ''
-        set -g escape-time 1
-        set -g status-position bottom
         set -g status-bg colour234
         set -g status-fg colour137
+        set -g status-right "[#S]"
         set -g status-left ""
-        set -g status-right ""
-        set -g status-right-length 50
-        set -g status-left-length 20
         set -g status-interval 5
         set -g renumber-windows on
         set -g automatic-rename on
         set -g automatic-rename-format '#{b:pane_current_path}'
         set -g base-index 1
+        set -g escape-time 1
         set -g focus-events on
         set -g history-limit 5000
         set -ga terminal-overrides ",xterm-256color:Tc"
-        setw -g window-status-current-format " #I#[fg=colour250]:#[fg=colour255]#W#[fg=colour50]#F "
-        setw -g window-status-format " #I#[fg=colour237]:#[fg=colour250]#W#[fg=colour244]#F "
         setw -g mode-keys vi
         setw -g pane-base-index 1
+        setw -g window-status-current-format " #I#[fg=colour250]:#[fg=colour255]#W#[fg=colour50]#F "
+        setw -g window-status-format " #I#[fg=colour237]:#[fg=colour250]#W#[fg=colour244]#F "
       '';
     };
   };
