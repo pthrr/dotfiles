@@ -95,8 +95,6 @@ set expandtab
 set foldmethod=indent
 set foldnestmax=2
 set foldlevelstart=10
-" disable py2
-let g:loaded_python_provider = 0
 " automatically save view, load with :loadview
 autocmd BufWinLeave *.* mkview
 " show matching brackets
