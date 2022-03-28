@@ -64,5 +64,8 @@ export QT_ACCESSIBILITY=0
 export NO_AT_BRIDGE=1
 export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=0
 export LESS='-r'
+export GUIX_LOCPATH="$HOME/.guix-profile/lib/locale"
+export GUIX_PROFILE="$HOME/.guix-profile"
+source "$GUIX_PROFILE/etc/profile"
 source "$HOME/.cargo/env"
 eval $(opam config env)
