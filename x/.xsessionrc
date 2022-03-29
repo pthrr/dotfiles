@@ -1,7 +1,7 @@
-xrandr --output DVI-D-0 --mode 1920x1080 --rate 144
-xrdb -merge ~/.xresources
-xsetroot -solid black &
-redshift -O 4000 &
-stalonetray &
-nm-applet &
-nextcloud &
+# Load profile
+    for file in "/etc/profile" "$HOME/.profile" "/etc/xprofile" "$HOME/.xprofile"; do
+        if [ -f "$file" ]; then
+            echo "Loading profile from $file";
+            . "$file"
+        fi
+    done
