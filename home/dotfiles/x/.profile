@@ -46,16 +46,19 @@ if [ -d "$HOME/.lv2" ] ; then
     export LV2_PATH="$HOME/.lv2:$LV2_PATH"
 fi
 
+#
 if [ -f "$HOME/.guix-profile/etc/profile" ] ; then
     export GUIX_LOCPATH="$HOME/.guix-profile/lib/locale"
     export GUIX_PROFILE="$HOME/.guix-profile"
     source "$GUIX_PROFILE/etc/profile"
 fi
 
+#
 if [ -f "$HOME/.cargo/env" ] ; then
     source "$HOME/.cargo/env"
 fi
 
+#
 if [ -f $(which opam) ] ; then
     eval $(opam config env)
 fi
