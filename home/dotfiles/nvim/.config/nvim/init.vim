@@ -130,6 +130,8 @@ nnoremap <leader>d "_d
 vnoremap <leader>p "_dP
 " todo-comments
 nmap <F5> :TodoQuickFix cwd=.<CR>
+let version = matchstr(execute('version'), 'NVIM v\zs[^\n]*')
+if version > 0.5
 lua << EOF
   require("todo-comments").setup {
     highlight = {
@@ -153,6 +155,7 @@ lua << EOF
     pattern = [[\b(KEYWORDS):]],
   }
 EOF
+endif
 " ultisnips
 let g:UltiSnipsExpandTrigger = '<tab>'
 let g:UltiSnipsJumpForwardTrigger = '<tab>'
