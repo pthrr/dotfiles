@@ -3,15 +3,6 @@ export HISTSIZE=1000
 export HISTFILESIZE=2000
 export PROMPT_DIRTRIM=2
 export PS1='\[\e[33m\]\w\[\e[0m\] \u$(if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then echo " @ \h"; else echo ""; fi) % '
-function cht() {
-    curl -m 10 "https://cht.sh/$@"
-}
-function gmv() { # move submodule
-    mv $1 $2
-    git rm $1
-    git add $2
-    git submodule sync
-}
 function fpy() {
     isort --profile black --atomic --line-length 79 "$@"
     black --verbose --line-length 79 "$@"
@@ -64,7 +55,7 @@ function vo() {
     shopt -u nullglob
 }
 alias vi='nvim'
-alias g='git'
+alias vim='nvim'
 alias top='htop'
 alias ls='exa'
 alias cat='bat'
@@ -73,18 +64,19 @@ alias cp='cp -iv'
 alias mv='mv -iv'
 alias mkdir='mkdir -pv'
 alias rm='rm -Iv'
-alias untar='tar vxf'
-alias un7z='7z x'
+alias g='git'
 alias cl='clear'
+alias py='python3'
+alias xdg='xdg-open'
 alias ..='cd ../'
 alias ...='cd ../../'
 alias ....='cd ../../../'
 alias .....='cd ../../../../'
-alias py='python3'
-alias xdg='xdg-open'
-alias jupnote='/mnt/c/Users/vierheller/Desktop/chrome-win/chrome.exe http://localhost:8888/; jupyter-notebook --no-browser --notebook-dir=~/Documents/notebooks'
+alias jupnote='$BROWSER http://localhost:8888/; jupyter-notebook --no-browser --notebook-dir=~/Documents/notebooks'
 alias mirror='wget --mirror --convert-links --adjust-extension --page-requisites --no-parent'
 alias com='picocom -b 115200 --echo --omap=crcrlf'
+alias untar='tar vxf'
+alias un7z='7z x'
 alias procs='ps -aux'
 alias ports='sudo netstat -pln'
 alias pwgen="python -c 'import secrets,pyperclip;pw=secrets.token_urlsafe(32);pyperclip.copy(pw);print(pw)'"
