@@ -29,7 +29,7 @@
              "htop"
              "xxd"
              "tmux"
-             "xterm"
+             "alacritty"
              "fzf"
              "rsync"
              "curl"

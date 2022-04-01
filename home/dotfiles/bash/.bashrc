@@ -90,5 +90,3 @@ alias ports='sudo netstat -pln'
 alias pwgen="python -c 'import secrets,pyperclip;pw=secrets.token_urlsafe(32);pyperclip.copy(pw);print(pw)'"
 source "$HOME/z.sh"
 source "$HOME/key-bindings.bash"
-source "$HOME/.cargo/env"
-eval $(opam config env)
