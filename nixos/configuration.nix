@@ -139,6 +139,7 @@
       jre8
       curl
       htop
+      alacritty
       gdb
       rr
       appimage-run
@@ -983,23 +984,23 @@
               , borderWidth = 2
               }
               `additionalKeys`
-              [ ((mod1Mask, xK_p), spawn "exe=`dmenu_path | yeganesh -- -b -fn \"xft:DejaVu Sans Mono:size=10\"` && eval \"exec $exe\"")
-              , ((mod1Mask, xK_s), spawn "xlock")
-              , ((0, xF86XK_MonBrightnessUp), spawn "xbacklight +10")
+              [ ((0, xF86XK_MonBrightnessUp), spawn "xbacklight +10")
               , ((0, xF86XK_MonBrightnessDown), spawn "xbacklight -10")
-              , ((0, xF86XK_AudioMute), spawn "pactl set-sink-mute @DEFAULT_SINK@ toggle")
-              , ((0, xF86XK_AudioMicMute), spawn "pactl set-source-mute @DEFAULT_SOURCE@ toggle")
               , ((0, xF86XK_AudioLowerVolume), spawn "pactl set-sink-volume @DEFAULT_SINK@ -10%")
               , ((0, xF86XK_AudioRaiseVolume), spawn "pactl set-sink-volume @DEFAULT_SINK@ +10%")
-              , ((mod1Mask, xK_Right), nextWS)
-              , ((mod1Mask, xK_Left), prevWS)
+              , ((0, xF86XK_AudioMute), spawn "pactl set-sink-mute @DEFAULT_SINK@ toggle")
+              , ((0, xF86XK_AudioMicMute), spawn "pactl set-source-mute @DEFAULT_SOURCE@ toggle")
+              , ((mod1Mask, xK_z), toggleWS)
+              , ((mod1Mask, xK_j), nextWS)
+              , ((mod1Mask, xK_k), prevWS)
+              , ((mod1Mask, xK_h), nextScreen)
+              , ((mod1Mask, xK_l), prevScreen)
               , ((mod1Mask .|. shiftMask, xK_Right), shiftToNext)
               , ((mod1Mask .|. shiftMask, xK_Left), shiftToPrev)
-              , ((mod1Mask, xK_Up), nextScreen)
-              , ((mod1Mask, xK_Down), prevScreen)
               , ((mod1Mask .|. shiftMask, xK_Up), shiftNextScreen)
               , ((mod1Mask .|. shiftMask, xK_Down), shiftPrevScreen)
-              , ((mod1Mask, xK_z), toggleWS)
+              , ((mod1Mask, xK_s), spawn "xlock")
+              , ((mod1Mask, xK_p), spawn "exe=`dmenu_path | yeganesh -- -b -fn \"xft:DejaVu Sans Mono:size=10\"` && eval \"exec $exe\"")
               , ((mod1Mask, xK_q), restart "/run/current-system/sw/bin/xmonad" True)
               ]
           '';
