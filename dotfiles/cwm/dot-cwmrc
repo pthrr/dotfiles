@@ -1,6 +1,8 @@
 sticky yes
 snapdist 4
-gap 0 0 0 0
+ignore termbar
+autogroup 0 termbar
+gap 30 0 0 0
 borderwidth 2
 color inactiveborder darkblue
 color activeborder red
