@@ -1,81 +1,86 @@
 sticky yes
 snapdist 4
-ignore termbar
-autogroup 0 termbar
 gap 30 0 0 0
 borderwidth 2
+
+fontname "mono:pixelsize=10"
+
 color inactiveborder darkblue
 color activeborder red
 color menubg "#a8ff60"
 color menufg "#000"
-fontname "mono:pixelsize=10"
+
 # KEYBINDINGS:
 # 4 = mod (windows key)
 # S = shift
 # C = control
 # M = meta (alt)
 unbind-key all
+
 bind-key MS-r restart
 bind-key MS-q quit
-bind-key MS-Return alacritty
+bind-key MS-Return kitty
 bind-key MS-l xlock
+
+bind-key M-p menu-exec
+bind-key 4S-b dmenubrowser
+bind-key 4-slash menu-window
+bind-key 4-r menu-cmd
+bind-key 4-d 'dmenu_run -fn "Mono:size=10" -nb "#282828" -nf "#ebdbb2" -sb "#1d2021" -sf "#fe8019"'
+
+bind-key 4-1 group-toggle-1
+bind-key 4-2 group-toggle-2
+bind-key 4-3 group-toggle-3
+bind-key 4-4 group-toggle-4
+bind-key 4-5 group-toggle-5
+bind-key 4-6 group-toggle-6
+bind-key 4-7 group-toggle-7
+bind-key 4-8 group-toggle-8
+bind-key 4-9 group-toggle-9
+
+bind-key M-1 group-only-1
+bind-key M-2 group-only-2
+bind-key M-3 group-only-3
+bind-key M-4 group-only-4
+bind-key M-5 group-only-5
+bind-key M-6 group-only-6
+bind-key M-7 group-only-7
+bind-key M-8 group-only-8
+bind-key M-9 group-only-9
+
+bind-key C-1 group-close-1
+bind-key C-2 group-close-2
+bind-key C-3 group-close-3
+bind-key C-4 group-close-4
+bind-key C-5 group-close-5
+bind-key C-6 group-close-6
+bind-key C-7 group-close-7
+bind-key C-8 group-close-8
+bind-key C-9 group-close-9
+
+bind-key MS-1 window-movetogroup-1
+bind-key MS-2 window-movetogroup-2
+bind-key MS-3 window-movetogroup-3
+bind-key MS-4 window-movetogroup-4
+bind-key MS-5 window-movetogroup-5
+bind-key MS-6 window-movetogroup-6
+bind-key MS-7 window-movetogroup-7
+bind-key MS-8 window-movetogroup-8
+bind-key MS-9 window-movetogroup-9
+
+bind-key M-j group-cycle
+bind-key M-k group-rcycle
+bind-key M-h window-cycle-ingroup
+bind-key M-l window-rcycle-ingroup
+
 bind-key MS-c window-close
+bind-key 4-g window-group
 bind-key 4-BackSpace window-hide
 bind-key 4-Down window-lower
 bind-key 4-Up window-raise
-bind-key M-Tab window-cycle
-bind-key MS-Tab window-rcycle
-
-# mod + space = change xkb layout
-bind-key 4-space changexkbmap
-
-# set a window's label
-bind-key 4-n window-menu-label
-
-# mod + $N = show only windows for group $N
-# (you can think of this as switching to virtual desktop $N)
-bind-key 4-1 group-only-1
-bind-key 4-2 group-only-2
-bind-key 4-3 group-only-3
-bind-key 4-4 group-only-4
-bind-key 4-5 group-only-5
-bind-key 4-6 group-only-6
-bind-key 4-7 group-only-7
-bind-key 4-8 group-only-8
-bind-key 4-9 group-only-9
-
-# mod + shift +$N = move window to group $N
-bind-key 4S-1 window-movetogroup-1
-bind-key 4S-2 window-movetogroup-2
-bind-key 4S-3 window-movetogroup-3
-bind-key 4S-4 window-movetogroup-4
-bind-key 4S-5 window-movetogroup-5
-bind-key 4S-6 window-movetogroup-6
-bind-key 4S-7 window-movetogroup-7
-bind-key 4S-8 window-movetogroup-8
-bind-key 4S-9 window-movetogroup-9
-
-# mod + A = toggle showing windows from all groups
-bind-key 4-a group-toggle-all
-# mod + G = toggle current window's group membership
-bind-key 4-g window-group
-
-# mod + right arrow = cycle through the window groups
-# (you can think of this as switching to the next virtual desktop)
-bind-key 4-Right group-cycle
-# mod + left arrow = same thing in reverse
-bind-key 4-Left group-rcycle
-# mod + Shift + S = stick current window to be visible in all groups
-bind-key 4S-s window-stick
-
-# mod + F = make current window fullscreen
-bind-key 4-f window-fullscreen
-# mod + M = maximize current window
 bind-key 4-m window-maximize
-# mod + equals = maximize window in vertical direction only
-bind-key 4-equal window-vmaximize
-# mod + shift + equals = maximize window in horizontal direction only
-bind-key 4S-equal window-hmaximize
+bind-key S-v window-vtile
+bind-key S-s window-htile
 
 # mod + H,J,K,L = move window left, down, up, right 10 pixels
 bind-key 4-h window-move-left-big
@@ -89,21 +94,6 @@ bind-key 4S-j window-resize-down-big
 bind-key 4S-k window-resize-up-big
 bind-key 4S-l window-resize-right-big
 
-# mod + V = tile windows vertically, current window to the left
-bind-key 4-v window-vtile
-# mod + S = tile windows horizontally, current window to the top
-bind-key 4-s window-htile
-
-# mod + / = show popup menu of current windows
-bind-key 4-slash menu-window
-# mod + r = show popup menu to run a command (configured below)
-bind-key 4-r menu-cmd
-# mod + d = dmenu
-bind-key 4-d 'dmenu_run -fn "Mono:size=10" -nb "#282828" -nf "#ebdbb2" -sb "#1d2021" -sf "#fe8019"'
-
-# mod + Shift + b = Browser (dmenu)
-#bind-key 4S-b dmenubrowser
-
 # unbind default mouse actions
 unbind-mouse M-1
 unbind-mouse CM-1
@@ -111,18 +101,17 @@ unbind-mouse M-2
 unbind-mouse M-3
 unbind-mouse CMS-3
 
-# mod + left click drag = move window
 bind-mouse 4-1 window-move
-# mod + right click drag = resize window
 bind-mouse 4-3 window-resize
-# mod + middle click = lower window's focus
 bind-mouse 4-2 window-lower
-# mod + shift + middle click = hide window
 bind-mouse 4S-2 window-hide
 
+# Ignore list
+ignore termbar
+
 # Autogroup definitions
-autogroup 1 "Navigator,Firefox"
+autogroup 0 termbar
 
 # these commands will appear in the command menu
 command chromium chromium
-command alacritty alacritty
+command kitty kitty

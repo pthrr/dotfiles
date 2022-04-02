@@ -26,40 +26,40 @@ if [ -d "$HOME/.local/bin" ] ; then
     export PATH="$HOME/.local/bin:$PATH"
 fi
 
-#
+# set PATH so it includes bin if it exists
 if [ -d "/sbin" ] ; then
     export PATH="/sbin:$PATH"
 fi
 
-#
+# set PATH so it includes bin if it exists
 if [ -d "/usr/sbin" ] ; then
     export PATH="/usr/sbin:$PATH"
 fi
 
-# include Cabal
+# include Haskell environment
 if [ -d "$HOME/.cabal/bin" ] ; then
     export PATH="$HOME/.cabal/bin:$PATH"
 fi
 
-# include plugins
+# include LV2 plugins
 if [ -d "$HOME/.lv2" ] ; then
     export LV2_PATH="$HOME/.lv2:$LV2_PATH"
 fi
 
-#
+# include Guix environment
 if [ -f "$HOME/.guix-profile/etc/profile" ] ; then
     export GUIX_LOCPATH="$HOME/.guix-profile/lib/locale"
     export GUIX_PROFILE="$HOME/.guix-profile"
     source "$GUIX_PROFILE/etc/profile"
 fi
 
-#
+# include GO environment
 if [ -f "$HOME/.cargo/env" ] ; then
     source "$HOME/.cargo/env"
 fi
 
-#
-if [ -f $(which opam) ] ; then
+# include OCaml environment
+if [ -f "$(which opam)" ] ; then
     eval $(opam config env)
 fi
 
@@ -67,11 +67,11 @@ export FZF_DEFAULT_COMMAND='rg --files'
 export FZF_DEFAULT_OPTS='-m --height 50% --border'
 export LC_ALL='de_DE.UTF-8'
 export LANG='de_DE.UTF-8'
+export SHELL='bash'
+export TERM='xterm-kitty'
 export EDITOR='nvim'
-export TERMINAL='xterm-256color'
-export TERM='xterm-256color'
 export BROWSER='chromium'
-export SUDO_ASKPASS='/usr/bin/ssh-askpass'
+export TERMINAL='kitty'
 export _JAVA_AWT_WM_NONREPARENTING=1
 export GTK_THEME=Adwaita:dark
 export QT_QPA_PLATFORMTHEME=qt5ct
