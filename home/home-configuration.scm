@@ -59,7 +59,8 @@
 
 (define cwm-packages
   (map specification->package
-       (list "cwm")))
+       (list "cwm"
+             "stalonetray")))
 
 (define x-packages
   (map specification->package

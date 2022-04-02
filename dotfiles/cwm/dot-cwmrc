@@ -5,8 +5,8 @@ borderwidth 2
 
 fontname "mono:pixelsize=10"
 
-color inactiveborder darkblue
-color activeborder red
+color inactiveborder black
+color activeborder "#646464"
 color menubg "#a8ff60"
 color menufg "#000"
 
@@ -20,13 +20,11 @@ unbind-key all
 bind-key MS-r restart
 bind-key MS-q quit
 bind-key MS-Return kitty
-bind-key MS-l xlock
+#bind-key MS-l xlock # -> solve auth issue
 
 bind-key M-p menu-exec
-bind-key 4S-b dmenubrowser
 bind-key 4-slash menu-window
 bind-key 4-r menu-cmd
-bind-key 4-d 'dmenu_run -fn "Mono:size=10" -nb "#282828" -nf "#ebdbb2" -sb "#1d2021" -sf "#fe8019"'
 
 bind-key 4-1 group-toggle-1
 bind-key 4-2 group-toggle-2
@@ -79,8 +77,8 @@ bind-key 4-BackSpace window-hide
 bind-key 4-Down window-lower
 bind-key 4-Up window-raise
 bind-key 4-m window-maximize
-bind-key S-v window-vtile
-bind-key S-s window-htile
+bind-key 4S-v window-vtile
+bind-key 4S-s window-htile
 
 # mod + H,J,K,L = move window left, down, up, right 10 pixels
 bind-key 4-h window-move-left-big

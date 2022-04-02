@@ -11,11 +11,12 @@ reset="${esc}[0m"
 redf="${esc}[31m"
 cyanf="${esc}[36m";
 purplef="${esc}[35m"
+
 pipe="${purplef}|${reset}"
 
 today()
 {
-	DATE=$(date '+%a %d %b %H:%M')
+    DATE=$(date '+%a %d %b %H:%M')
 }
 
 desktop_id()
@@ -49,7 +50,7 @@ bat_status()
 
 mem()
 {
-	MEM=$(top -n | grep Memory | awk {'print $6'})
+	MEM=$(top -n 1 | grep Memory | awk {'print $6'})
 }
 
 wifi()
@@ -72,18 +73,22 @@ my_name()
 tput civis
 
 while true; do
-	today
-	desktop_id
-	cpu
-	mem
-	bat
-	bat_status
-	wifi
-	network
-	my_name
-	tput cup 1 0
-	printf "[${DESKTOP_ID}] ${pipe} ${cyanf}${YO}${reset} ${pipe} ${DATE} ${pipe} ${cyanf}CPU:${reset} ${CPU_SPEED} MHz (${CPU_TEMP}°) ${pipe} ${cyanf}Mem:${reset} ${MEM} "
-	printf "${pipe} ${cyanf}Bat:${reset} $BAT - ${BAT_STATUS} ${pipe} ${cyanf}SSID:${reset}${SSID}${pipe}"
-	printf " ${cyanf}IPs:${reset} ${PIP} / ${IIP}" echo "\e[1A"
-        sleep 1
+    today
+    desktop_id
+    #cpu
+    #mem
+    #bat
+    #bat_status
+    #wifi
+    #network
+    #my_name
+    tput cup 1 0
+    printf "[${DESKTOP_ID}] ${DATE} | "
+    #printf "[${DESKTOP_ID}] ${pipe} ${cyanf}${YO}${reset} ${pipe} ${DATE}"
+    #printf " ${pipe} ${cyanf}CPU:${reset} ${CPU_SPEED} MHz (${CPU_TEMP}°)"
+    #printf " ${pipe} ${cyanf}Mem:${reset} ${MEM} "
+    #printf "${pipe} ${cyanf}Bat:${reset} $BAT - ${BAT_STATUS} ${pipe}"
+    #printf " ${cyanf}SSID:${reset}${SSID}${pipe}"
+    #printf " ${cyanf}IPs:${reset} ${PIP} / ${IIP}" echo "\e[1A"
+    sleep 1
 done
