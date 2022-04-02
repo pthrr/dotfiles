@@ -115,3 +115,4 @@ autogroup 0 termbar
 # these commands will appear in the command menu
 command chromium chromium
 command kitty kitty
+command xterm xterm
