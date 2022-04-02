@@ -130,8 +130,8 @@ nnoremap <leader>d "_d
 vnoremap <leader>p "_dP
 " todo-comments
 nmap <F5> :TodoQuickFix cwd=.<CR>
-let version = split(matchstr(execute('version'), 'NVIM v\zs[^\n]*'), "\\.")
-if index(["5","6","7","8","9"], version[1]) >= 0
+let ver = split(matchstr(execute('version'), 'NVIM v\zs[^\n]*'), "\\.")
+if index(["5","6","7","8","9"], ver[1]) >= 0
 lua << EOF
   require("todo-comments").setup {
     highlight = {
