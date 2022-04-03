@@ -29,7 +29,6 @@
              "htop"
              "xxd"
              "tmux"
-             "kitty"
              "fzf"
              "rsync"
              "curl"
