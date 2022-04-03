@@ -1,22 +1,16 @@
 sticky yes
 snapdist 4
-gap 30 0 0 0
+gap 20 0 0 0
 borderwidth 2
-
+ignore termbar
+autogroup 0 termbar
 fontname "mono:pixelsize=10"
-
 color inactiveborder black
 color activeborder "#646464"
-color menubg "#a8ff60"
-color menufg "#000"
+color menubg "#888888"
+color menufg "#707070"
 
-# KEYBINDINGS:
-# 4 = mod (windows key)
-# S = shift
-# C = control
-# M = meta (alt)
 unbind-key all
-
 bind-key MS-r restart
 bind-key MS-q quit
 bind-key MS-Return kitty
@@ -25,6 +19,7 @@ bind-key MS-Return kitty
 bind-key M-p menu-exec
 bind-key 4-slash menu-window
 bind-key 4-r menu-cmd
+bind-key 4-s menu-ssh
 
 bind-key 4-1 group-toggle-1
 bind-key 4-2 group-toggle-2
@@ -92,25 +87,8 @@ bind-key 4S-j window-resize-down-big
 bind-key 4S-k window-resize-up-big
 bind-key 4S-l window-resize-right-big
 
-# unbind default mouse actions
-unbind-mouse M-1
-unbind-mouse CM-1
-unbind-mouse M-2
-unbind-mouse M-3
-unbind-mouse CMS-3
-
-bind-mouse 4-1 window-move
-bind-mouse 4-3 window-resize
-bind-mouse 4-2 window-lower
-bind-mouse 4S-2 window-hide
-
-# Ignore list
-ignore termbar
-
-# Autogroup definitions
-autogroup 0 termbar
-
-# these commands will appear in the command menu
-command chromium chromium
-command kitty kitty
-command xterm xterm
+unbind-mouse all
+bind-mouse M-1 window-move
+bind-mouse M-3 window-resize
+bind-mouse M-2 window-lower
+bind-mouse MS-2 window-hide

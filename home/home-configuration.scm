@@ -60,7 +60,8 @@
 (define cwm-packages
   (map specification->package
        (list "cwm"
-             "stalonetray")))
+             "stalonetray"
+             "lemonbar")))
 
 (define x-packages
   (map specification->package
@@ -100,6 +101,7 @@
   (map specification->package
        (list "vlc"
              "xfig"
+             "telegram-desktop"
              "keepassxc"
              "ardour"
              "zathura"

@@ -48,14 +48,15 @@ fi
 
 # include Guix environment
 if [ -f "$HOME/.guix-profile/etc/profile" ] ; then
-    export GUIX_LOCPATH="$HOME/.guix-profile/lib/locale"
-    export GUIX_PROFILE="$HOME/.guix-profile"
-    source "$GUIX_PROFILE/etc/profile"
+    #export GUIX_LOCPATH="$HOME/.guix-profile/lib/locale"
+    #export GUIX_PROFILE="$HOME/.guix-profile"
+    export XDG_DATA_DIRS="$XDG_DATA_DIRS:/usr/local/share:/usr/share"
+    #. "$GUIX_PROFILE/etc/profile"
 fi
 
 # include GO environment
 if [ -f "$HOME/.cargo/env" ] ; then
-    source "$HOME/.cargo/env"
+    . "$HOME/.cargo/env"
 fi
 
 # include OCaml environment
@@ -63,6 +64,7 @@ if [ -f "$(which opam)" ] ; then
     eval $(opam config env)
 fi
 
+#export XDG_DATA_DIRS="/usr/share/gnome:/usr/local/share/:/usr/share/:$XDG_DATA_DIRS"
 export FZF_DEFAULT_COMMAND='rg --files'
 export FZF_DEFAULT_OPTS='-m --height 50% --border'
 export LC_ALL='de_DE.UTF-8'

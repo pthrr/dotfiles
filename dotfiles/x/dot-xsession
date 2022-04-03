@@ -1,10 +1,11 @@
 xsetroot -solid black
-xterm -name termbar -class termbar -T termbar -e termbar \
-    -fa "Ubuntu Mono" -fs 12 \
-    -bg "black" -fg "#646464" \
-    -geometry 120x1+0+0 &
+termbar | lemonbar -n termbar -d -p \
+    -f -*-fixed-*-*-*-*-13-*-100-100-*-*-*-* \
+    -B "#000000" -F "#646464" \
+    -g 800x20+0+0 -u 0 &
 stalonetray &
 redshift -O 4000 &
 nm-applet &
 nextcloud &
-exec cwm
+telegram-desktop -startintray &
+exec openbsd-cwm
