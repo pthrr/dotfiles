@@ -1,4 +1,7 @@
 xsetroot -solid black
+termprop &
+termdate &
+termstat &
 termbar | lemonbar -n lemonbar -d -p \
     -f -*-fixed-*-*-*-*-13-*-100-100-*-*-*-* \
     -B "#000000" -F "#646464" \

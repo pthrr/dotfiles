@@ -1,18 +1,29 @@
 #!/usr/bin/env bash
+#set -eu -o pipefail
 
-today()
-{
-    DATE=$(date '+%a, KW %V, %d.%m.%y - %H:%M')
-}
+BAR_FIFO=/tmp/bar_fifo
+DELIM=" | "
 
-desktop_id()
-{
-    DESKTOP_ID=$(xprop -root 32c '\t$0' _NET_CURRENT_DESKTOP | cut -f 2)
-}
+if [ ! -e "${BAR_FIFO}" ] ; then
+    exit 1
+fi
 
-while true ; do
-    today
-    desktop_id
-    echo "[${DESKTOP_ID}] ${DATE} | "
-    sleep 1
+cat "${BAR_FIFO}" | while read -r line ; do
+    echo "${line}"
+    IFS='|' read -r -a list <<< "${line}"
+
+    case ${list[0]} in
+        PROP)
+            groups=${list[1]}
+            ;;
+        DATE)
+            time=${list[1]}
+            ;;
+        STAT)
+            stats=${list[1]}
+            ;;
+    esac
+
+    output="${groups}${DELIM}${time}${DELIM}${stats}"
+    printf "%s\n" "${output}"
 done
