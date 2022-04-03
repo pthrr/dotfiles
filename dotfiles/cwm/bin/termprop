@@ -34,7 +34,7 @@ xprop -spy -root -notype \
                 ;;
         esac
 
-        output='PROP|'
+        output='GRPS|'
 
         for (( desktop=1; desktop<${_NET_NUMBER_OF_DESKTOPS}; desktop++ )) ; do
             if (( desktop == _NET_CURRENT_DESKTOP )) ; then

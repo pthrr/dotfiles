@@ -17,12 +17,13 @@ unbind-key all
 bind-key MS-r restart
 bind-key MS-q quit
 bind-key MS-Return xterm
-#bind-key MS-l xlock # -> solve auth issue
+#bind-key MS-s xlock # -> solve auth issue
 bind-key M-p menu-exec
-bind-key 4-slash menu-window
-bind-key 4-r menu-cmd
-bind-key 4-s menu-ssh
+bind-key M-w menu-window
+bind-key M-r menu-cmd
+bind-key M-s menu-ssh
 
+bind-key 4-Tab group-toggle-all
 bind-key 4-1 group-toggle-1
 bind-key 4-2 group-toggle-2
 bind-key 4-3 group-toggle-3
@@ -68,10 +69,10 @@ bind-key M-j group-cycle
 bind-key M-k group-rcycle
 bind-key M-l window-rcycle-ingroup
 
-bind-key 4-h window-move-left-big
-bind-key 4-j window-move-down-big
-bind-key 4-k window-move-up-big
-bind-key 4-l window-move-right-big
+bind-key MS-h window-move-left-big
+bind-key MS-j window-move-down-big
+bind-key MS-k window-move-up-big
+bind-key MS-l window-move-right-big
 
 bind-key 4S-h window-resize-left-big
 bind-key 4S-j window-resize-down-big
@@ -79,13 +80,14 @@ bind-key 4S-k window-resize-up-big
 bind-key 4S-l window-resize-right-big
 
 bind-key MS-c window-close
+bind-key 4-ll window-stick
 bind-key 4-g window-group
-bind-key 4-BackSpace window-hide
-bind-key 4-Down window-lower
-bind-key 4-Up window-raise
-bind-key 4-m window-maximize
-bind-key 4S-v window-vtile
-bind-key 4S-s window-htile
+bind-key M-BackSpace window-hide
+bind-key M-Down window-lower
+bind-key M-Up window-raise
+bind-key MS-m window-maximize
+bind-key MS-v window-vtile
+bind-key MS-y window-htile
 
 unbind-mouse all
 bind-mouse M-1 window-move

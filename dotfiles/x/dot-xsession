@@ -1,9 +1,9 @@
-xsetroot -solid black
 xrdb -merge ~/.xresources
+xsetroot -solid black &
 termbar | lemonbar -n lemonbar -d -p \
     -f -*-fixed-*-*-*-*-13-*-100-100-*-*-*-* \
     -B "#000000" -F "#646464" \
-    -g 800x20+0+0 -u 0 &
+    -g 850x20+0+0 -u 0 &
 stalonetray --sticky true -d none -t false \
     -bg black -i 15 -s 20 \
     --grow-gravity W --icon-gravity SE \

@@ -9,7 +9,7 @@ fi
 
 datetime()
 {
-    DATE=$(date '+%a, KW %V, %d.%m.%y - %H:%M')
+    DATE=$(date '+%a, KW %V, %d.%m.%y, %H:%M')
 }
 
 while : ; do
