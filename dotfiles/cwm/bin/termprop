@@ -5,7 +5,7 @@ BAR_FIFO=/tmp/bar_fifo
 _NET_NUMBER_OF_DESKTOPS=10
 
 if [ ! -e "${BAR_FIFO}" ] ; then
-    mkfifo ${BAR_FIFO}
+    exit 1
 fi
 
 xprop -spy -root -notype \

@@ -4,16 +4,16 @@
 BAR_FIFO=/tmp/bar_fifo
 
 if [ ! -e "${BAR_FIFO}" ] ; then
-    mkfifo ${BAR_FIFO}
+    exit 1
 fi
 
-date()
+datetime()
 {
     DATE=$(date '+%a, KW %V, %d.%m.%y - %H:%M')
 }
 
 while : ; do
-    date
+    datetime
     echo -e "DATE|${DATE}"
     sleep 30
 done > ${BAR_FIFO}

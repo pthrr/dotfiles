@@ -5,7 +5,7 @@ BAR_FIFO=/tmp/bar_fifo
 DELIM=" - "
 
 if [ ! -e "${BAR_FIFO}" ] ; then
-    mkfifo ${BAR_FIFO}
+    exit 1
 fi
 
 mem()

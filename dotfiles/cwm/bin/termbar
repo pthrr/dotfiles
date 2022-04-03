@@ -5,8 +5,13 @@ BAR_FIFO=/tmp/bar_fifo
 DELIM=" | "
 
 if [ ! -e "${BAR_FIFO}" ] ; then
-    exit 1
+    mkfifo ${BAR_FIFO}
+    sleep 1
 fi
+
+termprop &
+termdate &
+termstat &
 
 cat "${BAR_FIFO}" | while read -r line ; do
     IFS='|' read -r -a list <<< "${line}"
