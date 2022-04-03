@@ -16,7 +16,7 @@ color menufg "#707070"
 unbind-key all
 bind-key MS-r restart
 bind-key MS-q quit
-bind-key MS-Return kitty
+bind-key MS-Return xterm
 #bind-key MS-l xlock # -> solve auth issue
 bind-key M-p menu-exec
 bind-key 4-slash menu-window
