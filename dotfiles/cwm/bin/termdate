@@ -7,13 +7,13 @@ if [ ! -e "${BAR_FIFO}" ] ; then
     mkfifo ${BAR_FIFO}
 fi
 
-today()
+date()
 {
     DATE=$(date '+%a, KW %V, %d.%m.%y - %H:%M')
 }
 
 while : ; do
-    today
+    date
     echo -e "DATE|${DATE}"
     sleep 30
 done > ${BAR_FIFO}
