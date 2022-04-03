@@ -1,11 +1,15 @@
 xsetroot -solid black
-termbar | lemonbar -n termbar -d -p \
+termbar | lemonbar -n lemonbar -d -p \
     -f -*-fixed-*-*-*-*-13-*-100-100-*-*-*-* \
     -B "#000000" -F "#646464" \
     -g 800x20+0+0 -u 0 &
-stalonetray &
+stalonetray --sticky true -d none -t false \
+    -bg black -i 15 -s 20 \
+    --grow-gravity W --icon-gravity SE \
+    --kludges force_icons_size \
+    --window-strut top --window-type dock --window-layer bottom \
+    --geometry 9x1-0+0 &
 redshift -O 4000 &
 nm-applet &
 nextcloud &
-telegram-desktop -startintray &
 exec openbsd-cwm

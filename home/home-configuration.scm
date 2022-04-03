@@ -77,6 +77,7 @@
              "net-tools"
              "network-manager"
              "network-manager-applet"
+             "blueman"
              "alsa-utils"
              "redshift")))
 
@@ -101,7 +102,6 @@
   (map specification->package
        (list "vlc"
              "xfig"
-             "telegram-desktop"
              "keepassxc"
              "ardour"
              "zathura"

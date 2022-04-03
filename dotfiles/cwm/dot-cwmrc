@@ -1,13 +1,16 @@
 sticky yes
-snapdist 4
+snapdist 10
 gap 20 0 0 0
 borderwidth 2
-ignore termbar
-autogroup 0 termbar
-fontname "mono:pixelsize=10"
+moveamount 2
+ignore lemonbar
+ignore stalonetray
+autogroup 0 lemonbar
+autogroup 0 stalonetray
+fontname "mono:pixelsize=11"
 color inactiveborder black
 color activeborder "#646464"
-color menubg "#888888"
+color menubg "#868686"
 color menufg "#707070"
 
 unbind-key all
@@ -15,7 +18,6 @@ bind-key MS-r restart
 bind-key MS-q quit
 bind-key MS-Return kitty
 #bind-key MS-l xlock # -> solve auth issue
-
 bind-key M-p menu-exec
 bind-key 4-slash menu-window
 bind-key 4-r menu-cmd
@@ -61,10 +63,20 @@ bind-key MS-7 window-movetogroup-7
 bind-key MS-8 window-movetogroup-8
 bind-key MS-9 window-movetogroup-9
 
+bind-key M-h window-cycle-ingroup
 bind-key M-j group-cycle
 bind-key M-k group-rcycle
-bind-key M-h window-cycle-ingroup
 bind-key M-l window-rcycle-ingroup
+
+bind-key 4-h window-move-left-big
+bind-key 4-j window-move-down-big
+bind-key 4-k window-move-up-big
+bind-key 4-l window-move-right-big
+
+bind-key 4S-h window-resize-left-big
+bind-key 4S-j window-resize-down-big
+bind-key 4S-k window-resize-up-big
+bind-key 4S-l window-resize-right-big
 
 bind-key MS-c window-close
 bind-key 4-g window-group
@@ -74,18 +86,6 @@ bind-key 4-Up window-raise
 bind-key 4-m window-maximize
 bind-key 4S-v window-vtile
 bind-key 4S-s window-htile
-
-# mod + H,J,K,L = move window left, down, up, right 10 pixels
-bind-key 4-h window-move-left-big
-bind-key 4-j window-move-down-big
-bind-key 4-k window-move-up-big
-bind-key 4-l window-move-right-big
-
-# mod + shift + H,J,K,L = resize window left, down, up, right by 10 pixels
-bind-key 4S-h window-resize-left-big
-bind-key 4S-j window-resize-down-big
-bind-key 4S-k window-resize-up-big
-bind-key 4S-l window-resize-right-big
 
 unbind-mouse all
 bind-mouse M-1 window-move
