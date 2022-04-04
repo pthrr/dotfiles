@@ -42,7 +42,7 @@
              "font-fira-code"
              "font-dejavu"
              "font-ubuntu"
-             "font-font-awesome"
+             "font-awesome"
              "glibc-locales"
              "glibc-utf8-locales"
              "nss-certs")))
@@ -56,11 +56,9 @@
              "xfce4-volumed-pulse"
              "xfce4-notifyd")))
 
-(define cwm-packages
+(define awesome-packages
   (map specification->package
-       (list "cwm"
-             "stalonetray"
-             "lemonbar")))
+       (list "awesome")))
 
 (define x-packages
   (map specification->package
@@ -77,6 +75,7 @@
              "network-manager"
              "network-manager-applet"
              "blueman"
+             "bluez"
              "alsa-utils"
              "redshift")))
 

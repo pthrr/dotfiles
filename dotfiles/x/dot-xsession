@@ -1,16 +1,7 @@
 xrdb -merge ~/.xresources
+setxkbmap -layout de -model pc105
 xsetroot -solid black &
-termbar | lemonbar -n lemonbar -d -p \
-    -f -*-fixed-*-*-*-*-13-*-100-100-*-*-*-* \
-    -B "#000000" -F "#646464" \
-    -g 850x20+0+0 -u 0 &
-stalonetray --sticky true -d none -t false \
-    -bg black -i 15 -s 20 \
-    --grow-gravity W --icon-gravity SE \
-    --kludges force_icons_size \
-    --window-strut top --window-type dock --window-layer bottom \
-    --geometry 9x1-0+0 &
 redshift -O 4000 &
 nm-applet &
 nextcloud &
-exec openbsd-cwm
+exec awesome
