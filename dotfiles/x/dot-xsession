@@ -1,7 +1,9 @@
+setxkbmap -layout de -model pc105 -option terminate:ctrl_alt_bksp
+xmodmap ~/.xmodmap
 xrdb -merge ~/.xresources
-setxkbmap -layout de -model pc105
 xsetroot -solid black &
 redshift -O 4000 &
 nm-applet &
 nextcloud &
-exec awesome
+echo "Starting at $(date)" >> ~/.config/i3/log
+exec i3 -V >> ~/.config/i3/log

@@ -56,14 +56,14 @@
              "xfce4-volumed-pulse"
              "xfce4-notifyd")))
 
-(define awesome-packages
+(define i3-packages
   (map specification->package
-       (list "awesome")))
+       (list "i3")))
 
 (define x-packages
   (map specification->package
        (list "xbacklight"
-             "xlockmore"
+             ;;"xlockmore"
              "xclip")))
 
 (define system-packages
@@ -117,7 +117,7 @@
        ,@dev-packages
        ;;,@xfce-packages
        ,@x-packages
-       ,@cwm-packages
+       ,@i3-packages
        ,@tools-packages))
 
   (services

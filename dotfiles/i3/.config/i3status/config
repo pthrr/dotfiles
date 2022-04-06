@@ -1,0 +1,16 @@
+
+general {
+    colors = true
+    output_format = "i3bar"
+    color_good = "#646464"
+    color_degraded = "#BCBCBC"
+    color_bad = "#FFFFFF"
+    interval = 5
+}
+
+order += "tztime local"
+
+tztime local {
+    timezone = "Europe/Berlin"
+    format = "%a, KW %V, %d.%m.%y - %H:%M"
+}
