@@ -1,4 +1,3 @@
-
 general {
     colors = true
     output_format = "i3bar"
@@ -8,7 +7,36 @@ general {
     interval = 5
 }
 
+order += "memory"
+order += "disk /"
+order += "cpu_temperature 0"
+order += "battery 0"
 order += "tztime local"
+
+memory {
+    format = "MEM %free"
+    format_degraded = "MEM %free"
+    threshold_degraded = "10%"
+}
+
+disk "/" {
+    format = "SSD %free"
+}
+
+cpu_temperature 0 {
+    format = "CPU %degrees °C"
+}
+
+battery 0 {
+    format = "BAT %status %percentage %remaining %emptytime"
+    format_down = "BAT -"
+    status_chr = "CHR"
+    status_bat = "BAT"
+    status_unk = "UNK"
+    status_full = "FULL"
+    path = "/sys/class/power_supply/BAT%d/uevent"
+    low_threshold = 10
+}
 
 tztime local {
     timezone = "Europe/Berlin"

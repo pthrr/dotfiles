@@ -6,4 +6,4 @@ redshift -O 4000 &
 nm-applet &
 nextcloud &
 echo "Starting at $(date)" >> ~/.config/i3/log
-exec i3 -V >> ~/.config/i3/log
+exec i3 >> ~/.config/i3/log

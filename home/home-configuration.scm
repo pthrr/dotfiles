@@ -58,7 +58,9 @@
 
 (define i3-packages
   (map specification->package
-       (list "i3")))
+       (list "i3-wm"
+             "i3lock"
+             "i3status")))
 
 (define x-packages
   (map specification->package

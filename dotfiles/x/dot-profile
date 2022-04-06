@@ -78,7 +78,6 @@ export XDG_PICTURES_DIR="$HOME/pictures"
 export XDG_PUBLICSHARE_DIR="$HOME/public"
 export XDG_TEMPLATES_DIR="$HOME/templates"
 export XDG_VIDEOS_DIR="$HOME/videos"
-export TERM='xterm-256color'
 export SHELL='bash'
 export EDITOR='nvim'
 export BROWSER='chromium'
