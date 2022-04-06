@@ -7,11 +7,20 @@ general {
     interval = 5
 }
 
+order += "volume master"
 order += "memory"
 order += "disk /"
 order += "cpu_temperature 0"
 order += "battery 0"
 order += "tztime local"
+
+volume master {
+        format = "VOL %volume"
+        format_muted = "VOL muted"
+        device = "default"
+        mixer = "Master"
+        mixer_idx = 0
+}
 
 memory {
     format = "MEM %free"
@@ -28,7 +37,7 @@ cpu_temperature 0 {
 }
 
 battery 0 {
-    format = "BAT %status %percentage %remaining %emptytime"
+    format = "BAT %emptytime %status"
     format_down = "BAT -"
     status_chr = "CHR"
     status_bat = "BAT"

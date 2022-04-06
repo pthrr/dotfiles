@@ -160,7 +160,7 @@ endif
 let g:UltiSnipsExpandTrigger = '<tab>'
 let g:UltiSnipsJumpForwardTrigger = '<tab>'
 let g:UltiSnipsJumpBackwardTrigger = '<s-tab>'
-let g:UltiSnipsSnippetDirectories = [$HOME.'/Documents/snippets']
+let g:UltiSnipsSnippetDirectories = [$XDG_DOCUMENTS_DIR.'/snippets']
 let g:ultisnips_python_style = 'sphinx'
 " tagbar
 nmap <F8> :TagbarToggle<CR>

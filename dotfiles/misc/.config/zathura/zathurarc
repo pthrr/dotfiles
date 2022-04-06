@@ -1,6 +1,15 @@
 # Open document in fit-width mode by default
 set adjust-open "width"
+set search-hadjust false
+set link-hadjust false
 set selection-clipboard clipboard
+
+map r reload
+map L rotate rotate-ccw
+map R rotate rotate-cw
+map g goto top
+map W adjust_window width
+map H adjust_window best-fit
 
 # One page per row by default
 set pages-per-row 1
