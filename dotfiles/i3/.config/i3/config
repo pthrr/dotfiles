@@ -33,7 +33,7 @@ bindsym $mod+Shift+Return exec $TERMINAL
 bindsym $mod+Shift+c kill
 
 # start dmenu (a program launcher)
-bindsym $mod+p exec "dmenu_run -nf '#646464' -nb '#000000' -sb '#646464' -sf '#000000' -b"
+bindsym $mod+p exec "dmenu_path | yeganesh -- -fn 'pango:Fira Code:size=10' -nf '#646464' -nb '#000000' -sb '#646464' -sf '#000000' -b | bash"
 
 # change focus
 bindsym $mod+h focus left
@@ -120,7 +120,8 @@ bar {
   position top
 }
 
-exec --no-startup-id ~/.config/i3/alternating_layouts.py
+# Autostart
+exec --no-startup-id ~/.config/i3/scripts/alternating_layouts.py
 
 # Ergonomy improvements
 focus_follows_mouse yes

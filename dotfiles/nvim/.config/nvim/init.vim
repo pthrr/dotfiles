@@ -1,6 +1,6 @@
 " OS dependent
 let s:settings = {}
-let s:settings.cache_dir = expand('~/.config/nvim/cache')
+let s:settings.cache_dir = expand($XDG_DATA_HOME.'/nvim/cache')
 let s:settings.dein_dir = s:settings.cache_dir . '/dein'
 let s:settings.dein_repo_dir = s:settings.dein_dir . '/repos/github.com/Shougo/dein.vim'
 if &runtimepath !~# '/dein.vim'
@@ -24,18 +24,6 @@ endif
 if dein#check_install()
     call dein#install()
 endif
-if !isdirectory($HOME."/.config")
-    call mkdir($HOME."/.config", "", 0770)
-endif
-if !isdirectory($HOME."/.config/nvim")
-    call mkdir($HOME."/.config/nvim", "", 0770)
-endif
-if !isdirectory($HOME."/.config/nvim/undo")
-    call mkdir($HOME."/.config/nvim/undo", "", 0700)
-endif
-if !isdirectory($HOME."/.config/nvim/tags")
-    call mkdir($HOME."/.config/nvim/tags", "", 0700)
-endif
 set termguicolors
 set background=dark
 colorscheme NeoSolarized
@@ -51,7 +39,6 @@ set nowritebackup
 set noshowmode
 set novisualbell
 set noerrorbells
-set undodir=~/.config/nvim/undo
 set undofile
 set undolevels=1000
 set undoreload=10000
@@ -161,7 +148,6 @@ let g:UltiSnipsExpandTrigger = '<tab>'
 let g:UltiSnipsJumpForwardTrigger = '<tab>'
 let g:UltiSnipsJumpBackwardTrigger = '<s-tab>'
 let g:UltiSnipsSnippetDirectories = [$XDG_DOCUMENTS_DIR.'/snippets']
-let g:ultisnips_python_style = 'sphinx'
 " tagbar
 nmap <F8> :TagbarToggle<CR>
 let g:tagbar_compact = 1
@@ -173,11 +159,11 @@ let g:tagbar_width = max([80, winwidth(0) / 4])
 map oo <C-]>
 map OO <C-T>
 map <C-O> g]
-set tags=~/.config/nvim/tags
+set tags=$XDG_DATA_HOME.'/nvim/cache/tags'
 let g:gutentags_modules = ['ctags']
 let g:gutentags_add_default_project_roots = 0
 let g:gutentags_project_root = ['requirements.txt', '.git', 'README.md']
-let g:gutentags_cache_dir='~/.config/nvim/tags'
+let g:gutentags_cache_dir=$XDG_DATA_HOME.'/nvim/cache/tags'
 let g:gutentags_generate_on_new = 1
 let g:gutentags_generate_on_missing = 1
 let g:gutentags_generate_on_write = 1
@@ -251,15 +237,6 @@ let g:ale_python_black_options = '--line-length 79'
 let g:ale_python_isort_options = '--profile black --atomic --line-length 79'
 let g:ale_cpp_clangformat_style_option = 'chromium'
 let g:ale_c_clangformat_style_option = 'webkit'
-let g:ale_cpp_clangtidy_checks = [
-    \ 'bugprone-*',
-    \ 'cppcoreguidelines-*',
-    \ 'google-*',
-    \ 'modernize-*',
-    \ 'misc-*',
-    \ 'performance-*',
-    \ 'readability-*',
-    \]
 let g:ale_fix_on_save = 0
 let g:ale_lint_on_enter = 1
 let g:ale_lint_on_filetype_changed = 0

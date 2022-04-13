@@ -1,25 +1,26 @@
 sudo apt-get update
 sudo apt-get install -y \
-    software-properties-common \
-    firmware-misc-nonfree \
-    intel-microcode \
-    laptop-mode-tools \
-    lm-sensors \
     libtool \
     build-essential \
     automake \
     autoconf \
     perl \
-    python3-pip \
     python3 \
-    pulseaudio-utils \
+    python3-pip \
+    python3-venv \
     pulseaudio \
-    x11-xserver-utils \
-    x11-apps \
-    xserver-xorg-input-synaptics \
+    pulseaudio-utils \
     xorg \
+    x11-apps \
+    x11-xserver-utils \
+    software-properties-common \
+    firmware-misc-nonfree \
+    intel-microcode \
+    #laptop-mode-tools \
+    #xserver-xorg-input-synaptics \
+    #lm-sensors \
     adwaita-icon-theme \
     adwaita-qt \
     qt5ct \
     mtp-tools \
-    xcircuit \
+    xcircuit

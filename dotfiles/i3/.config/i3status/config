@@ -23,7 +23,7 @@ volume master {
 }
 
 memory {
-    format = "MEM %free"
+    format = "RAM %free"
     format_degraded = "MEM %free"
     threshold_degraded = "10%"
 }

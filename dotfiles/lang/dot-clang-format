@@ -1,18 +1,10 @@
-# Use the Google style in this project.
+Language: Cpp
 BasedOnStyle: Google
-
-# Some folks prefer to write "int& foo" while others prefer "int &foo".  The
-# Google Style Guide only asks for consistency within a project, we chose
-# "int& foo" for this project:
 DerivePointerAlignment: false
 PointerAlignment: Left
-
-BreakStringLiterals: 'false'
-ColumnLimit: '0'
-IndentWidth: '4'
-ObjCBlockIndentWidth: '4'
-ObjCSpaceBeforeProtocolList: 'false'
-PenaltyBreakComment: '0'
-SortIncludes: 'true'
-TabWidth: '4'
-UseTab: ForIndentation
+SortIncludes: true
+TabWidth: 4
+IndentWidth: 4
+ObjCBlockIndentWidth: 4
+ConstructorInitializerIndentWidth: 8
+ContinuationIndentWidth: 8
