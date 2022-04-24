@@ -140,6 +140,7 @@
       curl
       htop
       alacritty
+      kitty
       gdb
       rr
       appimage-run
@@ -179,6 +180,7 @@
       xarchiver
       ipe
       zathura
+      hexchat
       ungoogled-chromium
       evolution
       tor-browser-bundle-bin
@@ -197,6 +199,7 @@
       nodePackages.node2nix
       ghidra-bin
       spotify
+      deadbeef
       tdesktop
       #element-desktop
       weechat
