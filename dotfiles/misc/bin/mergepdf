@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+DIR=$1
+files=$(find $DIR -name "*.pdf" -type f -print)
+pdfunite $files out.pdf

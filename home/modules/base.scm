@@ -6,6 +6,7 @@
   (map specification->package
        (list "exa"
              "dos2unix"
+             "webp"
              "ripgrep"
              "stow"
              "jq"
