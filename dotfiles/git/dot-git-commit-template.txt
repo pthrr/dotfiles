@@ -2,6 +2,10 @@
 # No more than 50 chars. #### 50 chars is here: #
 Add your title here
 
+# The body should not be longer than 72 chars. ####### Which is here: #
+# What has changed, e.g. names of classes, functions, methods, tests, etc.?
+What:
+
 # Why is this change happening, e.g. goals, use cases, stories, etc.?
 Why:
 
@@ -18,7 +22,7 @@ Tags:
 #   Add = Create a capability e.g. feature, test, dependency.
 #   Drop = Delete a capability e.g. feature, test, dependency.
 #   Fix = Fix an issue e.g. bug, typo, accident, misstatement.
-#   Update = Update information or instructions in e.g. the README.
+#   Update = Update information or instructions e.g. the README.
 #   Bump = Increase the version of something e.g. a dependency.
 #   Make = Change the build process, or tools, or infrastructure.
 #   Start = Begin doing something; e.g. enable a toggle, feature flag, etc.
