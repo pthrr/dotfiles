@@ -27,16 +27,24 @@
     recurse = true
 
 [diff]
-    tool = kdiff3
+    tool = meld
 
 [difftool]
-    prompt = false
+    prompt = true
 
 [merge]
-    tool = kdiff3
+    tool = meld
 
 [mergetool]
     keepBackup = false
+
+[difftool "meld"]
+    cmd = meld \"$LOCAL\" \"$REMOTE\"
+    trustExitCode = false
+
+[mergetool "meld"]
+    cmd = meld --auto-merge \"$LOCAL\" \"$BASE\" \"$REMOTE\" --output \"$MERGED\" --label=Local --label=Base --label=Remote --diff \"$BASE\" \"$LOCAL\" --diff \"$BASE\" \"$REMOTE\"
+    trustExitCode = false
 
 [difftool "kdiff3"]
     cmd = kdiff3 \"$LOCAL\" \"$REMOTE\"
