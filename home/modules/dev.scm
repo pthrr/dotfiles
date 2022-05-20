@@ -13,11 +13,13 @@
              ;;"gfortran-toolchain"
              ;;"gcc-toolchain"
              ;;"rust"
+             "mit-scheme"
              "ninja"
              "universal-ctags"
              "lv2"
              "git"
              "git-lfs"
+             "meld"
              "neovim"
              "cmake")))
 
