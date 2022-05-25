@@ -223,7 +223,7 @@ let g:gutentags_ctags_exclude = [
 " ale
 nmap <F6> :ALEFix<CR>
 let g:ale_linters = {
-    \ 'python': ['pylint', 'pyright'],
+    \ 'python': ['pylint', 'mypy'],
     \ 'cpp': ['clangtidy'],
     \ 'c': ['clangtidy'],
     \}
