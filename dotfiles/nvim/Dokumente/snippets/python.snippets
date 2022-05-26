@@ -758,7 +758,7 @@ def main(args: argparse.Namespace) -> int:
 	return 0
 
 
-def str_to_bool(value: typing.Union[str, bool]) -> None:
+def str_to_bool(value: typing.Union[str, bool]) -> bool:
 	if isinstance(value, bool):
 		return value
 	if value.lower() in ("yes", "true", "t", "y", "1"):
@@ -788,7 +788,7 @@ if __name__ == "__main__":
 	if args.debug:
 		LOGGING_LEVEL = logging.DEBUG
 	else:
-		LOGGING_LEVEL = logging.CRITICAL
+		LOGGING_LEVEL = logging.ERROR
 
 	LOGGING_FORMAT_STRING = "%(asctime)s | %(name)s | %(levelname)s | %(module)s, %(threadName)s, %(funcName)s, %(lineno)d | %(message)s"
 	logging.basicConfig(format=LOGGING_FORMAT_STRING, level=LOGGING_LEVEL)
