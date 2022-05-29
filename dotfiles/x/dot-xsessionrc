@@ -1,0 +1,15 @@
+if [ -f "/etc/profile" ] ; then
+    . "/etc/profile"
+fi
+
+if [ -f "$HOME/.profile" ] ; then
+    . "$HOME/.profile"
+fi
+
+if [ -f "/etc/xprofile" ] ; then
+    . "/etc/xprofile"
+fi
+
+if [ -f "$HOME/.xprofile" ] ; then
+    . "$HOME/.xprofile"
+fi
