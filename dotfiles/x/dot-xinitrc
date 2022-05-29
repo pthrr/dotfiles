@@ -1,24 +1,6 @@
 DEFAULT_SESSION="startxfce4"
 
-if [ -f "/etc/profile" ] ; then
-    . "/etc/profile"
-fi
-
-if [ -f "$HOME/.profile" ] ; then
-    . "$HOME/.profile"
-fi
-
-if [ -f "/etc/xprofile" ] ; then
-    . "/etc/xprofile"
-fi
-
-if [ -f "$HOME/.xprofile" ] ; then
-    . "$HOME/.xprofile"
-fi
-
-if [ -f "$HOME/.xresources" ] ; then
-    xrdb -merge "$HOME/.xresources"
-fi
+. "$HOME/.xsessionrc"
 
 # Start WM
 case $1 in
