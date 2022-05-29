@@ -13,3 +13,7 @@ fi
 if [ -f "$HOME/.xprofile" ] ; then
     . "$HOME/.xprofile"
 fi
+
+if [ -f "$HOME/.xresources" ] ; then
+    xrdb -merge "$HOME/.xresources"
+fi
