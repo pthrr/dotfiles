@@ -74,8 +74,6 @@ alias .....='cd ../../../../'
 alias jupnote='$BROWSER http://localhost:8888/; jupyter-notebook --no-browser --notebook-dir="$XDG_DOCUMENTS_DIR/notebooks"'
 alias mirror='wget --mirror --convert-links --adjust-extension --page-requisites --no-parent'
 alias com='picocom -b 115200 --echo --omap=crcrlf'
-alias untar='tar vxf'
-alias un7z='7z x'
 alias procs='ps -aux'
 alias ports='sudo netstat -pln'
 alias pwgen="python3 -c 'import secrets,pyperclip;pw=secrets.token_urlsafe(32);pyperclip.copy(pw);print(pw)'"
