@@ -54,7 +54,7 @@ if [ -f "$HOME/.guix-profile/etc/profile" ] ; then
     export XDG_DATA_DIRS="$XDG_DATA_DIRS:/usr/share/gnome:/usr/local/share:/usr/share"
 fi
 
-# include GO environment
+# include Rust environment
 if [ -f "$HOME/.cargo/env" ] ; then
     . "$HOME/.cargo/env"
 fi
