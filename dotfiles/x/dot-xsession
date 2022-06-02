@@ -1,1 +1,0 @@
-exec /bin/bash -login "$HOME/.xinitrc" i3
