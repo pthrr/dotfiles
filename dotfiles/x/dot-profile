@@ -93,4 +93,5 @@ export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=0
 export _JAVA_AWT_WM_NONREPARENTING=1
 export AWT_TOOLKIT=XToolkit
 export GTK_THEME=Adwaita:dark
+export GTK2_RC_FILES="/usr/share/themes/Adwaita-dark/gtk-2.0/gtkrc"
 export QT_QPA_PLATFORMTHEME=qt5ct
