@@ -11,7 +11,7 @@ order += "volume master"
 order += "memory"
 order += "disk /"
 order += "cpu_temperature 0"
-order += "battery 0"
+order += "battery 1"
 order += "tztime local"
 
 volume master {
@@ -36,8 +36,8 @@ cpu_temperature 0 {
     format = "CPU %degrees °C"
 }
 
-battery 0 {
-    format = "BAT %emptytime %status"
+battery 1 {
+    format = "BAT %percentage"
     format_down = "BAT -"
     status_chr = "CHR"
     status_bat = "BAT"

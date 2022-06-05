@@ -4,15 +4,25 @@ DEFAULT_SESSION="startxfce4"
 
 case $1 in
 i3)
-	setxkbmap -layout de -model pc105 -option terminate:ctrl_alt_bksp -option caps:none
-	xsetroot -solid black &
-	redshift -O 4000 &
-	nm-applet &
-	nextcloud &
-	echo "Starting at $(date)" >> "$XDG_CONFIG_HOME/i3/log"
-	exec i3 >> "$XDG_CONFIG_HOME/i3/log" 2>&1
-	;;
+    setxkbmap -layout de -model pc105 -option terminate:ctrl_alt_bksp -option caps:none
+    xsetroot -solid black &
+    redshift -O 4000 &
+    nm-applet &
+    nextcloud &
+    echo "Starting at $(date)" >> "$XDG_CONFIG_HOME/i3/log"
+    exec i3 >> "$XDG_CONFIG_HOME/i3/log" 2>&1
+    ;;
+openbsd-cwm)
+    setxkbmap -layout de -model pc105 -option terminate:ctrl_alt_bksp -option caps:none
+    xsetroot -solid black &
+    redshift -O 4000 &
+    nm-applet &
+    nextcloud &
+    polybar top &
+    echo "Starting at $(date)" >> "$XDG_CONFIG_HOME/cwm/log"
+    exec openbsd-cwm >> "$XDG_CONFIG_HOME/cwm/log" 2>&1
+    ;;
 *)
-	exec $DEFAULT_SESSION
-	;;
+    exec $DEFAULT_SESSION
+    ;;
 esac
