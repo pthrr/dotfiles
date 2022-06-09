@@ -7,5 +7,7 @@ exec nm-applet
 exec polybar top
 unmanage panel
 unmanage polybar
-bind c exec xterm
-bind f exec librewolf
+bind c exec $TERMINAL
+bind f exec $BROWSER
+bind g exec spacefm
+bind d exec claws-mail
