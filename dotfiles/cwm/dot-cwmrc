@@ -1,10 +1,10 @@
 borderwidth 1
 snapdist 4
-color activeborder goldenrod1
-color inactiveborder grey50
+color activeborder #000000
+color inactiveborder #000000
 fontname "DejaVu Sans:pixelsize=14:style=bold"
 
-gap 12 0 0 0
+gap 17 0 0 0
 
 autogroup 0 Cclock
 autogroup 0 XLoad
@@ -22,6 +22,7 @@ autogroup 4 Skype
 autogroup 4 Pino
 autogroup 4 Hotot
 
+ignore polybar
 ignore xlbiff
 
 command xterm xterm
@@ -36,7 +37,7 @@ command skype /usr/bin/skype
 command '' 'true'
 command xlock "xscreensaver-command --lock"
 
-# sticky yes
+sticky yes
 
 unbind-key all
 
