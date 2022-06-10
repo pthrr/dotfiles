@@ -55,35 +55,3 @@ label-mounted = SSD %percentage_used%%
 label-unmounted = SSD not mounted
 label-unmounted-foreground = #55
 label-warn = SSD %percentage_used%%
-
-[module/xworkspaces]
-type = internal/xworkspaces
-icon-1 = Workspace 1;1
-icon-2 = Workspace 2;2
-icon-3 = Workspace 3;3
-icon-4 = Workspace 4;4
-
-label-active = %icon%
-label-active-foreground = #000000
-label-active-background = #646464
-label-active-padding = 2
-
-label-inactive = %icon%
-label-inactive-foreground = #646464
-label-inactive-background = #000000
-label-inactive-padding = 2
-
-label-urgent = %icon%
-label-urgent-foreground = #646464
-label-urgent-background = #000000
-label-urgent-padding = 2
-
-label-empty = %icon%
-label-empty-foreground = #000000
-label-empty-background = #000000
-label-empty-padding = 2
-
-label-occupied = %icon%
-label-occupied-foreground = #646464
-label-occupied-background = #000000
-label-occupied-padding = 2

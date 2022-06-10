@@ -3,6 +3,9 @@ DEFAULT_SESSION="startxfce4"
 . "$HOME/.xsessionrc"
 
 case $1 in
+startxfce4)
+    exec startxfce4
+    ;;
 ratpoison)
     setxkbmap -layout de -model pc105 -option terminate:ctrl_alt_bksp -option caps:none
     xsetroot -solid black -cursor_name left_ptr
