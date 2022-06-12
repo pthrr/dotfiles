@@ -8,18 +8,15 @@ foreground = #646464
 padding-left = 0
 padding-right = 1
 tray-position = right
-font-0 = Fira Code:weight=Light:size=10;2
-modules-left = xworkspaces
+font-0 = "Fira Code:weight=Light:size=10;2"
 modules-right = filesystem gap temperature gap memory gap battery
 
 [module/gap]
 type = custom/text
 content = " | "
-content-background = #000000
 
 [module/memory]
 type = internal/memory
-warn-percentage = 95
 label = RAM %percentage_used%%
 label-warn = RAM %percentage_used%%
 interval = 10
@@ -40,18 +37,14 @@ thermal-zone = 0
 hwmon-path = /sys/devices/platform/coretemp.0/hwmon/hwmon5/temp1_input
 label = CPU %temperature-c%
 label-warn = CPU %temperature-c%
-label-warn-foreground = #f00
-base-temperature = 20
 interval = 10
 
 [module/filesystem]
 type = internal/fs
 mount-0 = /
-interval = 10
 fixed-values = true
 spacing = 4
-warn-percentage = 75
 label-mounted = SSD %percentage_used%%
 label-unmounted = SSD not mounted
-label-unmounted-foreground = #55
 label-warn = SSD %percentage_used%%
+interval = 10

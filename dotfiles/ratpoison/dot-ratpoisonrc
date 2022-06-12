@@ -9,6 +9,6 @@ exec polybar top &
 unmanage panel
 unmanage polybar
 bind c exec $TERMINAL
-bind f exec $BROWSER
+bind b exec $BROWSER
 bind g exec spacefm
 bind d exec claws-mail
