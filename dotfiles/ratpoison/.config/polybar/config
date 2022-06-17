@@ -25,6 +25,8 @@ interval = 10
 type = internal/battery
 battery = BAT1
 adapter = AC
+full-at = 99
+low-at = 9
 label-charging = Charging %percentage%%
 label-discharging = Discharging %percentage%%
 label-full = Fully charged
@@ -37,6 +39,8 @@ thermal-zone = 0
 hwmon-path = /sys/devices/platform/coretemp.0/hwmon/hwmon5/temp1_input
 label = CPU %temperature-c%
 label-warn = CPU %temperature-c%
+warn-temperature = 95
+label-warn-foreground = #f00
 interval = 10
 
 [module/filesystem]

@@ -1,4 +1,4 @@
-DEFAULT_SESSION="startxfce4"
+DEFAULT_SESSION="ratpoison"
 
 . "$HOME/.xsessionrc"
 
