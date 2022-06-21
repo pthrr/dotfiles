@@ -54,6 +54,14 @@
     cmd = kdiff3 \"$LOCAL\" \"$BASE\" \"$REMOTE\" \"$MERGED\"
     trustExitCode = false
 
+[difftool "bcomp4"]
+    cmd = bcomp4 \"$(wslpath -w $LOCAL)\" \"$(wslpath -w $REMOTE)\"
+    trustExitCode = false
+
+[mergetool "bcomp4"]
+    cmd = bcomp4 \"$(wslpath -w $LOCAL)\" \"$(wslpath -w $REMOTE)\" \"$(wslpath -w $BASE)\" \"$(wslpath -w $MERGED)\"
+    trustExitCode = false
+
 [pull]
     rebase = false
 
