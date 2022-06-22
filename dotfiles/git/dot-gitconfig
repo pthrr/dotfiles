@@ -55,12 +55,12 @@
     trustExitCode = false
 
 [difftool "bcomp4"]
-    cmd = bcomp4 \"$(wslpath -w $LOCAL)\" \"$(wslpath -w $REMOTE)\"
-    trustExitCode = false
+    cmd = \"/mnt/c/Program Files/Beyond Compare 4/BComp.exe\" "$(wslpath -w $LOCAL)" "$(wslpath -w $REMOTE)"
+    trustExitCode = true
 
 [mergetool "bcomp4"]
-    cmd = bcomp4 \"$(wslpath -w $LOCAL)\" \"$(wslpath -w $REMOTE)\" \"$(wslpath -w $BASE)\" \"$(wslpath -w $MERGED)\"
-    trustExitCode = false
+    cmd = \"/mnt/c/Program Files/Beyond Compare 4/BComp.exe\" "$(wslpath -w $LOCAL)" "$(wslpath -w $REMOTE)" "$(wslpath -w $BASE)" "$(wslpath -w $MERGED)"
+    trustExitCode = true
 
 [pull]
     rebase = false
