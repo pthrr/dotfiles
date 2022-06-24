@@ -79,6 +79,7 @@
     template = ~/.git-commit-template.txt
 
 [alias]
+    guidiff = difftool --dir-diff --no-symlinks
     a = add
     b = branch
     c = commit
