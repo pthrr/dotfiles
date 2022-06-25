@@ -9,11 +9,16 @@ padding-left = 0
 padding-right = 1
 tray-position = right
 font-0 = "Fira Code:weight=Light:size=10;2"
-modules-right = filesystem gap temperature gap memory gap battery
+modules-right = space-status gap filesystem gap temperature gap memory gap battery
 
 [module/gap]
 type = custom/text
 content = " | "
+
+[module/space-status]
+type = custom/script
+exec = curl -s https://api.muc.ccc.de/spaceapi.json | jq '.state.message'
+interval = 90
 
 [module/memory]
 type = internal/memory
