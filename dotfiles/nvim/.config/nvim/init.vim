@@ -18,6 +18,7 @@ if dein#load_state(s:settings.dein_dir)
     call dein#add('nvim-lua/plenary.nvim')
     call dein#add('folke/todo-comments.nvim', { 'depends': 'plenary' })
     call dein#add('dense-analysis/ale')
+    call dein#add('elixir-editors/vim-elixir')
     call dein#end()
     call dein#save_state()
 endif
@@ -227,12 +228,14 @@ let g:ale_linters = {
     \ 'cpp': ['clangtidy'],
     \ 'c': ['clangtidy'],
     \ 'xml': ['xmllint'],
+    \ 'elixir': ['elixir-ls'],
     \}
 let g:ale_fixers = {
     \ 'python': ['black', 'isort'],
     \ 'cpp': ['clang-format'],
     \ 'c': ['clang-format'],
     \ 'xml': ['xmllint'],
+    \ 'elixir': ['mix_format'],
     \ '*': ['remove_trailing_lines', 'trim_whitespace'],
     \}
 let g:ale_python_black_options = '--line-length 79'
