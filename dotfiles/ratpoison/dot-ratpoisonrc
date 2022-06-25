@@ -4,6 +4,7 @@ set padding 0 16 0 0
 set winname class
 exec rpws init 4 -k
 exec nm-applet &
+exec blueman-applet &
 exec nextcloud &
 exec polybar top &
 unmanage panel
