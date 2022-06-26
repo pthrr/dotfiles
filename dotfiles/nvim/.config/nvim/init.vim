@@ -228,7 +228,6 @@ let g:ale_linters = {
     \ 'cpp': ['clangtidy'],
     \ 'c': ['clangtidy'],
     \ 'xml': ['xmllint'],
-    \ 'elixir': ['elixir-ls'],
     \ 'clojure': ['joker'],
     \}
 let g:ale_fixers = {
@@ -236,8 +235,6 @@ let g:ale_fixers = {
     \ 'cpp': ['clang-format'],
     \ 'c': ['clang-format'],
     \ 'xml': ['xmllint'],
-    \ 'elixir': ['mix_format'],
-    \ 'clojure': ['joker'],
     \ '*': ['remove_trailing_lines', 'trim_whitespace'],
     \}
 let g:ale_python_black_options = '--line-length 79'
