@@ -13,20 +13,23 @@ function fcc() {
     clang-format -verbose -i -style=google "$@"
     clang-tidy "$@"
 }
-function fcm() {
-    cmake-format -i "$@"
+function fcl() {
+    echo "not implemented"
 }
-function foc() {
-    ocamlformat --inplace --enable-outside-detected-project "$@"
+function vpy() {
+    shopt -s nullglob
+    nvim src/*.py "$@"
+    shopt -u nullglob
 }
-function ioc() {
-    dune init proj "$@" --libs "base,stdio,owl,owl-top,owl-base,owl-plplot"
+function vcc() {
+    shopt -s nullglob
+    nvim src/*.c src/*.cc "$@"
+    shopt -u nullglob
 }
-function roc() {
-    dune build && dune exec "$@"
-}
-function toc() {
-    dune test "$@"
+function vcl() {
+    shopt -s nullglob
+    nvim src/*.clj "$@"
+    shopt -u nullglob
 }
 function lla() {
     exa -la --git --color=always "$@" | less
@@ -39,21 +42,6 @@ function lsd() {
 }
 function lsf() {
     exa --tree --long --git --color=always --level 6 -a -I ".git|venv|__pycache__" "$@" | less
-}
-function vp() {
-    shopt -s nullglob
-    nvim src/*.py "$@"
-    shopt -u nullglob
-}
-function vc() {
-    shopt -s nullglob
-    nvim src/*.c src/*.cc "$@"
-    shopt -u nullglob
-}
-function vo() {
-    shopt -s nullglob
-    nvim bin/*.ml lib/*.ml test/*.ml "$@"
-    shopt -u nullglob
 }
 alias vi='nvim'
 alias vim='nvim'
