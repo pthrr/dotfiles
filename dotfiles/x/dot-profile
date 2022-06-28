@@ -64,6 +64,27 @@ if [ -f "$HOME/.guix-profile/etc/profile" ] ; then
     export XDG_DATA_DIRS="$XDG_DATA_DIRS:/usr/share/gnome:/usr/local/share:/usr/share"
 fi
 
+# create standard dirs
+if [ ! -d  "$HOME/tmp" ] ; then
+    mkdir "$HOME/tmp"
+fi
+
+if [ ! -d  "$HOME/bin" ] ; then
+    mkdir "$HOME/bin"
+fi
+
+if [ ! -d  "$HOME/opt" ] ; then
+    mkdir "$HOME/opt"
+fi
+
+if [ ! -d  "$HOME/mail/personal" ] ; then
+    mkdir -p "$HOME/mail/personal"
+fi
+
+if [ ! -d  "$HOME/mail/public" ] ; then
+    mkdir -p "$HOME/mail/public"
+fi
+
 export LANG=de_DE.UTF-8
 export LC_ALL=de_DE.UTF-8
 export XDG_CONFIG_HOME="$HOME/.config"
@@ -83,6 +104,8 @@ export SHELL='bash'
 export EDITOR='nvim'
 export BROWSER='librewolf'
 export TERMINAL='xterm'
+export MAILPATH='$HOME/mail/personal/Inbox?"Mail arrived in $_!":$HOME/mail/public/Inbox?"Mail arrived in $_!"'
+export MAILCHECK=0
 export FZF_DEFAULT_COMMAND='rg --files'
 export FZF_DEFAULT_OPTS='-m --height 50% --border'
 export LESS='-r'
