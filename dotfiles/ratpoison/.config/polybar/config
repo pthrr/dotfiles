@@ -9,7 +9,7 @@ padding-left = 0
 padding-right = 1
 tray-position = right
 font-0 = "Fira Code:weight=Light:size=10;2"
-modules-right = space-status gap filesystem gap temperature gap memory gap battery
+modules-right = space-status gap filesystem gap memory gap battery
 
 [module/gap]
 type = custom/text

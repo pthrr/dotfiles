@@ -228,13 +228,14 @@ let g:ale_linters = {
     \ 'cpp': ['clangtidy'],
     \ 'c': ['clangtidy'],
     \ 'xml': ['xmllint'],
-    \ 'clojure': ['joker'],
+    \ 'rust': ['rustc'],
     \}
 let g:ale_fixers = {
     \ 'python': ['black', 'isort'],
     \ 'cpp': ['clang-format'],
     \ 'c': ['clang-format'],
     \ 'xml': ['xmllint'],
+    \ 'rust': ['rustfmt'],
     \ '*': ['remove_trailing_lines', 'trim_whitespace'],
     \}
 let g:ale_python_black_options = '--line-length 79'

@@ -13,9 +13,6 @@ function fcc() {
     clang-format -verbose -i -style=google "$@"
     clang-tidy "$@"
 }
-function fcl() {
-    echo "not implemented"
-}
 function vpy() {
     shopt -s nullglob
     nvim src/*.py "$@"
@@ -24,11 +21,6 @@ function vpy() {
 function vcc() {
     shopt -s nullglob
     nvim src/*.c src/*.cc "$@"
-    shopt -u nullglob
-}
-function vcl() {
-    shopt -s nullglob
-    nvim src/*.clj "$@"
     shopt -u nullglob
 }
 function lla() {
