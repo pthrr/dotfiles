@@ -12,4 +12,3 @@ unmanage polybar
 bind c exec $TERMINAL
 bind b exec $BROWSER
 bind g exec spacefm
-bind d exec claws-mail
