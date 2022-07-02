@@ -3,22 +3,61 @@ width = 1366
 height = 16
 wm-name = polybar
 top = true
+bottom = false
 background = #000000
 foreground = #646464
 padding-left = 0
 padding-right = 1
 tray-position = right
-font-0 = "Fira Code:weight=Light:size=10;2"
-modules-right = space-status gap filesystem gap memory gap battery
+tray-offset-y = 1
+font-0 = "Fira Code:weight=Regular:size=10;2"
+modules-right = space-status gap filesystem gap memory gap battery gap date
+
+[bar/bottom]
+width = 1366
+height = 16
+wm-name = polybar
+top = false
+bottom = true
+background = #9999bb
+foreground = #000000
+padding-left = 0
+padding-right = 1
+tray-position = right
+tray-offset-y = 0
+font-0 = "Fira Code:weight=Regular:size=10;2"
+modules-left = battery gap memory gap filesystem gap cpu
+modules-center = herbstluftwm
+modules-right = space-status gap date
 
 [module/gap]
 type = custom/text
 content = " | "
 
+[module/herbstluftwm]
+type = custom/script
+exec = MONITOR=HDMI-0 ~/.config/polybar/herbstluftwm.sh
+exec-if = ps -C herbstluftwm >/dev/null 2>&1
+tail = true
+interval = 1
+
+[module/date]
+type = internal/date
+date = %a, %d-%m-%y%
+time = %H:%M
+label = %date% %time%
+
 [module/space-status]
 type = custom/script
 exec = curl -s https://api.muc.ccc.de/spaceapi.json | jq '.state.message'
 interval = 90
+
+[module/cpu]
+type = internal/cpu
+warn-percentage = 90
+label = CPU %percentage%%
+label-warn = CPU %percentage%%
+interval = 1
 
 [module/memory]
 type = internal/memory
@@ -37,16 +76,6 @@ label-discharging = Discharging %percentage%%
 label-full = Fully charged
 label-low = BATTERY LOW
 poll-interval = 10
-
-[module/temperature]
-type = internal/temperature
-thermal-zone = 0
-hwmon-path = /sys/devices/platform/coretemp.0/hwmon/hwmon5/temp1_input
-warn-temperature = 95
-label = CPU %temperature-c%
-label-warn = CPU %temperature-c%
-label-warn-foreground = #f00
-interval = 10
 
 [module/filesystem]
 type = internal/fs

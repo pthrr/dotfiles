@@ -2,10 +2,11 @@ xterm*faceName: Ubuntu Mono
 xterm*faceSize: 11
 xterm*renderFont: true
 xterm*saveLines: 2000
+xterm*internalBorder: 0
+xterm*borderWidth: 0
 xterm*fading: 40
 xterm*fadeColor: #002b36
 xterm*cursorColor: #93a1a1
-xterm*internalBorder: 6
 xterm*pointerColorBackground: #586e75
 xterm*pointerColorForeground: #93a1a1
 xterm*background: #002b36
