@@ -9,9 +9,9 @@ hc spawn nm-applet
 hc spawn blueman-applet
 hc spawn polybar bottom
 
-pause 2
-
 hc emit_hook reload
+
+hc set_layout horizontal
 
 hc keyunbind --all
 
@@ -23,7 +23,7 @@ hc keybind $Mod-t spawn rofi -show window
 hc keybind $Mod-Shift-q quit
 hc keybind $Mod-Shift-r reload
 hc keybind $Mod-Shift-c close
-hc keybind $Mod-Return spawn "${TERMINAL:-xterm}" # use your $TERMINAL with xterm as fallback
+hc keybind $Mod-Return spawn "${TERMINAL:-xterm}"
 
 hc keybind $Mod-Left  focus left
 hc keybind $Mod-Down  focus down
@@ -146,8 +146,10 @@ hc set focus_follows_mouse 1
 
 hc keybind XF86MonBrightnessUp spawn xbacklight +10
 hc keybind XF86MonBrightnessDown spawn xbacklight -10
+
 hc keybind XF86AudioMute spawn pactl set-sink-mute @DEFAULT_SINK@ toggle
 hc keybind XF86AudioMicMute spawn pactl set-source-mute @DEFAULT_SOURCE@ toggle
+
 hc keybind XF86AudioRaiseVolume spawn pactl set-sink-volume @DEFAULT_SINK@ +10%
 hc keybind XF86AudioLowerVolume spawn pactl set-sink-volume @DEFAULT_SINK@ -10%
 
@@ -156,20 +158,20 @@ hc unrule -F
 #hc rule class=XTerm tag=3 # move all xterms to tag 3
 hc rule focus=on # normally focus new clients
 hc rule floatplacement=smart
-#hc rule focus=off # normally do not focus new clients
 # give focus to most common terminals
-hc rule class~'(.*[Rr]xvt.*|.*[Tt]erm|Konsole)' focus=on
+#hc rule class~'(.*[Rr]xvt.*|.*[Tt]erm|Konsole)' focus=on
 hc rule windowtype~'_NET_WM_WINDOW_TYPE_(DIALOG|UTILITY|SPLASH)' floating=on
-hc rule windowtype='_NET_WM_WINDOW_TYPE_DIALOG' focus=on
+hc rule class="librewolf-default" floating=on
+#hc rule windowtype='_NET_WM_WINDOW_TYPE_DIALOG' focus=on
 hc rule windowtype~'_NET_WM_WINDOW_TYPE_(NOTIFICATION|DOCK|DESKTOP)' manage=off
 
-hc rule instance=xv class=MPlayer fullscreen=on
+#hc rule instance=xv class=MPlayer fullscreen=on
 #firefox dialog should be fullscreen, useful for my tiny eeepc
-hc rule instance="Dialog" class="Firefox" fullscreen=on #delicious bookmark
-hc rule instance="Aup" class="Firefox" fullscreen=on #autoproxy
-hc rule instance="Abp" class="Firefox" fullscreen=on #adblock plus
+#hc rule instance="Dialog" class="Firefox" fullscreen=on #delicious bookmark
+#hc rule instance="Aup" class="Firefox" fullscreen=on #autoproxy
+#hc rule instance="Abp" class="Firefox" fullscreen=on #adblock plus
 #view the image in fullscreen
-hc rule instance=feh class=feh fullscreen=on #feh has some bug
+#hc rule instance=feh class=feh fullscreen=on #feh has some bug
 
 hc set tree_style '╾│ ├└╼─┐'
 
