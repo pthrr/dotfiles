@@ -43,7 +43,7 @@ interval = 1
 
 [module/date]
 type = internal/date
-date = %a, %d-%m-%y%
+date = %a, KW %V, %d-%m-%y%
 time = %H:%M
 label = %date% %time%
 

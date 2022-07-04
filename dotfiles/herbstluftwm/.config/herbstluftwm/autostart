@@ -17,8 +17,8 @@ hc keyunbind --all
 
 Mod=Mod1 # Use alt as the main modifier
 
-hc keybind $Mod-d spawn rofi -show drun -modi drun,run
-hc keybind $Mod-t spawn rofi -show window
+hc keybind $Mod-d spawn rofi -theme solarized -show run -modi drun,run
+hc keybind $Mod-t spawn rofi -theme solarized -show window
 
 hc keybind $Mod-Shift-q quit
 hc keybind $Mod-Shift-r reload
@@ -120,7 +120,7 @@ hc set frame_bg_transparent on
 hc set frame_transparent_width 5
 hc set frame_gap 4
 
-hc attr theme.title_height 12
+hc attr theme.title_height 0
 hc attr theme.title_font 'Dejavu Sans:pixelsize=12'  # example using Xft
 # hc attr theme.title_font '-*-fixed-medium-r-*-*-13-*-*-*-*-*-*-*'
 hc attr theme.padding_top 2  # space below the title's baseline (i.e. text depth)
@@ -129,7 +129,7 @@ hc attr theme.normal.color '#454545'
 hc attr theme.urgent.color orange
 hc attr theme.inner_width 4
 hc attr theme.inner_color black
-hc attr theme.border_width 4
+hc attr theme.border_width 2
 hc attr theme.floating.border_width 4
 hc attr theme.floating.outer_width 4
 hc attr theme.floating.outer_color black
@@ -153,18 +153,18 @@ hc keybind XF86AudioMicMute spawn pactl set-source-mute @DEFAULT_SOURCE@ toggle
 hc keybind XF86AudioRaiseVolume spawn pactl set-sink-volume @DEFAULT_SINK@ +10%
 hc keybind XF86AudioLowerVolume spawn pactl set-sink-volume @DEFAULT_SINK@ -10%
 
-# rules
 hc unrule -F
-#hc rule class=XTerm tag=3 # move all xterms to tag 3
 hc rule focus=on # normally focus new clients
 hc rule floatplacement=smart
+
+hc rule windowtype='_NET_WM_WINDOW_TYPE_DIALOG' focus=on
+hc rule windowtype~'_NET_WM_WINDOW_TYPE_(DIALOG|UTILITY|SPLASH)' floating=on
+hc rule windowtype~'_NET_WM_WINDOW_TYPE_(NOTIFICATION|DOCK|DESKTOP)' manage=off
+hc rule class="librewolf-default" floating=on tag=2
+
 # give focus to most common terminals
 #hc rule class~'(.*[Rr]xvt.*|.*[Tt]erm|Konsole)' focus=on
-hc rule windowtype~'_NET_WM_WINDOW_TYPE_(DIALOG|UTILITY|SPLASH)' floating=on
-hc rule class="librewolf-default" floating=on
-#hc rule windowtype='_NET_WM_WINDOW_TYPE_DIALOG' focus=on
-hc rule windowtype~'_NET_WM_WINDOW_TYPE_(NOTIFICATION|DOCK|DESKTOP)' manage=off
-
+#hc rule class=XTerm tag=1
 #hc rule instance=xv class=MPlayer fullscreen=on
 #firefox dialog should be fullscreen, useful for my tiny eeepc
 #hc rule instance="Dialog" class="Firefox" fullscreen=on #delicious bookmark
