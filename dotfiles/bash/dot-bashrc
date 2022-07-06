@@ -4,13 +4,24 @@ export HISTFILESIZE=2000
 export HISTFILE="$XDG_CACHE_HOME/.bash_history"
 export PROMPT_DIRTRIM=2
 export PS1='\[\e[33m\]\w\[\e[0m\] \u$(if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then echo " @ \h"; else echo ""; fi) % '
+function command_not_found_handle() {
+    regex_url='(https?|ftp|file)://[-[:alnum:]\+&@#/%?=~_|!:,.;]*[-[:alnum:]\+&@#/%=~_|]'
+    regex_git='.*.git'
+    if [[ $1 =~ $regex_git ]]
+    then
+        git cloner "$1"
+    elif [[ $1 =~ $regex_url ]]
+    then
+        wget "$1"
+    fi
+}
 function fpy() {
     isort --profile black --atomic --line-length 79 "$@"
     black --verbose --line-length 79 "$@"
     pylint "$@"
 }
 function fcc() {
-    clang-format -verbose -i -style=google "$@"
+    clang-format -verbose -i -style=chromium "$@"
     clang-tidy "$@"
 }
 function vpy() {
@@ -24,16 +35,16 @@ function vcc() {
     shopt -u nullglob
 }
 function lla() {
-    exa -la --git --color=always "$@" | less
+    exa -la --git --icons --classify --color=always "$@" | less
 }
 function ll() {
-    exa -l --git --color=always "$@" | less
+    exa -l --git --icons --classify --color=always "$@" | less
 }
 function lsd() {
-    exa --tree --long --git --color=always --level 6 -D -I ".git|venv|__pycache__" "$@" | less
+    exa --tree --long --git --icons --classify --color=always --level 6 -D -I ".git|venv|__pycache__" "$@" | less
 }
 function lsf() {
-    exa --tree --long --git --color=always --level 6 -a -I ".git|venv|__pycache__" "$@" | less
+    exa --tree --long --git --icons --classify --color=always --level 6 -a -I ".git|venv|__pycache__" "$@" | less
 }
 alias vi='nvim'
 alias vim='nvim'
