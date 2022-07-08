@@ -37,6 +37,9 @@ function vcc() {
 function lla() {
     exa -la --git --icons --classify --color=always "$@" | less
 }
+function lls() {
+    exa -la --git --classify "$@"
+}
 function ll() {
     exa -l --git --icons --classify --color=always "$@" | less
 }
