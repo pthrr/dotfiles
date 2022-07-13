@@ -107,15 +107,15 @@ bindsym $mod+Shift+q exec "i3-msg exit"
 #
 bar {
   colors {
-    background #000000
-    statusline #646464
-    separator  #646464
+    background #646464
+    statusline #000000
+    separator  #000000
 
-    focused_workspace  #646464 #646464 #000000
-    active_workspace   #000000 #000000 #646464
-    inactive_workspace #000000 #000000 #646464
-    urgent_workspace   #000000 #000000 #646464
-    binding_mode       #000000 #000000 #646464
+    focused_workspace  #000000 #000000 #646464
+    active_workspace   #646464 #646464 #000000
+    inactive_workspace #646464 #646464 #000000
+    urgent_workspace   #646464 #646464 #000000
+    binding_mode       #646464 #646464 #000000
   }
 
   status_command i3status
