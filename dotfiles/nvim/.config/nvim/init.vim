@@ -19,6 +19,7 @@ if dein#load_state(s:settings.dein_dir)
     call dein#add('folke/todo-comments.nvim', { 'depends': 'plenary' })
     call dein#add('dense-analysis/ale')
     call dein#add('raimon49/requirements.txt.vim')
+    call dein#add('iamcco/markdown-preview.nvim', {'on_ft': ['markdown', 'pandoc.markdown', 'rmd'], 'build': 'sh -c "cd app && yarn install"'})
     call dein#end()
     call dein#save_state()
 endif
@@ -149,6 +150,8 @@ let g:UltiSnipsExpandTrigger = '<tab>'
 let g:UltiSnipsJumpForwardTrigger = '<tab>'
 let g:UltiSnipsJumpBackwardTrigger = '<s-tab>'
 let g:UltiSnipsSnippetDirectories = [$XDG_DOCUMENTS_DIR.'/snippets']
+" markdown preview
+nmap <F7> :MarkdownPreviewToggle<CR>
 " tagbar
 nmap <F8> :TagbarToggle<CR>
 let g:tagbar_compact = 1
