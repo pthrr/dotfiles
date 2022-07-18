@@ -75,6 +75,11 @@ set wildignore +=*.eot,*.otf,*.ttf,*.woff
 set wildignore +=*.doc,*.pdf,*.cbr,*.cbz
 set wildignore +=*.zip,*.tar.gz,*.tar.bz2,*.rar,*.tar.xz,*.kgb
 set wildignore +=*.swp,.lock,.DS_Store,._*
+set laststatus=2
+set statusline=
+set statusline+=%(%n\ %=\ %f%)
+set statusline+=%=
+set statusline+=%(%l,%c%V\ %=\ %P%)
 set colorcolumn=80
 set clipboard=unnamedplus
 set tabstop=4
