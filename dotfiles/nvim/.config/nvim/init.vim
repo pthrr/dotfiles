@@ -18,7 +18,7 @@ if dein#load_state(s:settings.dein_dir)
     call dein#add('nvim-lua/plenary.nvim')
     call dein#add('folke/todo-comments.nvim', { 'depends': 'plenary' })
     call dein#add('dense-analysis/ale')
-    call dein#add('elixir-editors/vim-elixir')
+    call dein#add('raimon49/requirements.txt.vim')
     call dein#end()
     call dein#save_state()
 endif
