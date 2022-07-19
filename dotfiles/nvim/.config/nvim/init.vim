@@ -82,8 +82,8 @@ set wildignore +=*.swp,.lock,.DS_Store,._*
 set laststatus=2
 set statusline=
 set statusline+=%-4.(%n%)
-set statusline+=%-20.(%f\ %h%m%r%)
-set statusline+=\ %{fugitive#statusline()}
+set statusline+=%f\ %h%m%r
+set statusline+=%20.(%{fugitive#statusline()}%)
 set statusline+=%=
 set statusline+=%-14.(%l,%c%V%)
 set statusline+=\ %P
