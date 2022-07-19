@@ -19,8 +19,11 @@ if dein#load_state(s:settings.dein_dir)
     call dein#add('folke/todo-comments.nvim', { 'depends': 'plenary' })
     call dein#add('dense-analysis/ale')
     call dein#add('raimon49/requirements.txt.vim')
-    call dein#add('iamcco/markdown-preview.nvim', {'on_ft': ['markdown', 'pandoc.markdown', 'rmd'], 'build': 'sh -c "cd app && yarn install"'})
+    call dein#add('iamcco/markdown-preview.nvim',
+                \ {'on_ft': ['markdown', 'pandoc.markdown', 'rmd'],
+                \ 'build': 'sh -c "cd app && yarn install"'})
     call dein#add('tpope/vim-fugitive')
+    call dein#add('jceb/vim-orgmode')
     call dein#end()
     call dein#save_state()
 endif
@@ -78,10 +81,12 @@ set wildignore +=*.zip,*.tar.gz,*.tar.bz2,*.rar,*.tar.xz,*.kgb
 set wildignore +=*.swp,.lock,.DS_Store,._*
 set laststatus=2
 set statusline=
-set statusline+=%(%n\ %=\ %f%)
+set statusline+=%-4.(%n%)
+set statusline+=%-20.(%f\ %h%m%r%)
 set statusline+=\ %{fugitive#statusline()}
 set statusline+=%=
-set statusline+=%(%l,%c%V\ %=\ %P%)
+set statusline+=%-14.(%l,%c%V%)
+set statusline+=\ %P
 set colorcolumn=80
 set clipboard=unnamedplus
 set tabstop=4
@@ -107,6 +112,7 @@ let g:cpp_member_highlight = 1
 let g:cpp_attributes_highlight = 1
 " change leader key
 let mapleader = "'"
+let maplocalleader = "\\"
 " map ESC
 inoremap jk <ESC>
 tnoremap jk <C-\><C-n>
