@@ -19,10 +19,6 @@ if dein#load_state(s:settings.dein_dir)
     call dein#add('folke/todo-comments.nvim', { 'depends': 'plenary' })
     call dein#add('dense-analysis/ale')
     call dein#add('raimon49/requirements.txt.vim')
-    call dein#add('iamcco/markdown-preview.nvim',
-                \ {'on_ft': ['markdown', 'pandoc.markdown', 'rmd'],
-                \ 'build': 'sh -c "cd app && yarn install"'})
-    call dein#add('tpope/vim-fugitive')
     call dein#add('jceb/vim-orgmode')
     call dein#end()
     call dein#save_state()
@@ -83,7 +79,6 @@ set laststatus=2
 set statusline=
 set statusline+=%-4.(%n%)
 set statusline+=%f\ %h%m%r
-set statusline+=%20.(%{fugitive#statusline()}%)
 set statusline+=%=
 set statusline+=%-14.(%l,%c%V%)
 set statusline+=\ %P
