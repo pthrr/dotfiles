@@ -64,6 +64,17 @@ if [ -f "$HOME/.guix-profile/etc/profile" ] ; then
     export XDG_DATA_DIRS="$XDG_DATA_DIRS:/usr/share/gnome:/usr/local/share:/usr/share"
 fi
 
+# include Nix environment
+if [ -f "$HOME/.nix-profile/etc/profile.d/nix.sh" ] ; then
+    . "$HOME/.nix-profile/etc/profile.d/nix.sh"
+    export NIX_PATH=$HOME/.nix-defexpr/channels:/nix/var/nix/profiles/per-user/root/channels${NIX_PATH:+:$NIX_PATH}
+fi
+
+if [ -f "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh" ] ; then
+    # shell is not managed by home manager
+    . "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
+fi
+
 # create standard dirs
 if [ ! -d  "$HOME/tmp" ] ; then
     mkdir "$HOME/tmp"
@@ -123,3 +134,5 @@ export ANDROID_NDK=/usr/lib/android-ndk
 export GTK_THEME=Adwaita:dark
 export GTK2_RC_FILES="/usr/share/themes/Adwaita-dark/gtk-2.0/gtkrc"
 export QT_QPA_PLATFORMTHEME=qt5ct
+
+if [ -e /home/pthrr/.nix-profile/etc/profile.d/nix.sh ]; then . /home/pthrr/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer
