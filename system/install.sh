@@ -29,4 +29,4 @@ sudo apt-get install -y \
     #mtp-tools \
     #xcircuit
 #source ~/.profile
-pip3 install -r requirements.txt
+python3 -m pip install i3ipc
