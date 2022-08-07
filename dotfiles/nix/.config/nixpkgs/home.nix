@@ -32,12 +32,12 @@
 
     # files in ~/
     home.file.".gitconfig" = {
-        source = ../../../../dotfiles/git/.gitconfig;
+        source = ../../../git/.gitconfig;
         recursive = true;
     };
 
     home.file.".git-commit-template.txt" = {
-        source = ../../../../dotfiles/git/.git-commit-template.txt;
+        source = ../../../git/.git-commit-template.txt;
         recursive = true;
     };
 }
