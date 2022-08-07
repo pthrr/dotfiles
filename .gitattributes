@@ -2,7 +2,7 @@
 *.bash          text eol=lf
 *.vim           text eol=lf
 *.snippets      text eol=lf
-dot-tmux.conf   text eol=lf
-dot-bashrc      text eol=lf
-dot-profile     text eol=lf
-dot-gitconfig   text eol=lf
+.tmux.conf   text eol=lf
+.bashrc      text eol=lf
+.profile     text eol=lf
+.gitconfig   text eol=lf
