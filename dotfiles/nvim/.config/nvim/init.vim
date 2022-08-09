@@ -20,6 +20,7 @@ if dein#load_state(s:settings.dein_dir)
     call dein#add('dense-analysis/ale')
     call dein#add('raimon49/requirements.txt.vim')
     call dein#add('jceb/vim-orgmode')
+    call dein#add('LnL7/vim-nix')
     call dein#end()
     call dein#save_state()
 endif
