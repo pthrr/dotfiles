@@ -36,5 +36,6 @@ sudo apt-get install -y \
     adwaita-icon-theme \
     adwaita-qt \
     qt5ct
-python3 -m pip install \
+python3 -m pip install pip --upgrade
+python3 -m pip install --upgrade --force-reinstall \
     i3ipc
