@@ -22,6 +22,7 @@
             pkgs.jq
             pkgs.ripgrep
             pkgs.fzf
+            pkgs.keepassxc
             pkgs.librewolf
             pkgs.ardour
             pkgs.neovim
@@ -81,25 +82,25 @@
     xdg = {
         # files in ~/.config/
         configFile."i3" = {
-            source = ../../../../dotfiles/i3/.config/i3;
+            source = ../../../i3/.config/i3;
             recursive = true;
         };
         configFile."i3status" = {
-            source = ../../../../dotfiles/i3/.config/i3status;
+            source = ../../../i3/.config/i3status;
             recursive = true;
         };
         configFile."rofi" = {
-            source = ../../../../dotfiles/i3/.config/rofi;
+            source = ../../../i3/.config/rofi;
             recursive = true;
         };
 
         configFile."zathura" = {
-            source = ../../../../dotfiles/misc/.config/zathura;
+            source = ../../../misc/.config/zathura;
             recursive = true;
         };
 
         configFile."nvim" = {
-            source = ../../../../dotfiles/nvim/.config/nvim;
+            source = ../../../nvim/.config/nvim;
             recursive = true;
         };
     };
