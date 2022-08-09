@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -eu -o pipefail
+set -euo pipefail
 cd "$(dirname "$0")"
 
 # Bug: Stow cant properly use --dotfiles option on folders right now
