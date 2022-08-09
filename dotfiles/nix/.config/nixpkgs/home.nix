@@ -20,6 +20,8 @@
 
         packages = [
             pkgs.jq
+            pkgs.spotify
+            pkgs.steam
             pkgs.ripgrep
             pkgs.fzf
             pkgs.keepassxc
