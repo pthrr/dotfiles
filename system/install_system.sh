@@ -12,7 +12,7 @@ sudo apt-get install -y \
     intel-microcode \
     adwaita-icon-theme \
     adwaita-qt \
-    qt5ct \
-
-python3 -m pip install i3ipc
-python3 -m pip install mypy
+    qt5ct
+python3 -m pip install \
+    i3ipc \
+    mypy
