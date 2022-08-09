@@ -20,10 +20,21 @@
 
         packages = [
             pkgs.jq
+            pkgs.vlc
+            pkgs.meld
+            pkgs.universal-ctags
+            pkgs.cmake
+            pkgs.tectonic
+            pkgs.mypy
+            pkgs.ninja
             pkgs.spotify
+            pkgs.zathura
+            pkgs.ipe
             pkgs.steam
             pkgs.ripgrep
             pkgs.fzf
+            pkgs.exa
+            pkgs.redshift
             pkgs.keepassxc
             pkgs.librewolf
             pkgs.ardour
