@@ -22,6 +22,9 @@
             pkgs.jq
             pkgs.vlc
             pkgs.meld
+            pkgs.mutt
+            pkgs.weechat
+            pkgs.pylint
             pkgs.universal-ctags
             pkgs.cmake
             pkgs.tectonic
