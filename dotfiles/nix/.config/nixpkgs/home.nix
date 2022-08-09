@@ -20,6 +20,10 @@
 
         packages = [
             pkgs.jq
+            pkgs.ripgrep
+            pkgs.fzf
+            pkgs.librewolf
+            pkgs.ardour
             pkgs.neovim
             pkgs.obsidian
             pkgs.zotero
