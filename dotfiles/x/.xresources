@@ -28,5 +28,5 @@ xterm*color13: #6c71c4
 xterm*color14: #93a1a1
 xterm*color15: #fdf6e3
 xterm*VT100.Translations: #override \
-  <Btn1Up>: select-end(PRIMARY, CLIPBOARD, CUT_BUFFER0) \n\
-  Ctrl <KeyPress>V: insert-selection(CLIPBOARD, CUT_BUFFER0, PRIMARY)
+    <Btn1Up>: select-end(PRIMARY, CLIPBOARD, CUT_BUFFER0) \n\
+    Ctrl <KeyPress>V: insert-selection(CLIPBOARD, CUT_BUFFER0, PRIMARY)

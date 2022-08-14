@@ -1,0 +1,20 @@
+#! /bin/sh
+
+while true; do
+    gonow=
+    stat=$(stat --format=%Y.%Z.%s $1)
+
+    if [ "$stat" != "${laststat:-$stat}" ]; then
+        laststat=$stat
+        gonow=yes
+    fi
+
+    if [ -n "$gonow" ]; then
+        echo "[[=== start ===]]"
+        $@
+        echo "[[=== done ===]]"
+    fi
+
+    laststat=$stat
+    sleep 1
+done

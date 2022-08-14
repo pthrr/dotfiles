@@ -1,0 +1,16 @@
+#! /bin/sh
+
+case "$1" in
+    *://*)
+        exec $BROWSER "$1"
+        ;;
+    *.pdf|*.djvu)
+        exec $PDFVIEWER "$1"
+        ;;
+    *.mp3|*.mp4)
+        exec $MEDIAPLAYER "$1"
+        ;;
+    *)
+        echo "No application registered for that file type!"
+        ;;
+esac

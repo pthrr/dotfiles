@@ -115,6 +115,8 @@ export SHELL='bash'
 export EDITOR='nvim'
 export BROWSER='librewolf'
 export TERMINAL='xterm'
+export PDFVIEWER='zathura'
+export MEDIAPLAYER='vlc'
 export MAILPATH="$HOME/mail/personal/Inbox:$HOME/mail/public/Inbox"
 export MAILCHECK=300
 export FZF_DEFAULT_COMMAND='rg --files'
@@ -134,5 +136,3 @@ export ANDROID_NDK=/usr/lib/android-ndk
 export GTK_THEME=Adwaita:dark
 export GTK2_RC_FILES="/usr/share/themes/Adwaita-dark/gtk-2.0/gtkrc"
 export QT_QPA_PLATFORMTHEME=qt5ct
-
-if [ -e /home/pthrr/.nix-profile/etc/profile.d/nix.sh ]; then . /home/pthrr/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer
