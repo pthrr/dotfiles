@@ -127,7 +127,6 @@ export QT_ACCESSIBILITY=0
 export NO_AT_BRIDGE=1
 export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=0
 export _JAVA_AWT_WM_NONREPARENTING=1
-export QT_XCB_GL_INTEGRATION=none
 export AWT_TOOLKIT=XToolkit
 export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
 export ANDROID_HOME=/usr/lib/android-sdk

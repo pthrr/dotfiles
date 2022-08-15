@@ -49,7 +49,6 @@
             pkgs.obsidian
             pkgs.zotero
             pkgs.nextcloud-client
-            pkgs.joplin-desktop
         ];
 
         # files in ~/
