@@ -19,6 +19,10 @@
         enableNixpkgsReleaseCheck = true;
 
         packages = [
+            pkgs.tor-browser-bundle-bin
+            pkgs.drawio
+            pkgs.meson
+            pkgs.bazelisk
             pkgs.jq
             pkgs.vlc
             pkgs.meld
