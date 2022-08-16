@@ -17,7 +17,6 @@ sudo apt-get install -y \
     fonts-dejavu \
     fonts-font-awesome \
     fonts-ubuntu \
-    hicolor-icon-theme \
     spacefm \
     make \
     clang \
@@ -36,8 +35,12 @@ sudo apt-get install -y \
     firmware-misc-nonfree \
     intel-microcode \
     adwaita-icon-theme \
+    hicolor-icon-theme \
     adwaita-qt \
     qt5ct
 python3 -m pip install pip --upgrade
 python3 -m pip install --upgrade --force-reinstall \
-    i3ipc
+    i3ipc \
+    mypy \
+    isort \
+    black
