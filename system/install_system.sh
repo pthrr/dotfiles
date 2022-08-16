@@ -17,6 +17,8 @@ sudo apt-get install -y \
     fonts-dejavu \
     fonts-font-awesome \
     fonts-ubuntu \
+    hicolor-icon-theme \
+    spacefm \
     make \
     clang \
     clang-tools \

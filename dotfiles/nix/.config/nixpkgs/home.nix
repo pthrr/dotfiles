@@ -19,6 +19,7 @@
         enableNixpkgsReleaseCheck = true;
 
         packages = [
+            pkgs.statix
             pkgs.tor-browser-bundle-bin
             pkgs.drawio
             pkgs.meson
@@ -32,7 +33,6 @@
             pkgs.universal-ctags
             pkgs.cmake
             pkgs.tectonic
-            pkgs.mypy
             pkgs.ninja
             pkgs.spotify
             pkgs.zathura
