@@ -241,6 +241,8 @@ let g:ale_linters = {
     \ 'xml': ['xmllint'],
     \ 'rust': ['rustc'],
     \ 'nix': ['statix'],
+    \ 'json': ['jq'],
+    \ 'sh': ['shell'],
     \}
 let g:ale_fixers = {
     \ 'python': ['black', 'isort'],
@@ -248,6 +250,8 @@ let g:ale_fixers = {
     \ 'c': ['clang-format'],
     \ 'xml': ['xmllint'],
     \ 'rust': ['rustfmt'],
+    \ 'json': ['fixjson'],
+    \ 'sh': ['shfmt'],
     \ '*': ['remove_trailing_lines', 'trim_whitespace'],
     \}
 let g:ale_python_black_options = '--line-length 79'
@@ -255,6 +259,7 @@ let g:ale_python_isort_options = '--profile black --atomic --line-length 79'
 let g:ale_cpp_clangformat_style_option = 'chromium'
 let g:ale_c_clangformat_style_option = 'webkit'
 let g:ale_xml_xmllint_indentsize = 4
+let g:ale_sh_shfmt_options = '-i 4 -ci'
 let g:ale_fix_on_save = 0
 let g:ale_lint_on_enter = 1
 let g:ale_lint_on_filetype_changed = 0
