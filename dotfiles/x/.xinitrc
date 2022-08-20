@@ -6,6 +6,9 @@ case $1 in
 "gnome-session")
     exec gnome-session
     ;;
+"startxfce")
+    exec startxfce
+    ;;
 "i3"|*)
     setxkbmap -layout de -model pc105 -option terminate:ctrl_alt_bksp -option caps:none
     xmodmap -e "keycode 121 = XF86AudioMute"

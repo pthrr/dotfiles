@@ -28,6 +28,7 @@ sudo apt-get install -y \
     htop \
     xorg \
     i3 \
+    i3lock \
     i3status \
     rofi \
     python3 \
