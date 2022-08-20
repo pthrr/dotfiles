@@ -19,6 +19,9 @@
         enableNixpkgsReleaseCheck = true;
 
         packages = [
+            pkgs.lv2lint
+            pkgs.lv2bm
+            pkgs.jalv
             pkgs.statix
             pkgs.tor-browser-bundle-bin
             pkgs.drawio

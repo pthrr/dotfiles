@@ -147,10 +147,10 @@ bindsym $mod+Ctrl+greater move workspace to output right
 bindsym $mod+Ctrl+less move workspace to output left
 
 # Resize Containers, Vim-style                            ($mod+Control+[hjkl])
-bindsym $mod+Control+j resize grow height 5 px or 5 ppt
-bindsym $mod+Control+k resize shrink height 5 px or 5 ppt
-bindsym $mod+Control+l resize grow width 5 px or 5 ppt
-bindsym $mod+Control+h resize shrink width 5 px or 5 ppt
+bindsym $mod+Ctrl+j resize grow height 5 px or 5 ppt
+bindsym $mod+Ctrl+k resize shrink height 5 px or 5 ppt
+bindsym $mod+Ctrl+l resize grow width 5 px or 5 ppt
+bindsym $mod+Ctrl+h resize shrink width 5 px or 5 ppt
 
 # Toggle through workspaces
 bindsym $mod+Shift+Tab workspace prev

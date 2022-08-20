@@ -4,6 +4,13 @@ set -euo pipefail
 sudo apt-get update
 sudo apt-get install -y \
     build-essential \
+    gdb \
+    valgrind \
+    pkg-config \
+    lv2-dev \
+    libsndfile1-dev \
+    libx11-dev \
+    libcairo2-dev \
     automake \
     autoconf \
     strace \
@@ -21,8 +28,6 @@ sudo apt-get install -y \
     make \
     clang \
     clang-tools \
-    g++-10 \
-    gcc-10 \
     xterm \
     tmux \
     htop \
