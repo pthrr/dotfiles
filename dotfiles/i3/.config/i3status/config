@@ -36,7 +36,7 @@ volume master {
 }
 
 battery 1 {
-    format = "%status %emptytime"
+    format = "%status %remaining"
     format_down = "DWN"
     status_chr = "CHR"
     status_bat = "BAT"
@@ -44,6 +44,7 @@ battery 1 {
     status_full = "FULL"
     path = "/sys/class/power_supply/BAT%d/uevent"
     low_threshold = 10
+    last_full_capacity = true
 }
 
 tztime local {
