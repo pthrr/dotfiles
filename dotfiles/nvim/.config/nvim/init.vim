@@ -18,9 +18,12 @@ if dein#load_state(s:settings.dein_dir)
     call dein#add('nvim-lua/plenary.nvim')
     call dein#add('folke/todo-comments.nvim', { 'depends': 'plenary' })
     call dein#add('dense-analysis/ale')
+    call dein#add('rust-lang/rust.vim')
     call dein#add('raimon49/requirements.txt.vim')
     call dein#add('jceb/vim-orgmode')
-    call dein#add('rust-lang/rust.vim')
+    call dein#add('phaazon/hop.nvim')
+    call dein#add('numToStr/Comment.nvim')
+    call dein#add('cespare/vim-toml')
     call dein#add('LnL7/vim-nix')
     call dein#end()
     call dein#save_state()
@@ -152,6 +155,69 @@ lua << EOF
     },
     merge_keywords = false,
     pattern = [[\b(KEYWORDS):]],
+  }
+EOF
+endif
+" hop
+nmap <C-h> :HopWord<CR>
+nmap <S-h> :HopWordCurrentLine<CR>
+let ver = split(matchstr(execute('version'), 'NVIM v\zs[^\n]*'), "\\.")
+if index(["5","6","7","8","9"], ver[1]) >= 0
+lua << EOF
+  require("hop").setup {
+    keys = 'etovxqpdygfblzhckisuran',
+    jump_on_sole_occurrence = true,
+  }
+EOF
+endif
+" comment
+let ver = split(matchstr(execute('version'), 'NVIM v\zs[^\n]*'), "\\.")
+if index(["5","6","7","8","9"], ver[1]) >= 0
+lua << EOF
+  require("Comment").setup {
+    ---Add a space b/w comment and the line
+    padding = true,
+    ---Whether the cursor should stay at its position
+    sticky = true,
+    ---Lines to be ignored while (un)comment
+    ignore = nil,
+    ---LHS of toggle mappings in NORMAL mode
+    toggler = {
+        ---Line-comment toggle keymap
+        line = 'gcc',
+        ---Block-comment toggle keymap
+        block = 'gbc',
+    },
+    ---LHS of operator-pending mappings in NORMAL and VISUAL mode
+    opleader = {
+        ---Line-comment keymap
+        line = 'gc',
+        ---Block-comment keymap
+        block = 'gb',
+    },
+    ---LHS of extra mappings
+    extra = {
+        ---Add comment on the line above
+        above = 'gcO',
+        ---Add comment on the line below
+        below = 'gco',
+        ---Add comment at the end of line
+        eol = 'gcA',
+    },
+    ---Enable keybindings
+    ---NOTE: If given `false` then the plugin won't create any mappings
+    mappings = {
+        ---Operator-pending mapping; `gcc` `gbc` `gc[count]{motion}` `gb[count]{motion}`
+        basic = true,
+        ---Extra mapping; `gco`, `gcO`, `gcA`
+        extra = true,
+        ---Extended mapping; `g>` `g<` `g>[count]{motion}` `g<[count]{motion}`
+        extended = false,
+    },
+    ---Function to call before (un)comment
+    pre_hook = nil,
+    ---Function to call after (un)comment
+    post_hook = nil,
   }
 EOF
 endif

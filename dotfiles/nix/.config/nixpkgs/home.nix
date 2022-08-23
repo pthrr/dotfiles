@@ -19,6 +19,8 @@
         enableNixpkgsReleaseCheck = true;
 
         packages = [
+            pkgs.winetricks
+            pkgs.wineWowPackages.full
             pkgs.lv2lint
             pkgs.lv2bm
             pkgs.jalv
@@ -32,7 +34,6 @@
             pkgs.meld
             pkgs.mutt
             pkgs.weechat
-            pkgs.pylint
             pkgs.universal-ctags
             pkgs.cmake
             pkgs.tectonic
@@ -40,7 +41,6 @@
             pkgs.spotify
             pkgs.zathura
             pkgs.ipe
-            pkgs.steam
             pkgs.ripgrep
             pkgs.fzf
             pkgs.exa

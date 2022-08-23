@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-sudo apt-get update
-sudo apt-get install -y \
+sudo apt update -y
+sudo apt install -y \
     build-essential \
     gdb \
     valgrind \
@@ -25,7 +25,6 @@ sudo apt-get install -y \
     fonts-font-awesome \
     fonts-ubuntu \
     spacefm \
-    make \
     clang \
     clang-tools \
     xterm \
@@ -43,10 +42,13 @@ sudo apt-get install -y \
     adwaita-icon-theme \
     hicolor-icon-theme \
     adwaita-qt \
-    qt5ct
-python3 -m pip install pip --upgrade
+    qt5ct \
+    steam
+sudo apt autoremove -y
+python3 -m pip install --upgrade pip
 python3 -m pip install --upgrade --force-reinstall \
     i3ipc \
     mypy \
     isort \
-    black
+    black \
+    pylint
