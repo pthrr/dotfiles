@@ -132,47 +132,39 @@ nnoremap <leader>d "_d
 vnoremap <leader>p "_dP
 " todo-comments
 nmap <F5> :TodoQuickFix cwd=.<CR>
-let ver = split(matchstr(execute('version'), 'NVIM v\zs[^\n]*'), "\\.")
-if index(["5","6","7","8","9"], ver[1]) >= 0
 lua << EOF
   require("todo-comments").setup {
     highlight = {
-        before = "", -- "fg" or "bg" or empty
-        keyword = "fg", -- "fg", "bg", "wide" or empty
-        after = "", -- "fg" or "bg" or empty
-        pattern = [[.*<(KEYWORDS)\s*:]],
-        comments_only = true,
-        max_line_len = 400,
-        exclude = {},
+      before = "", -- "fg" or "bg" or empty
+      keyword = "fg", -- "fg", "bg", "wide" or empty
+      after = "", -- "fg" or "bg" or empty
+      pattern = [[.*<(KEYWORDS)\s*:]],
+      comments_only = true,
+      max_line_len = 400,
+      exclude = {},
     },
     keywords = {
-        FIXME = { icon = "! ", color = "error" },
-        TODO = { icon = "+ ", color = "info" },
-        HACK = { icon = "* ", color = "warning" },
-        WARN = { icon = "# ", color = "warning" },
-        PERF = { icon = "$ ", color = "default" },
-        NOTE = { icon = "> ", color = "hint" },
+      FIXME = { icon = "! ", color = "error" },
+      TODO = { icon = "+ ", color = "info" },
+      HACK = { icon = "* ", color = "warning" },
+      WARN = { icon = "# ", color = "warning" },
+      PERF = { icon = "$ ", color = "default" },
+      NOTE = { icon = "> ", color = "hint" },
     },
     merge_keywords = false,
     pattern = [[\b(KEYWORDS):]],
   }
 EOF
-endif
 " hop
 nmap <C-h> :HopWord<CR>
 nmap <S-h> :HopWordCurrentLine<CR>
-let ver = split(matchstr(execute('version'), 'NVIM v\zs[^\n]*'), "\\.")
-if index(["5","6","7","8","9"], ver[1]) >= 0
 lua << EOF
   require("hop").setup {
-    keys = 'etovxqpdygfblzhckisuran',
+    --keys = 'etovxqpdygfblzhckisuran',
     jump_on_sole_occurrence = true,
   }
 EOF
-endif
 " comment
-let ver = split(matchstr(execute('version'), 'NVIM v\zs[^\n]*'), "\\.")
-if index(["5","6","7","8","9"], ver[1]) >= 0
 lua << EOF
   require("Comment").setup {
     ---Add a space b/w comment and the line
@@ -183,36 +175,36 @@ lua << EOF
     ignore = nil,
     ---LHS of toggle mappings in NORMAL mode
     toggler = {
-        ---Line-comment toggle keymap
-        line = 'gcc',
-        ---Block-comment toggle keymap
-        block = 'gbc',
+      ---Line-comment toggle keymap
+      line = 'gcc',
+      ---Block-comment toggle keymap
+      block = 'gbc',
     },
     ---LHS of operator-pending mappings in NORMAL and VISUAL mode
     opleader = {
-        ---Line-comment keymap
-        line = 'gc',
-        ---Block-comment keymap
-        block = 'gb',
+      ---Line-comment keymap
+      line = 'gc',
+      ---Block-comment keymap
+      block = 'gb',
     },
     ---LHS of extra mappings
     extra = {
-        ---Add comment on the line above
-        above = 'gcO',
-        ---Add comment on the line below
-        below = 'gco',
-        ---Add comment at the end of line
-        eol = 'gcA',
+      ---Add comment on the line above
+      above = 'gcO',
+      ---Add comment on the line below
+      below = 'gco',
+      ---Add comment at the end of line
+      eol = 'gcA',
     },
     ---Enable keybindings
     ---NOTE: If given `false` then the plugin won't create any mappings
     mappings = {
-        ---Operator-pending mapping; `gcc` `gbc` `gc[count]{motion}` `gb[count]{motion}`
-        basic = true,
-        ---Extra mapping; `gco`, `gcO`, `gcA`
-        extra = true,
-        ---Extended mapping; `g>` `g<` `g>[count]{motion}` `g<[count]{motion}`
-        extended = false,
+      ---Operator-pending mapping; `gcc` `gbc` `gc[count]{motion}` `gb[count]{motion}`
+      basic = true,
+      ---Extra mapping; `gco`, `gcO`, `gcA`
+      extra = true,
+      ---Extended mapping; `g>` `g<` `g>[count]{motion}` `g<[count]{motion}`
+      extended = false,
     },
     ---Function to call before (un)comment
     pre_hook = nil,
@@ -220,7 +212,6 @@ lua << EOF
     post_hook = nil,
   }
 EOF
-endif
 " ultisnips
 let g:UltiSnipsExpandTrigger = '<tab>'
 let g:UltiSnipsJumpForwardTrigger = '<tab>'
