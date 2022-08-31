@@ -296,7 +296,7 @@ let g:ale_linters = {
     \ 'cpp': ['clangtidy'],
     \ 'c': ['clangtidy'],
     \ 'xml': ['xmllint'],
-    \ 'rust': ['rustc'],
+    \ 'rust': ['analyzer'],
     \ 'nix': ['statix'],
     \ 'json': ['jq'],
     \ 'sh': ['shell'],
@@ -317,9 +317,13 @@ let g:ale_cpp_clangformat_style_option = 'chromium'
 let g:ale_c_clangformat_style_option = 'webkit'
 let g:ale_xml_xmllint_indentsize = 4
 let g:ale_sh_shfmt_options = '-i 4 -ci'
+let g:ale_rust_cargo_use_check = 1
+let g:ale_rust_cargo_check_tests = 1
+let g:ale_rust_cargo_check_examples = 1
 let g:ale_fix_on_save = 0
 let g:ale_lint_on_enter = 1
 let g:ale_lint_on_filetype_changed = 0
 let g:ale_lint_on_insert_leave = 0
 let g:ale_lint_on_text_changed = 0
 let g:ale_lint_on_save = 1
+let g:ale_sign_column_always = 1

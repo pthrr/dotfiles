@@ -19,6 +19,10 @@
         enableNixpkgsReleaseCheck = true;
 
         packages = [
+            pkgs.rustfmt
+            pkgs.rust-analyzer
+            pkgs.go
+            pkgs.gnucash
             pkgs.winetricks
             pkgs.wineWowPackages.full
             pkgs.lv2lint
