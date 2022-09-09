@@ -19,6 +19,8 @@
         enableNixpkgsReleaseCheck = true;
 
         packages = [
+            pkgs.texlive.combined.scheme-basic
+            pkgs.cling
             pkgs.rustfmt
             pkgs.rust-analyzer
             pkgs.go
