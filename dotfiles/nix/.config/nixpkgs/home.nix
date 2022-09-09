@@ -21,6 +21,7 @@
         packages = [
             pkgs.texlive.combined.scheme-basic
             pkgs.cling
+            pkgs.ghidra
             pkgs.rustfmt
             pkgs.rust-analyzer
             pkgs.go
