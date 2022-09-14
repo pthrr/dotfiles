@@ -19,6 +19,7 @@
         enableNixpkgsReleaseCheck = true;
 
         packages = [
+            pkgs.lmms
             pkgs.texlive.combined.scheme-basic
             pkgs.cling
             pkgs.ghidra
