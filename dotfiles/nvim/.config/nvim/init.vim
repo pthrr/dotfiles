@@ -22,7 +22,6 @@ if dein#load_state(s:settings.dein_dir)
     call dein#add('nvim-orgmode/orgmode', { 'depends': 'nvim-treesitter' })
     call dein#add('phaazon/hop.nvim')
     call dein#add('numToStr/Comment.nvim')
-    "call dein#add('tpope/vim-speeddating')
     call dein#add('rust-lang/rust.vim')
     call dein#add('cespare/vim-toml')
     call dein#add('LnL7/vim-nix')
@@ -174,8 +173,9 @@ lua << EOF
   }
 
   require('orgmode').setup({
+    org_todo_keywords = { "TODO", "IN-PROGRESS", "WAITING", "|", "DONE", "CANCELED" },
     org_agenda_files = {'~/agenda/**/*'},
-    org_default_notes_file = '~/org/notes_2022.org',
+    org_default_notes_file = '~/org/refile.org',
   })
 EOF
 " hop
