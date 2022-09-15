@@ -36,7 +36,7 @@ set termguicolors
 set background=dark
 colorscheme NeoSolarized
 " generic
-syntax on
+syntax off
 filetype plugin indent on
 set encoding=utf-8
 set fileencodings=ucs-bom,utf-8,latin1,cp1252,default
