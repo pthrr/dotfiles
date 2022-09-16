@@ -108,9 +108,6 @@ autocmd BufEnter * setlocal cursorline
 autocmd BufLeave * setlocal nocursorline
 autocmd InsertEnter * highlight cursorline guibg=none guifg=none gui=underline ctermbg=none ctermfg=none cterm=underline
 autocmd InsertLeave * highlight cursorline guibg=#073642 guifg=none gui=none ctermbg=none ctermfg=none cterm=none
-" c/cpp syntax highlighting options
-let g:cpp_member_highlight = 1
-let g:cpp_attributes_highlight = 1
 " change leader key
 let mapleader = "'"
 let maplocalleader = "\\"

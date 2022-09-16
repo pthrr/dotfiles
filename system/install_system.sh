@@ -27,6 +27,7 @@ sudo apt install -y \
     fonts-ubuntu \
     spacefm \
     clang \
+    clang-tidy \
     clang-tools \
     xterm \
     tmux \
