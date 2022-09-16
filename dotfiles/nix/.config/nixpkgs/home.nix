@@ -41,7 +41,6 @@
             pkgs.vlc
             pkgs.meld
             pkgs.mutt
-            pkgs.weechat
             pkgs.universal-ctags
             pkgs.cmake
             pkgs.tectonic
@@ -76,11 +75,6 @@
 
         file.".ssh" = {
             source = ../../../misc/.ssh;
-            recursive = true;
-        };
-
-        file.".weechat" = {
-            source = ../../../misc/.weechat;
             recursive = true;
         };
 
