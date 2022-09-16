@@ -44,8 +44,7 @@ sudo apt install -y \
     adwaita-icon-theme \
     hicolor-icon-theme \
     adwaita-qt \
-    qt5ct \
-    steam
+    qt5ct
 sudo apt autoremove -y
 python3 -m pip install --upgrade pip
 python3 -m pip install --upgrade --force-reinstall \
