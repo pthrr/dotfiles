@@ -88,6 +88,18 @@ if [ ! -d  "$HOME/opt" ] ; then
     mkdir "$HOME/opt"
 fi
 
+if [ ! -d  "$HOME/fun" ] ; then
+    mkdir "$HOME/fun"
+fi
+
+if [ ! -d  "$HOME/projects" ] ; then
+    mkdir "$HOME/projects"
+fi
+
+if [ ! -d  "$HOME/analysis" ] ; then
+    mkdir "$HOME/analysis"
+fi
+
 if [ ! -d  "$HOME/mail/personal" ] ; then
     mkdir -p "$HOME/mail/personal"
 fi
