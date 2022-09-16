@@ -71,7 +71,6 @@
         file.".gitconfig".source = ../../../git/.gitconfig;
         file.".git-commit-template.txt".source = ../../../git/.git-commit-template.txt;
 
-        file.".clang-format".source = ../../../lang/.clang-format;
         file.".clang-tidy".source = ../../../lang/.clang-tidy;
         file.".pylintrc".source = ../../../lang/.pylintrc;
 
