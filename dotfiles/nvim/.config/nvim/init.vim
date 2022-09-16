@@ -334,7 +334,7 @@ let g:ale_fixers = {
     \}
 let g:ale_python_black_options = '--line-length 79'
 let g:ale_python_isort_options = '--profile black --atomic --line-length 79'
-let g:ale_cpp_clangformat_style_option = 'chromium'
+let g:ale_cpp_clangformat_style_option = 'webkit'
 let g:ale_c_clangformat_style_option = 'webkit'
 let g:ale_xml_xmllint_indentsize = 4
 let g:ale_sh_shfmt_options = '-i 4 -ci'
