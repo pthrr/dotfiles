@@ -15,13 +15,13 @@ if dein#load_state(s:settings.dein_dir)
     call dein#add('sirver/ultisnips')
     call dein#add('preservim/tagbar')
     call dein#add('ludovicchabant/vim-gutentags')
+    call dein#add('phaazon/hop.nvim')
+    call dein#add('numToStr/Comment.nvim')
     call dein#add('nvim-lua/plenary.nvim')
     call dein#add('folke/todo-comments.nvim', { 'depends': 'plenary' })
     call dein#add('dense-analysis/ale')
     call dein#add('nvim-treesitter/nvim-treesitter')
     call dein#add('nvim-orgmode/orgmode', { 'depends': 'nvim-treesitter' })
-    call dein#add('phaazon/hop.nvim')
-    call dein#add('numToStr/Comment.nvim')
     call dein#add('rust-lang/rust.vim')
     call dein#add('cespare/vim-toml')
     call dein#add('LnL7/vim-nix')
@@ -36,7 +36,7 @@ set termguicolors
 set background=dark
 colorscheme NeoSolarized
 " generic
-syntax off
+syntax on
 filetype plugin indent on
 set encoding=utf-8
 set fileencodings=ucs-bom,utf-8,latin1,cp1252,default
