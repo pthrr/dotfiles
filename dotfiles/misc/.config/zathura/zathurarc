@@ -1,4 +1,3 @@
-# Open document in fit-width mode by default
 set adjust-open                 "width"
 set search-hadjust              false
 set link-hadjust                false
@@ -11,17 +10,15 @@ map g goto                      top
 map W adjust_window             width
 map H adjust_window             best-fit
 
-# One page per row by default
 set pages-per-row               1
 
-#stop at page boundries
 set scroll-page-aware           "true"
 set smooth-scroll               "true"
 set scroll-full-overlap         0.01
 set scroll-step                 100
 
 # zathurarc-dark
-set notification-error-bg       "#586e75" # base01  # seem not work
+set notification-error-bg       "#586e75" # base01
 set notification-error-fg       "#dc322f" # red
 set notification-warning-bg     "#586e75" # base01
 set notification-warning-fg     "#dc322f" # red
@@ -47,7 +44,7 @@ set inputbar-fg                "#eee8d5" # base2
 set statusbar-bg               "#073642" # base02
 set statusbar-fg               "#93a1a1" # base1
 
-set highlight-color            "#657b83" # base00  # hightlight match when search keyword(vim's /)
+set highlight-color            "#657b83" # base00
 set highlight-active-color     "#268bd2" # blue
 
 set default-bg                 "#073642" # base02
@@ -60,4 +57,4 @@ set render-loading-bg          "#073642" # base02
 set recolor                    true
 set recolor-lightcolor         "#073642" # base02
 set recolor-darkcolor          "#93a1a1" # base1
-# set recolor-keephue            true      # keep original color
+set recolor-keephue            true      # keep original color
