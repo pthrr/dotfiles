@@ -19,6 +19,7 @@
         enableNixpkgsReleaseCheck = true;
 
         packages = [
+            pkgs.dwarf-fortress
             pkgs.drawio
             pkgs.lmms
             pkgs.texlive.combined.scheme-basic
