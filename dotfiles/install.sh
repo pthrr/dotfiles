@@ -8,9 +8,9 @@ if [ -z "${1+n}" ] ; then
     for d in */ ; do
         [ -L "${d%/}" ] && continue
         echo "Stowing $d .."
-        stow --no-folding --target="$HOME" "$d"
+        stow --no-folding --target="$HOME" "${@:2}" "$d"
     done
 else
     echo "Stowing $1 .."
-    stow --no-folding --target="$HOME" "$1"
+    stow --no-folding --target="$HOME" "${@:2}" "$1"
 fi
