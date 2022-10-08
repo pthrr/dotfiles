@@ -1,4 +1,3 @@
-" OS dependent
 let s:settings = {}
 let s:settings.cache_dir = expand($XDG_DATA_HOME.'/nvim/cache')
 let s:settings.dein_dir = s:settings.cache_dir . '/dein'
@@ -15,17 +14,11 @@ if dein#load_state(s:settings.dein_dir)
     call dein#add('sirver/ultisnips')
     call dein#add('preservim/tagbar')
     call dein#add('ludovicchabant/vim-gutentags')
-    call dein#add('phaazon/hop.nvim')
-    call dein#add('numToStr/Comment.nvim')
-    call dein#add('nvim-lua/plenary.nvim')
-    call dein#add('folke/todo-comments.nvim', { 'depends': 'plenary' })
     call dein#add('dense-analysis/ale')
+    call dein#add('tpope/vim-repeat')
+    call dein#add('ggandor/leap.nvim', { 'depends': 'vim-repeat' })
     call dein#add('nvim-treesitter/nvim-treesitter')
-    call dein#add('nvim-orgmode/orgmode', { 'depends': 'nvim-treesitter' })
-    call dein#add('rust-lang/rust.vim')
-    call dein#add('cespare/vim-toml')
-    call dein#add('LnL7/vim-nix')
-    call dein#add('raimon49/requirements.txt.vim')
+    call dein#add('numToStr/Comment.nvim')
     call dein#end()
     call dein#save_state()
 endif
@@ -128,61 +121,9 @@ vnoremap <leader>d "_d
 nnoremap <leader>d "_d
 " replace currently selected text without yanking it
 vnoremap <leader>p "_dP
-" todo-comments
-nmap <F5> :TodoQuickFix cwd=.<CR>
+" leap
 lua << EOF
-  require("todo-comments").setup {
-    highlight = {
-      before = "", -- "fg" or "bg" or empty
-      keyword = "fg", -- "fg", "bg", "wide" or empty
-      after = "", -- "fg" or "bg" or empty
-      pattern = [[.*<(KEYWORDS)\s*:]],
-      comments_only = true,
-      max_line_len = 400,
-      exclude = {},
-    },
-    keywords = {
-      FIXME = { icon = "! ", color = "error" },
-      TODO = { icon = "+ ", color = "info" },
-      HACK = { icon = "* ", color = "warning" },
-      WARN = { icon = "# ", color = "warning" },
-      PERF = { icon = "$ ", color = "default" },
-      NOTE = { icon = "> ", color = "hint" },
-    },
-    merge_keywords = false,
-    pattern = [[\b(KEYWORDS):]],
-  }
-EOF
-" orgmode
-lua << EOF
-  -- Load custom tree-sitter grammar for org filetype
-  require('orgmode').setup_ts_grammar()
-
-  -- Tree-sitter configuration
-  require'nvim-treesitter.configs'.setup {
-    -- If TS highlights are not enabled at all, or disabled via `disable` prop, highlighting will fallback to default Vim syntax highlighting
-    highlight = {
-      enable = true,
-      additional_vim_regex_highlighting = {'org'}, -- Required for spellcheck, some LaTex highlights and code block highlights that do not have ts grammar
-    },
-
-    ensure_installed = {'org'}, -- Or run :TSUpdate org
-  }
-
-  require('orgmode').setup({
-    org_todo_keywords = { "TODO", "IN-PROGRESS", "WAITING", "|", "DONE", "CANCELED" },
-    org_agenda_files = {'~/agenda/**/*'},
-    org_default_notes_file = '~/org/refile.org',
-  })
-EOF
-" hop
-nmap <C-h> :HopWord<CR>
-nmap <S-h> :HopWordCurrentLine<CR>
-lua << EOF
-  require("hop").setup {
-    --keys = 'etovxqpdygfblzhckisuran',
-    jump_on_sole_occurrence = true,
-  }
+  require('leap').set_default_keymaps()
 EOF
 " comment
 lua << EOF
