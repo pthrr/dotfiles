@@ -81,7 +81,7 @@ set statusline+=%f\ %h%m%r
 set statusline+=%=
 set statusline+=%-14.(%l,%c%V%)
 set statusline+=\ %P
-set colorcolumn=80
+set colorcolumn=80,120
 set clipboard=unnamedplus
 set tabstop=4
 set softtabstop=4
