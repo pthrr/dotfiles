@@ -44,10 +44,10 @@ function ll() {
     exa -l --git --classify --color=always "$@" | less
 }
 function lsd() {
-    exa --tree --long --git --classify --color=always --level 6 -D -I ".git|venv|__pycache__" "$@" | less
+    exa --tree --long --git --classify --color=always --level 6 -D -I ".git|venv|__pycache__|*_cache" "$@" | less
 }
 function lsf() {
-    exa --tree --long --git --classify --color=always --level 6 -a -I ".git|venv|__pycache__" "$@" | less
+    exa --tree --long --git --classify --color=always --level 6 -a -I ".git|venv|__pycache__|*_cache" "$@" | less
 }
 alias vi='nvim'
 alias vim='nvim'
