@@ -16,8 +16,8 @@ function command_not_found_handle() {
     fi
 }
 function fpy() {
-    isort --profile black --atomic --line-length 79 "$@"
-    black --verbose --line-length 79 "$@"
+    isort --profile black --atomic "$@"
+    black --verbose "$@"
     pylint "$@"
 }
 function fcc() {
