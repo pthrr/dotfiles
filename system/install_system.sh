@@ -3,6 +3,7 @@ set -euo pipefail
 
 sudo apt update -y
 sudo apt install -y \
+    python-is-python3 \
     usrmerge \
     build-essential \
     gdb \
