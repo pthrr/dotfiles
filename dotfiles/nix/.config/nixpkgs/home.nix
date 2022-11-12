@@ -19,6 +19,7 @@
         enableNixpkgsReleaseCheck = true;
 
         packages = [
+            pkgs.openscad
             pkgs.coq
             pkgs.dwarf-fortress
             pkgs.drawio

@@ -3,6 +3,8 @@ set -euo pipefail
 
 sudo apt update -y
 sudo apt install -y \
+    leiningen \
+    clojure \
     python-is-python3 \
     usrmerge \
     build-essential \
