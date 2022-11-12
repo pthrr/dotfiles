@@ -43,7 +43,7 @@
             pkgs.jq
             pkgs.vlc
             pkgs.meld
-            pkgs.mutt
+            pkgs.neomutt
             pkgs.universal-ctags
             pkgs.cmake
             pkgs.tectonic

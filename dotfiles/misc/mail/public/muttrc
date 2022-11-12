@@ -1,0 +1,13 @@
+set mbox_type=Maildir
+set header_cache=$XDG_CACHE_HOME/mutt
+set message_cachedir=$XDG_CACHE_HOME/mutt
+
+set folder = "~/mail/public/Inbox"
+set spoolfile = "+/"
+set postponed = "~/mail/public/Drafts"
+set trash = "~/mail/public/Trash"
+set record = ""
+
+source "$HOME/mail/common.muttrc"
+source "$HOME/mail/public.muttrc"
+source "$HOME/mail/mutt-colors-solarized-dark-16.muttrc"
