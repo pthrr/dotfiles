@@ -78,7 +78,12 @@
         file.".clang-tidy".source = ../../../lang/.clang-tidy;
         file.".pylintrc".source = ../../../lang/.pylintrc;
 
-        file.".mailcap".source = ../../../misc/.mailcap;
+        file.".mailcap".source = ../../../mutt/.mailcap;
+
+        file."mail" = {
+            source = ../../../mutt/mail;
+            recursive = true;
+        };
 
         file.".ssh" = {
             source = ../../../misc/.ssh;
@@ -87,11 +92,6 @@
 
         file."bin" = {
             source = ../../../misc/bin;
-            recursive = true;
-        };
-
-        file."mail" = {
-            source = ../../../misc/mail;
             recursive = true;
         };
 
