@@ -19,6 +19,7 @@
         enableNixpkgsReleaseCheck = true;
 
         packages = [
+            pkgs.lynx
             pkgs.openscad
             pkgs.coq
             pkgs.dwarf-fortress
@@ -76,6 +77,8 @@
 
         file.".clang-tidy".source = ../../../lang/.clang-tidy;
         file.".pylintrc".source = ../../../lang/.pylintrc;
+
+        file.".mailcap".source = ../../../misc/.mailcap;
 
         file.".ssh" = {
             source = ../../../misc/.ssh;
