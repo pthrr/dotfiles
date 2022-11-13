@@ -21,11 +21,6 @@ if [ -d "/usr/sbin" ] ; then
     export PATH="/usr/sbin:$PATH"
 fi
 
-# set PATH so it includes bin if it exists
-if [ -d "/sbin" ] && [ ! -L "/sbin" ] ; then
-    export PATH="/sbin:$PATH"
-fi
-
 # set PATH so it includes user's private bin if it exists
 if [ -d "$HOME/bin" ] ; then
     export PATH="$HOME/bin:$PATH"
