@@ -92,16 +92,12 @@ if [ ! -d  "$HOME/fun" ] ; then
     mkdir "$HOME/fun"
 fi
 
-if [ ! -d  "$HOME/projects" ] ; then
-    mkdir "$HOME/projects"
-fi
-
 if [ ! -d  "$HOME/work" ] ; then
     mkdir "$HOME/work"
 fi
 
-if [ ! -d  "$HOME/analysis" ] ; then
-    mkdir "$HOME/analysis"
+if [ ! -d  "$HOME/learn" ] ; then
+    mkdir "$HOME/learn"
 fi
 
 if [ ! -d  "$HOME/mail/personal" ] ; then
