@@ -95,6 +95,10 @@ if [ ! -d  "$HOME/learn" ] ; then
     mkdir "$HOME/learn"
 fi
 
+if [ ! -d  "$HOME/HiDrive" ] ; then
+    mkdir "$HOME/HiDrive"
+fi
+
 if [ ! -d  "$HOME/mail/personal" ] ; then
     mkdir -p "$HOME/mail/personal"
 fi
