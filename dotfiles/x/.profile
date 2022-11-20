@@ -99,6 +99,10 @@ if [ ! -d  "$HOME/HiDrive" ] ; then
     mkdir "$HOME/HiDrive"
 fi
 
+if [ ! -d  "$HOME/Dokumente/notes" ] ; then
+    mkdir -p "$HOME/Dokumente/notes"
+fi
+
 if [ ! -d  "$HOME/mail/personal" ] ; then
     mkdir -p "$HOME/mail/personal"
 fi

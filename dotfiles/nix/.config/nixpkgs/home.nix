@@ -95,8 +95,8 @@
             recursive = true;
         };
 
-        file."Dokumente/snippets" = {
-            source = ../../../nvim/Dokumente/snippets;
+        file."Vorlagen/snippets" = {
+            source = ../../../nvim/Vorlagen/snippets;
             recursive = true;
         };
 

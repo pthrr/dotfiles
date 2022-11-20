@@ -177,7 +177,7 @@ EOF
 let g:UltiSnipsExpandTrigger = '<tab>'
 let g:UltiSnipsJumpForwardTrigger = '<tab>'
 let g:UltiSnipsJumpBackwardTrigger = '<s-tab>'
-let g:UltiSnipsSnippetDirectories = [$XDG_DOCUMENTS_DIR.'/snippets']
+let g:UltiSnipsSnippetDirectories = [$XDG_TEMPLATES_DIR.'/snippets']
 " tagbar
 nmap <F8> :TagbarToggle<CR>
 let g:tagbar_compact = 1
