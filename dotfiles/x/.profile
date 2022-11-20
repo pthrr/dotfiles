@@ -132,6 +132,7 @@ export BROWSER='librewolf'
 export TERMINAL='xterm'
 export PDFVIEWER='zathura'
 export MEDIAPLAYER='vlc'
+export FILEMANAGER='spacefm'
 export MAILPATH="$HOME/mail/personal/Inbox:$HOME/mail/public/Inbox"
 export MAILCHECK=300
 export FZF_DEFAULT_COMMAND='rg --files'
