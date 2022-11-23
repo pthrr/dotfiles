@@ -1,3 +1,4 @@
+if ! exists('g:vscode')
 let s:settings = {}
 let s:settings.cache_dir = expand($XDG_DATA_HOME.'/nvim/cache')
 let s:settings.dein_dir = s:settings.cache_dir . '/dein'
@@ -28,6 +29,7 @@ endif
 set termguicolors
 set background=dark
 colorscheme NeoSolarized
+endif " if not vscode
 " generic
 syntax on
 filetype plugin indent on
@@ -121,6 +123,7 @@ vnoremap <leader>d "_d
 nnoremap <leader>d "_d
 " replace currently selected text without yanking it
 vnoremap <leader>p "_dP
+if ! exists('g:vscode')
 " leap
 lua << EOF
   require('leap').set_default_keymaps()
@@ -288,3 +291,4 @@ let g:ale_lint_on_insert_leave = 0
 let g:ale_lint_on_text_changed = 0
 let g:ale_lint_on_save = 1
 let g:ale_sign_column_always = 1
+endif " if not vscode
