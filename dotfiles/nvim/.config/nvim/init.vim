@@ -66,16 +66,16 @@ set hidden
 set path+=**
 set wildmenu
 set wildmode=list:longest,full
-set wildignore +=.git,.hg,.svn
-set wildignore +=*.aux,*.out,*.toc
-set wildignore +=*.o,*.obj,*.exe,*.dll,*.manifest,*.rbc,*.class
-set wildignore +=*.ai,*.bmp,*.gif,*.ico,*.jpg,*.jpeg,*.png,*.psd,*.webp
-set wildignore +=*.avi,*.divx,*.mp4,*.webm,*.mov,*.m2ts,*.mkv,*.vob,*.mpg,*.mpeg
-set wildignore +=*.mp3,*.oga,*.ogg,*.wav,*.flac
-set wildignore +=*.eot,*.otf,*.ttf,*.woff
-set wildignore +=*.doc,*.pdf,*.cbr,*.cbz
-set wildignore +=*.zip,*.tar.gz,*.tar.bz2,*.rar,*.tar.xz,*.kgb
-set wildignore +=*.swp,.lock,.DS_Store,._*
+set wildignore+=.git,.hg,.svn
+set wildignore+=*.aux,*.out,*.toc
+set wildignore+=*.o,*.obj,*.exe,*.dll,*.manifest,*.rbc,*.class
+set wildignore+=*.ai,*.bmp,*.gif,*.ico,*.jpg,*.jpeg,*.png,*.psd,*.webp
+set wildignore+=*.avi,*.divx,*.mp4,*.webm,*.mov,*.m2ts,*.mkv,*.vob,*.mpg,*.mpeg
+set wildignore+=*.mp3,*.oga,*.ogg,*.wav,*.flac
+set wildignore+=*.eot,*.otf,*.ttf,*.woff
+set wildignore+=*.doc,*.pdf,*.cbr,*.cbz
+set wildignore+=*.zip,*.tar.gz,*.tar.bz2,*.rar,*.tar.xz,*.kgb
+set wildignore+=*.swp,.lock,.DS_Store,._*
 set laststatus=2
 set statusline=
 set statusline+=%-4.(%n%)
@@ -123,6 +123,7 @@ vnoremap <leader>d "_d
 nnoremap <leader>d "_d
 " replace currently selected text without yanking it
 vnoremap <leader>p "_dP
+"
 if ! exists('g:vscode')
 " leap
 lua << EOF
