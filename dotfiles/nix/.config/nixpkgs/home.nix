@@ -19,6 +19,7 @@
         enableNixpkgsReleaseCheck = true;
 
         packages = [
+            pkgs.vscode
             pkgs.lynx
             pkgs.openscad
             pkgs.coq
