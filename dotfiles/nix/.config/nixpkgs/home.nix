@@ -19,7 +19,6 @@
         enableNixpkgsReleaseCheck = true;
 
         packages = [
-            pkgs.vscode
             pkgs.lynx
             pkgs.openscad
             pkgs.coq
@@ -109,6 +108,14 @@
 
     # Let Home Manager install and manage itself.
     programs.home-manager.enable = true;
+
+    programs.vscode = {
+        enable = true;
+        package = pkgs.vscodium;
+        extensions = with pkgs.vscode-extensions; [
+            asvetliakov.vscode-neovim
+        ];
+    };
 
     xdg = {
         # files in ~/.config/
