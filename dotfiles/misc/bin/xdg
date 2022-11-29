@@ -10,7 +10,7 @@ case "$1" in
     *.mp3|*.mp4)
         exec $MEDIAPLAYER "$1"
         ;;
-    /*)
+    /*|~/*)
         exec $FILEMANAGER "$1"
         ;;
     *)
