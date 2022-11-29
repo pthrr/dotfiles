@@ -103,6 +103,10 @@ if [ ! -d  "$HOME/Dokumente/notes" ] ; then
     mkdir -p "$HOME/Dokumente/notes"
 fi
 
+if [ ! -d  "$HOME/Dokumente/notebooks" ] ; then
+    mkdir -p "$HOME/Dokumente/notebooks"
+fi
+
 if [ ! -d  "$HOME/mail/personal" ] ; then
     mkdir -p "$HOME/mail/personal"
 fi
