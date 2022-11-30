@@ -7,11 +7,10 @@ export PS1='\[\e[33m\]\w\[\e[0m\] \u$(if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY"
 function command_not_found_handle() {
     regex_url='(https?|ftp|file)://[-[:alnum:]\+&@#/%?=~_|!:,.;]*[-[:alnum:]\+&@#/%=~_|]'
     regex_git='.*.git'
-    if [[ $1 =~ $regex_git ]]
-    then
+
+    if [[ $1 =~ $regex_git ]] ; then
         git cloner "$1"
-    elif [[ $1 =~ $regex_url ]]
-    then
+    elif [[ $1 =~ $regex_url ]] ; then
         wget "$1"
     fi
 }
@@ -21,17 +20,12 @@ function fpy() {
     pylint "$@"
 }
 function fcc() {
-    clang-format -verbose -i -style=chromium "$@"
+    clang-format -verbose -i -style=webkit "$@"
     clang-tidy "$@"
 }
-function vpy() {
+function vo() {
     shopt -s nullglob
-    nvim src/*.py "$@"
-    shopt -u nullglob
-}
-function vcc() {
-    shopt -s nullglob
-    nvim src/*.c src/*.cc "$@"
+    $EDITOR "$@"
     shopt -u nullglob
 }
 function lla() {
