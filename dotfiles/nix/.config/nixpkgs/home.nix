@@ -19,6 +19,7 @@
         enableNixpkgsReleaseCheck = true;
 
         packages = [
+            pkgs.prusa-slicer
             pkgs.lynx
             pkgs.openscad
             pkgs.coq
