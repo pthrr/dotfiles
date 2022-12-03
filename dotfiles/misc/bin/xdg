@@ -14,6 +14,6 @@ case "$1" in
         exec $FILEMANAGER "$1"
         ;;
     *)
-        echo "No application registered for that file type!"
+        xdg-open "$1"
         ;;
 esac

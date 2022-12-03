@@ -19,6 +19,8 @@
         enableNixpkgsReleaseCheck = true;
 
         packages = [
+            pkgs.trash-cli
+            pkgs.nnn
             pkgs.prusa-slicer
             pkgs.lynx
             pkgs.openscad
@@ -134,7 +136,7 @@
         };
 
         configFile."zathura" = {
-            source = ../../../misc/.config/zathura;
+            source = ../../../zathura/.config/zathura;
             recursive = true;
         };
 

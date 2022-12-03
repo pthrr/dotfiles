@@ -156,3 +156,6 @@ export ANDROID_NDK=/usr/lib/android-ndk
 export GTK_THEME=Adwaita:dark
 export GTK2_RC_FILES="/usr/share/themes/Adwaita-dark/gtk-2.0/gtkrc"
 export QT_QPA_PLATFORMTHEME=qt5ct
+export NNN_BMS='D:~/Dokumente;d:~/Downloads/'
+export NNN_TRASH=1
+export NNN_OPTS="H"
