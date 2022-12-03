@@ -1,0 +1,42 @@
+#!/usr/local/plan9/bin/rc
+# que - a simple queue tracker
+# usage: que [-cp][-f file | file ]
+
+# set some defaults
+rfork ne
+path=$PLAN9/bin
+dir=$home/plan9/lib/queues
+mark='<--'
+tmp=/tmp/que-$pid
+fn sedi{
+	sed $1 $2 > $tmp
+	mv $tmp $2
+}
+
+# parse arguments
+if (~ $#* 0) ls -p $dir && exit
+flagfmt='c,p,f file'
+args=file
+if(! ifs=() eval `{getflags $*}){
+	usage
+	exit usage
+}
+if (~ $flagf '') file=$dir/$1
+if not file=$flagf
+if (! test -f $file){
+	echo Error: File $file does not exist >[1=2]
+	exit nofile
+}
+
+# update the queue
+if (! task=`{grep -n $mark $file | sed 's/:.*//'}) task=1
+prev=`{ echo $task - 1 | hoc }
+next=`{ echo $task + 1 | hoc }
+if (~ $flagp 1){
+	if(! ~ $prev 0) sed -n ''$prev'p' $file
+	exit
+}
+sedi 's/'$mark'//' $file
+if (~ $flagc 1) exit
+sed -n ''$task'p' $file
+sedi ''$next's/$/'$mark'/' $file

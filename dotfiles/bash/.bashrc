@@ -12,6 +12,8 @@ function command_not_found_handle() {
         git cloner "$1"
     elif [[ $1 =~ $regex_url ]] ; then
         wget "$1"
+    else
+        echo "Command was not found!"
     fi
 }
 function fpy() {
