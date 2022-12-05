@@ -19,6 +19,7 @@
         enableNixpkgsReleaseCheck = true;
 
         packages = [
+            pkgs.feh
             pkgs.mc
             pkgs.prusa-slicer
             pkgs.lynx
@@ -136,6 +137,11 @@
 
         configFile."zathura" = {
             source = ../../../zathura/.config/zathura;
+            recursive = true;
+        };
+
+        configFile."feh" = {
+            source = ../../../feh/.config/feh;
             recursive = true;
         };
 

@@ -1,22 +1,23 @@
-#! /bin/sh
+#!/usr/bin/env bash
+set -euo pipefail
 
-case "$1" in
+case "${@: -1}" in
     *://*)
-        exec $BROWSER "$1"
+        exec $BROWSER "$@"
         ;;
     *.pdf|*.djvu)
-        exec $PDFVIEWER "$1"
+        exec $PDFVIEWER "$@"
         ;;
-    *.jpg|*.png)
-        exec $IMAGEVIEWER "$1"
+    *.jpg|*.jpeg|*.png)
+        exec $IMAGEVIEWER "$@"
         ;;
     *.mp3|*.mp4)
-        exec $MEDIAPLAYER "$1"
+        exec $MEDIAPLAYER "$@"
         ;;
     /*|~/*)
-        exec $FILEMANAGER "$1"
+        exec $FILEMANAGER "$@"
         ;;
     *)
-        xdg-open "$1"
+        xdg-open "$@"
         ;;
 esac
