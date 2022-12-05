@@ -7,6 +7,9 @@ case "$1" in
     *.pdf|*.djvu)
         exec $PDFVIEWER "$1"
         ;;
+    *.jpg|*.png)
+        exec $IMAGEVIEWER "$1"
+        ;;
     *.mp3|*.mp4)
         exec $MEDIAPLAYER "$1"
         ;;
