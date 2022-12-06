@@ -4,6 +4,7 @@ set -euo pipefail
 sudo apt update -y
 sudo apt install -y \
     kicad \
+    golang-go \
     leiningen \
     clojure \
     python-is-python3 \

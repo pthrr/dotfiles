@@ -33,7 +33,6 @@
             pkgs.ghidra
             pkgs.rustfmt
             pkgs.rust-analyzer
-            pkgs.go
             pkgs.gnucash
             pkgs.winetricks
             pkgs.wineWowPackages.full
@@ -66,7 +65,6 @@
             pkgs.neovim
             pkgs.obsidian
             pkgs.zotero
-            pkgs.nextcloud-client
         ];
 
         # files in ~/
