@@ -6,8 +6,8 @@ case $1 in
 "gnome-session")
     exec gnome-session
     ;;
-"startxfce")
-    exec startxfce
+"startxfce4")
+    exec startxfce4
     ;;
 "i3"|*)
     setxkbmap -layout de -model pc105 -option terminate:ctrl_alt_bksp -option caps:none
