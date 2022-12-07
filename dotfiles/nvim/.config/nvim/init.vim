@@ -59,6 +59,8 @@ set relativenumber
 set nowrap
 set hlsearch
 set incsearch
+set updatetime=30
+set signcolumn=yes
 set autoread
 set lazyredraw
 set title
@@ -92,6 +94,12 @@ set expandtab
 set foldmethod=indent
 set foldnestmax=2
 set foldlevelstart=10
+" no rel nums on non focused buffer
+augroup numbertoggle
+  autocmd!
+  autocmd BufEnter,FocusGained,InsertLeave * set relativenumber
+  autocmd BufLeave,FocusLost,InsertEnter   * set norelativenumber
+augroup END
 " automatically save view, load with :loadview
 autocmd BufWinLeave *.* mkview
 " show matching brackets
