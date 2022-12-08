@@ -1,3 +1,4 @@
+set -o vi
 export HISTCONTROL=ignorespace:erasedups
 export HISTSIZE=1000
 export HISTFILESIZE=2000
