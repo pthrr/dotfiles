@@ -2,7 +2,7 @@
 set -euo pipefail
 
 case "${@: -1}" in
-    *://*)
+    *://*|*.html)
         exec $BROWSER "$@"
         ;;
     *.pdf|*.djvu)
