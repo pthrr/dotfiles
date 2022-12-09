@@ -87,7 +87,7 @@
         };
 
         file.".ssh" = {
-            source = ../../../misc/.ssh;
+            source = ../../../ssh/.ssh;
             recursive = true;
         };
 
