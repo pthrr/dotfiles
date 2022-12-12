@@ -1,4 +1,3 @@
-set -o vi
 export HISTCONTROL=ignorespace:erasedups
 export HISTSIZE=1000
 export HISTFILESIZE=2000
@@ -46,6 +45,7 @@ function lsd() {
 function lsf() {
     exa --tree --long --git --classify --color=always --level 6 -a -I ".git|venv|__pycache__|*_cache" "$@" | less
 }
+set -o vi
 alias vi='nvim'
 alias vim='nvim'
 alias top='htop'

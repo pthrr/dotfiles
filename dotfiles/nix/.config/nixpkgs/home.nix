@@ -19,6 +19,7 @@
         enableNixpkgsReleaseCheck = true;
 
         packages = [
+            pkgs.transmission-gtk
             pkgs.feh
             pkgs.mc
             pkgs.prusa-slicer
