@@ -19,8 +19,10 @@
         enableNixpkgsReleaseCheck = true;
 
         packages = [
+            pkgs.nsxiv
+            pkgs.farbfeld
+            pkgs.sent
             pkgs.transmission-gtk
-            pkgs.feh
             pkgs.mc
             pkgs.prusa-slicer
             pkgs.lynx
@@ -102,6 +104,11 @@
             recursive = true;
         };
 
+        file."Vorlagen/slides" = {
+            source = ../../../sent/Vorlagen/slides;
+            recursive = true;
+        };
+
         file.".profile".source = ../../../x/.profile;
         file.".xinitrc".source = ../../../x/.xinitrc;
         file.".xresources".source = ../../../x/.xresources;
@@ -136,11 +143,6 @@
 
         configFile."zathura" = {
             source = ../../../zathura/.config/zathura;
-            recursive = true;
-        };
-
-        configFile."feh" = {
-            source = ../../../feh/.config/feh;
             recursive = true;
         };
 
