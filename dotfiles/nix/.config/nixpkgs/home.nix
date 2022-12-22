@@ -55,7 +55,8 @@
             pkgs.cmake
             pkgs.tectonic
             pkgs.ninja
-            pkgs.spotify
+            pkgs.spotifyd
+            pkgs.spotify-tui
             pkgs.zathura
             pkgs.ipe
             pkgs.ripgrep
@@ -153,6 +154,15 @@
 
         configFile."nvim" = {
             source = ../../../nvim/.config/nvim;
+            recursive = true;
+        };
+
+        configFile."spotifyd" = {
+            source = ../../../spotify/.config/spotifyd;
+            recursive = true;
+        };
+        configFile."spotify-tui" = {
+            source = ../../../spotify/.config/spotify-tui;
             recursive = true;
         };
     };
