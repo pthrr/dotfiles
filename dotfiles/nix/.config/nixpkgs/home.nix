@@ -19,6 +19,7 @@
         enableNixpkgsReleaseCheck = true;
 
         packages = [
+            pkgs.graphviz
             pkgs.nsxiv
             pkgs.farbfeld
             pkgs.sent
