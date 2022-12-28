@@ -19,6 +19,9 @@
         enableNixpkgsReleaseCheck = true;
 
         packages = [
+            pkgs.gitui
+            pkgs.git
+            pkgs.git-lfs
             pkgs.poppler_utils
             pkgs.graphviz
             pkgs.nsxiv

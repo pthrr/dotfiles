@@ -24,8 +24,6 @@ sudo apt install -y \
     tree \
     curl \
     wget \
-    git \
-    git-lfs \
     stow \
     fonts-firacode \
     fonts-dejavu \
