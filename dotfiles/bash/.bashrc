@@ -45,6 +45,9 @@ function lsd() {
 function lsf() {
     exa --tree --long --git --classify --color=always --level 6 -a -I ".git|venv|__pycache__|*_cache" "$@" | less
 }
+function pb() {
+    "$@" | pbcopy
+}
 set -o vi
 alias vi='nvim'
 alias vim='nvim'
@@ -61,6 +64,8 @@ alias ..='cd ../'
 alias ...='cd ../../'
 alias ....='cd ../../../'
 alias .....='cd ../../../../'
+alias pbcopy='xsel — clipboard — input'
+alias pbpaste='xsel — clipboard — output'
 alias spot='pidof -q spotifyd || spotifyd; spt'
 alias mpubl='mutt -F "$HOME/mail/public/muttrc"'
 alias mpers='mutt -F "$HOME/mail/personal/muttrc"'

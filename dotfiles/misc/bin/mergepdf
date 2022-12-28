@@ -2,5 +2,5 @@
 set -euo pipefail
 
 DIR=$1
-files=$(find $DIR -name "*.pdf" -type f -print)
-pdfunite $files out.pdf
+files=$(find $DIR -iname "*.pdf" -type f -print)
+pdfunite $files "${DIR}/merged.pdf"

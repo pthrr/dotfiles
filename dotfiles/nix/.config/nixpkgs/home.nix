@@ -19,6 +19,7 @@
         enableNixpkgsReleaseCheck = true;
 
         packages = [
+            pkgs.poppler_utils
             pkgs.graphviz
             pkgs.nsxiv
             pkgs.farbfeld
