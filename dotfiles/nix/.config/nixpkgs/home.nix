@@ -19,8 +19,9 @@
         enableNixpkgsReleaseCheck = true;
 
         packages = [
+            pkgs.xdotool
             pkgs.rr
-            pkgs.rage
+            pkgs.age
             pkgs.youtube-dl
             pkgs.gitui
             pkgs.git
