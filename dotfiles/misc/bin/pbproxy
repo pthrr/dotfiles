@@ -1,0 +1,137 @@
+#!/usr/bin/env bash
+
+# this is used to emulate a clipboard on machines where xsel and/or
+# pbcopy/pbpaste aren't present (eg a headless linux box with no X servre)
+PBPROXY_TEMPFILE="/tmp/pboard"
+PBPROXY_SESSION_TIMEOUT="$((24 * 60 * 60))"
+
+main() {
+    case "$1" in
+    --start-session | -s)
+        remote_host="$2"
+        # write session file
+        cat >~/.pbproxy <<EOF
+            pbproxy_last_run_time="$(date +%s)"
+            remote_host="$remote_host"
+EOF
+        echo >&2 "Started remote pbproxy session for host '$remote_host'"
+        return
+        ;;
+    --end-session | -S)
+        rm ~/.pbproxy
+        echo >&2 "Ended remote pbproxy session"
+        return
+        ;;
+    --help | -h)
+        show-usage
+        return 0
+        ;;
+    esac
+
+    local remote_host="$1"
+
+    # load remote host from file if there's a valid session
+    if [[ -f ~/.pbproxy ]] && [[ -z "$remote_host" ]]; then
+        remote_host="$(
+            # pbproxy should set "$pbproxy_last_run_time" and "$remote_host"
+            source ~/.pbproxy
+            # if session was set w/in last day
+            if [[ $(($(($(date +%s))) - pbproxy_last_run_time)) -lt "$PBPROXY_SESSION_TIMEOUT" ]]; then
+                echo "$remote_host"
+            fi
+        )"
+    fi
+
+    if [[ -n "$remote_host" ]]; then
+        case "$SCRIPT_NAME" in
+        pbcopy | *copy*)
+            exec cat | ssh "$remote_host" '~/bin/pbcopy'
+            ;;
+        pbpaste | *paste*)
+            exec ssh "$remote_host" '~/bin/pbpaste'
+            ;;
+        esac
+
+        return 0
+    fi
+
+    if [[ "$CUR_PLATFORM" == "Darwin" ]]; then
+
+        # run the system pbcopy/pbpaste
+        exec "/usr/bin/$SCRIPT_NAME"
+    elif [[ "$CUR_PLATFORM" == "Linux" ]]; then
+
+        if quiet which xsel && quiet timeout 1 xsel --clipboard --output; then
+            case "$SCRIPT_NAME" in
+            pbcopy | *copy*)
+                cat | exec xsel --clipboard --input
+                ;;
+            pbpaste | *paste*)
+                exec xsel --clipboard --output
+                ;;
+            esac
+        else
+            case "$SCRIPT_NAME" in
+            pbcopy | *copy*)
+                exec cat >"$PBPROXY_TEMPFILE"
+                ;;
+            pbpaste | *paste*)
+                [[ -f "$PBPROXY_TEMPFILE" ]] && exec cat "$PBPROXY_TEMPFILE"
+                ;;
+            esac
+
+        fi
+    fi
+
+}
+
+show-usage() {
+    cat <<EOF
+
+$(basename $0)
+
+pbcopy/pbpaste and xsel wrapper with remote session support.
+
+You can use this to copy and paste to/from another machine's clipboard over
+ssh. <hostname> below can be any hostname your machine can reach via ssh
+(including host aliases set in ~/.ssh/config)
+
+Usage:
+
+Copy to another machine's clipboard:
+
+echo hi | pbcopy <hostname>
+
+Usage:
+      -s, --start-session <hostname>
+      -S, --end-session   <hostname>
+
+EOF
+    return 0
+}
+
+quiet() {
+    $@ &>/dev/null
+}
+
+abspath() {
+    local dir=
+    local file=
+    local res=
+    if quiet pushd "$1"; then
+        pwd
+        quiet popd
+    else
+        dir="$(dirname "$1")"
+        file="$(basename "$1")"
+        quiet pushd "$dir"
+        echo "$PWD/$file"
+        quiet popd
+    fi
+}
+
+SCRIPT_NAME="$(basename $0)"
+SCRIPT_DIR="$(abspath $(dirname $0))"
+CUR_PLATFORM="$(uname)"
+
+main "$@"

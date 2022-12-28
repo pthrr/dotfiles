@@ -3,6 +3,7 @@ set -euo pipefail
 
 sudo apt update -y
 sudo apt install -y \
+    cargo \
     npm \
     kicad \
     golang-go \

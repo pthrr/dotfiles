@@ -19,6 +19,9 @@
         enableNixpkgsReleaseCheck = true;
 
         packages = [
+            pkgs.rr
+            pkgs.rage
+            pkgs.youtube-dl
             pkgs.gitui
             pkgs.git
             pkgs.git-lfs
