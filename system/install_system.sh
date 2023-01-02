@@ -67,5 +67,4 @@ python3 -m pip install --upgrade --force-reinstall \
     isort \
     black \
     pylint \
-    pyperclip \
-    python3-clang
+    pyperclip
