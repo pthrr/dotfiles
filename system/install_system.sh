@@ -2,7 +2,11 @@
 set -euo pipefail
 
 sudo apt update -y
+sudo apt remove -y \
+    firefox-esr \
+    firefox
 sudo apt install -y \
+    chromium \
     xdotool \
     inotify-tools \
     xsel \

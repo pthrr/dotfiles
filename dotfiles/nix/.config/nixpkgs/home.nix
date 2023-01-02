@@ -19,6 +19,7 @@
         enableNixpkgsReleaseCheck = false;
 
         packages = [
+            pkgs.firefox
             pkgs.drumgizmo
             pkgs.carla
             pkgs.guitarix
