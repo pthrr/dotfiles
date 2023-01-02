@@ -19,6 +19,9 @@
         enableNixpkgsReleaseCheck = false;
 
         packages = [
+            pkgs.drumgizmo
+            pkgs.carla
+            pkgs.guitarix
             pkgs.rr
             pkgs.age
             pkgs.youtube-dl
