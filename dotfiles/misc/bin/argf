@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+FILE=$1
+CMD=$2
+
+mapfile -t <$FILE
+
+for f in "${MAPFILE[@]}"
+do
+    echo "Executing ${f} .."
+    $CMD $f
+done
