@@ -3,7 +3,11 @@ set -euo pipefail
 
 sudo apt update -y
 sudo apt install -y \
+    xdotool \
+    inotify-tools \
     xsel \
+    jackd2 \
+    alsa-utils \
     cargo \
     npm \
     kicad \

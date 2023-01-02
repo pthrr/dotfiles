@@ -115,6 +115,10 @@ if [ ! -d  "$HOME/mail/public" ] ; then
     mkdir -p "$HOME/mail/public"
 fi
 
+if [ ! -d  "$HOME/Audio" ] ; then
+    mkdir -p "$HOME/Audio"
+fi
+
 export LANG=de_DE.UTF-8
 export LC_ALL=de_DE.UTF-8
 export XDG_CONFIG_HOME="$HOME/.config"

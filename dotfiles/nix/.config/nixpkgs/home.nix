@@ -19,7 +19,6 @@
         enableNixpkgsReleaseCheck = true;
 
         packages = [
-            pkgs.xdotool
             pkgs.rr
             pkgs.age
             pkgs.youtube-dl
