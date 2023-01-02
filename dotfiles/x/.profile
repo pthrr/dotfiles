@@ -95,8 +95,8 @@ if [ ! -d  "$HOME/learn" ] ; then
     mkdir "$HOME/learn"
 fi
 
-if [ ! -d  "$HOME/HiDrive" ] ; then
-    mkdir "$HOME/HiDrive"
+if [ ! -d  "$HOME/Drive" ] ; then
+    mkdir "$HOME/Drive"
 fi
 
 if [ ! -d  "$HOME/Dokumente/notes" ] ; then

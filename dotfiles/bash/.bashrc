@@ -48,6 +48,9 @@ function lsf() {
 function pb() {
     "$@" | pbcopy
 }
+function pw() {
+    pb kp "$@"
+}
 set -o vi
 alias vi='nvim'
 alias vim='nvim'
