@@ -19,6 +19,7 @@
         enableNixpkgsReleaseCheck = false;
 
         packages = [
+            pkgs.ripes
             pkgs.firefox
             pkgs.drumgizmo
             pkgs.carla
