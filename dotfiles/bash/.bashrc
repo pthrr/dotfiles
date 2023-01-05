@@ -31,19 +31,19 @@ function vo() {
     shopt -u nullglob
 }
 function lla() {
-    exa -la --git --classify --color=always "$@" | less
+    exa -la --git --git-ignore --classify --color=always "$@" | less
 }
 function lls() {
-    exa -la --git --classify "$@"
+    exa -la --git --git-ignore --classify "$@"
 }
 function ll() {
-    exa -l --git --classify --color=always "$@" | less
+    exa -l --git --git-ignore --classify --color=always "$@" | less
 }
 function lsd() {
-    exa --tree --long --git --classify --color=always --level 6 -a -D -I ".git|venv|__pycache__|*_cache" "$@" | less
+    exa --tree --long --git --git-ignore --classify --color=always --level 6 -a -D -I ".git|venv|__pycache__|*_cache" "$@" | less
 }
 function lsf() {
-    exa --tree --long --git --classify --color=always --level 6 -a -I ".git|venv|__pycache__|*_cache" "$@" | less
+    exa --tree --long --git --git-ignore --classify --color=always --level 6 -a -I ".git|venv|__pycache__|*_cache" "$@" | less
 }
 function pb() {
     "$@" | pbcopy
