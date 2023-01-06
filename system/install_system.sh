@@ -6,6 +6,7 @@ sudo apt remove -y \
     firefox-esr \
     firefox
 sudo apt install -y \
+    gnupg2 \
     chromium \
     xdotool \
     inotify-tools \
