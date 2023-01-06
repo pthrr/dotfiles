@@ -6,12 +6,14 @@ sudo apt remove -y \
     firefox-esr \
     firefox
 sudo apt install -y \
+    lilv-utils \
     gnupg2 \
     chromium \
     xdotool \
     inotify-tools \
     xsel \
     jackd2 \
+    qjackctl \
     alsa-utils \
     cargo \
     npm \
