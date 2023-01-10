@@ -20,6 +20,7 @@ if dein#load_state(s:settings.dein_dir)
     call dein#add('ggandor/leap.nvim', { 'depends': 'vim-repeat' })
     call dein#add('nvim-treesitter/nvim-treesitter')
     call dein#add('numToStr/Comment.nvim')
+    call dein#add('sheerun/vim-polyglot')
     call dein#end()
     call dein#save_state()
 endif
