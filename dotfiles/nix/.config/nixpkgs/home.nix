@@ -19,7 +19,7 @@
         enableNixpkgsReleaseCheck = false;
 
         packages = [
-            pkgs.just
+            pkgs.go-task
             pkgs.ripes
             pkgs.firefox
             pkgs.drumgizmo
