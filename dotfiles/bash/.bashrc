@@ -80,5 +80,6 @@ alias com='picocom -b 115200 --echo --omap=crcrlf'
 alias procs='pstree -Ap'
 alias ports='netstat -pln'
 alias pwgen="python3 -c 'import secrets,pyperclip;pw=secrets.token_urlsafe(32);pyperclip.copy(pw);print(pw)'"
+alias dotfiles='git --git-dir=/home/pthrr/.dotfiles/.git --work-tree=/home/pthrr/.dotfiles'
 source "$HOME/z.sh"
 source "$HOME/key-bindings.bash"
