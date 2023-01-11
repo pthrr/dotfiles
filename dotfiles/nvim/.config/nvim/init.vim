@@ -1,26 +1,31 @@
-if ! exists('g:vscode')
-let s:settings = {}
-let s:settings.cache_dir = expand($XDG_DATA_HOME.'/nvim/cache')
-let s:settings.dein_dir = s:settings.cache_dir . '/dein'
-let s:settings.dein_repo_dir = s:settings.dein_dir . '/repos/github.com/Shougo/dein.vim'
-if &runtimepath !~# '/dein.vim'
-    if !isdirectory(s:settings.dein_repo_dir)
-        execute '!git clone --depth 1 https://github.com/Shougo/dein.vim ' . s:settings.dein_repo_dir
-    endif
-    execute 'set rtp^=' . fnamemodify(s:settings.dein_repo_dir, ':p')
+if !exists('g:vscode')
+let $CACHE = expand('~/.cache')
+if !isdirectory($CACHE)
+    call mkdir($CACHE, 'p')
 endif
-if dein#load_state(s:settings.dein_dir)
-    call dein#begin(s:settings.dein_dir)
+if &runtimepath !~# '/dein.vim'
+    let s:dein_dir = fnamemodify('dein.vim', ':p')
+    if !isdirectory(s:dein_dir)
+        let s:dein_dir = $CACHE . '/dein/repos/github.com/Shougo/dein.vim'
+        if !isdirectory(s:dein_dir)
+            execute '!git clone https://github.com/Shougo/dein.vim' s:dein_dir
+        endif
+    endif
+    execute 'set runtimepath^=' . substitute(
+        \ fnamemodify(s:dein_dir, ':p') , '[/\\]$', '', '')
+endif
+if dein#load_state(s:dein_dir)
+    call dein#begin(s:dein_dir)
     call dein#add('overcache/NeoSolarized')
     call dein#add('sirver/ultisnips')
     call dein#add('preservim/tagbar')
     call dein#add('ludovicchabant/vim-gutentags')
     call dein#add('dense-analysis/ale')
+    call dein#add('sheerun/vim-polyglot')
+    call dein#add('nvim-treesitter/nvim-treesitter')
     call dein#add('tpope/vim-repeat')
     call dein#add('ggandor/leap.nvim', { 'depends': 'vim-repeat' })
-    call dein#add('nvim-treesitter/nvim-treesitter')
     call dein#add('numToStr/Comment.nvim')
-    call dein#add('sheerun/vim-polyglot')
     call dein#end()
     call dein#save_state()
 endif
@@ -103,15 +108,15 @@ augroup numbertoggle
 augroup END
 " automatically save view, load with :loadview
 autocmd BufWinLeave *.* mkview
-" show matching brackets
-set showmatch
-set matchtime=0
-highlight MatchParen guibg=none guifg=white gui=bold ctermbg=none ctermfg=white cterm=bold
 " highlight cursorline
 autocmd BufEnter * setlocal cursorline
 autocmd BufLeave * setlocal nocursorline
 autocmd InsertEnter * highlight cursorline guibg=none guifg=none gui=underline ctermbg=none ctermfg=none cterm=underline
 autocmd InsertLeave * highlight cursorline guibg=#073642 guifg=none gui=none ctermbg=none ctermfg=none cterm=none
+" show matching brackets
+set showmatch
+set matchtime=0
+highlight MatchParen guibg=none guifg=white gui=bold ctermbg=none ctermfg=white cterm=bold
 " change leader key
 let mapleader = "'"
 let maplocalleader = "\\"
@@ -135,10 +140,6 @@ vnoremap <leader>p "_dP
 " configure clipboard if inside WSL
 " https://github.com/memoryInject/wsl-clipboard
 lua << EOF
-  -- vim.opt.clipboard = "unnamedplus"               -- allows neovim to access the system clipboard
-
-  -- Set wsl-clipboard for vim clipboard if running WSL
-  -- Check if the current linux kernal is microsoft WSL version
   local function is_wsl()
     local version_file = io.open("/proc/version", "rb")
     if version_file ~= nil and string.find(version_file:read("*a"), "microsoft") then
@@ -148,8 +149,6 @@ lua << EOF
     return false
   end
 
-  -- If current linux is under WSL then use wclip.exe
-  -- More info: https://github.com/memoryInject/wsl-clipboard
   if is_wsl() then
     vim.g.clipboard = {
       name = "wsl-clipboard",
@@ -165,60 +164,7 @@ lua << EOF
     }
   end
 EOF
-"
-if ! exists('g:vscode')
-" leap
-lua << EOF
-  require('leap').set_default_keymaps()
-EOF
-" comment
-lua << EOF
-  require("Comment").setup {
-    ---Add a space b/w comment and the line
-    padding = true,
-    ---Whether the cursor should stay at its position
-    sticky = true,
-    ---Lines to be ignored while (un)comment
-    ignore = nil,
-    ---LHS of toggle mappings in NORMAL mode
-    toggler = {
-      ---Line-comment toggle keymap
-      line = 'gcc',
-      ---Block-comment toggle keymap
-      block = 'gbc',
-    },
-    ---LHS of operator-pending mappings in NORMAL and VISUAL mode
-    opleader = {
-      ---Line-comment keymap
-      line = 'gc',
-      ---Block-comment keymap
-      block = 'gb',
-    },
-    ---LHS of extra mappings
-    extra = {
-      ---Add comment on the line above
-      above = 'gcO',
-      ---Add comment on the line below
-      below = 'gco',
-      ---Add comment at the end of line
-      eol = 'gcA',
-    },
-    ---Enable keybindings
-    ---NOTE: If given `false` then the plugin won't create any mappings
-    mappings = {
-      ---Operator-pending mapping; `gcc` `gbc` `gc[count]{motion}` `gb[count]{motion}`
-      basic = true,
-      ---Extra mapping; `gco`, `gcO`, `gcA`
-      extra = true,
-      ---Extended mapping; `g>` `g<` `g>[count]{motion}` `g<[count]{motion}`
-      extended = false,
-    },
-    ---Function to call before (un)comment
-    pre_hook = nil,
-    ---Function to call after (un)comment
-    post_hook = nil,
-  }
-EOF
+if !exists('g:vscode')
 " ultisnips
 let g:UltiSnipsExpandTrigger = '<tab>'
 let g:UltiSnipsJumpForwardTrigger = '<tab>'
@@ -334,4 +280,56 @@ let g:ale_lint_on_insert_leave = 0
 let g:ale_lint_on_text_changed = 0
 let g:ale_lint_on_save = 1
 let g:ale_sign_column_always = 1
+" leap
+lua << EOF
+  require('leap').set_default_keymaps()
+EOF
+" comment
+lua << EOF
+  require("Comment").setup {
+    ---Add a space b/w comment and the line
+    padding = true,
+    ---Whether the cursor should stay at its position
+    sticky = true,
+    ---Lines to be ignored while (un)comment
+    ignore = nil,
+    ---LHS of toggle mappings in NORMAL mode
+    toggler = {
+      ---Line-comment toggle keymap
+      line = 'gcc',
+      ---Block-comment toggle keymap
+      block = 'gbc',
+    },
+    ---LHS of operator-pending mappings in NORMAL and VISUAL mode
+    opleader = {
+      ---Line-comment keymap
+      line = 'gc',
+      ---Block-comment keymap
+      block = 'gb',
+    },
+    ---LHS of extra mappings
+    extra = {
+      ---Add comment on the line above
+      above = 'gcO',
+      ---Add comment on the line below
+      below = 'gco',
+      ---Add comment at the end of line
+      eol = 'gcA',
+    },
+    ---Enable keybindings
+    ---NOTE: If given `false` then the plugin won't create any mappings
+    mappings = {
+      ---Operator-pending mapping; `gcc` `gbc` `gc[count]{motion}` `gb[count]{motion}`
+      basic = true,
+      ---Extra mapping; `gco`, `gcO`, `gcA`
+      extra = true,
+      ---Extended mapping; `g>` `g<` `g>[count]{motion}` `g<[count]{motion}`
+      extended = false,
+    },
+    ---Function to call before (un)comment
+    pre_hook = nil,
+    ---Function to call after (un)comment
+    post_hook = nil,
+  }
+EOF
 endif " if not vscode
