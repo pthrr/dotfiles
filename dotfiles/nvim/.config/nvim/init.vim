@@ -244,9 +244,8 @@ let g:gutentags_ctags_exclude = [
       \ ]
 " ale
 nmap <F6> :ALEFix<CR>
-" TODO: add mypy
 let g:ale_linters = {
-    \ 'python': ['pylint'],
+    \ 'python': ['pylint', 'mypy'],
     \ 'cpp': ['clangtidy'],
     \ 'c': ['clangtidy'],
     \ 'xml': ['xmllint'],
