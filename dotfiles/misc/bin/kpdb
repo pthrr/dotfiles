@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+DIR="$HOME/Drive/to_Cloud/Documents/Keepass/"
+NEWEST=$( ls $DIR | sort -n | tail -1 )
+echo "${DIR}${NEWEST}"

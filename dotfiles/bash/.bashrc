@@ -48,8 +48,11 @@ function lsf() {
 function pb() {
     "$@" | pbcopy
 }
-function pw() {
-    pb kp "$@"
+function kppw() {
+    keepassxc-cli clip "$( kpdb )" "$@"
+}
+function kpusr() {
+    keepassxc-cli lookup "$( kpdb )" "$@"
 }
 set -o vi
 alias vi='nvim'
@@ -79,7 +82,7 @@ alias mirror='wget --mirror --convert-links --adjust-extension --page-requisites
 alias com='picocom -b 115200 --echo --omap=crcrlf'
 alias procs='pstree -Ap'
 alias ports='netstat -pln'
-alias pwgen="python3 -c 'import secrets,pyperclip;pw=secrets.token_urlsafe(32);pyperclip.copy(pw);print(pw)'"
-alias dotfiles='git --git-dir=$HOME/.dotfiles/.git --work-tree=$HOME/.dotfiles'
+alias pwgen='pb keepassxc-cli generate --lower --upper --numeric --special --length 32'
+alias dotfiles='git --git-dir="$HOME/.dotfiles/.git" --work-tree="$HOME/.dotfiles"'
 source "$HOME/z.sh"
 source "$HOME/key-bindings.bash"
