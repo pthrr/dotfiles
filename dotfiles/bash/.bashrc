@@ -52,7 +52,7 @@ function kppw() {
     keepassxc-cli clip "$( kpdb )" "$@"
 }
 function kpusr() {
-    keepassxc-cli lookup "$( kpdb )" "$@"
+    pb keepassxc-cli search "$( kpdb )" "$@"
 }
 set -o vi
 alias vi='nvim'
