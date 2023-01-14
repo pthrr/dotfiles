@@ -16,16 +16,18 @@ if &runtimepath !~# '/dein.vim'
 endif
 if dein#load_state(s:dein_dir)
     call dein#begin(s:dein_dir)
+    " call dein#add('sheerun/vim-polyglot')
+    " call dein#add('nvim-treesitter/nvim-treesitter')
+    " call dein#add('nvim-lua/plenary.nvim')
+    " call dein#add('nvim-telescope/telescope.nvim', { 'rev': '0.1.x' })
     call dein#add('overcache/NeoSolarized')
     call dein#add('sirver/ultisnips')
-    call dein#add('preservim/tagbar')
     call dein#add('ludovicchabant/vim-gutentags')
+    call dein#add('preservim/tagbar')
     call dein#add('dense-analysis/ale')
-    call dein#add('sheerun/vim-polyglot')
-    call dein#add('nvim-treesitter/nvim-treesitter')
+    call dein#add('numToStr/Comment.nvim')
     call dein#add('tpope/vim-repeat')
     call dein#add('ggandor/leap.nvim', { 'depends': 'vim-repeat' })
-    call dein#add('numToStr/Comment.nvim')
     call dein#end()
     call dein#save_state()
 endif
@@ -37,7 +39,7 @@ set background=dark
 colorscheme NeoSolarized
 endif " if not vscode
 " generic
-syntax on
+syntax off
 filetype plugin indent on
 set encoding=utf-8
 set fileencodings=ucs-bom,utf-8,latin1,cp1252,default

@@ -19,6 +19,7 @@
         enableNixpkgsReleaseCheck = false;
 
         packages = [
+            pkgs.librewolf
             pkgs.go-task
             pkgs.ripes
             pkgs.firefox
@@ -78,9 +79,7 @@
             pkgs.exa
             pkgs.redshift
             pkgs.keepassxc
-            pkgs.librewolf
             pkgs.ardour
-            pkgs.neovim
             pkgs.obsidian
             pkgs.zotero
         ];
@@ -138,6 +137,15 @@
         package = pkgs.vscodium;
         extensions = with pkgs.vscode-extensions; [
             asvetliakov.vscode-neovim
+        ];
+    };
+
+    programs.neovim = {
+        enable = true;
+        plugins = [
+            pkgs.vimPlugins.nvim-treesitter.withAllGrammars
+            pkgs.vimPlugins.plenary-nvim
+            pkgs.vimPlugins.telescope-nvim
         ];
     };
 
