@@ -6,6 +6,9 @@ sudo apt remove -y \
     firefox-esr \
     firefox
 sudo apt install -y \
+    cups \
+    exfat-fuse \
+    exfat-utils \
     lilv-utils \
     gnupg2 \
     chromium \
