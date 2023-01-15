@@ -16,10 +16,6 @@ if &runtimepath !~# '/dein.vim'
 endif
 if dein#load_state(s:dein_dir)
     call dein#begin(s:dein_dir)
-    " call dein#add('sheerun/vim-polyglot')
-    " call dein#add('nvim-treesitter/nvim-treesitter')
-    " call dein#add('nvim-lua/plenary.nvim')
-    " call dein#add('nvim-telescope/telescope.nvim', { 'rev': '0.1.x' })
     call dein#add('overcache/NeoSolarized')
     call dein#add('sirver/ultisnips')
     call dein#add('ludovicchabant/vim-gutentags')
@@ -167,6 +163,15 @@ lua << EOF
   end
 EOF
 if !exists('g:vscode')
+" tree-sitter
+lua << EOF
+  require'nvim-treesitter.configs'.setup {
+    highlight = {
+      enable = true,
+      additional_vim_regex_highlighting = false,
+    },
+  }
+EOF
 " ultisnips
 let g:UltiSnipsExpandTrigger = '<tab>'
 let g:UltiSnipsJumpForwardTrigger = '<tab>'
@@ -193,57 +198,57 @@ let g:gutentags_generate_on_missing = 1
 let g:gutentags_generate_on_write = 1
 let g:gutentags_generate_on_empty_buffer = 0
 let g:gutentags_ctags_extra_args = [
-      \ '--tag-relative=yes',
-      \ '--fields=+ailmnS',
-      \ ]
+    \ '--tag-relative=yes',
+    \ '--fields=+ailmnS',
+    \ ]
 let g:gutentags_ctags_exclude = [
-      \ '*.git', '*.svg', '*.hg',
-      \ '*/tests/*',
-      \ 'build',
-      \ 'dist',
-      \ '*/venv/*', '*/.venv/*',
-      \ '*sites/*/files/*',
-      \ 'bin',
-      \ 'node_modules',
-      \ 'bower_components',
-      \ 'cache',
-      \ 'compiled',
-      \ 'docs',
-      \ 'example',
-      \ 'bundle',
-      \ 'vendor',
-      \ '*.md',
-      \ '*-lock.json',
-      \ '*.lock',
-      \ '*bundle*.js',
-      \ '*build*.js',
-      \ '.*rc*',
-      \ '*.json',
-      \ '*.min.*',
-      \ '*.map',
-      \ '*.bak',
-      \ '*.zip',
-      \ '*.pyc',
-      \ '*.class',
-      \ '*.sln',
-      \ '*.Master',
-      \ '*.csproj',
-      \ '*.tmp',
-      \ '*.csproj.user',
-      \ '*.cache',
-      \ '*.pdb',
-      \ 'tags*',
-      \ 'cscope.*',
-      \ '*.css',
-      \ '*.less',
-      \ '*.scss',
-      \ '*.exe', '*.dll',
-      \ '*.mp3', '*.ogg', '*.flac',
-      \ '*.swp', '*.swo',
-      \ '*.bmp', '*.gif', '*.ico', '*.jpg', '*.png',
-      \ '*.rar', '*.zip', '*.tar', '*.tar.gz', '*.tar.xz', '*.tar.bz2',
-      \ '*.pdf', '*.doc', '*.docx', '*.ppt', '*.pptx',
-      \ ]
+    \ '*.git', '*.svg', '*.hg',
+    \ '*/tests/*',
+    \ 'build',
+    \ 'dist',
+    \ '*/venv/*', '*/.venv/*',
+    \ '*sites/*/files/*',
+    \ 'bin',
+    \ 'node_modules',
+    \ 'bower_components',
+    \ 'cache',
+    \ 'compiled',
+    \ 'docs',
+    \ 'example',
+    \ 'bundle',
+    \ 'vendor',
+    \ '*.md',
+    \ '*-lock.json',
+    \ '*.lock',
+    \ '*bundle*.js',
+    \ '*build*.js',
+    \ '.*rc*',
+    \ '*.json',
+    \ '*.min.*',
+    \ '*.map',
+    \ '*.bak',
+    \ '*.zip',
+    \ '*.pyc',
+    \ '*.class',
+    \ '*.sln',
+    \ '*.Master',
+    \ '*.csproj',
+    \ '*.tmp',
+    \ '*.csproj.user',
+    \ '*.cache',
+    \ '*.pdb',
+    \ 'tags*',
+    \ 'cscope.*',
+    \ '*.css',
+    \ '*.less',
+    \ '*.scss',
+    \ '*.exe', '*.dll',
+    \ '*.mp3', '*.ogg', '*.flac',
+    \ '*.swp', '*.swo',
+    \ '*.bmp', '*.gif', '*.ico', '*.jpg', '*.png',
+    \ '*.rar', '*.zip', '*.tar', '*.tar.gz', '*.tar.xz', '*.tar.bz2',
+    \ '*.pdf', '*.doc', '*.docx', '*.ppt', '*.pptx',
+    \ ]
 " ale
 nmap <F6> :ALEFix<CR>
 let g:ale_linters = {

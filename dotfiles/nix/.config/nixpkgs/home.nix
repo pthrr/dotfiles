@@ -19,6 +19,7 @@
         enableNixpkgsReleaseCheck = false;
 
         packages = [
+            pkgs.thunderbird
             pkgs.librewolf
             pkgs.go-task
             pkgs.ripes
@@ -75,6 +76,7 @@
             pkgs.zathura
             pkgs.ipe
             pkgs.ripgrep
+            pkgs.fd
             pkgs.fzf
             pkgs.exa
             pkgs.redshift
