@@ -17,6 +17,7 @@ endif
 if dein#load_state(s:dein_dir)
     call dein#begin(s:dein_dir)
     call dein#add('overcache/NeoSolarized')
+    "call dein#add('nvim-treesitter/nvim-treesitter')
     call dein#add('sirver/ultisnips')
     call dein#add('ludovicchabant/vim-gutentags')
     call dein#add('preservim/tagbar')
