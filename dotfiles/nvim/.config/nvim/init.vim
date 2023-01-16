@@ -1,5 +1,5 @@
 if !exists('g:vscode')
-let $CACHE = expand('~/.cache')
+let $CACHE = expand($XDG_CACHE_HOME)
 if !isdirectory($CACHE)
     call mkdir($CACHE, 'p')
 endif
@@ -43,7 +43,6 @@ set fileencodings=ucs-bom,utf-8,latin1,cp1252,default
 set nobomb
 set nobackup
 set noswapfile
-set nowritebackup
 set noshowmode
 set novisualbell
 set noerrorbells
@@ -83,7 +82,6 @@ set wildignore+=*.eot,*.otf,*.ttf,*.woff
 set wildignore+=*.doc,*.pdf,*.cbr,*.cbz
 set wildignore+=*.zip,*.tar.gz,*.tar.bz2,*.rar,*.tar.xz,*.kgb
 set wildignore+=*.swp,.lock,.DS_Store,._*
-set laststatus=2
 set statusline=
 set statusline+=%-4.(%n%)
 set statusline+=%f\ %h%m%r
@@ -189,7 +187,7 @@ let g:tagbar_width = max([80, winwidth(0) / 4])
 map oo <C-]>
 map OO <C-T>
 map <C-O> g]
-set tags=$XDG_DATA_HOME.'/nvim/cache/tags'
+set tags=$XDG_CACHE_HOME.'/tags'
 let g:gutentags_modules = ['ctags']
 let g:gutentags_add_default_project_roots = 0
 let g:gutentags_project_root = ['requirements.txt', '.git', 'README.md']
