@@ -94,15 +94,10 @@ set tabstop=4
 set softtabstop=4
 set shiftwidth=4
 set expandtab
-set foldmethod=indent
+set foldmethod=expr
+set foldexpr=nvim_treesitter#foldexpr()
 set foldnestmax=2
 set foldlevelstart=10
-" no rel nums on non focused buffer
-augroup numbertoggle
-  autocmd!
-  autocmd BufEnter,FocusGained,InsertLeave * set relativenumber
-  autocmd BufLeave,FocusLost,InsertEnter   * set norelativenumber
-augroup END
 " automatically save view, load with :loadview
 autocmd BufWinLeave *.* mkview
 " highlight cursorline
@@ -110,6 +105,12 @@ autocmd BufEnter * setlocal cursorline
 autocmd BufLeave * setlocal nocursorline
 autocmd InsertEnter * highlight cursorline guibg=none guifg=none gui=underline ctermbg=none ctermfg=none cterm=underline
 autocmd InsertLeave * highlight cursorline guibg=#073642 guifg=none gui=none ctermbg=none ctermfg=none cterm=none
+" no rel nums on non focused buffer
+augroup numbertoggle
+  autocmd!
+  autocmd BufEnter,FocusGained,InsertLeave * set relativenumber
+  autocmd BufLeave,FocusLost,InsertEnter   * set norelativenumber
+augroup END
 " show matching brackets
 set showmatch
 set matchtime=0
@@ -145,7 +146,6 @@ lua << EOF
     end
     return false
   end
-
   if is_wsl() then
     vim.g.clipboard = {
       name = "wsl-clipboard",
@@ -191,7 +191,7 @@ set tags=$XDG_CACHE_HOME.'/tags'
 let g:gutentags_modules = ['ctags']
 let g:gutentags_add_default_project_roots = 0
 let g:gutentags_project_root = ['requirements.txt', '.git', 'README.md']
-let g:gutentags_cache_dir=$XDG_DATA_HOME.'/nvim/cache/tags'
+let g:gutentags_cache_dir=$XDG_CACHE_HOME.'/tags'
 let g:gutentags_generate_on_new = 1
 let g:gutentags_generate_on_missing = 1
 let g:gutentags_generate_on_write = 1
