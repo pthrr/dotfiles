@@ -19,7 +19,6 @@
         enableNixpkgsReleaseCheck = false;
 
         packages = [
-            pkgs.thunderbird
             pkgs.librewolf
             pkgs.go-task
             pkgs.ripes
