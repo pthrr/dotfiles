@@ -6,7 +6,6 @@ sudo apt remove -y \
     firefox-esr \
     firefox
 sudo apt install -y \
-    evolution \
     cups \
     exfat-fuse \
     exfat-utils \
