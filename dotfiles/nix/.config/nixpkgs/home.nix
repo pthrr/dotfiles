@@ -19,6 +19,7 @@
         enableNixpkgsReleaseCheck = false;
 
         packages = [
+            pkgs.shfmt
             pkgs.thunderbird
             pkgs.librewolf
             pkgs.go-task
