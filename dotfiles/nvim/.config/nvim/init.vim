@@ -264,6 +264,7 @@ let g:ale_linters = {
     \ 'nix': ['statix'],
     \ 'json': ['jq'],
     \ 'sh': ['shell'],
+    \ 'markdown': [],
     \}
 let g:ale_fixers = {
     \ 'python': ['black', 'isort'],
@@ -273,6 +274,7 @@ let g:ale_fixers = {
     \ 'rust': ['rustfmt'],
     \ 'json': ['fixjson'],
     \ 'sh': ['shfmt'],
+    \ 'markdown': [],
     \ '*': ['remove_trailing_lines', 'trim_whitespace'],
     \}
 let g:ale_python_isort_options = '--profile black --atomic'
@@ -290,6 +292,7 @@ let g:ale_lint_on_insert_leave = 0
 let g:ale_lint_on_text_changed = 0
 let g:ale_lint_on_save = 1
 let g:ale_sign_column_always = 1
+let g:ale_disable_lsp = 1
 " leap
 lua << EOF
   require('leap').set_default_keymaps()
