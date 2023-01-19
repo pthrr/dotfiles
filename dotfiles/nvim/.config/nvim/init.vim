@@ -1,3 +1,15 @@
+lua << EOF
+  local function is_wsl()
+    local version_file = io.open("/proc/version", "rb")
+    if version_file ~= nil and string.find(version_file:read("*a"), "microsoft") then
+      version_file:close()
+      vim.g.wsl = true
+      return true
+    end
+    return false
+  end
+  is_wsl()
+EOF
 if !exists('g:vscode')
 let $CACHE = expand($XDG_CACHE_HOME)
 if !isdirectory($CACHE)
@@ -16,8 +28,13 @@ if &runtimepath !~# '/dein.vim'
 endif
 if dein#load_state(s:dein_dir)
     call dein#begin(s:dein_dir)
+    if exists('g:wsl')
+        call dein#add('nvim-treesitter/nvim-treesitter')
+        call dein#add('neoclide/coc.nvim', { 'merged': 0, 'rev': 'release' })
+        ":call dein#update()
+        ":CocInstall coc-pyright
+    endif
     call dein#add('overcache/NeoSolarized')
-    "call dein#add('nvim-treesitter/nvim-treesitter')
     call dein#add('sirver/ultisnips')
     call dein#add('ludovicchabant/vim-gutentags')
     call dein#add('preservim/tagbar')
@@ -137,30 +154,22 @@ nnoremap <leader>d "_d
 vnoremap <leader>p "_dP
 " configure clipboard if inside WSL
 " https://github.com/memoryInject/wsl-clipboard
+if exists('g:wsl')
 lua << EOF
-  local function is_wsl()
-    local version_file = io.open("/proc/version", "rb")
-    if version_file ~= nil and string.find(version_file:read("*a"), "microsoft") then
-      version_file:close()
-      return true
-    end
-    return false
-  end
-  if is_wsl() then
-    vim.g.clipboard = {
-      name = "wsl-clipboard",
-      copy = {
-        ["+"] = "wcopy",
-        ["*"] = "wcopy"
-      },
-      paste = {
-        ["+"] = "wpaste",
-        ["*"] = "wpaste"
-      },
-      cache_enabled = true
-    }
-  end
+  vim.g.clipboard = {
+    name = "wsl-clipboard",
+    copy = {
+      ["+"] = "wcopy",
+      ["*"] = "wcopy"
+    },
+    paste = {
+      ["+"] = "wpaste",
+      ["*"] = "wpaste"
+    },
+    cache_enabled = true
+  }
 EOF
+endif
 if !exists('g:vscode')
 " tree-sitter
 lua << EOF

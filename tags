@@ -1,0 +1,147 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_OUTPUT_EXCMD	mixed	/number, pattern, mixed, or combineV2/
+!_TAG_OUTPUT_FILESEP	slash	/slash or backslash/
+!_TAG_OUTPUT_MODE	u-ctags	/u-ctags or e-ctags/
+!_TAG_PATTERN_LENGTH_LIMIT	96	/0 for no limit/
+!_TAG_PROC_CWD	/home/ps/.dotfiles/	//
+!_TAG_PROGRAM_AUTHOR	Universal Ctags Team	//
+!_TAG_PROGRAM_NAME	Universal Ctags	/Derived from Exuberant Ctags/
+!_TAG_PROGRAM_URL	https://ctags.io/	/official site/
+!_TAG_PROGRAM_VERSION	5.9.0	/p5.9.20210425.0/
+$CACHE	dotfiles/nvim/.config/nvim/init.vim	/^let $CACHE = expand($XDG_CACHE_HOME)$/;"	v
+<C-J>	dotfiles/nvim/.config/nvim/init.vim	/^map <C-J> :bnext<CR>$/;"	m
+<C-K>	dotfiles/nvim/.config/nvim/init.vim	/^map <C-K> :bprev<CR>$/;"	m
+<C-O>	dotfiles/nvim/.config/nvim/init.vim	/^map <C-O> g]$/;"	m
+<F6>	dotfiles/nvim/.config/nvim/init.vim	/^nmap <F6> :ALEFix<CR>$/;"	m
+<F8>	dotfiles/nvim/.config/nvim/init.vim	/^nmap <F8> :TagbarToggle<CR>$/;"	m
+<leader>d	dotfiles/nvim/.config/nvim/init.vim	/^nnoremap <leader>d "_d$/;"	m
+<leader>d	dotfiles/nvim/.config/nvim/init.vim	/^vnoremap <leader>d "_d$/;"	m
+<leader>p	dotfiles/nvim/.config/nvim/init.vim	/^nnoremap <leader>p "0p$/;"	m
+<leader>p	dotfiles/nvim/.config/nvim/init.vim	/^vnoremap <leader>p "_dP$/;"	m
+<leader>p	dotfiles/nvim/.config/nvim/init.vim	/^xnoremap <leader>p "0p$/;"	m
+<space>	dotfiles/nvim/.config/nvim/init.vim	/^nnoremap <space> za$/;"	m
+<space>	dotfiles/nvim/.config/nvim/init.vim	/^vnoremap <space> zf$/;"	m
+EOF	dotfiles/misc/bin/pa	/^    age -R "$recipients_file" -o "$name.age" <<-EOF &&$/;"	h
+EOF	dotfiles/misc/bin/pbcopy	/^        cat >~\/.pbproxy <<EOF$/;"	h
+EOF	dotfiles/misc/bin/pbcopy	/^    cat <<EOF$/;"	h
+EOF	dotfiles/misc/bin/pbpaste	/^        cat >~\/.pbproxy <<EOF$/;"	h
+EOF	dotfiles/misc/bin/pbpaste	/^    cat <<EOF$/;"	h
+EOF	dotfiles/misc/bin/pbproxy	/^        cat >~\/.pbproxy <<EOF$/;"	h
+EOF	dotfiles/misc/bin/pbproxy	/^    cat <<EOF$/;"	h
+Lines	dotfiles/mc/.config/mc/solarized.ini	/^[Lines]$/;"	s
+OO	dotfiles/nvim/.config/nvim/init.vim	/^map OO <C-T>$/;"	m
+__fzf_cd__	dotfiles/bash/key-bindings.bash	/^__fzf_cd__() {$/;"	f
+__fzf_history__	dotfiles/bash/key-bindings.bash	/^__fzf_history__() {$/;"	f
+__fzf_select__	dotfiles/bash/key-bindings.bash	/^__fzf_select__() {$/;"	f
+__fzfcmd	dotfiles/bash/key-bindings.bash	/^__fzfcmd() {$/;"	f
+_z	dotfiles/bash/z.sh	/^_z() {$/;"	f
+_z_dirs	dotfiles/bash/z.sh	/^    _z_dirs () {$/;"	f
+_z_precmd	dotfiles/bash/z.sh	/^            _z_precmd() {$/;"	f
+_z_zsh_tab_completion	dotfiles/bash/z.sh	/^    _z_zsh_tab_completion() {$/;"	f
+abspath	dotfiles/misc/bin/pbcopy	/^abspath() {$/;"	f
+abspath	dotfiles/misc/bin/pbpaste	/^abspath() {$/;"	f
+abspath	dotfiles/misc/bin/pbproxy	/^abspath() {$/;"	f
+autoplay	dotfiles/spotify/.config/spotifyd/spotifyd.conf	/^autoplay = false$/;"	k	section:global
+backend	dotfiles/spotify/.config/spotifyd/spotifyd.conf	/^backend = "pulseaudio"$/;"	k	section:global
+bitrate	dotfiles/spotify/.config/spotifyd/spotifyd.conf	/^bitrate = 160$/;"	k	section:global
+buttonbar	dotfiles/mc/.config/mc/solarized.ini	/^[buttonbar]$/;"	s
+common	dotfiles/bash/z.sh	/^            function common(matches) {$/;"	f
+core	dotfiles/mc/.config/mc/solarized.ini	/^[core]$/;"	s
+dep	dotfiles/misc/bin/pa	/^dep() {$/;"	f
+device_name	dotfiles/spotify/.config/spotifyd/spotifyd.conf	/^device_name = "X250-daemon"$/;"	k	section:global
+device_type	dotfiles/spotify/.config/spotifyd/spotifyd.conf	/^device_type = "computer"$/;"	k	section:global
+dialog	dotfiles/mc/.config/mc/solarized.ini	/^[dialog]$/;"	s
+die	dotfiles/misc/bin/pa	/^die() {$/;"	f
+dotfiles	README.md	/^# dotfiles$/;"	c
+editor	dotfiles/mc/.config/mc/solarized.ini	/^[editor]$/;"	s
+error	dotfiles/mc/.config/mc/solarized.ini	/^[error]$/;"	s
+filehighlight	dotfiles/mc/.config/mc/solarized.ini	/^[filehighlight]$/;"	s
+find_parent	dotfiles/i3/.config/i3/scripts/alternating_layouts.py	/^def find_parent(i3, window_id):$/;"	f
+finder	dotfiles/i3/.config/i3/scripts/alternating_layouts.py	/^    def finder(connection, parent):$/;"	f	function:find_parent	file:
+frecent	dotfiles/bash/z.sh	/^            function frecent(rank, time) {$/;"	f
+fzf-file-widget	dotfiles/bash/key-bindings.bash	/^fzf-file-widget() {$/;"	f
+g:UltiSnipsExpandTrigger	dotfiles/nvim/.config/nvim/init.vim	/^let g:UltiSnipsExpandTrigger = '<tab>'$/;"	v
+g:UltiSnipsJumpBackwardTrigger	dotfiles/nvim/.config/nvim/init.vim	/^let g:UltiSnipsJumpBackwardTrigger = '<s-tab>'$/;"	v
+g:UltiSnipsJumpForwardTrigger	dotfiles/nvim/.config/nvim/init.vim	/^let g:UltiSnipsJumpForwardTrigger = '<tab>'$/;"	v
+g:UltiSnipsSnippetDirectories	dotfiles/nvim/.config/nvim/init.vim	/^let g:UltiSnipsSnippetDirectories = [$XDG_TEMPLATES_DIR.'\/snippets']$/;"	v
+g:ale_c_clangformat_style_option	dotfiles/nvim/.config/nvim/init.vim	/^let g:ale_c_clangformat_style_option = 'webkit'$/;"	v
+g:ale_cpp_clangformat_style_option	dotfiles/nvim/.config/nvim/init.vim	/^let g:ale_cpp_clangformat_style_option = 'webkit'$/;"	v
+g:ale_fix_on_save	dotfiles/nvim/.config/nvim/init.vim	/^let g:ale_fix_on_save = 0$/;"	v
+g:ale_fixers	dotfiles/nvim/.config/nvim/init.vim	/^let g:ale_fixers = {$/;"	v
+g:ale_lint_on_enter	dotfiles/nvim/.config/nvim/init.vim	/^let g:ale_lint_on_enter = 1$/;"	v
+g:ale_lint_on_filetype_changed	dotfiles/nvim/.config/nvim/init.vim	/^let g:ale_lint_on_filetype_changed = 0$/;"	v
+g:ale_lint_on_insert_leave	dotfiles/nvim/.config/nvim/init.vim	/^let g:ale_lint_on_insert_leave = 0$/;"	v
+g:ale_lint_on_save	dotfiles/nvim/.config/nvim/init.vim	/^let g:ale_lint_on_save = 1$/;"	v
+g:ale_lint_on_text_changed	dotfiles/nvim/.config/nvim/init.vim	/^let g:ale_lint_on_text_changed = 0$/;"	v
+g:ale_linters	dotfiles/nvim/.config/nvim/init.vim	/^let g:ale_linters = {$/;"	v
+g:ale_python_isort_options	dotfiles/nvim/.config/nvim/init.vim	/^let g:ale_python_isort_options = '--profile black --atomic'$/;"	v
+g:ale_rust_cargo_check_examples	dotfiles/nvim/.config/nvim/init.vim	/^let g:ale_rust_cargo_check_examples = 1$/;"	v
+g:ale_rust_cargo_check_tests	dotfiles/nvim/.config/nvim/init.vim	/^let g:ale_rust_cargo_check_tests = 1$/;"	v
+g:ale_rust_cargo_use_check	dotfiles/nvim/.config/nvim/init.vim	/^let g:ale_rust_cargo_use_check = 1$/;"	v
+g:ale_sh_shfmt_options	dotfiles/nvim/.config/nvim/init.vim	/^let g:ale_sh_shfmt_options = '-i 4 -ci'$/;"	v
+g:ale_sign_column_always	dotfiles/nvim/.config/nvim/init.vim	/^let g:ale_sign_column_always = 1$/;"	v
+g:ale_xml_xmllint_indentsize	dotfiles/nvim/.config/nvim/init.vim	/^let g:ale_xml_xmllint_indentsize = 4$/;"	v
+g:gutentags_add_default_project_roots	dotfiles/nvim/.config/nvim/init.vim	/^let g:gutentags_add_default_project_roots = 0$/;"	v
+g:gutentags_cache_dir	dotfiles/nvim/.config/nvim/init.vim	/^let g:gutentags_cache_dir=$XDG_CACHE_HOME.'\/ctags'$/;"	v
+g:gutentags_ctags_exclude	dotfiles/nvim/.config/nvim/init.vim	/^let g:gutentags_ctags_exclude = [$/;"	v
+g:gutentags_ctags_extra_args	dotfiles/nvim/.config/nvim/init.vim	/^let g:gutentags_ctags_extra_args = [$/;"	v
+g:gutentags_generate_on_empty_buffer	dotfiles/nvim/.config/nvim/init.vim	/^let g:gutentags_generate_on_empty_buffer = 0$/;"	v
+g:gutentags_generate_on_missing	dotfiles/nvim/.config/nvim/init.vim	/^let g:gutentags_generate_on_missing = 1$/;"	v
+g:gutentags_generate_on_new	dotfiles/nvim/.config/nvim/init.vim	/^let g:gutentags_generate_on_new = 1$/;"	v
+g:gutentags_generate_on_write	dotfiles/nvim/.config/nvim/init.vim	/^let g:gutentags_generate_on_write = 1$/;"	v
+g:gutentags_modules	dotfiles/nvim/.config/nvim/init.vim	/^let g:gutentags_modules = ['ctags']$/;"	v
+g:gutentags_project_root	dotfiles/nvim/.config/nvim/init.vim	/^let g:gutentags_project_root = ['requirements.txt', '.git', 'README.md']$/;"	v
+g:tagbar_compact	dotfiles/nvim/.config/nvim/init.vim	/^let g:tagbar_compact = 1$/;"	v
+g:tagbar_foldlevel	dotfiles/nvim/.config/nvim/init.vim	/^let g:tagbar_foldlevel = 1$/;"	v
+g:tagbar_show_linenumbers	dotfiles/nvim/.config/nvim/init.vim	/^let g:tagbar_show_linenumbers = 1$/;"	v
+g:tagbar_sort	dotfiles/nvim/.config/nvim/init.vim	/^let g:tagbar_sort = 1$/;"	v
+g:tagbar_width	dotfiles/nvim/.config/nvim/init.vim	/^let g:tagbar_width = max([80, winwidth(0) \/ 4])$/;"	v
+glob	dotfiles/misc/bin/pa	/^glob() {$/;"	f
+global	dotfiles/spotify/.config/spotifyd/spotifyd.conf	/^[global]$/;"	s
+help	dotfiles/mc/.config/mc/solarized.ini	/^[help]$/;"	s
+initial_volume	dotfiles/spotify/.config/spotifyd/spotifyd.conf	/^initial_volume = "100"$/;"	k	section:global
+jk	dotfiles/nvim/.config/nvim/init.vim	/^inoremap jk <ESC>$/;"	m
+main	dotfiles/i3/.config/i3/scripts/alternating_layouts.py	/^def main():$/;"	f
+main	dotfiles/misc/bin/pa	/^main() {$/;"	f
+main	dotfiles/misc/bin/pbcopy	/^main() {$/;"	f
+main	dotfiles/misc/bin/pbpaste	/^main() {$/;"	f
+main	dotfiles/misc/bin/pbproxy	/^main() {$/;"	f
+mapleader	dotfiles/nvim/.config/nvim/init.vim	/^let mapleader = "'"$/;"	v
+maplocalleader	dotfiles/nvim/.config/nvim/init.vim	/^let maplocalleader = "\\\\"$/;"	v
+menu	dotfiles/mc/.config/mc/solarized.ini	/^[menu]$/;"	s
+mixer	dotfiles/spotify/.config/spotifyd/spotifyd.conf	/^mixer = "PCM"$/;"	k	section:global
+no_audio_cache	dotfiles/spotify/.config/spotifyd/spotifyd.conf	/^no_audio_cache = true$/;"	k	section:global
+normalisation_pregain	dotfiles/spotify/.config/spotifyd/spotifyd.conf	/^normalisation_pregain = -10$/;"	k	section:global
+numbertoggle	dotfiles/nvim/.config/nvim/init.vim	/^augroup numbertoggle$/;"	a
+oo	dotfiles/nvim/.config/nvim/init.vim	/^map oo <C-]>$/;"	m
+output	dotfiles/bash/z.sh	/^            function output(matches, best_match, common) {$/;"	f
+password_cmd	dotfiles/spotify/.config/spotifyd/spotifyd.conf	/^password_cmd = "cat ~\/.spotifypw"$/;"	k	section:global
+popup	dotfiles/mc/.config/mc/solarized.ini	/^[popup]$/;"	s
+pw_add	dotfiles/misc/bin/pa	/^pw_add() {$/;"	f
+pw_del	dotfiles/misc/bin/pa	/^pw_del() {$/;"	f
+pw_edit	dotfiles/misc/bin/pa	/^pw_edit() {$/;"	f
+pw_list	dotfiles/misc/bin/pa	/^pw_list() {$/;"	f
+pw_show	dotfiles/misc/bin/pa	/^pw_show() {$/;"	f
+quiet	dotfiles/misc/bin/pbcopy	/^quiet() {$/;"	f
+quiet	dotfiles/misc/bin/pbpaste	/^quiet() {$/;"	f
+quiet	dotfiles/misc/bin/pbproxy	/^quiet() {$/;"	f
+s:dein_dir	dotfiles/nvim/.config/nvim/init.vim	/^        let s:dein_dir = $CACHE . '\/dein\/repos\/github.com\/Shougo\/dein.vim'$/;"	v
+s:dein_dir	dotfiles/nvim/.config/nvim/init.vim	/^    let s:dein_dir = fnamemodify('dein.vim', ':p')$/;"	v
+set_layout	dotfiles/i3/.config/i3/scripts/alternating_layouts.py	/^def set_layout(i3, e):$/;"	f
+show-usage	dotfiles/misc/bin/pbcopy	/^show-usage() {$/;"	f
+show-usage	dotfiles/misc/bin/pbpaste	/^show-usage() {$/;"	f
+show-usage	dotfiles/misc/bin/pbproxy	/^show-usage() {$/;"	f
+skin	dotfiles/mc/.config/mc/solarized.ini	/^[skin]$/;"	s
+sread	dotfiles/misc/bin/pa	/^sread() {$/;"	f
+statusbar	dotfiles/mc/.config/mc/solarized.ini	/^[statusbar]$/;"	s
+store	dotfiles/nix/.config/nix/nix.conf	/^auto-optimise-store = true$/;"	k
+usage	dotfiles/misc/bin/pa	/^usage() {$/;"	f
+username_cmd	dotfiles/spotify/.config/spotifyd/spotifyd.conf	/^username_cmd = "cat ~\/.spotifyusr"$/;"	k	section:global
+viewer	dotfiles/mc/.config/mc/solarized.ini	/^[viewer]$/;"	s
+volume_controller	dotfiles/spotify/.config/spotifyd/spotifyd.conf	/^volume_controller = "softvol"$/;"	k	section:global
+volume_normalisation	dotfiles/spotify/.config/spotifyd/spotifyd.conf	/^volume_normalisation = false$/;"	k	section:global
+widget-common	dotfiles/mc/.config/mc/solarized.ini	/^[widget-common]$/;"	s
+widget-panel	dotfiles/mc/.config/mc/solarized.ini	/^[widget-panel]$/;"	s
+widget-scollbar	dotfiles/mc/.config/mc/solarized.ini	/^[widget-scollbar]$/;"	s
+yn	dotfiles/misc/bin/pa	/^yn() {$/;"	f

@@ -149,6 +149,8 @@
             pkgs.vimPlugins.nvim-treesitter.withAllGrammars
             pkgs.vimPlugins.plenary-nvim
             pkgs.vimPlugins.telescope-nvim
+            pkgs.vimPlugins.coc-nvim
+            pkgs.vimPlugins.coc-pyright
         ];
     };
 

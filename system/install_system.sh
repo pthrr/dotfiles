@@ -74,5 +74,7 @@ python3 -m pip install --upgrade --force-reinstall \
     black \
     pylint \
     pyperclip
-npm install \
+sudo npm install -g npm n
+sudo n stable
+sudo npm install \
     fixjson
