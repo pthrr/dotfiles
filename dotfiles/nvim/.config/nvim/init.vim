@@ -31,8 +31,7 @@ if dein#load_state(s:dein_dir)
     if exists('g:wsl')
         call dein#add('nvim-treesitter/nvim-treesitter')
         call dein#add('neoclide/coc.nvim', { 'merged': 0, 'rev': 'release' })
-        ":call dein#update()
-        ":CocInstall coc-pyright
+        let g:coc_global_extensions = ['coc-pyright']
     endif
     call dein#add('overcache/NeoSolarized')
     call dein#add('sirver/ultisnips')
@@ -59,6 +58,7 @@ set encoding=utf-8
 set fileencodings=ucs-bom,utf-8,latin1,cp1252,default
 set nobomb
 set nobackup
+set nowritebackup
 set noswapfile
 set noshowmode
 set novisualbell
