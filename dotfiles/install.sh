@@ -4,8 +4,8 @@ cd "$(dirname "$0")"
 
 # Bug: Stow cant properly use --dotfiles option on folders right now
 
-if [ -z "${1+n}" ] ; then
-    for d in */ ; do
+if [ -z "${1+n}" ]; then
+    for d in */; do
         [ -L "${d%/}" ] && continue
         echo "Stowing $d .."
         stow --no-folding --target="$HOME" "${@:2}" "$d"

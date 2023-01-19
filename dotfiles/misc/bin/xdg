@@ -2,19 +2,19 @@
 set -euo pipefail
 
 case "${@: -1}" in
-    *://*|*.html)
+    *://* | *.html)
         exec $BROWSER "$@"
         ;;
-    *.pdf|*.djvu)
+    *.pdf | *.djvu)
         exec $PDFVIEWER "$@"
         ;;
-    *.jpg|*.jpeg|*.png)
+    *.jpg | *.jpeg | *.png)
         exec $IMAGEVIEWER "$@"
         ;;
-    *.mp3|*.mp4)
+    *.mp3 | *.mp4)
         exec $MEDIAPLAYER "$@"
         ;;
-    /*|~/*)
+    /* | ~/*)
         exec $FILEMANAGER "$@"
         ;;
     *)

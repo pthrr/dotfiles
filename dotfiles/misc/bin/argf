@@ -6,8 +6,7 @@ CMD=$2
 
 mapfile -t <$FILE
 
-for f in "${MAPFILE[@]}"
-do
+for f in "${MAPFILE[@]}"; do
     echo "Executing ${f} .."
     $CMD $f
 done

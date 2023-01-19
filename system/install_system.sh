@@ -69,8 +69,10 @@ sudo apt autoremove -y
 python3 -m pip install --upgrade pip
 python3 -m pip install --upgrade --force-reinstall \
     i3ipc \
-    mypy \
+    pyright \
     isort \
     black \
     pylint \
     pyperclip
+npm install \
+    fixjson
