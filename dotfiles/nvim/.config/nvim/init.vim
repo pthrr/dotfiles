@@ -76,6 +76,7 @@ set nowrap
 set hlsearch
 set incsearch
 set updatetime=30
+set ttimeoutlen=10
 set signcolumn=yes
 set autoread
 set lazyredraw
