@@ -32,7 +32,6 @@ if dein#load_state(s:dein_dir)
     call dein#add('sirver/ultisnips')
     call dein#add('ludovicchabant/vim-gutentags')
     call dein#add('preservim/tagbar')
-    call dein#add('dense-analysis/ale')
     call dein#add('numToStr/Comment.nvim')
     call dein#add('tpope/vim-repeat')
     call dein#add('ggandor/leap.nvim', { 'depends': 'vim-repeat' })
@@ -47,7 +46,11 @@ set background=dark
 colorscheme NeoSolarized
 endif " if not vscode
 " generic
+if !exists('g:vscode')
 syntax off
+else
+syntax on
+endif
 filetype plugin indent on
 set encoding=utf-8
 set fileencodings=ucs-bom,utf-8,latin1,cp1252,default
@@ -253,46 +256,11 @@ let g:gutentags_ctags_exclude = [
     \ '*.rar', '*.zip', '*.tar', '*.tar.gz', '*.tar.xz', '*.tar.bz2',
     \ '*.pdf', '*.doc', '*.docx', '*.ppt', '*.pptx',
     \ ]
-" ale
-nmap <F6> :ALEFix<CR>
-let g:ale_linters = {
-    \ 'python': ['pylint', 'pyright'],
-    \ 'cpp': ['clangtidy'],
-    \ 'c': ['clangtidy'],
-    \ 'xml': ['xmllint'],
-    \ 'rust': ['analyzer'],
-    \ 'nix': ['statix'],
-    \ 'json': ['jq'],
-    \ 'sh': ['shell'],
-    \ 'markdown': [],
-    \}
-let g:ale_fixers = {
-    \ 'python': ['black', 'isort'],
-    \ 'cpp': ['clang-format'],
-    \ 'c': ['clang-format'],
-    \ 'xml': ['xmllint'],
-    \ 'rust': ['rustfmt'],
-    \ 'json': ['fixjson'],
-    \ 'sh': ['shfmt'],
-    \ 'markdown': [],
-    \ '*': ['remove_trailing_lines', 'trim_whitespace'],
-    \}
-let g:ale_python_isort_options = '--profile black --atomic'
-let g:ale_cpp_clangformat_style_option = 'webkit'
-let g:ale_c_clangformat_style_option = 'webkit'
-let g:ale_xml_xmllint_indentsize = 4
-let g:ale_sh_shfmt_options = '-i 4 -ci'
-let g:ale_rust_cargo_use_check = 1
-let g:ale_rust_cargo_check_tests = 1
-let g:ale_rust_cargo_check_examples = 1
-let g:ale_fix_on_save = 0
-let g:ale_lint_on_enter = 1
-let g:ale_lint_on_filetype_changed = 0
-let g:ale_lint_on_insert_leave = 0
-let g:ale_lint_on_text_changed = 0
-let g:ale_lint_on_save = 1
-let g:ale_sign_column_always = 1
-let g:ale_disable_lsp = 1
+" coc
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
 " leap
 lua << EOF
   require('leap').set_default_keymaps()
