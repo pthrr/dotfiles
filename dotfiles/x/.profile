@@ -111,6 +111,14 @@ if [ ! -d  "$HOME/Dokumente/notebooks" ] ; then
     mkdir -p "$HOME/Dokumente/notebooks"
 fi
 
+if [ ! -d  "$HOME/Vorlagen/slides" ] ; then
+    mkdir -p "$HOME/Vorlagen/slides"
+fi
+
+if [ ! -d  "$HOME/Vorlagen/snippets" ] ; then
+    mkdir -p "$HOME/Vorlagen/snippets"
+fi
+
 if [ ! -d  "$HOME/mail/personal" ] ; then
     mkdir -p "$HOME/mail/personal"
 fi

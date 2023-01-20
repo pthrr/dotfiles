@@ -86,14 +86,14 @@ set updatetime=300
 set signcolumn=yes
 set autoread
 set lazyredraw
+set ttyfast
 set title
 set hidden
 set path+=**
-set wildmenu
 set wildmode=list:longest,full
 set wildignore+=.git,.hg,.svn
 set wildignore+=*.aux,*.out,*.toc
-set wildignore+=*.o,*.obj,*.exe,*.dll,*.manifest,*.rbc,*.class
+set wildignore+=*.o,*.obj,*.exe,*.dll,*.rbc,*.class
 set wildignore+=*.ai,*.bmp,*.gif,*.ico,*.jpg,*.jpeg,*.png,*.psd,*.webp
 set wildignore+=*.avi,*.divx,*.mp4,*.webm,*.mov,*.m2ts,*.mkv,*.vob,*.mpg,*.mpeg
 set wildignore+=*.mp3,*.oga,*.ogg,*.wav,*.flac
