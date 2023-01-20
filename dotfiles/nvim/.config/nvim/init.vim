@@ -68,7 +68,7 @@ set undoreload=10000
 set timeout
 set ttimeout
 set timeoutlen=300
-set ttimeoutlen=10
+set ttimeoutlen=50
 set scrolloff=1
 set sidescrolloff=5
 set list
@@ -125,11 +125,8 @@ autocmd BufLeave * setlocal nocursorline
 autocmd InsertEnter * highlight cursorline guibg=none guifg=none gui=underline ctermbg=none ctermfg=none cterm=underline
 autocmd InsertLeave * highlight cursorline guibg=#073642 guifg=none gui=none ctermbg=none ctermfg=none cterm=none
 " no rel nums on non focused buffer
-augroup numbertoggle
-  autocmd!
-  autocmd BufEnter,FocusGained,InsertLeave * set relativenumber
-  autocmd BufLeave,FocusLost,InsertEnter   * set norelativenumber
-augroup END
+autocmd BufEnter,FocusGained,InsertLeave * setlocal relativenumber
+autocmd BufLeave,FocusLost,InsertEnter * setlocal norelativenumber
 " show matching brackets
 set showmatch
 set matchtime=0
@@ -212,8 +209,6 @@ nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
-xmap <leader>f  <Plug>(coc-format-selected)
-nmap <leader>f  <Plug>(coc-format-selected)
 " leap
 lua << EOF
   require('leap').set_default_keymaps()
