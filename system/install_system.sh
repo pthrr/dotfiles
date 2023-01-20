@@ -4,7 +4,8 @@ set -euo pipefail
 sudo apt update -y
 sudo apt remove -y \
     firefox-esr \
-    firefox
+    firefox \
+    nodejs
 sudo apt install -y \
     cups \
     exfat-fuse \
