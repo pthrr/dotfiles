@@ -25,6 +25,8 @@ if dein#load_state(s:dein_dir)
     call dein#begin(s:dein_dir)
     if exists('g:wsl')
         call dein#add('nvim-treesitter/nvim-treesitter')
+        call dein#add('nvim-lua/plenary.nvim')
+        call dein#add('nvim-telescope/telescope.nvim')
         call dein#add('neoclide/coc.nvim', { 'merged': 0, 'rev': 'release' })
         let g:coc_global_extensions = ['coc-pyright']
     endif
@@ -137,7 +139,6 @@ highlight MatchParen guibg=none guifg=white gui=bold ctermbg=none ctermfg=white 
 let mapleader = "'"
 let maplocalleader = "\\"
 " map ESC
-nnoremap jk i
 inoremap jk <ESC>
 tnoremap jk <C-\><C-n>
 " move among buffers with CTRL
@@ -191,13 +192,9 @@ let g:UltiSnipsSnippetDirectories = [$XDG_TEMPLATES_DIR.'/snippets']
 nmap <F8> :TagbarToggle<CR>
 let g:tagbar_compact = 1
 let g:tagbar_sort = 1
-" let g:tagbar_foldlevel = 1
 let g:tagbar_show_linenumbers = 1
 let g:tagbar_width = max([80, winwidth(0) / 4])
 " gutentags
-" map oo <C-]>
-" map OO <C-T>
-" map <C-O> g]
 set tags=$XDG_CACHE_HOME.'/ctags'
 let g:gutentags_modules = ['ctags']
 let g:gutentags_add_default_project_roots = 0
