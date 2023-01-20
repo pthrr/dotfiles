@@ -64,7 +64,10 @@ set noerrorbells
 set undofile
 set undolevels=1000
 set undoreload=10000
-set complete=.,w,b,u,t
+set timeout
+set ttimeout
+set timeoutlen=500
+set ttimeoutlen=25
 set scrolloff=1
 set sidescrolloff=5
 set list
@@ -78,8 +81,7 @@ set relativenumber
 set nowrap
 set hlsearch
 set incsearch
-set updatetime=30
-set ttimeoutlen=10
+set updatetime=300
 set signcolumn=yes
 set autoread
 set lazyredraw
@@ -135,6 +137,7 @@ highlight MatchParen guibg=none guifg=white gui=bold ctermbg=none ctermfg=white 
 let mapleader = "'"
 let maplocalleader = "\\"
 " map ESC
+nnoremap jk i
 inoremap jk <ESC>
 tnoremap jk <C-\><C-n>
 " move among buffers with CTRL
@@ -188,13 +191,13 @@ let g:UltiSnipsSnippetDirectories = [$XDG_TEMPLATES_DIR.'/snippets']
 nmap <F8> :TagbarToggle<CR>
 let g:tagbar_compact = 1
 let g:tagbar_sort = 1
-let g:tagbar_foldlevel = 1
+" let g:tagbar_foldlevel = 1
 let g:tagbar_show_linenumbers = 1
 let g:tagbar_width = max([80, winwidth(0) / 4])
 " gutentags
-map oo <C-]>
-map OO <C-T>
-map <C-O> g]
+" map oo <C-]>
+" map OO <C-T>
+" map <C-O> g]
 set tags=$XDG_CACHE_HOME.'/ctags'
 let g:gutentags_modules = ['ctags']
 let g:gutentags_add_default_project_roots = 0
@@ -257,10 +260,15 @@ let g:gutentags_ctags_exclude = [
     \ '*.pdf', '*.doc', '*.docx', '*.ppt', '*.pptx',
     \ ]
 " coc
+nmap <F2> <Plug>(coc-rename)
+nmap <silent> [g <Plug>(coc-diagnostic-prev)
+nmap <silent> ]g <Plug>(coc-diagnostic-next)
 nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
+xmap <leader>f  <Plug>(coc-format-selected)
+nmap <leader>f  <Plug>(coc-format-selected)
 " leap
 lua << EOF
   require('leap').set_default_keymaps()
