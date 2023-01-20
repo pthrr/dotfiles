@@ -2,5 +2,6 @@
     "python.formatting.provider": "black",
     "pyright.testing.provider": "pytest",
     "python.linting.pylintEnabled": true,
-    "suggest.noselect": true
+    "suggest.noselect": true,
+    "pyright.organizeimports.provider": "isort"
 }

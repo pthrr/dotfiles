@@ -28,12 +28,11 @@ if dein#load_state(s:dein_dir)
         call dein#add('nvim-lua/plenary.nvim')
         call dein#add('nvim-telescope/telescope.nvim')
         call dein#add('neoclide/coc.nvim', { 'merged': 0, 'rev': 'release' })
-        let g:coc_global_extensions = ['coc-pyright']
+        let g:coc_global_extensions = ['coc-pyright', 'coc-rust-analyzer']
     endif
     call dein#add('overcache/NeoSolarized')
     call dein#add('sirver/ultisnips')
-    call dein#add('ludovicchabant/vim-gutentags')
-    call dein#add('preservim/tagbar')
+    call dein#add('liuchengxu/vista.vim')
     call dein#add('numToStr/Comment.nvim')
     call dein#add('tpope/vim-repeat')
     call dein#add('ggandor/leap.nvim', { 'depends': 'vim-repeat' })
@@ -68,8 +67,8 @@ set undolevels=1000
 set undoreload=10000
 set timeout
 set ttimeout
-set timeoutlen=500
-set ttimeoutlen=25
+set timeoutlen=300
+set ttimeoutlen=10
 set scrolloff=1
 set sidescrolloff=5
 set list
@@ -188,74 +187,23 @@ let g:UltiSnipsExpandTrigger = '<tab>'
 let g:UltiSnipsJumpForwardTrigger = '<tab>'
 let g:UltiSnipsJumpBackwardTrigger = '<s-tab>'
 let g:UltiSnipsSnippetDirectories = [$XDG_TEMPLATES_DIR.'/snippets']
-" tagbar
-nmap <F8> :TagbarToggle<CR>
-let g:tagbar_compact = 1
-let g:tagbar_sort = 1
-let g:tagbar_show_linenumbers = 1
-let g:tagbar_width = max([80, winwidth(0) / 4])
-" gutentags
-set tags=$XDG_CACHE_HOME.'/ctags'
-let g:gutentags_modules = ['ctags']
-let g:gutentags_add_default_project_roots = 0
-let g:gutentags_project_root = ['requirements.txt', '.git', 'README.md']
-let g:gutentags_cache_dir=$XDG_CACHE_HOME.'/ctags'
-let g:gutentags_generate_on_new = 1
-let g:gutentags_generate_on_missing = 1
-let g:gutentags_generate_on_write = 1
-let g:gutentags_generate_on_empty_buffer = 0
-let g:gutentags_ctags_extra_args = [
-    \ '--tag-relative=yes',
-    \ '--fields=+ailmnS',
-    \ ]
-let g:gutentags_ctags_exclude = [
-    \ '*.git', '*.svg', '*.hg',
-    \ '*/tests/*',
-    \ 'build',
-    \ 'dist',
-    \ '*/venv/*', '*/.venv/*',
-    \ '*sites/*/files/*',
-    \ 'bin',
-    \ 'node_modules',
-    \ 'bower_components',
-    \ 'cache',
-    \ 'compiled',
-    \ 'docs',
-    \ 'example',
-    \ 'bundle',
-    \ 'vendor',
-    \ '*.md',
-    \ '*-lock.json',
-    \ '*.lock',
-    \ '*bundle*.js',
-    \ '*build*.js',
-    \ '.*rc*',
-    \ '*.json',
-    \ '*.min.*',
-    \ '*.map',
-    \ '*.bak',
-    \ '*.zip',
-    \ '*.pyc',
-    \ '*.class',
-    \ '*.sln',
-    \ '*.Master',
-    \ '*.csproj',
-    \ '*.tmp',
-    \ '*.csproj.user',
-    \ '*.cache',
-    \ '*.pdb',
-    \ 'tags*',
-    \ 'cscope.*',
-    \ '*.css',
-    \ '*.less',
-    \ '*.scss',
-    \ '*.exe', '*.dll',
-    \ '*.mp3', '*.ogg', '*.flac',
-    \ '*.swp', '*.swo',
-    \ '*.bmp', '*.gif', '*.ico', '*.jpg', '*.png',
-    \ '*.rar', '*.zip', '*.tar', '*.tar.gz', '*.tar.xz', '*.tar.bz2',
-    \ '*.pdf', '*.doc', '*.docx', '*.ppt', '*.pptx',
-    \ ]
+" vista
+nmap <F8> :Vista!!<CR>
+let g:vista_default_executive = 'coc'
+let g:vista_sidebar_width = max([80, winwidth(0) / 4])
+let g:vista_echo_cursor = 0
+let g:vista_echo_cursor_startegy = 'scroll'
+let g:vista_stay_on_open = 0
+let g:vista_blink = [0, 0]
+let g:vista_top_level_blink = [0, 0]
+let g:vista_highlight_whole_line = 1
+let g:vista#renderer#enable_icon = 1
+let g:vista#renderer#icons = {
+    \ "function": "f",
+    \ "method": "m",
+    \ "variable": "v",
+    \ "class": "c",
+    \ }
 " coc
 nmap <F2> <Plug>(coc-rename)
 nmap <silent> [g <Plug>(coc-diagnostic-prev)
