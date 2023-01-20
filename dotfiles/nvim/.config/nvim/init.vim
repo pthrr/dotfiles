@@ -32,6 +32,7 @@ if dein#load_state(s:dein_dir)
     endif
     call dein#add('overcache/NeoSolarized')
     call dein#add('sirver/ultisnips')
+    call dein#add('folke/todo-comments.nvim')
     call dein#add('liuchengxu/vista.vim')
     call dein#add('numToStr/Comment.nvim')
     call dein#add('tpope/vim-repeat')
@@ -221,7 +222,6 @@ nnoremap <silent> K :call ShowDocumentation()<CR>
 command! -nargs=0 Format :call CocActionAsync('format')
 command! -nargs=? Fold :call     CocAction('fold', <f-args>)
 command! -nargs=0 OR   :call     CocActionAsync('runCommand', 'editor.action.organizeImport')
-nmap <F5> :Fold<CR>
 nmap <F6> :Format<CR>
 nmap <F7> :OR<CR>
 " Show all diagnostics
@@ -244,6 +244,63 @@ nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
 lua << EOF
   require('leap').set_default_keymaps()
 EOF
+" todo-comments
+nmap <F5> :TodoTelescope keywords=TODO,FIX<CR>
+lua << EOF
+  require("todo-comments").setup {
+    signs = false,
+    keywords = {
+      FIX = { icon = " ", color = "error", alt = { "FIXME", "BUG", "FIXIT", "ISSUE" }, },
+      TODO = { icon = " ", color = "info" },
+      HACK = { icon = " ", color = "warning" },
+      WARN = { icon = " ", color = "warning", alt = { "WARNING", "XXX" } },
+      PERF = { icon = " ", alt = { "OPTIM", "PERFORMANCE", "OPTIMIZE" } },
+      NOTE = { icon = " ", color = "hint", alt = { "INFO" } },
+      TEST = { icon = "⏲ ", color = "test", alt = { "TESTING", "PASSED", "FAILED" } },
+    },
+    gui_style = {
+      fg = "NONE",
+      bg = "BOLD",
+    },
+    merge_keywords = false,
+    highlight = {
+      multiline = true,
+      multiline_pattern = "^.",
+      multiline_context = 10,
+      before = "",
+      keyword = "wide",
+      after = "fg",
+      pattern = [[.*<(KEYWORDS)\s*:]],
+      comments_only = true,
+      max_line_len = 400,
+      exclude = {},
+    },
+    colors = {
+      error = { "DiagnosticError", "ErrorMsg", "#DC2626" },
+      warning = { "DiagnosticWarn", "WarningMsg", "#FBBF24" },
+      info = { "DiagnosticInfo", "#2563EB" },
+      hint = { "DiagnosticHint", "#10B981" },
+      default = { "Identifier", "#7C3AED" },
+      test = { "Identifier", "#FF00FF" }
+    },
+    search = {
+      command = "rg",
+      args = {
+        "--color=never",
+        "--no-heading",
+        "--with-filename",
+        "--line-number",
+        "--column",
+      },
+      pattern = [[\b(KEYWORDS):]],
+    },
+  }
+EOF
+" telescope
+nnoremap <leader>ff <cmd>Telescope find_files<cr>
+nnoremap <leader>fg <cmd>Telescope live_grep<cr>
+nnoremap <leader>fb <cmd>Telescope buffers<cr>
+nnoremap <leader>fh <cmd>Telescope help_tags<cr>
 " comment
 lua << EOF
   require("Comment").setup {
