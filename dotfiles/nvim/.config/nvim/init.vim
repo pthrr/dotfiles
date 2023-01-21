@@ -96,9 +96,9 @@ set wildignore+=.git,.hg,.svn
 set wildignore+=*.aux,*.out,*.toc
 set wildignore+=*.o,*.obj,*.exe,*.dll
 set wildignore+=*.ai,*.bmp,*.gif,*.ico,*.jpg,*.jpeg,*.png,*.psd,*.webp
-set wildignore+=*.avi,*.divx,*.mp4,*.webm,*.mov,*.m2ts,*.mkv,*.vob,*.mpg,*.mpeg
+set wildignore+=*.avi,*.divx,*.mp4,*.webm,*.mov,*.mkv,*.vob,*.mpg,*.mpeg
 set wildignore+=*.mp3,*.oga,*.ogg,*.wav,*.flac
-set wildignore+=*.eot,*.otf,*.ttf,*.woff
+set wildignore+=*.otf,*.ttf
 set wildignore+=*.doc,*.pdf
 set wildignore+=*.zip,*.tar.gz,*.tar.bz2,*.rar,*.tar.xz
 set wildignore+=*.swp,.lock,.DS_Store,._*
@@ -128,6 +128,13 @@ autocmd InsertLeave * highlight cursorline guibg=#073642 guifg=none gui=none cte
 " no rel nums on non focused buffer
 autocmd BufEnter,FocusGained,InsertLeave * setlocal relativenumber
 autocmd BufLeave,FocusLost,InsertEnter * setlocal norelativenumber
+" remove trailing white space at save
+lua << EOF
+vim.api.nvim_create_autocmd({ "BufWritePre" }, {
+  pattern = { "*" },
+  command = [[%s/\s\+$//e]],
+})
+EOF
 " show matching brackets
 set showmatch
 set matchtime=0
@@ -220,25 +227,17 @@ function! ShowDocumentation()
 endfunction
 nnoremap <silent> K :call ShowDocumentation()<CR>
 command! -nargs=0 Format :call CocActionAsync('format')
-command! -nargs=? Fold :call     CocAction('fold', <f-args>)
-command! -nargs=0 OR   :call     CocActionAsync('runCommand', 'editor.action.organizeImport')
+command! -nargs=? Fold :call CocAction('fold', <f-args>)
+command! -nargs=0 OR :call CocActionAsync('runCommand', 'editor.action.organizeImport')
 nmap <F6> :Format<CR>
 nmap <F7> :OR<CR>
-" Show all diagnostics
 nnoremap <silent><nowait> <space>a  :<C-u>CocList diagnostics<cr>
-" Manage extensions
 nnoremap <silent><nowait> <space>e  :<C-u>CocList extensions<cr>
-" Show commands
 nnoremap <silent><nowait> <space>c  :<C-u>CocList commands<cr>
-" Find symbol of current document
 nnoremap <silent><nowait> <space>o  :<C-u>CocList outline<cr>
-" Search workspace symbols
 nnoremap <silent><nowait> <space>s  :<C-u>CocList -I symbols<cr>
-" Do default action for next item
 nnoremap <silent><nowait> <space>j  :<C-u>CocNext<CR>
-" Do default action for previous item
 nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
-" Resume latest coc list
 nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
 " leap
 lua << EOF
@@ -247,6 +246,15 @@ EOF
 " todo-comments
 nmap <F5> :TodoTelescope keywords=TODO,FIX<CR>
 lua << EOF
+  vim.keymap.set("n", "]t", function()
+    require("todo-comments").jump_next()
+  end, { desc = "Next todo comment" })
+  vim.keymap.set("n", "[t", function()
+    require("todo-comments").jump_prev()
+  end, { desc = "Previous todo comment" })
+  -- vim.keymap.set("n", "]t", function()
+  --   require("todo-comments").jump_next({keywords = { "ERROR", "WARNING" }})
+  -- end, { desc = "Next error/warning todo comment" })
   require("todo-comments").setup {
     signs = false,
     keywords = {
