@@ -48,11 +48,7 @@ set background=dark
 colorscheme NeoSolarized
 endif " if not vscode
 " generic
-if !exists('g:vscode')
-syntax off
-else
 syntax on
-endif
 filetype plugin indent on
 set encoding=utf-8
 set fileencodings=ucs-bom,utf-8,latin1,cp1252,default
@@ -183,7 +179,7 @@ lua << EOF
   require'nvim-treesitter.configs'.setup {
     highlight = {
       enable = true,
-      additional_vim_regex_highlighting = false,
+      additional_vim_regex_highlighting = true,
     },
   }
 EOF
@@ -204,10 +200,10 @@ let g:vista_top_level_blink = [0, 0]
 let g:vista_highlight_whole_line = 1
 let g:vista#renderer#enable_icon = 1
 let g:vista#renderer#icons = {
-    \ "function": "f",
-    \ "method": "m",
-    \ "variable": "v",
-    \ "class": "c",
+    \ "function": "+",
+    \ "method": "+",
+    \ "variable": "-",
+    \ "class": "#",
     \ "constant": "",
     \ }
 " coc
