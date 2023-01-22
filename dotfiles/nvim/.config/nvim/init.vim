@@ -48,7 +48,7 @@ set background=dark
 colorscheme NeoSolarized
 endif " if not vscode
 " generic
-syntax on
+syntax off
 filetype plugin indent on
 set encoding=utf-8
 set fileencodings=ucs-bom,utf-8,latin1,cp1252,default
@@ -205,6 +205,7 @@ let g:vista#renderer#icons = {
     \ "variable": "-",
     \ "class": "#",
     \ "constant": "",
+    \ "struct": "#",
     \ }
 " coc
 nmap <leader>rn <Plug>(coc-rename)
