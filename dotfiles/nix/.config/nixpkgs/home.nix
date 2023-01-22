@@ -68,7 +68,6 @@
             pkgs.vlc
             pkgs.meld
             pkgs.neomutt
-            pkgs.universal-ctags
             pkgs.cmake
             pkgs.tectonic
             pkgs.ninja
