@@ -177,7 +177,31 @@ if !exists('g:vscode')
 " tree-sitter
 lua << EOF
   require'nvim-treesitter.configs'.setup {
-    ensure_installed = { "c", "lua", "vim", "help", "rust", "python", "yaml", "toml", "json", "cpp", "java" },
+    ensure_installed = {
+        "c",
+        "lua",
+        "vim",
+        "help",
+        "rust",
+        "python",
+        "yaml",
+        "toml",
+        "json",
+        "cpp",
+        "java",
+        "bash",
+        "cmake",
+        "dockerfile",
+        "git_rebase",
+        "gitattributes",
+        "gitcommit",
+        -- "gitignore",
+        "go",
+        "markdown",
+        "meson",
+        "nix",
+        "verilog"
+    },
     sync_install = false,
     auto_install = false,
     highlight = {
