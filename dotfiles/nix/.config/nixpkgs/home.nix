@@ -19,6 +19,7 @@
         enableNixpkgsReleaseCheck = false;
 
         packages = [
+            pkgs.qucs-s
             pkgs.shfmt
             pkgs.thunderbird
             pkgs.librewolf

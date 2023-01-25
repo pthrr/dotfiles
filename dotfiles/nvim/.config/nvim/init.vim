@@ -5,7 +5,6 @@ lua << EOF
     vim.g.wsl = true
   end
 EOF
-if !exists('g:vscode')
 let $CACHE = expand($XDG_CACHE_HOME)
 if !isdirectory($CACHE)
     call mkdir($CACHE, 'p')
@@ -46,7 +45,6 @@ endif
 set termguicolors
 set background=dark
 colorscheme NeoSolarized
-endif " if not vscode
 " generic
 syntax off
 filetype plugin indent on
@@ -112,6 +110,7 @@ set shiftwidth=4
 set expandtab
 set foldmethod=expr
 set foldexpr=nvim_treesitter#foldexpr()
+set nofoldenable
 set foldnestmax=2
 set foldlevelstart=10
 " automatically save view, load with :loadview
@@ -173,8 +172,8 @@ lua << EOF
   }
 EOF
 endif
-if !exists('g:vscode')
 " tree-sitter
+if exists('g:wsl')
 lua << EOF
   require'nvim-treesitter.configs'.setup {
     ensure_installed = {
@@ -206,10 +205,20 @@ lua << EOF
     auto_install = false,
     highlight = {
       enable = true,
-      additional_vim_regex_highlighting = true,
+      additional_vim_regex_highlighting = false,
     },
   }
 EOF
+else
+lua << EOF
+  require'nvim-treesitter.configs'.setup {
+    highlight = {
+      enable = true,
+      additional_vim_regex_highlighting = false,
+    },
+  }
+EOF
+endif
 " ultisnips
 let g:UltiSnipsExpandTrigger = '<tab>'
 let g:UltiSnipsJumpForwardTrigger = '<tab>'
@@ -367,4 +376,3 @@ lua << EOF
     post_hook = nil,
   }
 EOF
-endif " if not vscode
