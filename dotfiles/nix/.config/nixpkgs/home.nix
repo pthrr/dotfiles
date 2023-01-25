@@ -46,9 +46,8 @@
             pkgs.lynx
             pkgs.openscad
             pkgs.coq
+            pkgs.lean2
             pkgs.dwarf-fortress
-            pkgs.drawio
-            pkgs.lmms
             pkgs.texlive.combined.scheme-basic
             pkgs.cling
             pkgs.ghidra
