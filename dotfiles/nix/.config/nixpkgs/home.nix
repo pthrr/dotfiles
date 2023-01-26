@@ -19,6 +19,8 @@
         enableNixpkgsReleaseCheck = false;
 
         packages = [
+            pkgs.ngspice
+            pkgs.xyce-parallel
             pkgs.qucs-s
             pkgs.shfmt
             pkgs.thunderbird
