@@ -73,8 +73,7 @@ python3 -m pip install --upgrade --force-reinstall \
     pyright \
     isort \
     black \
-    pylint \
-    pyperclip
+    pylint
 sudo npm install -g npm n
 sudo n stable
 sudo npm install \
