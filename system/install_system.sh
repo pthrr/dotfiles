@@ -7,6 +7,7 @@ sudo apt remove -y \
     firefox \
     nodejs
 sudo apt install -y \
+    cpufrequtils \
     cups \
     exfat-fuse \
     exfat-utils \
@@ -73,7 +74,8 @@ python3 -m pip install --upgrade --force-reinstall \
     pyright \
     isort \
     black \
-    pylint
+    pylint \
+    rtcqs
 sudo npm install -g npm n
 sudo n stable
 sudo npm install \

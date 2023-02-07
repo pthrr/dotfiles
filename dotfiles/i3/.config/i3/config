@@ -37,7 +37,7 @@ bindsym $mod+Shift+c kill
 
 # start dmenu (a program launcher)
 bindsym $mod+d exec "rofi -theme solarized -show run -modi drun,run"
-bindsym $mod+t exec "rofi -theme solarized -show window"
+bindsym $mod+a exec "rofi -theme solarized -show window"
 bindsym $mod+z exec "rofi -theme solarized -show ssh"
 
 # change focus
