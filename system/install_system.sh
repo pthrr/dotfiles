@@ -19,6 +19,7 @@ sudo apt install -y \
     xsel \
     jackd2 \
     qjackctl \
+    pulseaudio-module-jack \
     alsa-utils \
     cargo \
     npm \
