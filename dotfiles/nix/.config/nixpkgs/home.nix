@@ -144,6 +144,7 @@
         enable = true;
         plugins = [
             pkgs.vimPlugins.nvim-treesitter.withAllGrammars
+            pkgs.vimPlugins.nvim-treesitter-textobjects
             pkgs.vimPlugins.plenary-nvim
             pkgs.vimPlugins.telescope-nvim
             pkgs.vimPlugins.coc-nvim
