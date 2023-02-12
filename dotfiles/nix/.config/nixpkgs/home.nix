@@ -19,6 +19,8 @@
         enableNixpkgsReleaseCheck = false;
 
         packages = [
+            pkgs.flowblade
+            pkgs.neofetch
             pkgs.ngspice
             pkgs.xyce-parallel
             pkgs.qucs-s

@@ -86,3 +86,4 @@ alias pwgen='pb keepassxc-cli generate --lower --upper --numeric --special --len
 alias dotfiles='git --git-dir="$HOME/.dotfiles/.git" --work-tree="$HOME/.dotfiles"'
 source "$HOME/z.sh"
 source "$HOME/key-bindings.bash"
+[[ -f "$HOME/.localrc" ]] && source "$HOME/.localrc"
