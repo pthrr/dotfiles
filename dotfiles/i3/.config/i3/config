@@ -126,6 +126,7 @@ bar {
 }
 
 # Autostart
+exec --no-startup-id redshift -PO 4000
 exec --no-startup-id ~/.config/i3/scripts/alternating_layouts.py
 exec --no-startup-id blueman-applet
 exec --no-startup-id nm-applet

@@ -3,10 +3,19 @@ set -euo pipefail
 
 sudo apt update -y
 sudo apt remove -y \
-    firefox-esr \
-    firefox \
-    nodejs
+    task-lxqt-desktop \
+    task-gnome-desktop \
+    task-xfce-desktop \
+    task-kde-desktop \
+    task-mate-desktop \
+    task-cinnamon-desktop \
+    task-lxde-desktop
 sudo apt install -y \
+    qemu \
+    task-gnome-flashback-desktop \
+    task-desktop \
+    task-german \
+    task-laptop \
     cpufrequtils \
     cups \
     exfat-fuse \
@@ -68,6 +77,9 @@ sudo apt install -y \
     hicolor-icon-theme \
     adwaita-qt \
     qt5ct
+sudo apt remove -y \
+    firefox-esr \
+    firefox
 sudo apt autoremove -y
 python3 -m pip install --upgrade pip
 python3 -m pip install --upgrade --force-reinstall \

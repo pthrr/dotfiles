@@ -2,26 +2,19 @@
 
 . "$HOME/.xsessionrc"
 
-case $1 in
-"gnome-session")
+session=${1:-i3}
+
+case $session in
+gnome|gnome-session)
     exec gnome-session
     ;;
-"startxfce4")
+xfce|xfce4|startxfce4)
     exec startxfce4
     ;;
-"i3"|*)
-    setxkbmap -layout de -model pc105 -option terminate:ctrl_alt_bksp -option caps:none
-    xmodmap -e "keycode 121 = XF86AudioMute"
-    xmodmap -e "keycode 122 = XF86AudioLowerVolume"
-    xmodmap -e "keycode 123 = XF86AudioRaiseVolume"
-    xmodmap -e "keycode 198 = XF86AudioMicMute"
-    xsetroot -solid black -cursor_name left_ptr
-    xset dpms 0 0 0
-    xset s noblank
-    xset s off
-    xset b off
-    xset r rate 300 50
-    redshift -PO 4000
+i3wm|i3)
     exec i3
+    ;;
+*)
+    exec xwm
     ;;
 esac

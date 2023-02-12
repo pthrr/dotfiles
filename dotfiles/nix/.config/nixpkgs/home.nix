@@ -76,6 +76,7 @@
             pkgs.tectonic
             pkgs.ninja
             pkgs.spotifyd
+            pkgs.spotify
             pkgs.spotify-tui
             pkgs.zathura
             pkgs.ipe
@@ -133,6 +134,7 @@
         file.".xinitrc".source = ../../../x/.xinitrc;
         file.".xresources".source = ../../../x/.xresources;
         file.".xsessionrc".source = ../../../x/.xsessionrc;
+        file.".xprofile".source = ../../../x/.xprofile;
     };
 
     # Let Home Manager install and manage itself.
