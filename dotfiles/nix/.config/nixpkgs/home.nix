@@ -19,10 +19,11 @@
         enableNixpkgsReleaseCheck = false;
 
         packages = [
+            pkgs.ccls
             pkgs.flowblade
             pkgs.neofetch
             pkgs.ngspice
-            pkgs.xyce-parallel
+            pkgs.xyce
             pkgs.qucs-s
             pkgs.shfmt
             pkgs.thunderbird
@@ -96,6 +97,7 @@
         file.".tmux.conf".source = ../../../bash/.tmux.conf;
         file."key-bindings.bash".source = ../../../bash/key-bindings.bash;
         file."z.sh".source = ../../../bash/z.sh;
+        file."git-prompt.sh".source = ../../../bash/git-prompt.sh;
 
         file.".gitconfig".source = ../../../git/.gitconfig;
         file.".git-commit-template.txt".source = ../../../git/.git-commit-template.txt;
@@ -150,6 +152,14 @@
             pkgs.vimPlugins.coc-nvim
             pkgs.vimPlugins.coc-pyright
             pkgs.vimPlugins.coc-rust-analyzer
+            pkgs.vimPlugins.coc-toml
+            pkgs.vimPlugins.coc-yaml
+            pkgs.vimPlugins.coc-json
+            pkgs.vimPlugins.coc-sh
+            pkgs.vimPlugins.coc-docker
+            pkgs.vimPlugins.coc-java
+            pkgs.vimPlugins.coc-markdownlint
+            pkgs.vimPlugins.coc-snippets
         ];
     };
 
