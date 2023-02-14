@@ -11,6 +11,7 @@ sudo apt remove -y \
     task-cinnamon-desktop \
     task-lxde-desktop
 sudo apt install -y \
+    nvidia-detect \
     qemu \
     task-gnome-flashback-desktop \
     task-desktop \
