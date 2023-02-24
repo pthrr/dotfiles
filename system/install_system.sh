@@ -11,6 +11,7 @@ sudo apt remove -y \
     task-cinnamon-desktop \
     task-lxde-desktop
 sudo apt install -y \
+    install gnome-software-plugin-flatpak \
     nvidia-detect \
     qemu \
     task-gnome-flashback-desktop \
@@ -77,11 +78,17 @@ sudo apt install -y \
     adwaita-icon-theme \
     hicolor-icon-theme \
     adwaita-qt \
-    qt5ct
+    qt5ct \
+    flatpak
 sudo apt remove -y \
     firefox-esr \
     firefox
 sudo apt autoremove -y
+sudo flatpak remote-add --if-not-exists \
+    flathub https://flathub.org/repo/flathub.flatpakrepo
+sudo flatpak install \
+    kdenlive \
+    labplot
 python3 -m pip install --upgrade pip
 python3 -m pip install --upgrade --force-reinstall \
     i3ipc \
