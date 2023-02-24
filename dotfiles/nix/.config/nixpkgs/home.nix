@@ -39,6 +39,7 @@
             pkgs.gitui
             pkgs.git
             pkgs.git-lfs
+            pkgs.git-filter-repo
             pkgs.poppler_utils
             pkgs.graphviz
             pkgs.nsxiv

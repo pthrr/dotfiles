@@ -174,5 +174,5 @@ export ANDROID_NDK=/usr/lib/android-ndk
 export GTK_THEME=Adwaita:dark
 export GTK2_RC_FILES="/usr/share/themes/Adwaita-dark/gtk-2.0/gtkrc"
 export QT_QPA_PLATFORMTHEME=qt5ct
-export MC_XDG_OPEN=~/bin/xdg
+export MC_XDG_OPEN="$HOME/bin/xdg"
 export MC_SKIN="$HOME/.config/mc/solarized.ini"
