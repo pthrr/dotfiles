@@ -19,6 +19,8 @@
         enableNixpkgsReleaseCheck = false;
 
         packages = [
+            pkgs.whatsapp-for-linux
+            pkgs.tdesktop
             pkgs.ccls
             pkgs.neofetch
             pkgs.ngspice
