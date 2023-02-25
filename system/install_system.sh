@@ -98,6 +98,7 @@ python3 -m pip install --upgrade --force-reinstall \
     isort \
     black \
     pylint \
+    conan \
     rtcqs
 sudo npm install -g npm n
 sudo n stable
