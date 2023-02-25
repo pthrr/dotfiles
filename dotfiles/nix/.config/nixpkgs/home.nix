@@ -20,7 +20,6 @@
 
         packages = [
             pkgs.ccls
-            pkgs.flowblade
             pkgs.neofetch
             pkgs.ngspice
             pkgs.xyce
