@@ -88,7 +88,9 @@ sudo flatpak remote-add --if-not-exists \
     flathub https://flathub.org/repo/flathub.flatpakrepo
 sudo flatpak install \
     kdenlive \
-    labplot
+    labplot \
+    joplin \
+    jdownloader
 python3 -m pip install --upgrade pip
 python3 -m pip install --upgrade --force-reinstall \
     i3ipc \
