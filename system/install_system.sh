@@ -5,16 +5,16 @@ sudo apt update -y
 sudo apt remove -y \
     task-lxqt-desktop \
     task-gnome-desktop \
-    task-xfce-desktop \
+    task-gnome-flashback-desktop \
     task-kde-desktop \
     task-mate-desktop \
     task-cinnamon-desktop \
     task-lxde-desktop
 sudo apt install -y \
-    install gnome-software-plugin-flatpak \
+    gnome-software-plugin-flatpak \
     nvidia-detect \
     qemu \
-    task-gnome-flashback-desktop \
+    task-xfce-desktop \
     task-desktop \
     task-german \
     task-laptop \
