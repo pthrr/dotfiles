@@ -4,8 +4,8 @@ set -euo pipefail
 sudo apt update -y
 sudo apt remove -y \
     task-lxqt-desktop \
-    task-gnome-desktop \
     task-gnome-flashback-desktop \
+    task-xfce-desktop \
     task-kde-desktop \
     task-mate-desktop \
     task-cinnamon-desktop \
@@ -14,7 +14,7 @@ sudo apt install -y \
     gnome-software-plugin-flatpak \
     nvidia-detect \
     qemu \
-    task-xfce-desktop \
+    task-gnome-desktop \
     task-desktop \
     task-german \
     task-laptop \
