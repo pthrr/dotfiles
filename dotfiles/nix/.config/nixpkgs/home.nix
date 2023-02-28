@@ -19,6 +19,7 @@
         enableNixpkgsReleaseCheck = false;
 
         packages = [
+            pkgs.steam
             pkgs.whatsapp-for-linux
             pkgs.tdesktop
             pkgs.ccls
