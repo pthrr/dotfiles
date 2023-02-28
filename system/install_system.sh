@@ -10,10 +10,21 @@ sudo apt remove -y \
     task-mate-desktop \
     task-cinnamon-desktop \
     task-lxde-desktop
-sudo apt install -y \
-    gnome-software-plugin-flatpak \
+[[ "$( lsb_release -cs )" = "kinetic" ]] && sudo apt install -y \
+    exfatprogs \
+    qemu-system \
+    chromium-browser
+[[ "$( lsb_release -cs )" != "kinetic" ]] && sudo apt install -y \
+    hicolor-icon-theme \
     nvidia-detect \
+    firmware-misc-nonfree \
+    exfat-utils \
     qemu \
+    chromium
+sudo apt install -y \
+    sshfs \
+    ssh-askpass \
+    gnome-software-plugin-flatpak \
     task-gnome-desktop \
     task-desktop \
     task-german \
@@ -21,10 +32,8 @@ sudo apt install -y \
     cpufrequtils \
     cups \
     exfat-fuse \
-    exfat-utils \
     lilv-utils \
     gnupg2 \
-    chromium \
     xdotool \
     inotify-tools \
     xsel \
@@ -73,10 +82,8 @@ sudo apt install -y \
     rofi \
     python3 \
     python3-pip \
-    firmware-misc-nonfree \
     intel-microcode \
     adwaita-icon-theme \
-    hicolor-icon-theme \
     adwaita-qt \
     qt5ct \
     flatpak
