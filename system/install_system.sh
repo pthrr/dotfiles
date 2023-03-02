@@ -22,6 +22,9 @@ sudo apt remove -y \
     qemu \
     chromium
 sudo apt install -y \
+    gnome-shell-extension-manager \
+    gnome-shell-extensions \
+    gnome-tweaks \
     sshfs \
     ssh-askpass \
     gnome-software-plugin-flatpak \
