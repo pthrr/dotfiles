@@ -23,9 +23,9 @@ sudo apt remove -y \
     qemu \
     chromium
 sudo apt install -y \
-    gnome-shell-extension-manager \
     gnome-shell-extensions \
     gnome-tweaks \
+    sshpass \
     sshfs \
     ssh-askpass \
     gnome-software-plugin-flatpak \
@@ -101,7 +101,8 @@ sudo flatpak install \
     kdenlive \
     labplot \
     joplin \
-    jdownloader
+    jdownloader \
+    com.mattjakeman.ExtensionManager
 python3 -m pip install --upgrade pip
 python3 -m pip install --upgrade --force-reinstall \
     i3ipc \
