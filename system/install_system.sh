@@ -13,7 +13,8 @@ sudo apt remove -y \
 [[ "$( lsb_release -cs )" = "kinetic" ]] && sudo apt install -y \
     exfatprogs \
     qemu-system \
-    chromium-browser
+    chromium-browser \
+    ubuntu-advantage-tools
 [[ "$( lsb_release -cs )" != "kinetic" ]] && sudo apt install -y \
     hicolor-icon-theme \
     nvidia-detect \
