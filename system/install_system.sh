@@ -100,7 +100,6 @@ sudo flatpak remote-add --if-not-exists \
 sudo flatpak install \
     kdenlive \
     labplot \
-    joplin \
     jdownloader \
     com.mattjakeman.ExtensionManager
 python3 -m pip install --upgrade pip
