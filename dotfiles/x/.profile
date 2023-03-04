@@ -95,6 +95,10 @@ if [ ! -d  "$HOME/learn" ] ; then
     mkdir "$HOME/learn"
 fi
 
+if [ ! -d  "$HOME/analysis" ] ; then
+    mkdir "$HOME/analysis"
+fi
+
 if [ ! -d  "$HOME/business" ] ; then
     mkdir "$HOME/business"
 fi
