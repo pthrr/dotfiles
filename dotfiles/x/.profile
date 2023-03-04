@@ -99,6 +99,10 @@ if [ ! -d  "$HOME/analysis" ] ; then
     mkdir "$HOME/analysis"
 fi
 
+if [ ! -d  "$HOME/practice" ] ; then
+    mkdir "$HOME/practice"
+fi
+
 if [ ! -d  "$HOME/business" ] ; then
     mkdir "$HOME/business"
 fi
