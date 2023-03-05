@@ -19,6 +19,7 @@
         enableNixpkgsReleaseCheck = false;
 
         packages = [
+            pkgs.ulauncher
             pkgs.anki
             pkgs.reaper
             pkgs.steam

@@ -62,11 +62,12 @@ fi
 # include Nix environment
 if [ -f "$HOME/.nix-profile/etc/profile.d/nix.sh" ] ; then
     . "$HOME/.nix-profile/etc/profile.d/nix.sh"
-    export NIX_PATH=$HOME/.nix-defexpr/channels:/nix/var/nix/profiles/per-user/root/channels${NIX_PATH:+:$NIX_PATH}
+    # export NIX_PATH=$HOME/.nix-defexpr/channels:/nix/var/nix/profiles/per-user/root/channels${NIX_PATH:+:$NIX_PATH}
+    export NIX_PATH="$HOME/.nix-defexpr/channels:$NIX_PATH"
+    export XDG_DATA_DIRS="$HOME/.nix-profile/share:$XDG_DATA_DIRS"
 fi
 
 if [ -f "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh" ] ; then
-    # shell is not managed by home manager
     . "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
 fi
 
