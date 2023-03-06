@@ -74,6 +74,7 @@ sudo apt install -y \
     fonts-ubuntu \
     spacefm \
     clang \
+    clangd \
     clang-tidy \
     clang-tools \
     xterm \
@@ -105,10 +106,10 @@ sudo flatpak install \
 python3 -m pip install --upgrade pip
 python3 -m pip install --upgrade --force-reinstall \
     i3ipc \
-    pyright \
+    mypy \
+    ruff \
     isort \
     black \
-    pylint \
     conan \
     rtcqs
 sudo npm install -g npm n

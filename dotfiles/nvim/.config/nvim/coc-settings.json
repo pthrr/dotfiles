@@ -1,19 +1,9 @@
 {
+    "suggest.noselect": true,
+    "pyright.organizeimports.provider": "isort",
     "python.formatting.provider": "black",
     "pyright.testing.provider": "pytest",
-    "python.linting.pylintEnabled": true,
-    "suggest.noselect": true,
-    "pyright.organizeimports.provider": "isort"
-    "languageserver": {
-      "ccls": {
-        "command": "ccls",
-        "filetypes": ["c", "cc", "cpp", "c++", "objc", "objcpp"],
-        "rootPatterns": [".ccls", "compile_commands.json", ".git/", ".hg/"],
-        "initializationOptions": {
-            "cache": {
-              "directory": "/tmp/ccls"
-            }
-        }
-      }
-    }
+    "python.linting.enabled": true,
+    "python.linting.mypyEnabled": true,
+    "python.linting.ruffEnabled": true
 }

@@ -30,6 +30,7 @@ if dein#load_state(s:dein_dir)
         call dein#add('neoclide/coc.nvim', { 'merged': 0, 'rev': 'release' })
         let g:coc_global_extensions = [
             \ 'coc-docker',
+            \ 'coc-clangd',
             \ 'coc-toml',
             \ 'coc-yaml',
             \ 'coc-json',

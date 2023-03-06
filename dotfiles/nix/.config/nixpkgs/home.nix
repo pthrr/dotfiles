@@ -157,6 +157,7 @@
             pkgs.vimPlugins.plenary-nvim
             pkgs.vimPlugins.telescope-nvim
             pkgs.vimPlugins.coc-nvim
+            pkgs.vimPlugins.coc-clangd
             pkgs.vimPlugins.coc-pyright
             pkgs.vimPlugins.coc-rust-analyzer
             pkgs.vimPlugins.coc-toml
