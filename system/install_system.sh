@@ -95,6 +95,8 @@ sudo apt install -y \
 sudo apt remove -y \
     firefox-esr \
     firefox
+sudo apt purge -y \
+    gnome-games
 sudo apt autoremove -y
 sudo flatpak remote-add --if-not-exists \
     flathub https://flathub.org/repo/flathub.flatpakrepo
