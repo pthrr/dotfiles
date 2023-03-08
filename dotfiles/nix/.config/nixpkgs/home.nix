@@ -80,6 +80,7 @@
             pkgs.meld
             pkgs.neomutt
             pkgs.cmake
+            pkgs.cmake-format
             pkgs.tectonic
             pkgs.ninja
             pkgs.spotifyd
@@ -157,6 +158,7 @@
             pkgs.vimPlugins.plenary-nvim
             pkgs.vimPlugins.telescope-nvim
             pkgs.vimPlugins.coc-nvim
+            pkgs.vimPlugins.coc-cmake
             pkgs.vimPlugins.coc-clangd
             pkgs.vimPlugins.coc-pyright
             pkgs.vimPlugins.coc-rust-analyzer
