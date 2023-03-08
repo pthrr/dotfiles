@@ -18,15 +18,6 @@ function command_not_found_handle() {
         echo "Command was not found!"
     fi
 }
-function fpy() {
-    isort --profile black --atomic "$@"
-    black --verbose "$@"
-    pylint "$@"
-}
-function fcc() {
-    clang-format -verbose -i -style=webkit "$@"
-    clang-tidy "$@"
-}
 function vo() {
     shopt -s nullglob
     $EDITOR "$@"
@@ -68,7 +59,7 @@ alias rm='rm -Iv'
 alias g='git'
 alias t='task'
 alias j='jobs'
-alias cl='clear'
+alias c='clear'
 alias py='python'
 alias ..='cd ../'
 alias ...='cd ../../'
