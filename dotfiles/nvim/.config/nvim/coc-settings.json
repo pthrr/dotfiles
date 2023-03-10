@@ -8,5 +8,6 @@
     "python.linting.enabled": true,
     "python.linting.mypyEnabled": true,
     "python.linting.ruffEnabled": true,
-    "snippets.userSnippetsDirectory": "~/Vorlagen/snippets"
+    "snippets.userSnippetsDirectory": "~/Vorlagen/snippets",
+    "clangd.arguments": ["--compile-commands-dir=build"]
 }
