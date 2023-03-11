@@ -120,6 +120,10 @@ if [ ! -d  "$HOME/Dokumente/notebooks" ] ; then
     mkdir -p "$HOME/Dokumente/notebooks"
 fi
 
+if [ ! -d  "$HOME/Dokumente/letters" ] ; then
+    mkdir -p "$HOME/Dokumente/letters"
+fi
+
 if [ ! -d  "$HOME/Vorlagen/slides" ] ; then
     mkdir -p "$HOME/Vorlagen/slides"
 fi
