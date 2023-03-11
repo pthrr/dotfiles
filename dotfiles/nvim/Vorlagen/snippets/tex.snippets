@@ -1,10 +1,3 @@
-priority -50
-
-###########################################################################
-#                            TEXTMATE SNIPPETS                            #
-###########################################################################
-
-#! header
 snippet letter "basic letter" b
 \documentclass[fontsize=12pt]{scrlttr2}
 \LoadLetterOption{DIN}
@@ -13,13 +6,13 @@ snippet letter "basic letter" b
 \usepackage[ngerman]{babel}
 \KOMAoptions{fromemail=true,fromphone=true,fromalign=left}
 \setkomavar{fromname}{${1}}
-\setkomavar{fromaddress}{${2}\\${3}}
+\setkomavar{fromaddress}{${2}\\\\${3}}
 \setkomavar{fromemail}{${4}}
 \setkomavar{fromphone}{${5}}
 \setkomavar{signature}{\usekomavar{fromname}}
 \setkomavar*{enclseparator}{Anlage}
 \begin{document}
-\begin{letter}{${6}\\${7}\\${8}}
+\begin{letter}{${6}\\\\${7}\\\\${8}}
 \setkomavar{place}{${9}}
 \setkomavar{date}{\today}
 \setkomavar{subject}{${10}}
@@ -28,15 +21,13 @@ ${0}
 \closing{Mit freundlichen Grüßen,}
 % \ps PS: \dots
 % \encl{%
-%   Anlage 1\\
+%   Anlage 1\\\\
 %   Anlage 2%
 % }
 % \cc{%
-%   Verteiler 1\\
+%   Verteiler 1\\\\
 %   Verteiler 2%
 % }
 \end{letter}
 \end{document}
 endsnippet
-
-# vim:ft=snippets:
