@@ -10,19 +10,15 @@ sudo apt remove -y \
     task-mate-desktop \
     task-cinnamon-desktop \
     task-lxde-desktop
-[[ "$( lsb_release -cs )" = "kinetic" ]] && sudo apt install -y \
-    exfatprogs \
-    qemu-system \
-    chromium-browser \
-    ubuntu-advantage-tools
-[[ "$( lsb_release -cs )" != "kinetic" ]] && sudo apt install -y \
+sudo apt install -y \
+    libcairo2-dev \
+    libopenblas-dev \
     hicolor-icon-theme \
     nvidia-detect \
     firmware-misc-nonfree \
     exfat-utils \
     qemu \
-    chromium
-sudo apt install -y \
+    chromium \
     gnome-shell-extensions \
     gnome-tweaks \
     sshpass \
