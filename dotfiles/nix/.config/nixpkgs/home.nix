@@ -79,7 +79,7 @@
             pkgs.vlc
             pkgs.meld
             pkgs.neomutt
-            pkgs.cmake
+            pkgs.cmakeWithGui
             pkgs.cmake-format
             pkgs.tectonic
             pkgs.ninja
