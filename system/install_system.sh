@@ -11,6 +11,7 @@ sudo apt remove -y \
     task-cinnamon-desktop \
     task-lxde-desktop
 sudo apt install -y \
+    libcairomm-1.0-dev \
     libcairo2-dev \
     libopenblas-dev \
     hicolor-icon-theme \
