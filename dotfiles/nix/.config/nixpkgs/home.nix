@@ -19,6 +19,7 @@
         enableNixpkgsReleaseCheck = false;
 
         packages = [
+            pkgs.wezterm
             pkgs.ulauncher
             pkgs.anki
             pkgs.reaper
