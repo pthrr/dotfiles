@@ -173,6 +173,7 @@ export QT_ACCESSIBILITY=0
 export NO_AT_BRIDGE=1
 export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=0
 export DO_NOT_TRACK=1
+export CPM_SOURCE_CACHE="$HOME/.cache/CPM"
 export _JAVA_AWT_WM_NONREPARENTING=1
 export AWT_TOOLKIT=XToolkit
 export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
