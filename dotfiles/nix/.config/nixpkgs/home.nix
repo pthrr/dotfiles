@@ -79,7 +79,7 @@
             pkgs.vlc
             pkgs.meld
             pkgs.neomutt
-            pkgs.cmake
+            pkgs.cmakeWithGui
             pkgs.cmake-format
             pkgs.tectonic
             pkgs.ninja
@@ -111,7 +111,6 @@
 
         file.".clang-tidy".source = ../../../lang/.clang-tidy;
         file.".clang-format".source = ../../../lang/.clang-format;
-        file.".pylintrc".source = ../../../lang/.pylintrc;
 
         file.".mailcap".source = ../../../mutt/.mailcap;
 
