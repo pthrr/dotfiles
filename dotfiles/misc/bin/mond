@@ -1,31 +1,14 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# if [[ $1 =~ "[a-zA-Z0-9]{1,}\.[a-zA-Z0-9]{1,}" ]] ; then # /f/d/*.py
-#     echo "wildcard"
-# fi
-#
-# if [[ $1 =~ "*[.]*$" ]] ; then # /f/d/x.py
-#     echo "file"
-# fi
+PWD=$1
+echo "Working on ´$PWD´ .."
 
-# inotifywait -qrm --event modify,create,delete,move --format "%w%f"
-
-while true; do
-    gonow=
-    stat=$(stat --format=%Y.%Z.%s $1)
-
-    if [ "$stat" != "${laststat:-$stat}" ]; then
-        laststat=$stat
-        gonow=yes
-    fi
-
-    if [ -n "$gonow" ]; then
+inotifywait -q --event modify,create,delete,move  -mr $PWD |
+    while read directory action file; do
+        sleep 1
         echo "[[=== start ===]]"
-        $@
+        echo "Trigger: directory=$directory file=$file action=$action"
+        ${@:2}
         echo "[[=== done ===]]"
-    fi
-
-    laststat=$stat
-    sleep 1
-done
+    done

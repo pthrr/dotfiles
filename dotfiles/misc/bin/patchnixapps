@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
-cd "$HOME/.nix-profile/share/applications"
+
+DIR=$1
+cd $DIR
 
 cmd='nixGL'
 kExecRegex='^Exec=.+$'
