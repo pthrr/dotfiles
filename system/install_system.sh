@@ -11,8 +11,8 @@ sudo apt remove -y \
     task-cinnamon-desktop \
     task-lxde-desktop
 sudo apt install -y \
-    openjdk-11-jdk-headless \
-    openjdk-11-jre-headless \
+    openjdk-17-jdk-headless \
+    openjdk-17-jre-headless \
     libcairomm-1.0-dev \
     libcairo2-dev \
     libopenblas-dev \
