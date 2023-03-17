@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-PWD=$1
-echo "Working on ´$PWD´ .."
+DIR=$1
+echo "Working on ´$DIR´ .."
 
-inotifywait -q --event modify,create,delete,move  -mr $PWD |
+inotifywait -q --event modify,create,delete,move -mr $DIR |
     while read directory action file; do
         sleep 1
         echo "[[=== start ===]]"

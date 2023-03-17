@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
-set -e
-set -u
+set -euo pipefail
 
 if [ -f "$1" ]; then
     case "$1" in

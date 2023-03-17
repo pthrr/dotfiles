@@ -102,8 +102,7 @@ sudo flatpak remote-add --if-not-exists \
 sudo flatpak install \
     kdenlive \
     labplot \
-    jdownloader \
-    com.mattjakeman.ExtensionManager
+    jdownloader
 python3 -m pip install --upgrade pip
 python3 -m pip install --upgrade --force-reinstall \
     i3ipc \
