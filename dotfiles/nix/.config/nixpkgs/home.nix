@@ -19,8 +19,8 @@
         enableNixpkgsReleaseCheck = false;
 
         packages = [
+            pkgs.maven
             pkgs.wezterm
-            pkgs.ulauncher
             pkgs.anki
             pkgs.reaper
             pkgs.steam
