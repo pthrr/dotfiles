@@ -26,7 +26,6 @@
             pkgs.steam
             pkgs.whatsapp-for-linux
             pkgs.tdesktop
-            pkgs.ccls
             pkgs.neofetch
             pkgs.ngspice
             pkgs.xyce
