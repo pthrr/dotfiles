@@ -20,7 +20,6 @@
 
         packages = [
             pkgs.maven
-            pkgs.wezterm
             pkgs.anki
             pkgs.reaper
             pkgs.steam
@@ -174,10 +173,6 @@
 
     xdg = {
         # files in ~/.config/
-        configFile."wezterm" = {
-            source = ../../../wezterm/.config/wezterm;
-            recursive = true;
-        };
         configFile."i3" = {
             source = ../../../i3/.config/i3;
             recursive = true;
