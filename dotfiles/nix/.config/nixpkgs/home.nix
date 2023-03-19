@@ -19,6 +19,7 @@
         enableNixpkgsReleaseCheck = false;
 
         packages = [
+            pkgs.pcb2gcode
             pkgs.candle
             pkgs.maven
             pkgs.anki
