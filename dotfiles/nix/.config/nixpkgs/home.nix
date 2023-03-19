@@ -19,6 +19,7 @@
         enableNixpkgsReleaseCheck = false;
 
         packages = [
+            pkgs.candle
             pkgs.maven
             pkgs.anki
             pkgs.reaper
