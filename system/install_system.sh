@@ -46,7 +46,6 @@ sudo apt install -y \
     alsa-utils \
     cargo \
     npm \
-    kicad \
     golang-go \
     leiningen \
     clojure \

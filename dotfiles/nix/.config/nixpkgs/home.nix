@@ -19,6 +19,8 @@
         enableNixpkgsReleaseCheck = false;
 
         packages = [
+            pkgs.kicad
+            pkgs.horizon-eda
             pkgs.pcb2gcode
             pkgs.candle
             pkgs.maven
