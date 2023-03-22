@@ -85,6 +85,7 @@ sudo apt install -y \
     rofi \
     python3 \
     python3-pip \
+    python3-dev \
     intel-microcode \
     adwaita-icon-theme \
     adwaita-qt \
