@@ -67,7 +67,6 @@ alias ....='cd ../../../'
 alias .....='cd ../../../../'
 alias pbclear='echo "" | pbcopy'
 alias pbclean='pbpaste | pbcopy'
-alias spot='pidof -q spotifyd || spotifyd; spt'
 alias mpubl='mutt -F "$HOME/mail/public/muttrc"'
 alias mpers='mutt -F "$HOME/mail/personal/muttrc"'
 alias jupnote='$BROWSER http://localhost:8888/; jupyter-notebook --no-browser --notebook-dir="$XDG_DOCUMENTS_DIR/notebooks"'
@@ -80,4 +79,3 @@ alias pwgen='pb keepassxc-cli generate --lower --upper --numeric --special --len
 alias dotfiles='git --git-dir="$HOME/.dotfiles/.git" --work-tree="$HOME/.dotfiles"'
 source "$HOME/key-bindings.bash"
 source "$HOME/git-prompt.sh"
-[[ -f "$HOME/.localrc" ]] && source "$HOME/.localrc"
