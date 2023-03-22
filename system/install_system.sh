@@ -102,6 +102,7 @@ sudo flatpak remote-add --if-not-exists \
 sudo flatpak install \
     kdenlive \
     labplot \
+    joplin_desktop \
     jdownloader
 python3 -m pip install --upgrade pip
 python3 -m pip install --upgrade --force-reinstall \
