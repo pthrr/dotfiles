@@ -78,7 +78,6 @@ alias procs='pstree -Ap'
 alias ports='netstat -pln'
 alias pwgen='pb keepassxc-cli generate --lower --upper --numeric --special --length 32'
 alias dotfiles='git --git-dir="$HOME/.dotfiles/.git" --work-tree="$HOME/.dotfiles"'
-source "$HOME/z.sh"
 source "$HOME/key-bindings.bash"
 source "$HOME/git-prompt.sh"
 [[ -f "$HOME/.localrc" ]] && source "$HOME/.localrc"

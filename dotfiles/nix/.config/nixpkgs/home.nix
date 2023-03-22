@@ -86,9 +86,7 @@
             pkgs.cmake-format
             pkgs.tectonic
             pkgs.ninja
-            pkgs.spotifyd
             pkgs.spotify
-            pkgs.spotify-tui
             pkgs.zathura
             pkgs.ipe
             pkgs.ripgrep
@@ -106,7 +104,6 @@
         file.".bashrc".source = ../../../bash/.bashrc;
         file.".tmux.conf".source = ../../../bash/.tmux.conf;
         file."key-bindings.bash".source = ../../../bash/key-bindings.bash;
-        file."z.sh".source = ../../../bash/z.sh;
         file."git-prompt.sh".source = ../../../bash/git-prompt.sh;
 
         file.".gitconfig".source = ../../../git/.gitconfig;
@@ -202,15 +199,6 @@
 
         configFile."nvim" = {
             source = ../../../nvim/.config/nvim;
-            recursive = true;
-        };
-
-        configFile."spotifyd" = {
-            source = ../../../spotify/.config/spotifyd;
-            recursive = true;
-        };
-        configFile."spotify-tui" = {
-            source = ../../../spotify/.config/spotify-tui;
             recursive = true;
         };
     };
