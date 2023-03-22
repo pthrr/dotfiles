@@ -76,6 +76,7 @@ alias com='picocom -b 115200 --echo --omap=crcrlf'
 alias procs='pstree -Ap'
 alias ports='netstat -pln'
 alias pwgen='pb keepassxc-cli generate --lower --upper --numeric --special --length 32'
+alias mksomespace='nix-collect-garbage -d'
 alias dotfiles='git --git-dir="$HOME/.dotfiles/.git" --work-tree="$HOME/.dotfiles"'
 source "$HOME/key-bindings.bash"
 source "$HOME/git-prompt.sh"
