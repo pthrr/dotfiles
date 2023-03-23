@@ -1,2 +1,13 @@
-Checks: 'bugprone-*,cppcoreguidelines-*,hicpp-*,modernize-*,performance-*,readability-*,portability-*'
+Checks: >
+    -*,
+    cert-*,
+    hicpp-*,
+    cppcoreguidelines-*,
+    modernize-*,
+    bugprone-*,
+    performance-*,
+    readability-*,
+    portability-*,
+    misc-*
+
 FormatStyle: 'file'
