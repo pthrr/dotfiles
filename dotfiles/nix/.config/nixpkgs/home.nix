@@ -81,7 +81,6 @@
             pkgs.jq
             pkgs.vlc
             pkgs.meld
-            pkgs.neomutt
             pkgs.cmakeWithGui
             pkgs.cmake-format
             pkgs.tectonic
@@ -112,13 +111,6 @@
         file.".clang-tidy".source = ../../../lang/.clang-tidy;
         file.".clang-format".source = ../../../lang/.clang-format;
 
-        file.".mailcap".source = ../../../mutt/.mailcap;
-
-        file."mail" = {
-            source = ../../../mutt/mail;
-            recursive = true;
-        };
-
         file.".ssh" = {
             source = ../../../ssh/.ssh;
             recursive = true;
@@ -133,7 +125,6 @@
             source = ../../../nvim/Vorlagen/snippets;
             recursive = true;
         };
-
         file."Vorlagen/slides" = {
             source = ../../../sent/Vorlagen/slides;
             recursive = true;
