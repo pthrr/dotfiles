@@ -122,8 +122,7 @@ set tabstop=4
 set softtabstop=4
 set shiftwidth=4
 set expandtab
-set foldmethod=expr
-set foldexpr=nvim_treesitter#foldexpr()
+set foldmethod=indent
 set nofoldenable
 set foldnestmax=2
 set foldlevelstart=10
