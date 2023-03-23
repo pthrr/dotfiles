@@ -1,3 +1,82 @@
+snippet pyproject "basic pyproject.toml template" b
+[tool.black]
+line-length = 110
+target-version = ['py39']
+extend-exclude = '''
+/(
+    scripts
+    |tools
+    |tests
+    |doc
+    |venv
+)/
+'''
+
+[tool.isort]
+line_length = 110
+py_version = 39
+profile = "black"
+skip_gitignore = true
+filter_files = true
+atomic = true
+extend_skip = [
+    "scripts",
+    "tools",
+    "tests",
+    "doc",
+    "venv",
+]
+
+[tool.mypy]
+python_version = "3.9"
+disallow_untyped_defs = true
+disallow_any_unimported = true
+no_implicit_optional = true
+check_untyped_defs = true
+warn_return_any = true
+warn_unused_ignores = true
+show_error_codes = true
+exclude = [
+    "scripts",
+    "tools",
+    "tests",
+    "doc",
+    "venv"
+]
+
+[[tool.mypy.overrides]]
+module = "numpy.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "scipy.*"
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+addopts = "-vv --strict-config --strict-markers"
+markers = [
+    "unit: unit test for single functions and classes",
+    "integration: test integrating several units without hardware dependencies or external software components",
+    "system: test running the full system on real hardware but without external software components",
+    "conformance: test checking the formal specification against a customer use case",
+    "reliability: long-running test checking the reliability of a customer use case",
+    "performance: long-running test running a resource critical use case",
+    "acceptance: test running final checks before customer release"
+]
+
+[tool.ruff]
+line-length = 110
+target-version = "py39"
+extend-select = ["I", "N", "UP", "B", "A", "PL", "NPY"]
+extend-exclude = [
+    "scripts",
+    "tools",
+    "tests",
+    "doc",
+    "venv",
+]
+endsnippet
+
 snippet #! "basic header" b
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
@@ -13,7 +92,7 @@ snippet #! "basic header" b
 $0
 endsnippet
 
-snippet scripttempl "basic script template" b
+snippet script "basic script template" b
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
