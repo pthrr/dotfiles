@@ -19,6 +19,7 @@
         enableNixpkgsReleaseCheck = false;
 
         packages = [
+            pkgs.element-desktop
             pkgs.kicad
             pkgs.horizon-eda
             pkgs.pcb2gcode
