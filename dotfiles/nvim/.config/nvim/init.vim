@@ -74,10 +74,6 @@ set noerrorbells
 set undofile
 set undolevels=1000
 set undoreload=10000
-set timeout
-set ttimeout
-set timeoutlen=300
-set ttimeoutlen=50
 set scrolloff=1
 set sidescrolloff=5
 set list
