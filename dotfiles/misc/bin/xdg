@@ -5,7 +5,7 @@ case "${@: -1}" in
     *://* | *.html)
         exec $BROWSER "$@"
         ;;
-    *.pdf | *.djvu)
+    *.pdf | *.djvu | *.ps)
         exec $PDFVIEWER "$@"
         ;;
     *.jpg | *.jpeg | *.png)

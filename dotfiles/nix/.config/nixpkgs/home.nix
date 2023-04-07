@@ -61,7 +61,8 @@
             pkgs.lynx
             pkgs.openscad
             pkgs.coq
-            pkgs.lean2
+            pkgs.coqPackages.coqide
+            pkgs.compcert
             pkgs.dwarf-fortress
             pkgs.texlive.combined.scheme-basic
             pkgs.cling
