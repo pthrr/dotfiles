@@ -11,6 +11,7 @@ sudo apt remove -y \
     task-cinnamon-desktop \
     task-lxde-desktop
 sudo apt install -y \
+    gnome-themes-standard \
     openjdk-17-jdk-headless \
     openjdk-17-jre-headless \
     libcairomm-1.0-dev \
@@ -42,6 +43,7 @@ sudo apt install -y \
     xsel \
     jackd2 \
     qjackctl \
+    a2jmidid \
     pulseaudio-module-jack \
     alsa-utils \
     cargo \

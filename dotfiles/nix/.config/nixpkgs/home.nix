@@ -96,8 +96,8 @@
             pkgs.exa
             pkgs.redshift
             pkgs.keepassxc
-            pkgs.ardour
             pkgs.obsidian
+            pkgs.buck
             pkgs.zotero
         ];
 
