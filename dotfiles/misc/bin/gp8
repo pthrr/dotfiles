@@ -1,3 +1,0 @@
-#!/usr/bin/env bash
-
-wine ~/.wine/drive_c/Program\ Files/Arobas\ Music/Guitar\ Pro\ 8/GuitarPro.exe
