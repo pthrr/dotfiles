@@ -105,6 +105,7 @@
         file.".bashrc".source = ../../../bash/.bashrc;
         file.".tmux.conf".source = ../../../bash/.tmux.conf;
         file."key-bindings.bash".source = ../../../bash/key-bindings.bash;
+        file."z.sh".source = ../../../bash/z.sh;
         file."git-prompt.sh".source = ../../../bash/git-prompt.sh;
 
         file.".gitconfig".source = ../../../git/.gitconfig;
