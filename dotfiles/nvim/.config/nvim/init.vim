@@ -204,11 +204,12 @@ lua << EOF
         "git_rebase",
         "gitattributes",
         "gitcommit",
-        -- "gitignore",
         "go",
         "markdown",
         "meson",
         "nix",
+        "haskell",
+        "zig",
         "verilog"
     },
     sync_install = false,
