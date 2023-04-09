@@ -19,6 +19,12 @@
         enableNixpkgsReleaseCheck = false;
 
         packages = [
+            pkgs.swh_lv2
+            pkgs.ladspaPlugins
+            pkgs.wolf-shaper
+            pkgs.distrho
+            pkgs.x42-plugins
+            pkgs.x42-avldrums
             pkgs.zig
             pkgs.cabal-install
             pkgs.cabal2nix
