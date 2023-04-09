@@ -19,6 +19,7 @@
         enableNixpkgsReleaseCheck = false;
 
         packages = [
+            pkgs.zig
             pkgs.cabal-install
             pkgs.cabal2nix
             pkgs.stack
