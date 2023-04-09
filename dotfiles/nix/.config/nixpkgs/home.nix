@@ -19,6 +19,11 @@
         enableNixpkgsReleaseCheck = false;
 
         packages = [
+            pkgs.cabal-install
+            pkgs.cabal2nix
+            pkgs.stack
+            pkgs.ghc
+            pkgs.haskell-language-server
             pkgs.element-desktop
             pkgs.kicad
             pkgs.horizon-eda
