@@ -51,6 +51,10 @@ if [ -d "$HOME/.lv2" ] ; then
     export LV2_PATH="$HOME/.lv2:$LV2_PATH"
 fi
 
+if [ -d "$HOME/.nix-profile/lib/lv2" ] ; then
+    export LV2_PATH="$HOME/.nix-profile/lib/lv2:$LV2_PATH"
+fi
+
 # include Guix environment
 if [ -f "$HOME/.guix-profile/etc/profile" ] ; then
     #export GUIX_LOCPATH="$HOME/.guix-profile/lib/locale"
