@@ -4,7 +4,6 @@
         "coc.preferences.formatOnSave": true,
     },
     "coc.preferences.enableMarkdown": true,
-    "codeLens.enable": true,
     "pyright.organizeimports.provider": "isort",
     "pyright.testing.provider": "pytest",
     "python.formatting.provider": "black",
