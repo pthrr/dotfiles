@@ -135,6 +135,10 @@
             source = ../../../misc/bin;
             recursive = true;
         };
+        file."scripts" = {
+            source = ../../../misc/scripts;
+            recursive = true;
+        };
 
         file."Vorlagen/snippets" = {
             source = ../../../nvim/Vorlagen/snippets;

@@ -136,14 +136,6 @@ if [ ! -d  "$HOME/Vorlagen/snippets" ] ; then
     mkdir -p "$HOME/Vorlagen/snippets"
 fi
 
-if [ ! -d  "$HOME/mail/personal" ] ; then
-    mkdir -p "$HOME/mail/personal"
-fi
-
-if [ ! -d  "$HOME/mail/public" ] ; then
-    mkdir -p "$HOME/mail/public"
-fi
-
 if [ ! -d  "$HOME/Audio" ] ; then
     mkdir -p "$HOME/Audio"
 fi
