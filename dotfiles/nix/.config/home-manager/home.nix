@@ -211,13 +211,5 @@
             source = ../../../nvim/.config/nvim;
             recursive = true;
         };
-
-        configFile."black" = {
-            source = ../../../lang/.config/black;
-        };
-        configFile."mypy" = {
-            source = ../../../lang/.config/mypy;
-            recursive = true;
-        };
     };
 }
