@@ -1,6 +1,6 @@
 {
     "suggest.noselect": true,
-    "[xml][json][yaml][toml][haskell][rust][c][cpp][python]": {
+    "[markdown][xml][json][yaml][toml][haskell][rust][c][cpp][python]": {
         "coc.preferences.formatOnSave": true,
     },
     "coc.preferences.enableMarkdown": true,
