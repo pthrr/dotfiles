@@ -115,10 +115,12 @@
 
         # files in ~/
         file.".bashrc".source = ../../../bash/.bashrc;
-        file.".tmux.conf".source = ../../../bash/.tmux.conf;
+        file.".profile".source = ../../../bash/.profile;
         file."key-bindings.bash".source = ../../../bash/key-bindings.bash;
         file."z.sh".source = ../../../bash/z.sh;
         file."git-prompt.sh".source = ../../../bash/git-prompt.sh;
+
+        file.".tmux.conf".source = ../../../tmux/.tmux.conf;
 
         file.".gitconfig".source = ../../../git/.gitconfig;
         file.".git-commit-template.txt".source = ../../../git/.git-commit-template.txt;
@@ -149,7 +151,6 @@
             recursive = true;
         };
 
-        file.".profile".source = ../../../x/.profile;
         file.".xinitrc".source = ../../../x/.xinitrc;
         file.".xresources".source = ../../../x/.xresources;
         file.".xsessionrc".source = ../../../x/.xsessionrc;
