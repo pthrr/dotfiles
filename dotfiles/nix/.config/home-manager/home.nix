@@ -19,6 +19,9 @@
         enableNixpkgsReleaseCheck = false;
 
         packages = [
+            pkgs.tlaplus
+            pkgs.tlaplusToolbox
+            pkgs.alloy6
             pkgs.swh_lv2
             pkgs.ladspaPlugins
             pkgs.wolf-shaper
