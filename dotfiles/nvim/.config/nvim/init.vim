@@ -141,8 +141,6 @@ vim.api.nvim_create_autocmd({ "BufWritePre" }, {
 })
 EOF
 " show matching brackets
-set showmatch
-set matchtime=0
 highlight MatchParen guibg=none guifg=white gui=bold ctermbg=none ctermfg=white cterm=bold
 " change leader key
 let mapleader = "'"
