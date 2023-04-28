@@ -19,6 +19,8 @@
         enableNixpkgsReleaseCheck = false;
 
         packages = [
+            pkgs.wasmer
+            pkgs.emscripten
             pkgs.tlaplus
             pkgs.tlaplusToolbox
             pkgs.alloy6
