@@ -19,6 +19,7 @@
         enableNixpkgsReleaseCheck = false;
 
         packages = [
+            pkgs.discord
             pkgs.tmuxp
             pkgs.wasmer
             pkgs.emscripten
