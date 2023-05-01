@@ -92,6 +92,7 @@ sudo apt install -y \
     adwaita-icon-theme \
     adwaita-qt \
     qt5ct \
+    rofi-tmuxp \
     flatpak
 sudo apt remove -y \
     firefox-esr \

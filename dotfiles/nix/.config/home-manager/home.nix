@@ -19,6 +19,7 @@
         enableNixpkgsReleaseCheck = false;
 
         packages = [
+            pkgs.tmuxp
             pkgs.wasmer
             pkgs.emscripten
             pkgs.tlaplus
@@ -126,6 +127,10 @@
         file."git-prompt.sh".source = ../../../bash/git-prompt.sh;
 
         file.".tmux.conf".source = ../../../tmux/.tmux.conf;
+        file.".tmuxp" = {
+            source = ../../../tmux/.tmuxp;
+            recursive = true;
+        };
 
         file.".gitconfig".source = ../../../git/.gitconfig;
         file.".git-commit-template.txt".source = ../../../git/.git-commit-template.txt;
