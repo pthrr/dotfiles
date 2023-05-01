@@ -85,6 +85,7 @@ sudo apt install -y \
     i3lock \
     i3status \
     rofi \
+    rofi-tmuxp \
     python3 \
     python3-pip \
     python3-dev \
@@ -92,7 +93,6 @@ sudo apt install -y \
     adwaita-icon-theme \
     adwaita-qt \
     qt5ct \
-    rofi-tmuxp \
     flatpak
 sudo apt remove -y \
     firefox-esr \
