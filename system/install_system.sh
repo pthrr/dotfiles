@@ -85,6 +85,7 @@ sudo apt install -y \
     i3lock \
     i3status \
     rofi \
+    rofi-tmuxp \
     python3 \
     python3-pip \
     python3-dev \

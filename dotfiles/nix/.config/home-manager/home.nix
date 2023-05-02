@@ -19,8 +19,12 @@
         enableNixpkgsReleaseCheck = false;
 
         packages = [
-            pkgs.nusmv
             pkgs.nuXmv
+            pkgs.nusmv
+            pkgs.discord
+            pkgs.tmuxp
+            pkgs.wasmer
+            pkgs.emscripten
             pkgs.tlaplus
             pkgs.tlaplusToolbox
             pkgs.alloy6
@@ -126,6 +130,10 @@
         file."git-prompt.sh".source = ../../../bash/git-prompt.sh;
 
         file.".tmux.conf".source = ../../../tmux/.tmux.conf;
+        file.".tmuxp" = {
+            source = ../../../tmux/.tmuxp;
+            recursive = true;
+        };
 
         file.".gitconfig".source = ../../../git/.gitconfig;
         file.".git-commit-template.txt".source = ../../../git/.git-commit-template.txt;
