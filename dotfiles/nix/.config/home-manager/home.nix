@@ -19,6 +19,8 @@
         enableNixpkgsReleaseCheck = false;
 
         packages = [
+            pkgs.nusmv
+            pkgs.nuXmv
             pkgs.tlaplus
             pkgs.tlaplusToolbox
             pkgs.alloy6
