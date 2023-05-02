@@ -85,7 +85,6 @@ sudo apt install -y \
     i3lock \
     i3status \
     rofi \
-    rofi-tmuxp \
     python3 \
     python3-pip \
     python3-dev \
@@ -115,6 +114,7 @@ python3 -m pip install --upgrade --force-reinstall \
     isort \
     black \
     conan \
+    rofi-tmuxp \
     rtcqs
 sudo npm install -g npm n
 sudo n stable
