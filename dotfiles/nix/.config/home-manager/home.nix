@@ -147,9 +147,7 @@
             recursive = true;
         };
 
-        file.".local/share/applications/Joplin.desktop" = {
-            source = ../../../misc/.local/share/applications/Joplin.desktop;
-        };
+        file.".local/share/applications/Joplin.desktop".source = ../../../misc/.local/share/applications/Joplin.desktop;
         file."bin" = {
             source = ../../../misc/bin;
             recursive = true;
