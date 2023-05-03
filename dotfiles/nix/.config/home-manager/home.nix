@@ -19,6 +19,8 @@
         enableNixpkgsReleaseCheck = false;
 
         packages = [
+            pkgs.joplin
+            pkgs.joplin-desktop
             pkgs.slack
             pkgs.nuXmv
             pkgs.nusmv
