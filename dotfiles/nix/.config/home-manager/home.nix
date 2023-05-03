@@ -19,6 +19,7 @@
         enableNixpkgsReleaseCheck = false;
 
         packages = [
+            pkgs.slack
             pkgs.nuXmv
             pkgs.nusmv
             pkgs.discord
