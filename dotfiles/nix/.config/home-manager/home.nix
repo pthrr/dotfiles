@@ -19,7 +19,6 @@
         enableNixpkgsReleaseCheck = false;
 
         packages = [
-            pkgs.joplin
             pkgs.slack
             pkgs.nuXmv
             pkgs.nusmv
@@ -148,6 +147,9 @@
             recursive = true;
         };
 
+        file.".local/share/applications/Joplin.desktop" = {
+            source = ../../../misc/.local/share/applications/Joplin.desktop;
+        };
         file."bin" = {
             source = ../../../misc/bin;
             recursive = true;
