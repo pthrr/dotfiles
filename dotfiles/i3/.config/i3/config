@@ -28,6 +28,7 @@ floating_modifier $mod
 
 # start a terminal
 bindsym $mod+Return exec $TERMINAL
+bindsym $mod+b exec zutty
 
 # lock screen
 bindsym $mod+s exec i3lock -c 000000
