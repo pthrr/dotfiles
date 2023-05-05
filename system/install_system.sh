@@ -11,6 +11,7 @@ sudo apt remove -y \
     task-cinnamon-desktop \
     task-lxde-desktop
 sudo apt install -y \
+    libxmu-dev \
     gnome-themes-standard \
     openjdk-17-jdk-headless \
     openjdk-17-jre-headless \
