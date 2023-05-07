@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+wget -O- https://www.virtualbox.org/download/oracle_vbox_2016.asc | sudo gpg --dearmor --yes --output /usr/share/keyrings/oracle-virtualbox-2016.gpg
+[[ ! $(grep "virtualbox" /etc/apt/sources.list) ]] && echo "deb [arch=amd64 signed-by=/usr/share/keyrings/oracle-virtualbox-2016.gpg] https://download.virtualbox.org/virtualbox/debian bullseye contrib" | sudo tee -a /etc/apt/sources.list
 sudo apt update -y
 sudo apt remove -y \
     task-lxqt-desktop \
@@ -11,6 +13,7 @@ sudo apt remove -y \
     task-cinnamon-desktop \
     task-lxde-desktop
 sudo apt install -y \
+    virtualbox-7.0 \
     libxmu-dev \
     gnome-themes-standard \
     openjdk-17-jdk-headless \
