@@ -19,6 +19,7 @@
         enableNixpkgsReleaseCheck = false;
 
         packages = [
+            pkgs.dotnet-sdk
             pkgs.slack
             pkgs.nuXmv
             pkgs.nusmv
