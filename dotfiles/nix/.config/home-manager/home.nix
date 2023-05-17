@@ -19,6 +19,8 @@
         enableNixpkgsReleaseCheck = false;
 
         packages = [
+            pkgs.mozwire
+            pkgs.mozillavpn
             pkgs.dotnet-sdk
             pkgs.slack
             pkgs.nuXmv
