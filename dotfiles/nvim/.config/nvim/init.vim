@@ -93,6 +93,8 @@ set signcolumn=yes
 set autoread
 set lazyredraw
 set ttyfast
+set timeoutlen=300
+set ttimeoutlen=0
 set title
 set hidden
 set path+=**
