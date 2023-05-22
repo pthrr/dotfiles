@@ -14,7 +14,7 @@ sudo apt remove -y \
 sudo apt install -y \
     virtualbox-7.0 \
     libxmu-dev \
-    gnome-themes-standard \
+    # gnome-themes-standard \
     openjdk-17-jdk-headless \
     openjdk-17-jre-headless \
     libcairomm-1.0-dev \
@@ -26,14 +26,14 @@ sudo apt install -y \
     exfat-utils \
     qemu \
     chromium \
-    gnome-shell-extensions \
-    gnome-tweaks \
+    # gnome-shell-extensions \
+    # gnome-tweaks \
     sshpass \
     sshfs \
     ssh-askpass \
-    gnome-software-plugin-flatpak \
+    # gnome-software-plugin-flatpak \
     task-kde-desktop \
-    task-gnome-desktop \
+    # task-gnome-desktop \
     task-desktop \
     task-german \
     task-laptop \
@@ -95,7 +95,7 @@ sudo apt install -y \
     intel-microcode \
     adwaita-icon-theme \
     adwaita-qt \
-    qt5ct \
+    # qt5ct \
     flatpak
 sudo apt remove -y \
     firefox-esr \
