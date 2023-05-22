@@ -8,7 +8,6 @@ sudo apt remove -y \
     task-lxqt-desktop \
     task-gnome-flashback-desktop \
     task-xfce-desktop \
-    task-kde-desktop \
     task-mate-desktop \
     task-cinnamon-desktop \
     task-lxde-desktop
@@ -33,6 +32,7 @@ sudo apt install -y \
     sshfs \
     ssh-askpass \
     gnome-software-plugin-flatpak \
+    task-kde-desktop \
     task-gnome-desktop \
     task-desktop \
     task-german \
