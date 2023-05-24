@@ -20,7 +20,7 @@ sudo apt install -y \
     libcairomm-1.0-dev \
     libcairo2-dev \
     libopenblas-dev \
-    hicolor-icon-theme \
+    # hicolor-icon-theme \
     nvidia-detect \
     firmware-misc-nonfree \
     exfat-utils \
@@ -33,6 +33,8 @@ sudo apt install -y \
     ssh-askpass \
     # gnome-software-plugin-flatpak \
     task-kde-desktop \
+    # kdenlive \
+    # labplot \
     # task-gnome-desktop \
     task-desktop \
     task-german \
@@ -93,21 +95,19 @@ sudo apt install -y \
     python3-pip \
     python3-dev \
     intel-microcode \
-    adwaita-icon-theme \
-    adwaita-qt \
+    # adwaita-icon-theme \
+    # adwaita-qt \
     # qt5ct \
     flatpak
 sudo apt remove -y \
     firefox-esr \
     firefox
-sudo apt purge -y \
-    gnome-games
+# sudo apt purge -y \
+#     gnome-games
 sudo apt autoremove -y
 sudo flatpak remote-add --if-not-exists \
     flathub https://flathub.org/repo/flathub.flatpakrepo
 sudo flatpak install \
-    kdenlive \
-    labplot \
     jdownloader
 python3 -m pip install --upgrade pip
 python3 -m pip install --upgrade --force-reinstall \
