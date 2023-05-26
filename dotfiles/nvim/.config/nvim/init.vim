@@ -118,7 +118,7 @@ set statusline+=%=
 set statusline+=%-14.(%l,%c%V%)
 set statusline+=\ %P
 set colorcolumn=80,110
-set clipboard=unnamedplus
+set clipboard+=unnamedplus
 set tabstop=4
 set softtabstop=4
 set shiftwidth=4
@@ -167,24 +167,36 @@ nnoremap <leader>d "_d
 " replace currently selected text without yanking it
 vnoremap <leader>p "_dP
 " configure clipboard if inside WSL
-" https://github.com/memoryInject/wsl-clipboard
 if exists('g:wsl')
-lua << EOF
-  vim.g.clipboard = {
-    name = "wsl-clipboard",
-    copy = {
-      ["+"] = "wcopy",
-      ["*"] = "wcopy"
-    },
-    paste = {
-      ["+"] = "wpaste",
-      ["*"] = "wpaste"
-    },
-    cache_enabled = true
-  }
-EOF
+  let g:clipboard = {
+    \   'name': 'WslClipboard',
+    \   'copy': {
+    \      '+': 'clip.exe',
+    \      '*': 'clip.exe',
+    \    },
+    \   'paste': {
+    \      '+': 'powershell.exe -c [Console]::Out.Write($(Get-Clipboard -Raw).tostring().replace("`r", ""))',
+    \      '*': 'powershell.exe -c [Console]::Out.Write($(Get-Clipboard -Raw).tostring().replace("`r", ""))',
+    \   },
+    \   'cache_enabled': 0,
+    \ }
+" https://github.com/memoryInject/wsl-clipboard
+" lua << EOF
+"   vim.g.clipboard = {
+"     name = "wsl-clipboard",
+"     copy = {
+"       ["+"] = "wcopy",
+"       ["*"] = "wcopy"
+"     },
+"     paste = {
+"       ["+"] = "wpaste",
+"       ["*"] = "wpaste"
+"     },
+"     cache_enabled = true
+"   }
+" EOF
 endif
-"cppman
+" cppman
 lua << EOF
   local cppman = require"cppman"
   cppman.setup()

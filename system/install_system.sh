@@ -12,6 +12,7 @@ sudo apt remove -y \
     task-cinnamon-desktop \
     task-lxde-desktop
 sudo apt install -y \
+    xclip \
     virtualbox-7.0 \
     libxmu-dev \
     # gnome-themes-standard \
