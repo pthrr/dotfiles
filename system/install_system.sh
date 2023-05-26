@@ -111,6 +111,7 @@ sudo flatpak install \
     jdownloader
 python3 -m pip install --upgrade pip
 python3 -m pip install --upgrade --force-reinstall \
+    cppman \
     i3ipc \
     mypy \
     ruff \

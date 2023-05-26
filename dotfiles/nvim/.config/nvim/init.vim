@@ -43,6 +43,8 @@ if dein#load_state(s:dein_dir)
             \ 'coc-snippets'
             \ ]
     endif
+    call dein#add('MunifTanjim/nui.nvim')
+    call dein#add('madskjeldgaard/cppman.nvim', { 'depends': 'nui.nvim' })
     call dein#add('overcache/NeoSolarized')
     call dein#add('sirver/ultisnips')
     call dein#add('folke/todo-comments.nvim')
@@ -182,6 +184,19 @@ lua << EOF
   }
 EOF
 endif
+"cppman
+lua << EOF
+  local cppman = require"cppman"
+  cppman.setup()
+  -- Make a keymap to open the word under cursor in CPPman
+  vim.keymap.set("n", "<leader>cm", function()
+      cppman.open_cppman_for(vim.fn.expand("<cword>"))
+  end)
+  -- Open search box
+  vim.keymap.set("n", "<leader>cc", function()
+      cppman.input()
+  end)
+EOF
 " tree-sitter
 if exists('g:wsl')
 lua << EOF
