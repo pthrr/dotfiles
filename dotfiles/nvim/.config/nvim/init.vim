@@ -180,21 +180,6 @@ if exists('g:wsl')
     \   },
     \   'cache_enabled': 0,
     \ }
-" https://github.com/memoryInject/wsl-clipboard
-" lua << EOF
-"   vim.g.clipboard = {
-"     name = "wsl-clipboard",
-"     copy = {
-"       ["+"] = "wcopy",
-"       ["*"] = "wcopy"
-"     },
-"     paste = {
-"       ["+"] = "wpaste",
-"       ["*"] = "wpaste"
-"     },
-"     cache_enabled = true
-"   }
-" EOF
 endif
 " cppman
 lua << EOF
