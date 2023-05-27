@@ -8,32 +8,35 @@ sudo apt remove -y \
     task-lxqt-desktop \
     task-gnome-flashback-desktop \
     task-xfce-desktop \
-    task-kde-desktop \
     task-mate-desktop \
     task-cinnamon-desktop \
     task-lxde-desktop
 sudo apt install -y \
+    xclip \
     virtualbox-7.0 \
     libxmu-dev \
-    gnome-themes-standard \
+    # gnome-themes-standard \
     openjdk-17-jdk-headless \
     openjdk-17-jre-headless \
     libcairomm-1.0-dev \
     libcairo2-dev \
     libopenblas-dev \
-    hicolor-icon-theme \
+    # hicolor-icon-theme \
     nvidia-detect \
     firmware-misc-nonfree \
     exfat-utils \
     qemu \
     chromium \
-    gnome-shell-extensions \
-    gnome-tweaks \
+    # gnome-shell-extensions \
+    # gnome-tweaks \
     sshpass \
     sshfs \
     ssh-askpass \
-    gnome-software-plugin-flatpak \
-    task-gnome-desktop \
+    # gnome-software-plugin-flatpak \
+    task-kde-desktop \
+    # kdenlive \
+    # labplot \
+    # task-gnome-desktop \
     task-desktop \
     task-german \
     task-laptop \
@@ -93,24 +96,23 @@ sudo apt install -y \
     python3-pip \
     python3-dev \
     intel-microcode \
-    adwaita-icon-theme \
-    adwaita-qt \
-    qt5ct \
+    # adwaita-icon-theme \
+    # adwaita-qt \
+    # qt5ct \
     flatpak
 sudo apt remove -y \
     firefox-esr \
     firefox
-sudo apt purge -y \
-    gnome-games
+# sudo apt purge -y \
+#     gnome-games
 sudo apt autoremove -y
 sudo flatpak remote-add --if-not-exists \
     flathub https://flathub.org/repo/flathub.flatpakrepo
 sudo flatpak install \
-    kdenlive \
-    labplot \
     jdownloader
 python3 -m pip install --upgrade pip
 python3 -m pip install --upgrade --force-reinstall \
+    cppman \
     i3ipc \
     mypy \
     ruff \
