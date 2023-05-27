@@ -30,6 +30,7 @@ if dein#load_state(s:dein_dir)
         call dein#add('neoclide/coc.nvim', { 'merged': 0, 'rev': 'release' })
         let g:coc_global_extensions = [
             \ 'coc-docker',
+            \ 'coc-elixir',
             \ 'coc-cmake',
             \ 'coc-clangd',
             \ 'coc-toml',
@@ -43,16 +44,16 @@ if dein#load_state(s:dein_dir)
             \ 'coc-snippets'
             \ ]
     endif
+    call dein#add('overcache/NeoSolarized')
+    call dein#add('ziglang/zig.vim')
+    call dein#add('sirver/ultisnips')
+    call dein#add('folke/todo-comments.nvim')
+    call dein#add('numToStr/Comment.nvim')
+    call dein#add('liuchengxu/vista.vim')
     call dein#add('derekwyatt/vim-fswitch')
     call dein#add('tyru/open-browser.vim')
     call dein#add('MunifTanjim/nui.nvim')
     call dein#add('madskjeldgaard/cppman.nvim', { 'depends': 'nui.nvim' })
-    call dein#add('overcache/NeoSolarized')
-    call dein#add('sirver/ultisnips')
-    call dein#add('folke/todo-comments.nvim')
-    call dein#add('liuchengxu/vista.vim')
-    call dein#add('numToStr/Comment.nvim')
-    call dein#add('ziglang/zig.vim')
     call dein#add('tpope/vim-repeat')
     call dein#add('ggandor/leap.nvim', { 'depends': 'vim-repeat' })
     call dein#end()
@@ -139,8 +140,6 @@ autocmd InsertLeave * highlight cursorline guibg=#073642 guifg=none gui=none cte
 " no rel nums on non focused buffer
 autocmd BufEnter,FocusGained,InsertLeave * setlocal relativenumber
 autocmd BufLeave,FocusLost,InsertEnter * setlocal norelativenumber
-" format gleam
-autocmd BufWritePre *.gleam Neoformat
 " remove trailing white space at save
 lua << EOF
 vim.api.nvim_create_autocmd({ "BufWritePre" }, {
@@ -213,29 +212,33 @@ lua << EOF
   require'nvim-treesitter.configs'.setup {
     ensure_installed = {
         "c",
-        "lua",
-        "vim",
-        "help",
+        "go",
+        "zig",
+        "cpp",
+        "java",
         "rust",
+        "lua",
         "python",
         "yaml",
         "toml",
         "json",
-        "cpp",
-        "java",
+        "markdown",
         "bash",
         "cmake",
+        "meson",
         "dockerfile",
         "git_rebase",
         "gitattributes",
         "gitcommit",
-        "go",
-        "markdown",
-        "meson",
-        "nix",
+        "elixir",
+        "eex",
+        "heex",
         "haskell",
-        "zig",
-        "verilog"
+        "ocaml",
+        "vim",
+        "nix",
+        "verilog",
+        "help"
     },
     sync_install = false,
     auto_install = false,

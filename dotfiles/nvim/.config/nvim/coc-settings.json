@@ -1,6 +1,6 @@
 {
     "suggest.noselect": true,
-    "[markdown][xml][json][yaml][toml][haskell][zig][rust][c][cpp][python]": {
+    "[markdown][xml][json][yaml][toml][elixir][haskell][zig][rust][c][cpp][python]": {
         "coc.preferences.formatOnSave": true,
     },
     "coc.preferences.enableMarkdown": true,
@@ -15,15 +15,6 @@
         "--compile-commands-dir=build"
     ],
     "languageserver": {
-        "gleam": {
-            "command": "gleam",
-            "args": [
-                "lsp"
-            ],
-            "filetypes": [
-                "gleam"
-            ]
-        },
         "haskell": {
             "command": "haskell-language-server-wrapper",
             "args": [

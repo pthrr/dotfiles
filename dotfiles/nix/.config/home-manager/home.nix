@@ -19,7 +19,8 @@
         enableNixpkgsReleaseCheck = false;
 
         packages = [
-            pkgs.gleam
+            pkgs.elixir
+            pkgs.elixir-ls
             pkgs.mozwire
             pkgs.mozillavpn
             pkgs.dotnet-sdk
