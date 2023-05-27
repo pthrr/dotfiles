@@ -15,6 +15,15 @@
         "--compile-commands-dir=build"
     ],
     "languageserver": {
+        "gleam": {
+            "command": "gleam",
+            "args": [
+                "lsp"
+            ],
+            "filetypes": [
+                "gleam"
+            ]
+        },
         "haskell": {
             "command": "haskell-language-server-wrapper",
             "args": [

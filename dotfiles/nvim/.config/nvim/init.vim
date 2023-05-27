@@ -139,6 +139,8 @@ autocmd InsertLeave * highlight cursorline guibg=#073642 guifg=none gui=none cte
 " no rel nums on non focused buffer
 autocmd BufEnter,FocusGained,InsertLeave * setlocal relativenumber
 autocmd BufLeave,FocusLost,InsertEnter * setlocal norelativenumber
+" format gleam
+autocmd BufWritePre *.gleam Neoformat
 " remove trailing white space at save
 lua << EOF
 vim.api.nvim_create_autocmd({ "BufWritePre" }, {
