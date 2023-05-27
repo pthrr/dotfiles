@@ -43,6 +43,7 @@ if dein#load_state(s:dein_dir)
             \ 'coc-snippets'
             \ ]
     endif
+    call dein#add('gleam-lang/gleam.vim')
     call dein#add('MunifTanjim/nui.nvim')
     call dein#add('madskjeldgaard/cppman.nvim', { 'depends': 'nui.nvim' })
     call dein#add('overcache/NeoSolarized')
