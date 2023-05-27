@@ -43,15 +43,16 @@ if dein#load_state(s:dein_dir)
             \ 'coc-snippets'
             \ ]
     endif
+    call dein#add('sbdchd/neoformat')
     call dein#add('gleam-lang/gleam.vim')
-    call dein#add('MunifTanjim/nui.nvim')
-    call dein#add('madskjeldgaard/cppman.nvim', { 'depends': 'nui.nvim' })
+    call dein#add('ziglang/zig.vim')
     call dein#add('overcache/NeoSolarized')
     call dein#add('sirver/ultisnips')
     call dein#add('folke/todo-comments.nvim')
     call dein#add('liuchengxu/vista.vim')
     call dein#add('numToStr/Comment.nvim')
-    call dein#add('ziglang/zig.vim')
+    call dein#add('MunifTanjim/nui.nvim')
+    call dein#add('madskjeldgaard/cppman.nvim', { 'depends': 'nui.nvim' })
     call dein#add('tpope/vim-repeat')
     call dein#add('ggandor/leap.nvim', { 'depends': 'vim-repeat' })
     call dein#end()
@@ -138,6 +139,8 @@ autocmd InsertLeave * highlight cursorline guibg=#073642 guifg=none gui=none cte
 " no rel nums on non focused buffer
 autocmd BufEnter,FocusGained,InsertLeave * setlocal relativenumber
 autocmd BufLeave,FocusLost,InsertEnter * setlocal norelativenumber
+" format gleam
+autocmd BufWritePre *.gleam Neoformat
 " remove trailing white space at save
 lua << EOF
 vim.api.nvim_create_autocmd({ "BufWritePre" }, {
