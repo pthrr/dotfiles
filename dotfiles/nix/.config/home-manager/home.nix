@@ -19,6 +19,9 @@
         enableNixpkgsReleaseCheck = false;
 
         packages = [
+            pkgs.verilator
+            pkgs.gtkwave
+            pkgs.bluespec
             pkgs.elixir
             pkgs.elixir-ls
             pkgs.mozwire
