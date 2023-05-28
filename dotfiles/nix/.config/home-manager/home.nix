@@ -19,6 +19,9 @@
         enableNixpkgsReleaseCheck = false;
 
         packages = [
+            pkgs.icestorm
+            pkgs.nextpnrWithGui
+            pkgs.yosys
             pkgs.verilator
             pkgs.gtkwave
             pkgs.bluespec
