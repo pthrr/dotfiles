@@ -19,6 +19,7 @@
         enableNixpkgsReleaseCheck = false;
 
         packages = [
+            pkgs.picocom
             pkgs.yosys-bluespec
             pkgs.icestorm
             pkgs.nextpnrWithGui
