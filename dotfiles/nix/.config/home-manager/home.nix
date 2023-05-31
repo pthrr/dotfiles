@@ -19,6 +19,7 @@
         enableNixpkgsReleaseCheck = false;
 
         packages = [
+            pkgs.hlint
             pkgs.picocom
             pkgs.yosys-bluespec
             pkgs.icestorm

@@ -44,6 +44,7 @@ if dein#load_state(s:dein_dir)
             \ 'coc-snippets'
             \ ]
     endif
+    let g:coc_global_extensions = [ 'coc-elixir' ]
     call dein#add('overcache/NeoSolarized')
     call dein#add('ziglang/zig.vim')
     call dein#add('sirver/ultisnips')

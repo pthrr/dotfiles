@@ -21,11 +21,11 @@
                 "--lsp"
             ],
             "rootPatterns": [
-                "stack.yaml",
-                "*.cabal",
+                ".stack.yaml",
+                ".hie-bios",
+                "BUILD.bazel",
                 "cabal.config",
-                "package.yaml",
-                "hie.yaml"
+                "package.yaml"
             ],
             "filetypes": [
                 "hs",
@@ -33,7 +33,11 @@
                 "haskell"
             ],
             "initializationOptions": {
-                "languageServerHaskell": {}
+                "languageServerHaskell": {
+                    "hlintOn": true,
+                    "maxNumberOfProblems": 10,
+                    "completionSnippetsOn": true
+                }
             }
         }
     },
