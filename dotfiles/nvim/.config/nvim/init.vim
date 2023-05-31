@@ -28,23 +28,7 @@ if dein#load_state(s:dein_dir)
         call dein#add('nvim-lua/plenary.nvim')
         call dein#add('nvim-telescope/telescope.nvim')
         call dein#add('neoclide/coc.nvim', { 'merged': 0, 'rev': 'release' })
-        let g:coc_global_extensions = [
-            \ 'coc-docker',
-            \ 'coc-elixir',
-            \ 'coc-cmake',
-            \ 'coc-clangd',
-            \ 'coc-toml',
-            \ 'coc-yaml',
-            \ 'coc-json',
-            \ 'coc-sh',
-            \ 'coc-pyright',
-            \ 'coc-rust-analyzer',
-            \ 'coc-java',
-            \ 'coc-markdownlint',
-            \ 'coc-snippets'
-            \ ]
     endif
-    let g:coc_global_extensions = [ 'coc-elixir' ]
     call dein#add('overcache/NeoSolarized')
     call dein#add('ziglang/zig.vim')
     call dein#add('sirver/ultisnips')
@@ -64,6 +48,22 @@ endif
 if dein#check_install()
     call dein#install()
 endif
+let g:coc_global_extensions = [
+    \ 'coc-docker',
+    \ 'coc-elixir',
+    \ 'coc-cmake',
+    \ 'coc-clangd',
+    \ 'coc-toml',
+    \ 'coc-yaml',
+    \ 'coc-json',
+    \ 'coc-sh',
+    \ 'coc-pyright',
+    \ 'coc-rust-analyzer',
+    \ 'coc-java',
+    \ 'coc-markdownlint',
+    \ 'coc-snippets',
+    \ 'coc-nvim'
+    \ ]
 set termguicolors
 set background=dark
 colorscheme NeoSolarized

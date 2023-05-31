@@ -196,19 +196,6 @@
             pkgs.vimPlugins.nvim-treesitter-textobjects
             pkgs.vimPlugins.plenary-nvim
             pkgs.vimPlugins.telescope-nvim
-            pkgs.vimPlugins.coc-nvim
-            pkgs.vimPlugins.coc-cmake
-            pkgs.vimPlugins.coc-clangd
-            pkgs.vimPlugins.coc-pyright
-            pkgs.vimPlugins.coc-rust-analyzer
-            pkgs.vimPlugins.coc-toml
-            pkgs.vimPlugins.coc-yaml
-            pkgs.vimPlugins.coc-json
-            pkgs.vimPlugins.coc-sh
-            pkgs.vimPlugins.coc-docker
-            pkgs.vimPlugins.coc-java
-            pkgs.vimPlugins.coc-markdownlint
-            pkgs.vimPlugins.coc-snippets
         ];
     };
 
