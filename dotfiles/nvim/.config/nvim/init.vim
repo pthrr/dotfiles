@@ -27,8 +27,8 @@ if dein#load_state(s:dein_dir)
         call dein#add('nvim-treesitter/nvim-treesitter-textobjects')
         call dein#add('nvim-lua/plenary.nvim')
         call dein#add('nvim-telescope/telescope.nvim')
-        call dein#add('neoclide/coc.nvim', { 'merged': 0, 'rev': 'release' })
     endif
+    call dein#add('neoclide/coc.nvim', { 'merged': 0, 'rev': 'release' })
     call dein#add('overcache/NeoSolarized')
     call dein#add('ziglang/zig.vim')
     call dein#add('sirver/ultisnips')
@@ -55,6 +55,7 @@ let g:coc_global_extensions = [
     \ 'coc-clangd',
     \ 'coc-toml',
     \ 'coc-yaml',
+    \ 'coc-xml',
     \ 'coc-json',
     \ 'coc-sh',
     \ 'coc-pyright',
