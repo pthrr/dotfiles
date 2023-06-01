@@ -61,8 +61,7 @@ let g:coc_global_extensions = [
     \ 'coc-rust-analyzer',
     \ 'coc-java',
     \ 'coc-markdownlint',
-    \ 'coc-snippets',
-    \ 'coc-nvim'
+    \ 'coc-snippets'
     \ ]
 set termguicolors
 set background=dark
