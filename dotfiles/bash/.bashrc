@@ -4,7 +4,7 @@ export HISTFILESIZE=2000
 export HISTFILE="$XDG_CACHE_HOME/.bash_history"
 export PROMPT_DIRTRIM=2
 export PROMPT_COMMAND='LAST_STATUS=$(if [[ $? == 0 ]]; then echo "✓"; else echo "✗"; fi);GIT_BRANCH=$(__git_ps1)'
-export PS1='\[\033[G\]\[\e[33m\]\w\[\e[0m\] \u$(if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then echo " @ \h"; else echo ""; fi)$GIT_BRANCH $LAST_STATUS '
+export PS1='\[\e[33m\]\w\[\e[0m\] \u$(if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then echo " @ \h"; else echo ""; fi)$GIT_BRANCH $LAST_STATUS '
 export PS4='$0.$LINENO: '
 function command_not_found_handle() {
     regex_url='(https?|ftp|file)://[-[:alnum:]\+&@#/%?=~_|!:,.;]*[-[:alnum:]\+&@#/%=~_|]'
