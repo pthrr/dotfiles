@@ -1,3 +1,11 @@
+(setq gc-cons-threshold (* 50 1000 1000))
+(defun display-startup-time ()
+  (message "Emacs loaded in %s with %d garbage collections."
+           (format "%.2f seconds"
+                   (float-time
+                   (time-subtract after-init-time before-init-time)))
+           gcs-done))
+(add-hook 'emacs-startup-hook #'display-startup-time)
 (setq inhibit-startup-message t)
 (scroll-bar-mode -1)
 (tool-bar-mode -1)
@@ -17,3 +25,7 @@
 (require 'use-package)
 (use-package solarized-theme)
 (load-theme 'solarized-dark t)
+(global-display-line-numbers-mode 1)
+(global-hl-line-mode 1)
+(blink-cursor-mode 0)
+(setq gc-cons-threshold (* 2 1000 1000))
