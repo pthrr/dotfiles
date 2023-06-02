@@ -19,6 +19,7 @@
         enableNixpkgsReleaseCheck = false;
 
         packages = [
+            pkgs.emacs
             pkgs.zeal
             pkgs.nasm
             pkgs.hlint
@@ -228,6 +229,11 @@
 
         configFile."nvim" = {
             source = ../../../nvim/.config/nvim;
+            recursive = true;
+        };
+
+        configFile."emacs" = {
+            source = ../../../emacs/.config/emacs;
             recursive = true;
         };
     };
