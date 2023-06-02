@@ -19,6 +19,7 @@
         enableNixpkgsReleaseCheck = false;
 
         packages = [
+            pkgs.zeal
             pkgs.nasm
             pkgs.hlint
             pkgs.picocom
