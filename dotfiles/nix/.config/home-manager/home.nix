@@ -19,6 +19,7 @@
         enableNixpkgsReleaseCheck = false;
 
         packages = [
+            pkgs.fq
             pkgs.emacs
             pkgs.zeal
             pkgs.nasm
