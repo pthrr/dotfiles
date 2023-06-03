@@ -23,8 +23,6 @@
   (setq use-package-always-ensure t
         use-package-expand-minimally t))
 (require 'use-package)
-(use-package solarized-theme)
-(load-theme 'solarized-dark t)
 (global-display-line-numbers-mode 1)
 (global-hl-line-mode 1)
 (blink-cursor-mode 0)

@@ -50,7 +50,7 @@ function kpusr() {
 set -o vi
 alias vi='nvim'
 alias vim='nvim'
-alias em='emacs'
+alias em='emacs --no-window-system'
 alias top='htop'
 alias ls='exa'
 alias cp='cp -iv'
