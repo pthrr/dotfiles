@@ -48,8 +48,8 @@ bindsym $mod+k focus up
 bindsym $mod+l focus right
 
 # Toggle through workspaces
-bindsym $mod+Tab+h workspace prev
-bindsym $mod+Tab+l workspace next
+bindsym $mod+Mod1+h workspace prev
+bindsym $mod+Mod1+l workspace next
 
 # move focused window
 bindsym $mod+Shift+h move left
