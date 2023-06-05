@@ -16,28 +16,22 @@ sudo apt install -y \
     xclip \
     virtualbox-7.0 \
     libxmu-dev \
-    # gnome-themes-standard \
     openjdk-17-jdk-headless \
     openjdk-17-jre-headless \
     libcairomm-1.0-dev \
     libcairo2-dev \
     libopenblas-dev \
-    # hicolor-icon-theme \
     nvidia-detect \
     firmware-misc-nonfree \
     exfat-utils \
     qemu \
     chromium \
-    # gnome-shell-extensions \
-    # gnome-tweaks \
     sshpass \
     sshfs \
     ssh-askpass \
-    # gnome-software-plugin-flatpak \
     task-kde-desktop \
-    # kdenlive \
-    # labplot \
-    # task-gnome-desktop \
+    kdenlive \
+    labplot \
     task-desktop \
     task-german \
     task-laptop \
@@ -81,6 +75,7 @@ sudo apt install -y \
     fonts-font-awesome \
     fonts-ubuntu \
     spacefm \
+    gcc \
     clang \
     clangd \
     clang-tidy \
@@ -97,15 +92,12 @@ sudo apt install -y \
     python3-pip \
     python3-dev \
     intel-microcode \
-    # adwaita-icon-theme \
-    # adwaita-qt \
-    # qt5ct \
     flatpak
 sudo apt remove -y \
     firefox-esr \
     firefox
-# sudo apt purge -y \
-#     gnome-games
+sudo apt purge -y \
+    kdegames
 sudo apt autoremove -y
 sudo flatpak remote-add --if-not-exists \
     flathub https://flathub.org/repo/flathub.flatpakrepo

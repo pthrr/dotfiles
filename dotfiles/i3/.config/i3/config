@@ -30,22 +30,26 @@ floating_modifier $mod
 bindsym $mod+Return exec $TERMINAL
 
 # lock screen
-bindsym $mod+s exec i3lock -c 000000
+bindsym $mod+Shift+s exec i3lock -c 000000
 
 # kill focused window
 bindsym $mod+Shift+x kill
 
 # start dmenu (a program launcher)
-bindsym $mod+a exec "rofi -theme solarized -show run -modi drun,run"
-bindsym $mod+d exec "rofi -theme solarized -show window"
-bindsym $mod+z exec "rofi -theme solarized -show ssh"
-bindsym $mod+u exec "rofi -theme solarized -show tmuxp"
+bindsym $mod+u exec "rofi -theme solarized -show run -modi drun,run"
+bindsym $mod+i exec "rofi -theme solarized -show window"
+bindsym $mod+o exec "rofi -theme solarized -show ssh"
+bindsym $mod+p exec "rofi -theme solarized -show tmuxp"
 
 # change focus
 bindsym $mod+h focus left
 bindsym $mod+j focus down
 bindsym $mod+k focus up
 bindsym $mod+l focus right
+
+# Toggle through workspaces
+bindsym $mod+Tab+h workspace prev
+bindsym $mod+Tab+l workspace next
 
 # move focused window
 bindsym $mod+Shift+h move left
@@ -152,10 +156,6 @@ bindsym $mod+Ctrl+j resize grow height 5 px or 5 ppt
 bindsym $mod+Ctrl+k resize shrink height 5 px or 5 ppt
 bindsym $mod+Ctrl+l resize grow width 5 px or 5 ppt
 bindsym $mod+Ctrl+h resize shrink width 5 px or 5 ppt
-
-# Toggle through workspaces
-bindsym $mod+Shift+Tab workspace prev
-bindsym $mod+Tab workspace next
 
 # ALSA
 bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +10%

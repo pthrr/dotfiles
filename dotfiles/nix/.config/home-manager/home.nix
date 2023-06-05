@@ -19,6 +19,9 @@
         enableNixpkgsReleaseCheck = false;
 
         packages = [
+            pkgs.podman
+            pkgs.podman-compose
+            pkgs.crun
             pkgs.fq
             pkgs.emacs
             pkgs.zeal
