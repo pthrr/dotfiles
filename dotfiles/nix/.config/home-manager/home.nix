@@ -19,6 +19,7 @@
         enableNixpkgsReleaseCheck = false;
 
         packages = [
+            pkgs.scons
             pkgs.podman
             pkgs.podman-compose
             pkgs.crun
