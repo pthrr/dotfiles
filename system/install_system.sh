@@ -76,6 +76,8 @@ sudo apt install -y \
     fonts-ubuntu \
     spacefm \
     gcc \
+    gcc-arm-none-eabi \
+    libnewlib-arm-none-eabi \
     clang \
     clangd \
     clang-tidy \
