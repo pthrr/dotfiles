@@ -19,6 +19,7 @@
         enableNixpkgsReleaseCheck = false;
 
         packages = [
+            pkgs.openocd
             pkgs.scons
             pkgs.podman
             pkgs.podman-compose
