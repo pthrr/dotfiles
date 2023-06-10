@@ -51,6 +51,7 @@ if dein#check_install()
 endif
 let g:coc_global_extensions = [
     \ 'coc-docker',
+    \ 'coc-zls',
     \ 'coc-elixir',
     \ 'coc-cmake',
     \ 'coc-clangd',
