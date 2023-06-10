@@ -42,6 +42,7 @@ if dein#load_state(s:dein_dir)
     call dein#add('madskjeldgaard/cppman.nvim', { 'depends': 'nui.nvim' })
     call dein#add('tpope/vim-repeat')
     call dein#add('ggandor/leap.nvim', { 'depends': 'vim-repeat' })
+    call dein#add('ggandor/flit.nvim', { 'depends': 'flit.nvim' })
     call dein#end()
     call dein#save_state()
 endif
@@ -424,6 +425,18 @@ nnoremap <silent> <leader>osq :call openbrowser#smart_search(expand('<cword>'), 
 " leap
 lua << EOF
   require('leap').set_default_keymaps()
+EOF
+" flit
+lua << EOF
+  require('flit').setup {
+    keys = { f = 'f', F = 'F', t = 't', T = 'T' },
+    -- A string like "nv", "nvo", "o", etc.
+    labeled_modes = "v",
+    multiline = true,
+    -- Like `leap`s similar argument (call-specific overrides).
+    -- E.g.: opts = { equivalence_classes = {} }
+    opts = {}
+  }
 EOF
 " todo-comments
 nmap <F5> :TodoTelescope keywords=TODO,FIX<CR>
