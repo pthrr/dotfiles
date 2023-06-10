@@ -19,7 +19,6 @@
         enableNixpkgsReleaseCheck = false;
 
         packages = [
-            pkgs.bluej
             pkgs.zls
             pkgs.openocd
             pkgs.scons
