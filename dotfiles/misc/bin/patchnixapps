@@ -17,5 +17,6 @@ for file in *; do
                 sed -i "${c}s/Exec=/Exec=nixGL /" $file
             fi
         done < $file
+        chmod +x $file
     fi
 done
