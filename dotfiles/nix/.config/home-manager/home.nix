@@ -19,6 +19,7 @@
         enableNixpkgsReleaseCheck = false;
 
         packages = [
+            pkgs.kakoune
             pkgs.zls
             pkgs.openocd
             pkgs.scons
