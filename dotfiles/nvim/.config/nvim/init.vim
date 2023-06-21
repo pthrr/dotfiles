@@ -28,21 +28,24 @@ if dein#load_state(s:dein_dir)
         call dein#add('nvim-lua/plenary.nvim')
         call dein#add('nvim-telescope/telescope.nvim')
     endif
-    call dein#add('neoclide/coc.nvim', { 'merged': 0, 'rev': 'release' })
+    " common
     call dein#add('overcache/NeoSolarized')
-    call dein#add('ziglang/zig.vim')
-    call dein#add('sirver/ultisnips')
-    call dein#add('TimUntersberger/neogit')
-    call dein#add('folke/todo-comments.nvim')
-    call dein#add('numToStr/Comment.nvim')
+    call dein#add('neoclide/coc.nvim', { 'merged': 0, 'rev': 'release' })
     call dein#add('liuchengxu/vista.vim')
-    call dein#add('derekwyatt/vim-fswitch')
-    call dein#add('tyru/open-browser.vim')
+    call dein#add('sirver/ultisnips')
+    " call dein#add('TimUntersberger/neogit')
+    call dein#add('numToStr/Comment.nvim')
+    call dein#add('folke/todo-comments.nvim')
+    " zig
+    call dein#add('ziglang/zig.vim')
+    " C++
     call dein#add('MunifTanjim/nui.nvim')
     call dein#add('madskjeldgaard/cppman.nvim', { 'depends': 'nui.nvim' })
-    call dein#add('tpope/vim-repeat')
-    call dein#add('ggandor/leap.nvim', { 'depends': 'vim-repeat' })
-    call dein#add('ggandor/flit.nvim', { 'depends': 'flit.nvim' })
+    call dein#add('derekwyatt/vim-fswitch')
+    call dein#add('tyru/open-browser.vim')
+    " call dein#add('tpope/vim-repeat')
+    " call dein#add('ggandor/leap.nvim', { 'depends': 'vim-repeat' })
+    " call dein#add('ggandor/flit.nvim', { 'depends': 'leap.nvim' })
     call dein#end()
     call dein#save_state()
 endif
@@ -69,7 +72,6 @@ let g:coc_global_extensions = [
 set termguicolors
 set background=dark
 colorscheme NeoSolarized
-" generic
 syntax off
 filetype plugin indent on
 set encoding=utf-8
@@ -126,6 +128,20 @@ set statusline+=%-14.(%l,%c%V%)
 set statusline+=\ %P
 set colorcolumn=80,110
 set clipboard+=unnamedplus
+if exists('g:wsl')
+  let g:clipboard = {
+    \   'name': 'WslClipboard',
+    \   'copy': {
+    \      '+': 'clip.exe',
+    \      '*': 'clip.exe',
+    \    },
+    \   'paste': {
+    \      '+': 'powershell.exe -c [Console]::Out.Write($(Get-Clipboard -Raw).tostring().replace("`r", ""))',
+    \      '*': 'powershell.exe -c [Console]::Out.Write($(Get-Clipboard -Raw).tostring().replace("`r", ""))',
+    \   },
+    \   'cache_enabled': 0,
+    \ }
+endif
 set tabstop=4
 set softtabstop=4
 set shiftwidth=4
@@ -173,43 +189,6 @@ vnoremap <leader>d "_d
 nnoremap <leader>d "_d
 " replace currently selected text without yanking it
 vnoremap <leader>p "_dP
-" configure clipboard if inside WSL
-if exists('g:wsl')
-  let g:clipboard = {
-    \   'name': 'WslClipboard',
-    \   'copy': {
-    \      '+': 'clip.exe',
-    \      '*': 'clip.exe',
-    \    },
-    \   'paste': {
-    \      '+': 'powershell.exe -c [Console]::Out.Write($(Get-Clipboard -Raw).tostring().replace("`r", ""))',
-    \      '*': 'powershell.exe -c [Console]::Out.Write($(Get-Clipboard -Raw).tostring().replace("`r", ""))',
-    \   },
-    \   'cache_enabled': 0,
-    \ }
-endif
-" cppman
-lua << EOF
-  local cppman = require"cppman"
-  cppman.setup()
-  -- Make a keymap to open the word under cursor in CPPman
-  vim.keymap.set("n", "<leader>cm", function()
-      cppman.open_cppman_for(vim.fn.expand("<cword>"))
-  end)
-  -- Open search box
-  vim.keymap.set("n", "<leader>cc", function()
-      cppman.input()
-  end)
-EOF
-" vim-fswitch
-au BufEnter *.hh  let b:fswitchdst = "cpp,cc" | let b:fswitchlocs = 'reg:|include.*|src/**|'
-au BufEnter *.cc let b:fswitchdst = "h,hpp,hh"
-nnoremap <silent> <A-o> :FSHere<cr>
-" Extra hotkeys to open header/source in the split
-nnoremap <silent> <localleader>oh :FSSplitLeft<cr>
-nnoremap <silent> <localleader>oj :FSSplitBelow<cr>
-nnoremap <silent> <localleader>ok :FSSplitAbove<cr>
-nnoremap <silent> <localleader>ol :FSSplitRight<cr>
 " tree-sitter
 if exists('g:wsl')
 lua << EOF
@@ -359,30 +338,11 @@ endif
 "   vim.keymap.set({ "n", "x", "o" }, "t", ts_repeat_move.builtin_t)
 "   vim.keymap.set({ "n", "x", "o" }, "T", ts_repeat_move.builtin_T)
 " EOF
-" ultisnips
-let g:UltiSnipsExpandTrigger = '<tab>'
-let g:UltiSnipsJumpForwardTrigger = '<tab>'
-let g:UltiSnipsJumpBackwardTrigger = '<s-tab>'
-let g:UltiSnipsSnippetDirectories = [$XDG_TEMPLATES_DIR.'/snippets']
-" vista
-nmap <F8> :Vista!!<CR>
-let g:vista_default_executive = 'coc'
-let g:vista_sidebar_width = max([80, winwidth(0) / 4])
-let g:vista_echo_cursor = 0
-let g:vista_echo_cursor_startegy = 'scroll'
-let g:vista_stay_on_open = 0
-let g:vista_blink = [0, 0]
-let g:vista_top_level_blink = [0, 0]
-let g:vista_highlight_whole_line = 1
-let g:vista#renderer#enable_icon = 1
-let g:vista#renderer#icons = {
-    \ "function": "+",
-    \ "method": "+",
-    \ "variable": "-",
-    \ "class": "#",
-    \ "constant": "",
-    \ "struct": "#",
-    \ }
+" telescope
+nnoremap <leader>ff <cmd>Telescope find_files<cr>
+nnoremap <leader>fg <cmd>Telescope live_grep<cr>
+nnoremap <leader>fb <cmd>Telescope buffers<cr>
+nnoremap <leader>fh <cmd>Telescope help_tags<cr>
 " coc
 nmap <leader>rn <Plug>(coc-rename)
 nmap <silent> [g <Plug>(coc-diagnostic-prev)
@@ -412,6 +372,52 @@ nnoremap <silent><nowait> <space>s  :<C-u>CocList -I symbols<cr>
 nnoremap <silent><nowait> <space>j  :<C-u>CocNext<CR>
 nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
 nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
+" vista
+nmap <F8> :Vista!!<CR>
+let g:vista_default_executive = 'coc'
+let g:vista_sidebar_width = max([80, winwidth(0) / 4])
+let g:vista_echo_cursor = 0
+let g:vista_echo_cursor_startegy = 'scroll'
+let g:vista_stay_on_open = 0
+let g:vista_blink = [0, 0]
+let g:vista_top_level_blink = [0, 0]
+let g:vista_highlight_whole_line = 1
+let g:vista#renderer#enable_icon = 1
+let g:vista#renderer#icons = {
+    \ "function": "+",
+    \ "method": "+",
+    \ "variable": "-",
+    \ "class": "#",
+    \ "constant": "",
+    \ "struct": "#",
+    \ }
+" ultisnips
+let g:UltiSnipsExpandTrigger = '<tab>'
+let g:UltiSnipsJumpForwardTrigger = '<tab>'
+let g:UltiSnipsJumpBackwardTrigger = '<s-tab>'
+let g:UltiSnipsSnippetDirectories = [$XDG_TEMPLATES_DIR.'/snippets']
+" cppman
+lua << EOF
+  local cppman = require"cppman"
+  cppman.setup()
+  -- Make a keymap to open the word under cursor in CPPman
+  vim.keymap.set("n", "<leader>cm", function()
+      cppman.open_cppman_for(vim.fn.expand("<cword>"))
+  end)
+  -- Open search box
+  vim.keymap.set("n", "<leader>cc", function()
+      cppman.input()
+  end)
+EOF
+" vim-fswitch
+au BufEnter *.hh  let b:fswitchdst = "cpp,cc" | let b:fswitchlocs = 'reg:|include.*|src/**|'
+au BufEnter *.cc let b:fswitchdst = "h,hpp,hh"
+nnoremap <silent> <A-o> :FSHere<cr>
+" Extra hotkeys to open header/source in the split
+nnoremap <silent> <localleader>oh :FSSplitLeft<cr>
+nnoremap <silent> <localleader>oj :FSSplitBelow<cr>
+nnoremap <silent> <localleader>ok :FSSplitAbove<cr>
+nnoremap <silent> <localleader>ol :FSSplitRight<cr>
 " open browser
 let g:openbrowser_search_engines = extend(
   \  get(g:, 'openbrowser_search_engines', {}),
@@ -423,22 +429,22 @@ let g:openbrowser_search_engines = extend(
   \ )
 nnoremap <silent> <leader>osx :call openbrowser#smart_search(expand('<cword>'), "cppreference")<CR>
 nnoremap <silent> <leader>osq :call openbrowser#smart_search(expand('<cword>'), "qt")<CR>
-" leap
-lua << EOF
-  require('leap').set_default_keymaps()
-EOF
-" flit
-lua << EOF
-  require('flit').setup {
-    keys = { f = 'f', F = 'F', t = 't', T = 'T' },
-    -- A string like "nv", "nvo", "o", etc.
-    labeled_modes = "v",
-    multiline = true,
-    -- Like `leap`s similar argument (call-specific overrides).
-    -- E.g.: opts = { equivalence_classes = {} }
-    opts = {}
-  }
-EOF
+" " leap
+" lua << EOF
+"   require('leap').set_default_keymaps()
+" EOF
+" " flit
+" lua << EOF
+"   require('flit').setup {
+"     keys = { f = 'f', F = 'F', t = 't', T = 'T' },
+"     -- A string like "nv", "nvo", "o", etc.
+"     labeled_modes = "v",
+"     multiline = true,
+"     -- Like `leap`s similar argument (call-specific overrides).
+"     -- E.g.: opts = { equivalence_classes = {} }
+"     opts = {}
+"   }
+" EOF
 " todo-comments
 nmap <F5> :TodoTelescope keywords=TODO,FIX<CR>
 lua << EOF
@@ -486,11 +492,6 @@ lua << EOF
     },
   }
 EOF
-" telescope
-nnoremap <leader>ff <cmd>Telescope find_files<cr>
-nnoremap <leader>fg <cmd>Telescope live_grep<cr>
-nnoremap <leader>fb <cmd>Telescope buffers<cr>
-nnoremap <leader>fh <cmd>Telescope help_tags<cr>
 " comment
 lua << EOF
   require("Comment").setup {
