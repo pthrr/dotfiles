@@ -33,19 +33,15 @@ if dein#load_state(s:dein_dir)
     call dein#add('neoclide/coc.nvim', { 'merged': 0, 'rev': 'release' })
     call dein#add('liuchengxu/vista.vim')
     call dein#add('sirver/ultisnips')
-    " call dein#add('TimUntersberger/neogit')
-    call dein#add('numToStr/Comment.nvim')
-    call dein#add('folke/todo-comments.nvim')
-    " zig
+    call dein#add('TimUntersberger/neogit', { 'depends': 'plenary.nvim' })
+    call dein#add('tpope/vim-commentary')
+    " Zig
     call dein#add('ziglang/zig.vim')
     " C++
     call dein#add('MunifTanjim/nui.nvim')
     call dein#add('madskjeldgaard/cppman.nvim', { 'depends': 'nui.nvim' })
     call dein#add('derekwyatt/vim-fswitch')
     call dein#add('tyru/open-browser.vim')
-    " call dein#add('tpope/vim-repeat')
-    " call dein#add('ggandor/leap.nvim', { 'depends': 'vim-repeat' })
-    " call dein#add('ggandor/flit.nvim', { 'depends': 'leap.nvim' })
     call dein#end()
     call dein#save_state()
 endif
@@ -320,24 +316,24 @@ lua << EOF
 EOF
 endif
 " treesitter-textobjects
-" lua <<EOF
-"   local ts_repeat_move = require "nvim-treesitter.textobjects.repeatable_move"
-"
-"   -- Repeat movement with ; and ,
-"   -- ensure ; goes forward and , goes backward regardless of the last direction
-"   vim.keymap.set({ "n", "x", "o" }, ";", ts_repeat_move.repeat_last_move_next)
-"   vim.keymap.set({ "n", "x", "o" }, ",", ts_repeat_move.repeat_last_move_previous)
-"
-"   -- vim way: ; goes to the direction you were moving.
-"   -- vim.keymap.set({ "n", "x", "o" }, ";", ts_repeat_move.repeat_last_move)
-"   -- vim.keymap.set({ "n", "x", "o" }, ",", ts_repeat_move.repeat_last_move_opposite)
-"
-"   -- Optionally, make builtin f, F, t, T also repeatable with ; and ,
-"   vim.keymap.set({ "n", "x", "o" }, "f", ts_repeat_move.builtin_f)
-"   vim.keymap.set({ "n", "x", "o" }, "F", ts_repeat_move.builtin_F)
-"   vim.keymap.set({ "n", "x", "o" }, "t", ts_repeat_move.builtin_t)
-"   vim.keymap.set({ "n", "x", "o" }, "T", ts_repeat_move.builtin_T)
-" EOF
+lua <<EOF
+  local ts_repeat_move = require "nvim-treesitter.textobjects.repeatable_move"
+
+  -- Repeat movement with ; and ,
+  -- ensure ; goes forward and , goes backward regardless of the last direction
+  vim.keymap.set({ "n", "x", "o" }, ";", ts_repeat_move.repeat_last_move_next)
+  vim.keymap.set({ "n", "x", "o" }, ",", ts_repeat_move.repeat_last_move_previous)
+
+  -- vim way: ; goes to the direction you were moving.
+  -- vim.keymap.set({ "n", "x", "o" }, ";", ts_repeat_move.repeat_last_move)
+  -- vim.keymap.set({ "n", "x", "o" }, ",", ts_repeat_move.repeat_last_move_opposite)
+
+  -- Optionally, make builtin f, F, t, T also repeatable with ; and ,
+  vim.keymap.set({ "n", "x", "o" }, "f", ts_repeat_move.builtin_f)
+  vim.keymap.set({ "n", "x", "o" }, "F", ts_repeat_move.builtin_F)
+  vim.keymap.set({ "n", "x", "o" }, "t", ts_repeat_move.builtin_t)
+  vim.keymap.set({ "n", "x", "o" }, "T", ts_repeat_move.builtin_T)
+EOF
 " telescope
 nnoremap <leader>ff <cmd>Telescope find_files<cr>
 nnoremap <leader>fg <cmd>Telescope live_grep<cr>
@@ -429,114 +425,3 @@ let g:openbrowser_search_engines = extend(
   \ )
 nnoremap <silent> <leader>osx :call openbrowser#smart_search(expand('<cword>'), "cppreference")<CR>
 nnoremap <silent> <leader>osq :call openbrowser#smart_search(expand('<cword>'), "qt")<CR>
-" " leap
-" lua << EOF
-"   require('leap').set_default_keymaps()
-" EOF
-" " flit
-" lua << EOF
-"   require('flit').setup {
-"     keys = { f = 'f', F = 'F', t = 't', T = 'T' },
-"     -- A string like "nv", "nvo", "o", etc.
-"     labeled_modes = "v",
-"     multiline = true,
-"     -- Like `leap`s similar argument (call-specific overrides).
-"     -- E.g.: opts = { equivalence_classes = {} }
-"     opts = {}
-"   }
-" EOF
-" todo-comments
-nmap <F5> :TodoTelescope keywords=TODO,FIX<CR>
-lua << EOF
-  vim.keymap.set("n", "]t", function()
-    require("todo-comments").jump_next()
-  end, { desc = "Next todo comment" })
-  vim.keymap.set("n", "[t", function()
-    require("todo-comments").jump_prev()
-  end, { desc = "Previous todo comment" })
-  -- vim.keymap.set("n", "]t", function()
-  --   require("todo-comments").jump_next({keywords = { "ERROR", "WARNING" }})
-  -- end, { desc = "Next error/warning todo comment" })
-  require("todo-comments").setup {
-    signs = false,
-    keywords = {
-      FIXME = { icon = "! ", color = "error" },
-      TODO = { icon = "", color = "info" },
-      NOTE = { icon = "", color = "hint" },
-    },
-    merge_keywords = false,
-    highlight = {
-      before = "",
-      keyword = "fg",
-      after = "",
-      pattern = [[.*<(KEYWORDS)\s*:]],
-      comments_only = true,
-    },
-    colors = {
-      error = { "DiagnosticError", "ErrorMsg", "#DC2626" },
-      warning = { "DiagnosticWarn", "WarningMsg", "#FBBF24" },
-      info = { "DiagnosticInfo", "#2563EB" },
-      hint = { "DiagnosticHint", "#10B981" },
-      default = { "Identifier", "#7C3AED" },
-    },
-    search = {
-      command = "rg",
-      args = {
-        "--color=never",
-        "--no-heading",
-        "--with-filename",
-        "--line-number",
-        "--column",
-      },
-      pattern = [[\b(KEYWORDS):]],
-    },
-  }
-EOF
-" comment
-lua << EOF
-  require("Comment").setup {
-    ---Add a space b/w comment and the line
-    padding = true,
-    ---Whether the cursor should stay at its position
-    sticky = true,
-    ---Lines to be ignored while (un)comment
-    ignore = nil,
-    ---LHS of toggle mappings in NORMAL mode
-    toggler = {
-      ---Line-comment toggle keymap
-      line = 'gcc',
-      ---Block-comment toggle keymap
-      block = 'gbc',
-    },
-    ---LHS of operator-pending mappings in NORMAL and VISUAL mode
-    opleader = {
-      ---Line-comment keymap
-      line = 'gc',
-      ---Block-comment keymap
-      block = 'gb',
-    },
-    ---LHS of extra mappings
-    extra = {
-      ---Add comment on the line above
-      above = 'gcO',
-      ---Add comment on the line below
-      below = 'gco',
-      ---Add comment at the end of line
-      eol = 'gcA',
-    },
-    ---Enable keybindings
-    ---NOTE: If given `false` then the plugin won't create any mappings
-    mappings = {
-      ---Operator-pending mapping; `gcc` `gbc` `gc[count]{motion}` `gb[count]{motion}`
-      basic = true,
-      ---Extra mapping; `gco`, `gcO`, `gcA`
-      extra = true,
-      ---Extended mapping; `g>` `g<` `g>[count]{motion}` `g<[count]{motion}`
-      extended = false,
-    },
-    ---Function to call before (un)comment
-    pre_hook = nil,
-    ---Function to call after (un)comment
-    post_hook = nil,
-  }
-EOF
