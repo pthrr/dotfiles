@@ -41,7 +41,7 @@ if dein#load_state(s:dein_dir)
     call dein#add('MunifTanjim/nui.nvim')
     call dein#add('madskjeldgaard/cppman.nvim', { 'depends': 'nui.nvim' })
     call dein#add('derekwyatt/vim-fswitch')
-    call dein#add('tyru/open-browser.vim')
+    call dein#add('KabbAmine/zeavim.vim')
     call dein#end()
     call dein#save_state()
 endif
@@ -414,14 +414,11 @@ nnoremap <silent> <localleader>oh :FSSplitLeft<cr>
 nnoremap <silent> <localleader>oj :FSSplitBelow<cr>
 nnoremap <silent> <localleader>ok :FSSplitAbove<cr>
 nnoremap <silent> <localleader>ol :FSSplitRight<cr>
-" open browser
-let g:openbrowser_search_engines = extend(
-  \  get(g:, 'openbrowser_search_engines', {}),
-  \  {
-  \    'cppreference': 'https://en.cppreference.com/mwiki/index.php?title=Special%3ASearch&search={query}',
-  \    'qt': 'https://doc.qt.io/qt-5/search-results.html?q={query}',
-  \  },
-  \  'keep'
-  \ )
-nnoremap <silent> <leader>osx :call openbrowser#smart_search(expand('<cword>'), "cppreference")<CR>
-nnoremap <silent> <leader>osq :call openbrowser#smart_search(expand('<cword>'), "qt")<CR>
+" zeal
+nmap <leader>z <Plug>Zeavim
+vmap <leader>z <Plug>ZVVisSelection
+nmap gz <Plug>ZVOperator
+nmap <leader><leader>z <Plug>ZVKeyDocset
+if exists('g:wsl')
+  let g:zv_zeal_executable = '/mnt/c/Program Files/Zeal/zeal.exe'
+endif
