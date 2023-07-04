@@ -60,6 +60,7 @@ let g:coc_global_extensions = [
     \ 'coc-json',
     \ 'coc-sh',
     \ 'coc-pyright',
+    \ 'coc-clojure',
     \ 'coc-rust-analyzer',
     \ 'coc-java',
     \ 'coc-markdownlint',
@@ -217,6 +218,7 @@ lua << EOF
         "vim",
         "nix",
         "verilog",
+        "clojure",
         "help"
     },
     sync_install = false,

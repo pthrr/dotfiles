@@ -19,7 +19,7 @@
         enableNixpkgsReleaseCheck = false;
 
         packages = [
-            pkgs.kakoune
+            pkgs.clojure-lsp
             pkgs.zls
             pkgs.openocd
             pkgs.scons
