@@ -83,6 +83,7 @@ sudo apt install -y \
     python3-dev \
     pipx \
     # vim
+    python3-pynvim \
     cppman \
     # java
     openjdk-17-jdk-headless \
