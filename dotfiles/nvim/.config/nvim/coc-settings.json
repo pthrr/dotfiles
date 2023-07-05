@@ -10,6 +10,7 @@
     "python.linting.enabled": true,
     "python.linting.mypyEnabled": true,
     "python.linting.ruffEnabled": true,
+    "python.analysis.typeCheckingMode": "off",
     "snippets.userSnippetsDirectory": "~/Vorlagen/snippets",
     "clangd.arguments": [
         "--compile-commands-dir=build"

@@ -12,70 +12,91 @@ sudo apt remove -y \
     task-cinnamon-desktop \
     task-lxde-desktop
 sudo apt install -y \
-    xxd
-    yakuake \
-    xclip \
-    virtualbox-7.0 \
-    libxmu-dev \
-    openjdk-17-jdk-headless \
-    openjdk-17-jre-headless \
-    libcairomm-1.0-dev \
-    libcairo2-dev \
-    libopenblas-dev \
-    nvidia-detect \
-    firmware-misc-nonfree \
-    exfat-utils \
-    qemu \
-    chromium \
-    sshpass \
-    sshfs \
-    ssh-askpass \
-    task-kde-desktop \
-    kdenlive \
-    labplot \
     task-desktop \
     task-german \
     task-laptop \
-    cpufrequtils \
-    cups \
-    exfat-fuse \
-    lilv-utils \
-    gnupg2 \
-    xdotool \
-    inotify-tools \
+    task-kde-desktop \
+    #
+    python-is-python3 \
+    usrmerge \
+    firmware-misc-nonfree \
+    intel-microcode \
+    fonts-firacode \
+    fonts-dejavu \
+    fonts-font-awesome \
+    fonts-ubuntu \
+    # x
+    i3 \
+    i3lock \
+    i3status \
+    rofi \
+    bash \
+    xterm \
+    tmux \
+    xorg \
+    #
+    automake \
+    autoconf \
+    build-essential \
+    pkg-config \
+    #
+    strace \
+    htop \
+    tree \
+    curl \
+    wget \
+    stow \
+    xclip \
     xsel \
+    sshpass \
+    sshfs \
+    ssh-askpass \
+    cups \
+    gnupg2 \
+    #
+    xxd \
+    exfat-utils \
+    cpufrequtils \
+    exfat-fuse \
+    nvidia-detect \
+    inotify-tools \
+    xdotool \
+    virtualbox-7.0 \
+    chromium \
+    flatpak \
+    kdenlive \
+    labplot \
+    spacefm \
+    qemu \
+    # audio
+    lilv-utils \
+    lv2-dev \
     jackd2 \
     qjackctl \
     a2jmidid \
     pulseaudio-module-jack \
     alsa-utils \
+    # py
+    python3-full \
+    python3-pip \
+    python3-dev \
+    pipx \
+    # vim
+    cppman \
+    # java
+    openjdk-17-jdk-headless \
+    openjdk-17-jre-headless \
+    # rs
     cargo \
+    # js
     npm \
+    # go
     golang-go \
+    # clojure
     leiningen \
     clojure \
-    python-is-python3 \
-    usrmerge \
-    build-essential \
+    # c/c++
     gdb \
-    valgrind \
-    pkg-config \
-    lv2-dev \
-    libsndfile1-dev \
-    libx11-dev \
-    libcairo2-dev \
-    automake \
-    autoconf \
-    strace \
-    tree \
-    curl \
-    wget \
-    stow \
-    fonts-firacode \
-    fonts-dejavu \
-    fonts-font-awesome \
-    fonts-ubuntu \
-    spacefm \
     gcc \
     gcc-arm-none-eabi \
     libnewlib-arm-none-eabi \
@@ -83,19 +104,15 @@ sudo apt install -y \
     clangd \
     clang-tidy \
     clang-tools \
-    xterm \
-    tmux \
-    htop \
-    xorg \
-    i3 \
-    i3lock \
-    i3status \
-    rofi \
-    python3 \
-    python3-pip \
-    python3-dev \
-    intel-microcode \
-    flatpak
+    valgrind \
+    #
+    libxmu-dev \
+    libcairomm-1.0-dev \
+    libcairo2-dev \
+    libopenblas-dev \
+    libsndfile1-dev \
+    libx11-dev \
+    libcairo2-dev
 sudo apt remove -y \
     firefox-esr \
     firefox
@@ -106,14 +123,13 @@ sudo flatpak remote-add --if-not-exists \
     flathub https://flathub.org/repo/flathub.flatpakrepo
 sudo flatpak install \
     jdownloader
-python3 -m pip install --upgrade pip
-python3 -m pip install --upgrade --force-reinstall \
-    cppman \
+pipx upgrade \
     i3ipc \
+    pre-commit \
+    black \
+    isort \
     mypy \
     ruff \
-    isort \
-    black \
     conan \
     rofi-tmuxp \
     rtcqs
