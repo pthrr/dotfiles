@@ -75,6 +75,12 @@ if [ -f "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh" ] ; then
     . "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
 fi
 
+# include pyenv
+if [ ! -f "$(which pyenv)" ] ; then
+    export PYENV_ROOT="$HOME/.pyenv"
+    export PATH="$PYENV_ROOT/bin:$PATH"
+fi
+
 # create standard dirs
 if [ ! -d  "$HOME/tmp" ] ; then
     mkdir "$HOME/tmp"

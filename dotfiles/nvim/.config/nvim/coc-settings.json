@@ -49,4 +49,5 @@
         "virtualTextLines": 1,
         "virtualTextPrefix": " —— "
     },
+    "snippets.ultisnips.pythonPrompt": false,
 }
