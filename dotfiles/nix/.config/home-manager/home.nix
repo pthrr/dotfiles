@@ -105,7 +105,7 @@
             pkgs.nsxiv
             pkgs.farbfeld
             pkgs.sent
-            pkgs.transmission-gtk
+            /* pkgs.transmission-gtk */
             pkgs.mc
             pkgs.prusa-slicer
             pkgs.lynx
