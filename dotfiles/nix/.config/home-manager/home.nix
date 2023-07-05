@@ -19,6 +19,8 @@
         enableNixpkgsReleaseCheck = false;
 
         packages = [
+            pkgs.ansible
+            pkgs.ansible-lint
             pkgs.conan
             pkgs.clojure-lsp
             pkgs.zls
