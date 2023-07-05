@@ -16,16 +16,12 @@ sudo apt install -y \
     task-german \
     task-laptop \
     task-kde-desktop \
-    #
-    python-is-python3 \
-    usrmerge \
     firmware-misc-nonfree \
     intel-microcode \
     fonts-firacode \
     fonts-dejavu \
     fonts-font-awesome \
     fonts-ubuntu \
-    # x
     i3 \
     i3lock \
     i3status \
@@ -35,12 +31,10 @@ sudo apt install -y \
     xterm \
     tmux \
     xorg \
-    #
     automake \
     autoconf \
     build-essential \
     pkg-config \
-    #
     strace \
     htop \
     tree \
@@ -55,10 +49,6 @@ sudo apt install -y \
     cups \
     gnupg2 \
     xxd \
-    #
-    exfat-utils \
-    cpufrequtils \
-    exfat-fuse \
     nvidia-detect \
     inotify-tools \
     xdotool \
@@ -69,7 +59,6 @@ sudo apt install -y \
     labplot \
     spacefm \
     qemu \
-    # audio
     lilv-utils \
     lv2-dev \
     jackd2 \
@@ -77,27 +66,19 @@ sudo apt install -y \
     a2jmidid \
     pulseaudio-module-jack \
     alsa-utils \
-    # py
     python3-full \
     python3-pip \
     python3-dev \
     pipx \
-    # vim
     python3-pynvim \
     cppman \
-    # java
     openjdk-17-jdk-headless \
     openjdk-17-jre-headless \
-    # rs
     cargo \
-    # js
     npm \
-    # go
     golang-go \
-    # clojure
     leiningen \
     clojure \
-    # c/c++
     gdb \
     gcc \
     gcc-arm-none-eabi \
@@ -107,7 +88,6 @@ sudo apt install -y \
     clang-tidy \
     clang-tools \
     valgrind \
-    #
     libxmu-dev \
     libcairomm-1.0-dev \
     libcairo2-dev \
