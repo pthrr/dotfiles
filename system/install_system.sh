@@ -29,6 +29,7 @@ sudo apt install -y \
     i3 \
     i3lock \
     i3status \
+    python3-i3ipc \
     rofi \
     bash \
     xterm \
@@ -53,8 +54,8 @@ sudo apt install -y \
     ssh-askpass \
     cups \
     gnupg2 \
-    #
     xxd \
+    #
     exfat-utils \
     cpufrequtils \
     exfat-fuse \
@@ -123,16 +124,14 @@ sudo flatpak remote-add --if-not-exists \
     flathub https://flathub.org/repo/flathub.flatpakrepo
 sudo flatpak install \
     jdownloader
-pipx upgrade \
-    i3ipc \
-    pre-commit \
-    black \
-    isort \
-    mypy \
-    ruff \
-    conan \
-    rofi-tmuxp \
-    rtcqs
+pipx install --force pre-commit
+pipx install --force black
+pipx install --force isort
+pipx install --force mypy
+pipx install --force ruff
+pipx install --force rofi-tmuxp
+pipx install --force rtcqs
+pipx upgrade-all
 sudo npm install -g npm n
 sudo n stable
 sudo npm install \

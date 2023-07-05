@@ -19,6 +19,7 @@
         enableNixpkgsReleaseCheck = false;
 
         packages = [
+            pkgs.conan
             pkgs.clojure-lsp
             pkgs.zls
             pkgs.openocd
