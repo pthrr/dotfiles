@@ -50,6 +50,7 @@ if dein#check_install()
 endif
 let g:coc_global_extensions = [
     \ 'coc-docker',
+    \ '@yaegassy/coc-ansible',
     \ 'coc-zls',
     \ 'coc-elixir',
     \ 'coc-cmake',
