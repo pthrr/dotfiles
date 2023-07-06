@@ -7,5 +7,5 @@ cd "$(dirname "$0")"
 ./system/install_nix_home_manager.sh
 ./dotfiles/install.sh nix/
 
-rm ~/.bashrc ~/.profile
+rm -f ~/.bashrc ~/.profile
 home-manager switch

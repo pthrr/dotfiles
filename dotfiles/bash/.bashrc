@@ -1,82 +1,271 @@
-export HISTCONTROL=ignorespace:erasedups
-export HISTSIZE=1000
-export HISTFILESIZE=2000
-export HISTFILE="$XDG_CACHE_HOME/.bash_history"
-export PROMPT_DIRTRIM=2
-export PROMPT_COMMAND='LAST_STATUS=$(if [[ $? == 0 ]]; then echo "✓"; else echo "✗"; fi);GIT_BRANCH=$(__git_ps1)'
-export PS1='\[\e[33m\]\w\[\e[0m\] \u$(if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then echo " @ \h"; else echo ""; fi)$GIT_BRANCH $LAST_STATUS '
-export PS4='$0.$LINENO: '
-function command_not_found_handle() {
-    regex_url='(https?|ftp|file)://[-[:alnum:]\+&@#/%?=~_|!:,.;]*[-[:alnum:]\+&@#/%=~_|]'
-    regex_git='.*.git'
+# set PATH so it includes bin if it exists
+if [ -d "/usr/sbin" ]; then
+    export PATH="/usr/sbin:$PATH"
+fi
 
-    if [[ $1 =~ $regex_git ]] ; then
-        git cloner "$1"
-    elif [[ $1 =~ $regex_url ]] ; then
-        wget "$1"
+# set PATH so it includes user's private bin if it exists
+if [ -d "$HOME/bin" ]; then
+    export PATH="$HOME/bin:$PATH"
+fi
+
+# set PATH so it includes user's private bin if it exists
+if [ -d "$HOME/.local/bin" ]; then
+    export PATH="$HOME/.local/bin:$PATH"
+fi
+
+# include Rust environment
+if [ -f "$HOME/.cargo/env" ]; then
+    . "$HOME/.cargo/env"
+fi
+
+# include Haskell environment
+if [ -d "$HOME/.cabal/bin" ]; then
+    export PATH="$HOME/.cabal/bin:$PATH"
+fi
+
+# include LV2 plugins
+if [ -d "$HOME/.lv2" ]; then
+    export LV2_PATH="$HOME/.lv2${LV2_PATH:+:$LV2_PATH}"
+fi
+
+if [ -d "$HOME/.nix-profile/lib/lv2" ]; then
+    export LV2_PATH="$HOME/.nix-profile/lib/lv2${LV2_PATH:+:$LV2_PATH}"
+fi
+
+# include Nix environment
+if [ -f "$HOME/.nix-profile/etc/profile.d/nix.sh" ]; then
+    . "$HOME/.nix-profile/etc/profile.d/nix.sh"
+fi
+
+if [ -f "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh" ]; then
+    . "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
+fi
+
+# include OCaml/opam environment
+if [ -d "$HOME/.opam" ]; then
+    eval "$(opam env)"
+fi
+
+# source custom env vars
+if [ -f ~/.env ]; then
+    set -a
+    source "$HOME/.env"
+    set +a
+fi
+
+# create standard dirs
+for d in .lv2 .clap tmp bin opt datasets fun analysis business job Drive \
+         Dokumente/notes Dokumente/notebooks Dokumente/letters \
+         Vorlagen/slides Audio; do
+    mkdir -p "$HOME/$d" 2>/dev/null
+done
+
+export LANG=de_DE.UTF-8
+export LC_COLLATE=C.UTF-8
+export XDG_CONFIG_HOME="$HOME/.config"
+export XDG_CACHE_HOME="$HOME/.cache"
+export XDG_DATA_HOME="$HOME/.local/share"
+export XDG_STATE_HOME="$HOME/.local/state"
+export XDG_DESKTOP_DIR="$HOME/Schreibtisch"
+export XDG_DOCUMENTS_DIR="$HOME/Dokumente"
+export XDG_DOWNLOAD_DIR="$HOME/Downloads"
+export XDG_MUSIC_DIR="$HOME/Musik"
+export XDG_AUDIO_DIR="$HOME/Audio"
+export XDG_PICTURES_DIR="$HOME/Bilder"
+export XDG_PUBLICSHARE_DIR="$HOME/Öffentlich"
+export XDG_TEMPLATES_DIR="$HOME/Vorlagen"
+export XDG_VIDEOS_DIR="$HOME/Video"
+export SHELL='/bin/bash'
+export EDITOR='nvim'
+export BROWSER='firefox'
+export MAILCLIENT='meli'
+export CALENDAR='calcurse'
+export TERMINAL='foot'
+export PDFVIEWER='zathura'
+export IMAGEVIEWER='nsxiv'
+export MEDIAPLAYER='vlc'
+export FILEMANAGER='vifm'
+export FZF_DEFAULT_COMMAND='rg --files'
+export FZF_DEFAULT_OPTS='-m --height 50% --border'
+export LESS='-R'
+export NO_AT_BRIDGE=1
+export DO_NOT_TRACK=1
+export CLAUDE_CODE_MAX_OUTPUT_TOKENS=64000
+export NINJA_STATUS="%p [%f:%s/%t] %o/s, %es "
+export _JAVA_AWT_WM_NONREPARENTING=1
+export CPM_SOURCE_CACHE="$XDG_CACHE_HOME/CPM"
+export SYSTEMC_HOME="/opt/systemc"
+export SYSTEMC_AMS_HOME="/opt/systemc-ams"
+export ICSC_HOME="$HOME/opt/sc_tools"
+export VERUS_ROOT="$HOME/opt/verus/source/target-verus/release"
+export VERUS_Z3_PATH="$HOME/opt/verus/source/z3"
+export HISTCONTROL=ignorespace:erasedups
+export HISTSIZE=50000
+export HISTFILESIZE=100000
+export HISTFILE="$HOME/.bash_history"
+export PROMPT_DIRTRIM=2
+__prompt_command() {
+    local last_exit=$?
+    local title_dir
+    title_dir=$(pwd | sed "s|$HOME|~|" | awk -F/ '{if (NF<=2) print $0; else print $(NF-1)"/"$NF}')
+    printf '\033]0;%s\007' "$title_dir"
+    [[ -n "$ZELLIJ" ]] && command zellij action rename-tab "$title_dir" 2>/dev/null
+    if (( last_exit == 0 )); then
+        LAST_STATUS="✓"
     else
-        echo "Command was not found!"
+        LAST_STATUS="✗"
+    fi
+    if [[ -n "$IN_NIX_SHELL" ]]; then
+        NIX_SHELL=" (nix-shell)"
+    else
+        NIX_SHELL=""
+    fi
+    JJ_BRANCH=$(__jj_ps1)
+    if [[ -n "$JJ_BRANCH" ]]; then
+        GIT_BRANCH=""
+    else
+        GIT_BRANCH=$(__git_ps1)
     fi
 }
-function vo() {
-    shopt -s nullglob
-    $EDITOR "$@"
-    shopt -u nullglob
+PROMPT_COMMAND=__prompt_command
+export PS1='\[\e[33m\]\w\[\e[0m\] \u$(if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then echo " @ \h"; else echo ""; fi)${GIT_BRANCH}${JJ_BRANCH}${NIX_SHELL} $LAST_STATUS '
+export PS4='$0.$LINENO: '
+function command_not_found_handle() {
+    local regex_url='(https?|ftp|file)://[-[:alnum:]\+&@#/%?=~_|!:,.;]*[-[:alnum:]\+&@#/%=~_|]'
+    local regex_git='(https?://|git@).*\.git'
+
+    if [[ $1 =~ $regex_git ]]; then
+        git clone "$1"
+    elif [[ $1 =~ $regex_url ]]; then
+        wget "$1"
+    else
+        echo "Command was not found: ${1}"
+        return 127
+    fi
 }
-function lla() {
-    exa -la --git --classify --color=always "$@" | less
+export GDBSETUP=".gdbsetup"
+setupgdb() {
+    if [[ -e "$GDBSETUP" && ! -f "$GDBSETUP" ]]; then
+        printf '%s already exists and is not a file\n' "$GDBSETUP" >&2
+        return 1
+    fi
+    printf 'dashboard -output %s\n' "$(tty)" >"$GDBSETUP"
 }
-function ll() {
-    exa -l --git --classify --color=always "$@" | less
+gdb() {
+    if [[ -f "$GDBSETUP" ]]; then
+        command gdb -x "$GDBSETUP" "$@"
+    else
+        command gdb "$@"
+    fi
 }
-function lls() {
-    exa -la --git --git-ignore --classify "$@"
+function zellij() {
+    local session=main
+    [[ -v ZELLIJ ]] && { command zellij "$@"; return; }
+    [[ $# -gt 0 ]] && { command zellij "$@"; return; }
+    if command zellij list-sessions --no-formatting --short 2>/dev/null | grep -qx "$session"; then
+        command zellij attach "$session"
+    else
+        command zellij
+    fi
 }
 function lsd() {
-    exa --tree --long --git --git-ignore --classify --color=always --level 6 -a -D -I ".git|venv|__pycache__|*_cache" "$@" | less
+    tree -a -C -L 6 -d -I '.git|.jj|.venv|__pycache__|*cache|build|target' "${@:-.}" | less -R
 }
 function lsf() {
-    exa --tree --long --git --git-ignore --classify --color=always --level 6 -a -I ".git|venv|__pycache__|*_cache" "$@" | less
-}
-function pb() {
-    "$@" | pbcopy
+    tree -a -C -L 6 -I '.git|.jj|.venv|__pycache__|*cache|build|target' "${@:-.}" | less -R
 }
 function kppw() {
     keepassxc-cli clip "$(kpdb)" "$@"
 }
 function kpusr() {
-    pb keepassxc-cli search "$(kpdb)" "$@"
+    keepassxc-cli search "$(kpdb)" "$@" | wl-copy
 }
+function jupnote() {
+    killall "jupyter-lab"
+    jupyter-lab --no-browser --notebook-dir="${@:-"$XDG_DOCUMENTS_DIR/notebooks"}" &
+    sleep 2
+    $BROWSER http://localhost:8888/
+}
+shopt -s histappend
+shopt -s cmdhist
+shopt -s extglob
+shopt -s globstar
+shopt -s dotglob
+shopt -s checkwinsize
+shopt -s checkjobs
 set -o vi
+set -o noclobber
 alias vi='nvim'
 alias vim='nvim'
-alias em='emacs'
-alias top='htop'
-alias ls='exa'
+alias fm='vifm . .'
+alias top='top -o %MEM'
+alias diff='diff --strip-trailing-cr --ignore-trailing-space'
+alias grep='LC_ALL=C grep -Hn --color=auto --binary-files=without-match --exclude-dir={.git,.jj,.venv,__pycache__,*cache,build,target}'
+alias ls='ls -h --classify --color=auto --group-directories-first'
+alias lls='ls -lah --classify --color=auto --group-directories-first'
+alias free='free -h'
+alias df='df -h --total'
+alias du='du -h'
+alias dd='dd status=progress'
+alias chown='chown --preserve-root -v'
+alias chmod='chmod --preserve-root -v'
+alias chgrp='chgrp --preserve-root -v'
+alias rsync='rsync -av --progress'
+alias wget='wget -nc'
+alias ln='ln -iv'
 alias cp='cp -iv'
 alias mv='mv -iv'
-alias mkdir='mkdir -pv'
 alias rm='rm -Iv'
-alias g='git'
-alias t='task'
+alias rmdir='rmdir -v --ignore-fail-on-non-empty'
+alias mkdir='mkdir -pv'
+alias bazel='bazelisk'
+alias gg='git'
+alias task='go-task'
+alias tt='go-task'
+alias zj='zellij'
 alias j='jobs'
 alias c='clear'
-alias py='python'
+alias h='history'
 alias ..='cd ../'
 alias ...='cd ../../'
 alias ....='cd ../../../'
 alias .....='cd ../../../../'
-alias pbclear='echo "" | pbcopy'
-alias pbclean='pbpaste | pbcopy'
-alias jupnote='$BROWSER http://localhost:8888/; jupyter-notebook --no-browser --notebook-dir="$XDG_DOCUMENTS_DIR/notebooks"'
-alias yt='youtube-dl --recode-video mp4'
-alias mirror='wget --mirror --convert-links --adjust-extension --page-requisites --no-parent'
+alias yt='yt-dlp --recode-video mp4'
 alias com='picocom -b 115200 --echo --omap=crcrlf'
 alias procs='pstree -Ap'
 alias ports='netstat -pln'
-alias pwgen='pb keepassxc-cli generate --lower --upper --numeric --special --length 32'
-alias mksomespace='nix-collect-garbage -d'
-alias dotfiles='git --git-dir="$HOME/.dotfiles/.git" --work-tree="$HOME/.dotfiles"'
-source "$HOME/key-bindings.bash"
+alias weather='curl wttr.in/munich'
+alias wifi='nmcli dev wifi show-password'
+alias wificonnect='nmcli --ask dev wifi connect'
+alias pwgen='keepassxc-cli generate --lower --upper --numeric --special --length 32 | wl-copy'
+alias mksomespace='nix-collect-garbage -d; sudo dnf clean all; flatpak uninstall --unused -y; sudo journalctl --vacuum-size=100M; pip cache purge; sudo btrfs balance start -musage=50 -dusage=50 /'
+alias mkupdates='sudo dnf update -y && sudo flatpak update -y'
+alias mkbackup='sudo "$HOME/.dotfiles/system/sync_ssd.bash"'
+alias srv='ssh nwv-srv'
+alias srvreb='ssh nwv-srv "cd ~/server && git pull && sudo task deploy"'
+alias plasma='dbus-run-session startplasma-wayland'
+alias mkrestart='killall kded6 2>/dev/null; systemctl --user restart sway-session.target'
+alias print='lp'
+alias print2='lp -o sides=two-sided-long-edge'
+alias printers='lpstat -p -d'
+alias printman='xdg http://localhost:631'
+alias cal='calcurse'
+alias mail='meli'
+_dedup_pathvar() {
+    local val="${!1}"
+    val="$(printf '%s' "$val" | awk -v RS=: -v ORS=: '!seen[$0]++')"
+    export "$1"="${val%:}"
+}
+_dedup_pathvar PATH
+_dedup_pathvar LV2_PATH
+_dedup_pathvar XDG_DATA_DIRS
+_dedup_pathvar MANPATH
+unset -f _dedup_pathvar
 source "$HOME/z.sh"
+GIT_PS1_SHOWUPSTREAM=""
 source "$HOME/git-prompt.sh"
+source "$HOME/jj-prompt.sh"
+
+if command -v direnv &> /dev/null; then
+    eval "$(direnv hook bash)"
+fi

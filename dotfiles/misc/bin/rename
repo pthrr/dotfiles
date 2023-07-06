@@ -1,0 +1,147 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+DRY=0
+EXT="md"
+DIR=""
+FORCE=0
+
+usage() {
+  cat <<EOF
+Usage: $(basename "$0") [OPTIONS] <directory>
+
+Normalize filenames: spaces to underscores, remove special chars.
+Result contains only [a-zA-Z0-9._-].
+
+Options:
+  -d, --dry-run          Preview changes without applying
+  -e, --extension EXT    File extension to match (default: md)
+  -f, --force            Skip confirmation prompt
+  -h, --help             Show this help
+EOF
+  exit "${1:-0}"
+}
+
+normalize() {
+  local base="${1%.*}"
+  local ext="${1##*.}"
+
+  # transliterations
+  base=$(echo "$base" | sed \
+    's/ /_/g;
+     s/+/plus/g; s/@/at/g; s/&/and/g;
+     s/ß/ss/g;
+     s/ä/ae/g; s/ö/oe/g; s/ü/ue/g;
+     s/Ä/Ae/g; s/Ö/Oe/g; s/Ü/Ue/g;
+     s/[éèêë]/e/g; s/[ÉÈÊË]/E/g;
+     s/[àâá]/a/g; s/[ÀÂÁ]/A/g;
+     s/[ùûú]/u/g; s/[ÙÛÚ]/U/g;
+     s/[ìîí]/i/g; s/[ÌÎÍ]/I/g;
+     s/[òôó]/o/g; s/[ÒÔÓ]/O/g;
+     s/ç/c/g; s/Ç/C/g;
+     s/ñ/n/g; s/Ñ/N/g;
+     s/[^a-zA-Z0-9._-]//g; s/__*/_/g; s/--*/-/g; s/\.\.*/./g; s/^[.-]*//; s/[.]*$//')
+
+  if [[ -z "$base" ]]; then
+    return 1
+  fi
+
+  echo "${base}.${ext}"
+}
+
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    -d|--dry-run)    DRY=1; shift ;;
+    -e|--extension)  EXT="${2:?Missing value for $1}"; shift 2 ;;
+    -f|--force)      FORCE=1; shift ;;
+    -h|--help)       usage 0 ;;
+    --)              shift; break ;;
+    -*)              echo "Unknown option: $1" >&2; usage 1 ;;
+    *)               DIR="$1"; shift ;;
+  esac
+done
+
+[[ -z "$DIR" ]] && { echo "Error: no directory specified" >&2; usage 1; }
+[[ ! -d "$DIR" ]] && { echo "Error: '$DIR' is not a directory" >&2; exit 1; }
+[[ ! -r "$DIR" ]] && { echo "Error: '$DIR' is not readable" >&2; exit 1; }
+[[ ! -w "$DIR" && $DRY -eq 0 ]] && { echo "Error: '$DIR' is not writable" >&2; exit 1; }
+
+DIR=$(cd "$DIR" && pwd)
+
+declare -a SRC=() DST=()
+SKIPPED=0
+
+while IFS= read -r -d '' f; do
+  dir=$(dirname "$f")
+  base=$(basename "$f")
+  new=$(normalize "$base") || {
+    echo "SKIP (empty after normalize): $base" >&2
+    ((++SKIPPED))
+    continue
+  }
+  if [[ "$base" != "$new" ]]; then
+    SRC+=("$f")
+    DST+=("$dir/$new")
+  fi
+done < <(find "$DIR" -type f -name "*.$EXT" -print0)
+
+if [[ ${#SRC[@]} -eq 0 ]]; then
+  echo "Nothing to rename."
+  exit 0
+fi
+
+echo "Found ${#SRC[@]} file(s) to rename:"
+echo
+for i in "${!SRC[@]}"; do
+  echo "  $(basename "${SRC[$i]}") -> $(basename "${DST[$i]}")"
+done
+echo
+
+COLLISIONS=0
+for i in "${!DST[@]}"; do
+  if [[ -e "${DST[$i]}" ]]; then
+    echo "COLLISION: $(basename "${SRC[$i]}") -> $(basename "${DST[$i]}") (target exists)" >&2
+    ((++COLLISIONS))
+  fi
+done
+
+declare -A SEEN=()
+for i in "${!DST[@]}"; do
+  target="${DST[$i]}"
+  if [[ -n "${SEEN[$target]:-}" ]]; then
+    echo "COLLISION: multiple files would rename to $(basename "$target")" >&2
+    ((++COLLISIONS))
+  fi
+  SEEN[$target]=1
+done
+
+if (( COLLISIONS )); then
+  echo "Error: $COLLISIONS collision(s) detected, aborting." >&2
+  exit 1
+fi
+
+if (( DRY )); then
+  echo "(dry run, no changes made)"
+  (( SKIPPED )) && echo "$SKIPPED file(s) skipped (empty name)."
+  exit 0
+fi
+
+if (( !FORCE )); then
+  read -rp "Apply ${#SRC[@]} rename(s)? [y/N] " answer
+  [[ "$answer" =~ ^[Yy]$ ]] || { echo "Aborted."; exit 0; }
+fi
+
+DONE=0
+FAIL=0
+for i in "${!SRC[@]}"; do
+  if mv "${SRC[$i]}" "${DST[$i]}"; then
+    echo "  $(basename "${SRC[$i]}") -> $(basename "${DST[$i]}")"
+    ((++DONE))
+  else
+    echo "FAIL: $(basename "${SRC[$i]}")" >&2
+    ((++FAIL))
+  fi
+done
+
+echo
+echo "Done: $DONE renamed, $FAIL failed, $SKIPPED skipped."

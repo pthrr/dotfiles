@@ -1,0 +1,25 @@
+# Mako notification daemon configuration
+
+# Automatically dismiss notifications after 5 seconds (5000 milliseconds)
+# Set to 0 to require manual dismissal
+default-timeout=5000
+
+# Font
+font=JetBrains Mono 11
+
+# Colors (matching Sway grayscale theme)
+background-color=#000000
+text-color=#909090
+border-color=#909090
+border-size=2
+
+# Position
+anchor=top-right
+margin=10
+
+# Size
+width=300
+height=100
+
+# Layout
+padding=10

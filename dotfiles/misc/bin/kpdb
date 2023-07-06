@@ -1,6 +1,12 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-DIR="$HOME/Drive/to_Cloud/Documents/Keepass/"
-NEWEST=$(ls $DIR | sort -n | tail -1)
-echo "${DIR}${NEWEST}"
+DIR="$HOME/Drive/to_Cloud/Documents/Keepass"
+NEWEST=$(find "$DIR" -mindepth 1 -maxdepth 1 -printf '%f\n' | sort -n | tail -1)
+
+if [[ -z "$NEWEST" ]]; then
+    echo "No KeePass database found in $DIR" >&2
+    exit 1
+fi
+
+echo "$DIR/$NEWEST"

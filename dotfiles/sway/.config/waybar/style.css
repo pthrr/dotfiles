@@ -1,0 +1,152 @@
+/* ==============================================================================
+ * WAYBAR MEDIUM GRAYSCALE THEME
+ * ============================================================================== */
+
+* {
+    border: none;
+    border-radius: 0;
+    font-family: "JetBrains Mono";
+    font-size: 11pt;
+    min-height: 0;
+}
+
+window#waybar {
+    background-color: #909090;
+    color: #000000;
+}
+
+/* Workspaces */
+#workspaces {
+    margin: 0;
+    padding: 0;
+}
+
+#workspaces button {
+    padding: 0 6px;
+    background-color: #909090;
+    color: #000000;
+    border: none;
+}
+
+#workspaces button.focused {
+    background-color: #000000;
+    color: #909090;
+}
+
+#workspaces button.active {
+    background-color: #909090;
+    color: #000000;
+}
+
+#workspaces button.urgent {
+    background-color: #909090;
+    color: #000000;
+}
+
+#workspaces button:hover {
+    background-color: #707070;
+    color: #ffffff;
+}
+
+/* Mode (resize, etc) */
+#mode {
+    background-color: #909090;
+    color: #000000;
+    padding: 0 6px;
+}
+
+/* All modules on the right */
+#cpu {
+    background-color: #909090;
+    color: #000000;
+    padding: 0 6px;
+    min-width: 85px;
+}
+
+#memory {
+    background-color: #909090;
+    color: #000000;
+    padding: 0 6px;
+    min-width: 85px;
+}
+
+#disk {
+    background-color: #909090;
+    color: #000000;
+    padding: 0 6px;
+    min-width: 120px;
+}
+
+#battery {
+    background-color: #909090;
+    color: #000000;
+    padding: 0 6px;
+    min-width: 175px;
+}
+
+#pulseaudio {
+    background-color: #909090;
+    color: #000000;
+    padding: 0 6px;
+    min-width: 85px;
+}
+
+#custom-timer {
+    background-color: #909090;
+    color: #000000;
+    padding: 0 6px;
+    min-width: 130px;
+}
+
+#clock {
+    background-color: #909090;
+    color: #000000;
+    padding: 0 10px;
+    min-width: 275px;
+}
+
+/* Tray */
+#tray {
+    background-color: #909090;
+    color: #000000;
+    padding: 0 8px;
+}
+
+/* Module separators */
+#tray,
+#cpu,
+#memory,
+#disk,
+#custom-battery,
+#pulseaudio {
+    border-right: 1px solid #000000;
+}
+
+/* Battery states */
+#battery.charging {
+    color: #000000;
+}
+
+#battery.warning:not(.charging) {
+    color: #000000;
+}
+
+#battery.critical:not(.charging) {
+    color: #000000;
+}
+
+/* Pulseaudio muted */
+#pulseaudio.muted {
+    color: #000000;
+}
+
+/* Tooltip */
+tooltip {
+    background-color: #909090;
+    color: #000000;
+    border: 1px solid #000000;
+}
+
+tooltip label {
+    color: #000000;
+}

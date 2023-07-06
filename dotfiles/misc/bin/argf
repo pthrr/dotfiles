@@ -1,12 +1,17 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-FILE=$1
-CMD=$2
+if [[ $# -lt 2 ]]; then
+    echo "Usage: $0 <file> <cmd> [args...]" >&2
+    exit 1
+fi
 
-mapfile -t <$FILE
+FILE="$1"
+shift
 
-for f in "${MAPFILE[@]}"; do
+mapfile -t lines < "$FILE"
+
+for f in "${lines[@]}"; do
     echo "Executing ${f} .."
-    $CMD $f
+    "$@" "$f"
 done

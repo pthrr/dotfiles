@@ -1,0 +1,8 @@
+model_provider = "nwv"
+preferred_auth_method = "apikey"
+
+[model_providers.nwv]
+name = "nwv"
+base_url = "https://placeholder.invalid/v1"
+env_key = "LLM_NW_TOKEN"
+wire_api = "responses"

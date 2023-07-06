@@ -1,248 +1,987 @@
-{ config, pkgs, ... }:
-
 {
-    home = {
-        # Home Manager needs a bit of information about you and the
-        # paths it should manage.
-        username = builtins.getEnv "USER";
-        homeDirectory = builtins.getEnv "HOME";
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
-        # This value determines the Home Manager release that your
-        # configuration is compatible with. This helps avoid breakage
-        # when a new Home Manager release introduces backwards
-        # incompatible changes.
-        #
-        # You can update Home Manager without changing this value. See
-        # the Home Manager release notes for a list of state version
-        # changes in each release.
-        stateVersion = "22.05";
-        enableNixpkgsReleaseCheck = false;
+let
+  ghcup = pkgs.stdenv.mkDerivation {
+    pname = "ghcup";
+    version = "latest";
+    src = pkgs.fetchurl {
+      url = "https://downloads.haskell.org/~ghcup/x86_64-linux-ghcup";
+      hash = "sha256-SA4F5BTS76WrvaAAaYSjNDzUlz6te1xI1lpVpHtAzlk=";
+    };
+    dontUnpack = true;
+    installPhase = ''
+      install -Dm755 $src $out/bin/ghcup
+    '';
+  };
 
-        packages = [
-            pkgs.rustfmt
-            pkgs.rust-analyzer
-            pkgs.yamllint
-            pkgs.ansible
-            pkgs.ansible-lint
-            pkgs.ansible-language-server
-            pkgs.elixir-ls
-            pkgs.elixir
-            pkgs.haskell-language-server
-            pkgs.hlint
-            pkgs.clojure-lsp
-            pkgs.zls
-            pkgs.zig
-            pkgs.compcert
-            pkgs.cling
-            pkgs.shfmt
-            pkgs.cabal-install
-            pkgs.cabal2nix
-            pkgs.stack
-            pkgs.ghc
-            pkgs.nasm
-            pkgs.wasmer
-            pkgs.emscripten
-            pkgs.cmakeWithGui
-            pkgs.cmake-format
-            pkgs.maven
-            pkgs.conan
-            pkgs.scons
-            pkgs.meson
-            pkgs.buck
-            pkgs.ninja
-            pkgs.bazelisk
-            pkgs.podman
-            pkgs.podman-compose
-            pkgs.emacs
-            pkgs.zeal
-            pkgs.picocom
-            pkgs.yosys-bluespec
-            pkgs.icestorm
-            pkgs.nextpnrWithGui
-            pkgs.yosys
-            pkgs.verilator
-            pkgs.gtkwave
-            pkgs.bluespec
-            pkgs.dotnet-sdk
-            pkgs.slack
-            pkgs.ngspice
-            pkgs.xyce
-            pkgs.qucs-s
-            pkgs.go-task
-            pkgs.ripes
-            pkgs.thunderbird
-            pkgs.librewolf
-            pkgs.firefox
-            pkgs.tor-browser-bundle-bin
-            pkgs.rr
-            pkgs.openocd
-            pkgs.age
-            pkgs.youtube-dl
-            pkgs.gitui
-            pkgs.git
-            pkgs.git-lfs
-            pkgs.git-filter-repo
-            pkgs.poppler_utils
-            pkgs.graphviz
-            pkgs.nsxiv
-            pkgs.farbfeld
-            pkgs.tmuxp
-            pkgs.sent
-            pkgs.mc
-            pkgs.fd
-            pkgs.jq
-            pkgs.fzf
-            pkgs.exa
-            pkgs.ripgrep
-            pkgs.crun
-            pkgs.fq
-            pkgs.redshift
-            pkgs.prusa-slicer
-            pkgs.lynx
-            pkgs.openscad
-            pkgs.kicad
-            pkgs.horizon-eda
-            pkgs.pcb2gcode
-            pkgs.candle
-            pkgs.tlaplus
-            pkgs.tlaplusToolbox
-            pkgs.nuXmv
-            pkgs.nusmv
-            pkgs.alloy6
-            pkgs.coq
-            pkgs.coqPackages.coqide
-            pkgs.ghidra
-            pkgs.gnucash
-            pkgs.winetricks
-            pkgs.wineWowPackages.full
-            pkgs.drawio
-            pkgs.vlc
-            pkgs.meld
-            pkgs.tectonic
-            pkgs.spotify
-            pkgs.discord
-            pkgs.element-desktop
-            pkgs.signal-desktop
-            pkgs.whatsapp-for-linux
-            pkgs.tdesktop
-            pkgs.anki
-            pkgs.reaper
-            pkgs.steam
-            pkgs.zathura
-            pkgs.ipe
-            pkgs.keepassxc
-            pkgs.obsidian
-            pkgs.zotero
-            pkgs.drumgizmo
-            pkgs.carla
-            pkgs.guitarix
-            pkgs.swh_lv2
-            pkgs.ladspaPlugins
-            pkgs.wolf-shaper
-            pkgs.distrho
-            pkgs.x42-plugins
-            pkgs.x42-avldrums
-            pkgs.lv2lint
-            pkgs.lv2bm
-            pkgs.jalv
-            pkgs.statix
+  xyceParallelNoCheck = pkgs.xyce-parallel.override {
+    enableDocs = false;
+    enableTests = false;
+  };
+
+  defaultUserName = "pthrr";
+  defaultUserEmail = "pthrr@posteo.de";
+  gitUserNameFile = "${config.home.homeDirectory}/.config/git/name.txt";
+  gitUserEmailFile = "${config.home.homeDirectory}/.config/git/email.txt";
+  gitUserName =
+    if builtins.pathExists gitUserNameFile then
+      let
+        content = builtins.readFile gitUserNameFile;
+      in
+      builtins.trace "gitUserNameFile exists: ${content}" content
+    else
+      builtins.trace "gitUserNameFile does not exist, using default" defaultUserName;
+  gitUserEmail =
+    if builtins.pathExists gitUserEmailFile then
+      let
+        content = builtins.readFile gitUserEmailFile;
+      in
+      builtins.trace "gitUserEmailFile exists: ${content}" content
+    else
+      builtins.trace "gitUserEmailFile does not exist, using default" defaultUserEmail;
+
+  commonUser = {
+    name = gitUserName;
+    email = gitUserEmail;
+  };
+
+  commonCore = {
+    editor = "nvim";
+    pager = "less -+$LESS -FRX";
+  };
+
+  codexNwv = pkgs.writeShellApplication {
+    name = "codex";
+    runtimeInputs = with pkgs; [
+      curl
+      jq
+    ];
+    text = ''
+      set -euo pipefail
+
+      if [ -z "''${LLM_NW_URL:-}" ] || [ -z "''${LLM_NW_TOKEN:-}" ] || [ -z "''${LLM_NW_MODEL:-}" ]; then
+        printf 'codex: LLM_NW_URL / LLM_NW_TOKEN / LLM_NW_MODEL not set (check ~/.env)\n' >&2
+        exit 1
+      fi
+
+      base_url="''${LLM_NW_URL%/}/v1"
+      default_model="$LLM_NW_MODEL"
+      # Models Bifrost does NOT advertise via /v1/models (serverless runpod has
+      # list_models off to avoid GPU cold-starts). Comma-separated, may be empty.
+      static_models="''${LLM_NW_STATIC_MODELS:-}"
+      catalog="$HOME/.codex/nwv-models.json"
+      mkdir -p "$HOME/.codex"
+
+      models_json="$(
+        curl -fsS "$base_url/models" \
+          -H "Authorization: Bearer $LLM_NW_TOKEN"
+      )"
+
+      if ! printf '%s' "$models_json" | jq -e --arg model "$default_model" '
+        [.data[]?.id] | index($model)
+      ' >/dev/null; then
+        printf 'codex: Bifrost does not advertise required default model %s\n' "$default_model" >&2
+        printf '%s\n' "$models_json" | jq -r '.data[]?.id // empty' >&2
+        exit 1
+      fi
+
+      printf '%s' "$models_json" | jq --arg default_model "$default_model" --arg static "$static_models" '
+        def catalog_model($slug; $priority): {
+          slug: $slug,
+          display_name: $slug,
+          description: "Bifrost gateway model",
+          default_reasoning_level: "medium",
+          supported_reasoning_levels: [
+            { effort: "low", description: "Light reasoning" },
+            { effort: "medium", description: "Default reasoning" },
+            { effort: "high", description: "Deeper reasoning" }
+          ],
+          shell_type: "shell_command",
+          visibility: "list",
+          supported_in_api: true,
+          priority: $priority,
+          upgrade: null,
+          base_instructions: "You are Codex, a coding agent. Work in the user workspace and follow the active Codex instructions.",
+          supports_reasoning_summaries: false,
+          default_reasoning_summary: "none",
+          support_verbosity: true,
+          default_verbosity: "medium",
+          apply_patch_tool_type: "freeform",
+          web_search_tool_type: "text_and_image",
+          truncation_policy: {
+            mode: "tokens",
+            limit: 10000
+          },
+          supports_parallel_tool_calls: true,
+          supports_image_detail_original: true,
+          context_window: (if ($slug | startswith("runpod/")) then 131072 else 65536 end),
+          max_context_window: (if ($slug | startswith("runpod/")) then 131072 else 65536 end),
+          effective_context_window_percent: 95,
+          experimental_supported_tools: [],
+          input_modalities: ["text"],
+          supports_search_tool: true
+        };
+
+        ($static | split(",") | map(select(. != ""))) as $static_models
+        | [ .data[]?.id | select(type == "string") ] as $discovered
+        | ([$default_model] + $discovered + $static_models
+           | reduce .[] as $m ([]; if index($m) then . else . + [$m] end)) as $ordered
+        | { models: ($ordered | to_entries | map(catalog_model(.value; .key))) }
+      ' > "$catalog"
+
+      chmod 0600 "$catalog"
+
+      exec ${pkgs.codex}/bin/codex --profile nwv \
+        -c "model=\"$default_model\"" \
+        -c "model_providers.nwv.base_url=\"$base_url\"" \
+        -c "model_catalog_json=\"$catalog\"" \
+        "$@"
+    '';
+  };
+in
+{
+  imports = [
+    "${fetchTarball "https://github.com/gmodena/nix-flatpak/archive/latest.tar.gz"}/modules/home-manager.nix"
+  ];
+
+  home = {
+    username = builtins.getEnv "USER";
+    homeDirectory = builtins.getEnv "HOME";
+    stateVersion = "22.05";
+    enableNixpkgsReleaseCheck = false;
+
+    packages =
+      with pkgs;
+      # Core utilities
+      [
+        coreutils
+        findutils
+        usbutils
+        pciutils
+        openssl
+        unrar
+        unzip
+        p7zip
+        wget
+        curl
+        gnupg
+        unixtools.xxd
+        inotify-tools
+      ]
+      ++
+
+        # Shell & terminal tools
+        [
+          vifm
+          zellij
+          tree
+          htop
+          fzf
+          ripgrep
+          fd
+          calcurse
+          meli
+        ]
+      ++
+
+        # WM
+        [
+          wl-clipboard
+          wlr-randr
+          udiskie
+        ]
+      ++
+
+        # Network & remote
+        [
+          sshpass
+          rclone
+        ]
+      ++
+
+        # Fonts
+        [
+          dejavu_fonts
+          fira-code
+          jetbrains-mono
+        ]
+      ++
+
+        # Build systems
+        [
+          scons
+          meson
+          ninja
+          bazelisk
+          bmake
+          bear
+          buck2
+          git-repo
+          conan
+          cmake
+        ]
+      ++
+
+        # Compilers & toolchains
+        [
+          zig
+          zls
+          ocaml
+          opam
+          lean4
+          rustup
+          (agda.withPackages (p: [
+            p.cubical
+            p.standard-library
+          ]))
+          # haskellPackages.agda-language-server  # unmaintained: needs lsp<1.7 and Agda<2.6.4
+          ghcup
+        ]
+      ++
+
+        # JavaScript/TypeScript
+        [
+          # deno
+          # bun
+          nodejs_24
+          tsx
+          eslint
+          vscode-langservers-extracted
+          typescript-language-server
+          bash-language-server
+          tree-sitter
+        ]
+      ++
+
+        # Python tooling
+        [
+          pre-commit
+          ruff
+          uv
+          ty
+          # python3Packages.jupyterlab
+          cppman
+          python3Packages.grip
+        ]
+      ++
+
+        # Java tooling
+        [
+          jdk
+          maven
+          gradle
+        ]
+      ++
+
+        # Nix tooling
+        [
+          nixd
+          nixfmt
+        ]
+      ++
+
+        # AI tooling
+        [
+          claude-code
+          codexNwv
+        ]
+      ++
+
+        # Containers & Kubernetes
+        # [ kind minikube helm k3s k3d crun envsubst ] ++
+
+        # Build caching & debugging
+        [
+          mold
+          sccache
+          # redis
+          gdbgui
+          rr
+          hotspot
+        ]
+      ++
+
+        # Hardware development
+        [
+          yosys
+          verilator
+          verible
+          # bluespec yosys-bluespec
+          icestorm
+          svdtools
+          svd2rust
+          candle
+          ngspice
+          # pcb2gcode
+          # sby
+          nextpnrWithGui
+          xyceParallelNoCheck
+          minicom
+          picocom
+        ]
+      ++
+
+        # WebAssembly
+        [
+          # emscripten
+          wasmtime
+          wabt
+        ]
+      ++
+
+        # Document tools
+        [
+          typst
+          tinymist
+          typstyle
+          pandoc
+          poppler-utils
+          graphviz
+          tectonic
+        ]
+      ++
+
+        # Formatters & linters
+        [
+          marksman
+          tlafmt
+          yamlfmt
+          yamllint
+          shfmt
+          stylua
+          lua-language-server
+          cmake-format
+          prettier
+        ]
+      ++
+
+        # Protocol buffers
+        [
+          protobuf
+          protobufc
+        ]
+      ++
+
+        # Data tools
+        [
+          jq
+          fq
+        ]
+      ++
+
+        # Formal verification
+        [
+          cue
+          cuelsp
+          cuetools
+          mcrl2
+          nuxmv
+          z3
+          tlaplus
+        ]
+      ++
+
+        # Image tools
+        [
+          nsxiv
+          farbfeld
+          libwebp
+          netpbm
+          potrace
+        ]
+      ++
+
+        # Media/Audio
+        [
+          drumgizmo
+          x42-avldrums
+          x42-plugins
+          wolf-shaper
+          calf
+        ]
+      ++
+
+        # Viewers & diff tools
+        [
+          difftastic
+          sent
+          zathura
+        ]
+      ++
+
+        # Web browsers
+        [
+          # ladybird
+        ]
+      ++
+
+        # Other
+        [
+          go-task
+          # wineWow64Packages.waylandFull
+          # ripes # temporarily disabled due to cmake build issue
         ];
 
-        # files in ~/
-        file.".bashrc".source = ../../../bash/.bashrc;
-        file.".profile".source = ../../../bash/.profile;
-        file."key-bindings.bash".source = ../../../bash/key-bindings.bash;
-        file."z.sh".source = ../../../bash/z.sh;
-        file."git-prompt.sh".source = ../../../bash/git-prompt.sh;
+    file = {
+      ".bashrc".source = ../../../bash/.bashrc;
+      ".bash_profile".source = ../../../bash/.bash_profile;
+      "z.sh".source = ../../../bash/z.sh;
+      "git-prompt.sh".source = ../../../bash/git-prompt.sh;
+      "jj-prompt.sh".source = ../../../bash/jj-prompt.sh;
 
-        file.".tmux.conf".source = ../../../tmux/.tmux.conf;
-        file.".tmuxp" = {
-            source = ../../../tmux/.tmuxp;
-            recursive = true;
-        };
+      ".clang-tidy".source = ../../../lang/.clang-tidy;
+      ".clang-format".source = ../../../lang/.clang-format;
+      ".cmake-format.yaml".source = ../../../lang/.cmake-format.yaml;
+      ".config/stylua/stylua.toml".source = ../../../lang/stylua.toml;
+      ".bazelrc".source = ../../../lang/.bazelrc;
+      ".prettierrc".source = ../../../lang/.prettierrc;
 
-        file.".gitconfig".source = ../../../git/.gitconfig;
-        file.".git-commit-template.txt".source = ../../../git/.git-commit-template.txt;
-
-        file.".clang-tidy".source = ../../../lang/.clang-tidy;
-        file.".clang-format".source = ../../../lang/.clang-format;
-
-        file.".ssh" = {
-            source = ../../../ssh/.ssh;
-            recursive = true;
-        };
-
-        file.".local/share/applications/Joplin.desktop".source = ../../../misc/.local/share/applications/Joplin.desktop;
-        file."bin" = {
-            source = ../../../misc/bin;
-            recursive = true;
-        };
-        file."scripts" = {
-            source = ../../../misc/scripts;
-            recursive = true;
-        };
-
-        file."Vorlagen/snippets" = {
-            source = ../../../nvim/Vorlagen/snippets;
-            recursive = true;
-        };
-        file."Vorlagen/slides" = {
-            source = ../../../sent/Vorlagen/slides;
-            recursive = true;
-        };
-
-        file.".xinitrc".source = ../../../x/.xinitrc;
-        file.".xresources".source = ../../../x/.xresources;
-        file.".xsessionrc".source = ../../../x/.xsessionrc;
-        file.".xprofile".source = ../../../x/.xprofile;
+      ".cargo" = {
+        source = ../../../lang/.cargo;
+        recursive = true;
+      };
+      ".ssh" = {
+        source = ../../../ssh/.ssh;
+        recursive = true;
+      };
+      "bin" = {
+        source = ../../../misc/bin;
+        recursive = true;
+      };
+      "Vorlagen/slides" = {
+        source = ../../../sent/Vorlagen/slides;
+        recursive = true;
+      };
+      ".claude" = {
+        source = ../../../claude/.config/claude;
+        recursive = true;
+      };
     };
+  };
 
-    # Let Home Manager install and manage itself.
-    programs.home-manager.enable = true;
+  # Unmount SSHFS mounts before sleep to prevent freeze.
+  # Ordered Before=sleep.target so systemd waits for completion before suspending.
+  # fusermount -uz (lazy unmount) detaches immediately via MNT_DETACH even if the
+  # FUSE daemon is unresponsive (e.g. SSH tunnel dropped mid-transit).
+  # TimeoutStartSec caps the worst case so sleep is never blocked indefinitely.
+  systemd.user.services.sshfs-sleep-handler = {
+    Unit = {
+      Description = "Unmount SSHFS before sleep";
+      Before = [ "sleep.target" ];
+    };
+    Service = {
+      Type = "oneshot";
+      ExecStart = pkgs.writeShellScript "sshfs-sleep-handler" ''
+        if /usr/bin/mount | grep -q " $HOME/Drive "; then
+          /usr/bin/fusermount -uz "$HOME/Drive" 2>/dev/null || true
+        fi
+      '';
+      TimeoutStartSec = 10;
+    };
+    Install = {
+      WantedBy = [ "sleep.target" ];
+    };
+  };
 
-    programs.neovim = {
-        enable = true;
-        plugins = [
-            pkgs.vimPlugins.nvim-treesitter.withAllGrammars
-            pkgs.vimPlugins.nvim-treesitter-textobjects
-            pkgs.vimPlugins.plenary-nvim
-            pkgs.vimPlugins.telescope-nvim
+  nixpkgs.config.allowUnfree = true;
+
+  programs.home-manager.enable = true;
+
+  programs.direnv = {
+    enable = true;
+    nix-direnv.enable = true;
+  };
+
+  programs.jujutsu = {
+    enable = true;
+    settings = {
+      user = commonUser;
+      core = commonCore;
+
+      git = {
+        auto-local-bookmark = true;
+        push-branch-prefix = "";
+        fetch-tags = true;
+        track-branches = true;
+      };
+
+      operation = {
+        allow-empty = true;
+
+        rebase = {
+          auto-squash = true;
+          update-refs = true;
+        };
+      };
+
+      # Revset aliases for powerful commit filtering
+      revset-aliases = {
+        "mine()" = ''author(email_substring("pthrr")) | committer(email_substring("pthrr"))'';
+        "trunk()" = "main@origin | master@origin";
+        "stack()" = "ancestors(@, mutable())";
+      };
+
+      aliases = {
+        # Git-equivalent aliases
+        co = [ "checkout" ];
+        br = [
+          "branch"
+          "list"
         ];
+        cm = [ "new" ];
+        df = [ "diff" ];
+        lg = [
+          "log"
+          "--graph"
+        ];
+        rb = [ "rebase" ];
+        mt = [ "resolve" ];
+
+        # Workflow shortcuts
+        st = [ "status" ];
+        l = [
+          "log"
+          "-r"
+          "trunk()..@"
+          "--limit"
+          "20"
+        ];
+        ll = [
+          "log"
+          "--limit"
+          "50"
+        ];
+        s = [ "show" ];
+        n = [ "new" ];
+        e = [ "edit" ];
+
+        # Advanced workflows
+        amend = [ "squash" ];
+        fixup = [ "squash" ];
+        uncommit = [
+          "edit"
+          "@-"
+        ];
+
+        # Git integration
+        fetch = [
+          "git"
+          "fetch"
+        ];
+        pull = [
+          "git"
+          "fetch"
+        ];
+        push = [
+          "git"
+          "push"
+        ];
+
+        # Git command aliases
+        git-fetch = [
+          "git"
+          "fetch"
+          "--prune"
+        ];
+        git-push = [
+          "git"
+          "push"
+          "--follow-tags"
+        ];
+        git-status = [
+          "git"
+          "status"
+        ];
+        git-log = [
+          "git"
+          "log"
+          "--oneline"
+          "--graph"
+          "--decorate"
+        ];
+        git-diff = [
+          "git"
+          "diff"
+        ];
+        git-commit = [
+          "git"
+          "commit"
+          "-v"
+        ];
+        git-branch = [
+          "git"
+          "branch"
+        ];
+        git-rebase = [
+          "git"
+          "rebase"
+        ];
+        git-merge = [
+          "git"
+          "merge"
+        ];
+      };
+
+      diff = {
+        tool = "difftastic";
+      };
+
+      merge = {
+        tool = "meld";
+      };
+
+      fetch = {
+        all = true;
+      };
+
+      push = {
+        auto-setup-remote = true;
+      };
+
+      pager = {
+        enabled = true;
+      };
+
+      ui = {
+        default-command = "status";
+        color = "auto";
+        diff-context = 8;
+        diff-editor = ":builtin";
+        merge-editor = "meld";
+        paginate = "auto";
+        log-synthetic-elided-nodes = true;
+      };
+
+      # Template customizations
+      template-aliases = {
+        "format_short_change_id(id)" = "id.shortest(8)";
+        "format_short_commit_id(id)" = "id.shortest(8)";
+      };
+    };
+  };
+
+  programs.git = {
+    enable = true;
+    package = pkgs.gitFull;
+    lfs.enable = true;
+    signing.format = "openpgp";
+    settings = {
+      user = {
+        name = commonUser.name;
+        email = commonUser.email;
+      };
+      core = commonCore // {
+        autocrlf = false;
+        excludesfile = "~/.config/git/.gitignore_global";
+        attributesfile = "~/.config/git/.gitattributes_global";
+      };
+
+      branch = {
+        sort = "-committerdate";
+      };
+
+      tag = {
+        sort = "version:refname";
+      };
+
+      init = {
+        defaultBranch = "main";
+      };
+
+      merge = {
+        conflictstyle = "zdiff3";
+        tool = "meld";
+      };
+
+      diff = {
+        algorithm = "histogram";
+        colorMoved = "plain";
+        mnemonicPrefix = true;
+        renames = true;
+        tool = "meld";
+      };
+
+      credential = {
+        helper = "cache --timeout=3600";
+      };
+
+      safe = {
+        directory = "*";
+      };
+
+      gpg = {
+        program = "gpg2";
+      };
+
+      submodule = {
+        recurse = true;
+      };
+
+      fetch = {
+        prune = true;
+        pruneTags = true;
+        all = true;
+      };
+
+      pull = {
+        ff = "only";
+        rebase = true;
+      };
+
+      push = {
+        recurseSubmodules = "on-demand";
+        default = "simple";
+        autoSetupRemote = true;
+        followTags = true;
+      };
+
+      commit = {
+        verbose = true;
+        template = "~/.config/git/git-commit-template.txt";
+      };
+
+      rerere = {
+        enabled = true;
+        autoupdate = true;
+      };
+
+      rebase = {
+        autoSquash = true;
+        autoStash = true;
+        updateRefs = true;
+      };
+
+      status = {
+        submoduleSummary = true;
+      };
+
+      difftool = {
+        prompt = true;
+
+        "difftastic" = {
+          cmd = "difft \"$LOCAL\" \"$REMOTE\"";
+          trustExitCode = true;
+        };
+
+        "meld" = {
+          cmd = "meld \"$LOCAL\" \"$REMOTE\"";
+          trustExitCode = false;
+        };
+
+        "kdiff3" = {
+          cmd = "kdiff3 \"$LOCAL\" \"$REMOTE\"";
+          trustExitCode = false;
+        };
+
+        "bcomp4" = {
+          cmd = "\"/mnt/c/Program Files/Beyond Compare 4/BComp.exe\" \"$(wslpath -w $LOCAL)\" \"$(wslpath -w $REMOTE)\"";
+          trustExitCode = true;
+        };
+      };
+
+      mergetool = {
+        keepBackup = false;
+
+        "meld" = {
+          cmd = "meld --auto-merge \"$LOCAL\" \"$BASE\" \"$REMOTE\" --output \"$MERGED\" --label=Local --label=Base --label=Remote --diff \"$BASE\" \"$LOCAL\" --diff \"$BASE\" \"$REMOTE\"";
+          trustExitCode = false;
+        };
+
+        "kdiff3" = {
+          cmd = "kdiff3 \"$LOCAL\" \"$BASE\" \"$REMOTE\" \"$MERGED\"";
+          trustExitCode = false;
+        };
+
+        "bcomp4" = {
+          cmd = "\"/mnt/c/Program Files/Beyond Compare 4/BComp.exe\" \"$(wslpath -w $LOCAL)\" \"$(wslpath -w $REMOTE)\" \"$(wslpath -w $BASE)\" \"$(wslpath -w $MERGED)\"";
+          trustExitCode = true;
+        };
+      };
+
+      pager = {
+        difftool = false;
+      };
+
+      alias = {
+        a = "add";
+        aa = "add --all";
+        b = "branch";
+        p = "push";
+        pf = "push --force-with-lease";
+        c = "commit";
+        ca = "commit --amend";
+        co = "checkout";
+        sw = "!git checkout $(git branch --sort=-committerdate | fzf | sed 's/^[* ] //')";
+        s = "status";
+        d = "diff";
+        dt = "difftool";
+        m = "merge";
+        mt = "mergetool";
+        l = "log";
+        lg = "log --graph";
+        lo = "log --oneline";
+        lp = "log --patch";
+        lfp = "log --first-parent";
+        lt = "log --topo-order";
+        ll = "log --graph --topo-order --date=short --abbrev-commit --decorate --boundary --pretty=format:'%Cgreen%ad %Cred%h%Creset -%C(yellow)%d%Creset %s %Cblue[%cn]%Creset %Cblue%G?%Creset'";
+        lla = "log --graph --topo-order --date=short --abbrev-commit --decorate --all --boundary --pretty=format:'%Cgreen%ad %Cred%h%Creset -%C(yellow)%d%Creset %s %Cblue[%cn]%Creset %Cblue%G?%Creset'";
+        lll = "log --graph --topo-order --date=iso8601-strict --no-abbrev-commit --abbrev=40 --decorate --all --boundary --pretty=format:'%Cgreen%ad %Cred%h%Creset -%C(yellow)%d%Creset %s %Cblue[%cn <%ce>]%Creset %Cblue%G?%Creset'";
+        subm-reinit = "!git submodule deinit --all --force && git submodule update --init --recursive";
+      };
+    };
+  };
+
+  programs.neovim = {
+    enable = true;
+    withRuby = true;
+    withPython3 = true;
+    withPerl = false;
+    withNodeJs = false;
+    # wrapRc=false skips provider --cmd; inject ruby/python hosts explicitly.
+    extraWrapperArgs =
+      let
+        providerWrap = pkgs.wrapNeovimUnstable pkgs.neovim-unwrapped {
+          withPython3 = true;
+          withRuby = true;
+          withPerl = false;
+          withNodeJs = false;
+          plugins = [ ];
+          wrapRc = false;
+        };
+      in
+      [
+        "--add-flags"
+        ''--cmd "lua ${providerWrap.passthru.providerLuaRc}"''
+      ];
+    plugins = with pkgs.vimPlugins; [
+      nvim-treesitter.withAllGrammars
+      plenary-nvim
+      telescope-nvim
+    ];
+  };
+
+  home.file.".codex/nwv.config.toml".source = ../../../codex/.codex/nwv.config.toml;
+
+  xdg.configFile =
+    let
+      mkConfigDir = name: {
+        source = ../../../${name}/.config/${name};
+        recursive = true;
+      };
+    in
+    lib.genAttrs [
+      "sway"
+      "gdb"
+      "foot"
+      "zathura"
+      "git"
+      "zellij"
+      "vifm"
+      "nvim"
+      "calcurse"
+      "meli"
+    ] mkConfigDir
+    // {
+      "plasma-workspace/env" = {
+        source = ../../../nix/.config/plasma-workspace/env;
+        recursive = true;
+      };
+      # waybar config is now part of sway package
+      "waybar" = {
+        source = ../../../sway/.config/waybar;
+        recursive = true;
+      };
+      "kanshi" = {
+        source = ../../../sway/.config/kanshi;
+        recursive = true;
+      };
+      "swaylock" = {
+        source = ../../../sway/.config/swaylock;
+        recursive = true;
+      };
+      "rofi" = {
+        source = ../../../sway/.config/rofi;
+        recursive = true;
+      };
+      "mako" = {
+        source = ../../../sway/.config/mako;
+        recursive = true;
+      };
+      # Bridge the host-side obsidian CLI to the Flatpak-confined socket.
+      # %t expands to $XDG_RUNTIME_DIR; recreated each user session by
+      # systemd-tmpfiles-setup.service since /run/user/UID is tmpfs.
+      "user-tmpfiles.d/obsidian-cli-socket.conf".text = ''
+        L+ %t/.obsidian-cli.sock - - - - %t/.flatpak/md.obsidian.Obsidian/xdg-run/.obsidian-cli.sock
+      '';
     };
 
-    xdg = {
-        # files in ~/.config/
-        configFile."i3" = {
-            source = ../../../i3/.config/i3;
-            recursive = true;
-        };
-        configFile."i3status" = {
-            source = ../../../i3/.config/i3status;
-            recursive = true;
-        };
-        configFile."rofi" = {
-            source = ../../../i3/.config/rofi;
-            recursive = true;
-        };
+  services.flatpak = {
+    enable = false;
+    uninstallUnmanaged = false;
+    uninstallUnused = false;
+    update.onActivation = false;
+    remotes = [
+      {
+        name = "flathub";
+        location = "https://flathub.org/repo/flathub.flatpakrepo";
+      }
+    ];
+    packages = [
+      "org.libreoffice.LibreOffice"
+      "it.fabiodistasio.AntaresSQL"
+      "net.lutris.Lutris"
+      "org.mozilla.firefox"
+      "io.github.gtkwave.GTKWave"
+      "io.github.ra3xdh.qucs_s"
+      "org.inkscape.Inkscape"
+      "org.gnucash.GnuCash"
+      "com.usebottles.bottles"
+      "org.otfried.Ipe"
+      "com.jgraph.drawio.desktop"
+      "org.mozilla.Thunderbird"
+      "org.torproject.torbrowser-launcher"
+      "md.obsidian.Obsidian"
+      "org.zotero.Zotero"
+      "org.jdownloader.JDownloader"
+      "org.kde.labplot"
+      "fm.reaper.Reaper"
+      "ar.com.tuxguitar.TuxGuitar"
+      "net.ankiweb.Anki"
+      "engineer.atlas.Nyxt"
+      "org.videolan.VLC"
+      "net.cozic.joplin_desktop"
+      "com.valvesoftware.Steam"
+      "org.telegram.desktop"
+      "com.discordapp.Discord"
+      "com.spotify.Client"
+      "im.riot.Riot"
+      "org.signal.Signal"
+      "org.keepassxc.KeePassXC"
+      "org.gnome.meld"
+      "com.prusa3d.PrusaSlicer"
+      "org.freecad.FreeCAD"
+      "org.openscad.OpenSCAD"
+      "org.kicad.KiCad"
+      "org.gimp.GIMP"
+      "org.sqlitebrowser.sqlitebrowser"
+      "org.kde.kdenlive"
+    ];
+  };
 
-        configFile."zathura" = {
-            source = ../../../zathura/.config/zathura;
-            recursive = true;
-        };
+  home.activation.runMyScript = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    sudo -n $HOME/bin/patchnixapps $HOME/.nix-profile/share/applications
+  '';
 
-        configFile."mc" = {
-            source = ../../../mc/.config/mc;
-            recursive = true;
-        };
 
-        configFile."nvim" = {
-            source = ../../../nvim/.config/nvim;
-            recursive = true;
-        };
-
-        configFile."emacs" = {
-            source = ../../../emacs/.config/emacs;
-            recursive = true;
-        };
-    };
+  home.activation.ensureHaskellTools = lib.hm.dag.entryAfter [ "installPackages" ] ''
+    export PATH="$HOME/.ghcup/bin:$HOME/.cabal/bin:$HOME/.nix-profile/bin:/usr/local/bin:/usr/bin:$PATH"
+    ghcup install ghc 9.8.4 --set
+    ghcup install cabal 3.16.1.0 --set
+    cabal update
+  '';
 }

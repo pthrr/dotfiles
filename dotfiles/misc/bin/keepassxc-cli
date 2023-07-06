@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+exec flatpak run --command=keepassxc-cli org.keepassxc.KeePassXC "$@"

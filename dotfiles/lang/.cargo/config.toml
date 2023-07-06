@@ -1,0 +1,6 @@
+[build]
+rustc-wrapper = "sccache-wrapper"
+rustflags = [
+    "-W", "clippy::pedantic",
+    "-W", "rust_2018_idioms",
+]

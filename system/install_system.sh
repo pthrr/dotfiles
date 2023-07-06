@@ -1,119 +1,72 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-wget -O- https://www.virtualbox.org/download/oracle_vbox_2016.asc | sudo gpg --dearmor --yes --output /usr/share/keyrings/oracle-virtualbox-2016.gpg
-[[ ! $(grep "virtualbox" /etc/apt/sources.list) ]] && echo "deb [arch=amd64 signed-by=/usr/share/keyrings/oracle-virtualbox-2016.gpg] https://download.virtualbox.org/virtualbox/debian bullseye contrib" | sudo tee -a /etc/apt/sources.list
-sudo apt update -y
-sudo apt remove -y \
-    task-lxqt-desktop \
-    task-gnome-flashback-desktop \
-    task-xfce-desktop \
-    task-mate-desktop \
-    task-cinnamon-desktop \
-    task-lxde-desktop
-sudo apt install -y \
-    task-desktop \
-    task-german \
-    task-laptop \
-    task-kde-desktop \
-    firmware-misc-nonfree \
-    intel-microcode \
-    fonts-firacode \
-    fonts-dejavu \
-    fonts-font-awesome \
-    fonts-ubuntu \
-    i3 \
-    i3lock \
-    i3status \
-    python3-i3ipc \
-    rofi \
-    bash \
-    xterm \
-    tmux \
-    xorg \
-    automake \
-    autoconf \
-    build-essential \
-    pkg-config \
-    strace \
-    htop \
-    tree \
-    curl \
-    wget \
-    stow \
-    xclip \
-    xsel \
-    sshpass \
-    sshfs \
-    ssh-askpass \
-    cups \
-    gnupg2 \
-    xxd \
-    nvidia-detect \
-    inotify-tools \
-    xdotool \
-    virtualbox-7.0 \
-    chromium \
-    flatpak \
-    kdenlive \
-    labplot \
-    spacefm \
-    qemu \
-    lilv-utils \
-    lv2-dev \
-    jackd2 \
-    qjackctl \
-    a2jmidid \
-    pulseaudio-module-jack \
-    alsa-utils \
-    python3-full \
-    python3-pip \
-    python3-dev \
-    pipx \
-    python3-pynvim \
-    cppman \
-    openjdk-17-jdk-headless \
-    openjdk-17-jre-headless \
-    cargo \
-    npm \
-    golang-go \
-    leiningen \
-    clojure \
-    gdb \
-    gcc \
-    gcc-arm-none-eabi \
-    libnewlib-arm-none-eabi \
-    clang \
-    clangd \
-    clang-tidy \
-    clang-tools \
-    valgrind \
-    libxmu-dev \
-    libcairomm-1.0-dev \
-    libcairo2-dev \
-    libopenblas-dev \
-    libsndfile1-dev \
-    libx11-dev \
-    libcairo2-dev
-sudo apt remove -y \
-    firefox-esr \
-    firefox
-sudo apt purge -y \
-    kdegames
-sudo apt autoremove -y
-sudo flatpak remote-add --if-not-exists \
-    flathub https://flathub.org/repo/flathub.flatpakrepo
-sudo flatpak install \
-    jdownloader
-pipx install --force pre-commit
-pipx install --force black
-pipx install --force isort
-pipx install --force mypy
-pipx install --force ruff
-pipx install --force rofi-tmuxp
-pipx install --force rtcqs
-pipx upgrade-all
-sudo npm install -g npm n
-sudo n stable
-sudo npm install \
-    fixjson
+sudo dnf update -y
+sudo dnf group install -y --skip-unavailable \
+	c-development \
+	container-management \
+	development-tools \
+	system-tools \
+	virtualization
+sudo dnf group install -y --skip-broken \
+	swaywm \
+	swaywm-extended
+# KDE Plasma as fallback desktop
+sudo dnf group install -y --skip-unavailable \
+	kde-desktop
+sudo dnf install -y \
+	kde-connect \
+	rofi-wayland sway-contrib kanshi blueman \
+	sway-systemd swaylock swayidle waybar mako foot \
+	syslinux \
+	flatpak \
+	clang llvm llvm-devel clang-tools-extra clang-analyzer clang-devel \
+	libstdc++-static glibc-static libasan libubsan libtsan \
+	arm-none-eabi-binutils-cs arm-none-eabi-gcc-cs-c++ arm-none-eabi-gcc-cs arm-none-eabi-newlib \
+	sshfs openocd dfu-util \
+	libxcrypt-compat ncurses-compat-libs \
+	mock
+# Remove dropped groups and packages from previous installs
+sudo dnf group remove -y \
+	admin-tools \
+	desktop-accessibility \
+	office \
+	sound-and-video \
+	libreoffice
+sudo dnf remove -y \
+	krdc qemu \
+	stlink stlink-gui \
+	cloud-utils \
+	openssh-askpass \
+	timeshift \
+	thunderbird firefox
+# Remove dunst after swaywm group installed (use mako instead)
+sudo dnf remove -y \
+	dunst
+# Disable offline updates - only allow manual online updates
+sudo systemctl mask \
+	packagekit-offline-update.service \
+	system-update.target \
+	dnf5-offline-transaction.service \
+	dnf-system-upgrade.service
+# Boot to console login, start DE manually
+sudo systemctl set-default multi-user.target
+
+# System hardening (idempotent)
+sudo mkdir -p /etc/systemd/journald.conf.d
+sudo tee /etc/systemd/journald.conf.d/size.conf <<<$'[Journal]\nSystemMaxUse=500M'
+sudo tee /etc/sysctl.d/99-swappiness.conf <<<"vm.swappiness=10"
+sudo tee /etc/sysctl.d/99-panic.conf <<<"kernel.panic=10"
+sudo sysctl --system
+
+# Ensure rescue kernel exists for recovery
+sudo dnf install -y kernel-core
+
+# DNF safety settings (idempotent - updates or adds)
+sudo sed -i '/^installonly_limit=/d; /^clean_requirements_on_remove=/d; /^protect_running_kernel=/d; /^keepcache=/d' /etc/dnf/dnf.conf
+cat <<'EOF' | sudo tee -a /etc/dnf/dnf.conf
+installonly_limit=3
+clean_requirements_on_remove=True
+protect_running_kernel=True
+keepcache=False
+EOF

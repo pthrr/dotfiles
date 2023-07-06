@@ -1,0 +1,67 @@
+{
+    "layer": "bottom",
+    "position": "bottom",
+    "height": 25,
+    "spacing": 2,
+    "modules-left": ["sway/workspaces", "sway/mode"],
+    "modules-center": [],
+    "modules-right": ["tray", "cpu", "memory", "disk", "pulseaudio", "custom/battery", "clock"],
+
+    "sway/workspaces": {
+        "disable-scroll": false,
+        "all-outputs": true,
+        "format": "{name}"
+    },
+
+    "sway/mode": {
+        "format": "<span style=\"italic\">{}</span>"
+    },
+
+    "tray": {
+        "icon-size": 25,
+        "spacing": 10,
+        "show-passive-items": true
+    },
+
+    "cpu": {
+        "format": "CPU: {usage}%",
+        "tooltip": true,
+        "interval": 3
+    },
+
+    "memory": {
+        "format": "MEM: {}%",
+        "tooltip": true,
+        "interval": 3
+    },
+
+    "disk": {
+        "format": "DSK: {free}",
+        "path": "/",
+        "tooltip-format": "Used: {used} / Total: {total} ({percentage_used}%)",
+        "interval": 30
+    },
+
+    "custom/battery": {
+        "exec": "~/.config/waybar/battery-combined.sh",
+        "interval": 3,
+        "format": "{}",
+        "tooltip": false,
+        "min-length": 14,
+        "separator": true
+    },
+
+    "pulseaudio": {
+        "format": "VOL: {volume}%",
+        "format-muted": "VOL: M",
+        "on-click": "pactl set-sink-mute @DEFAULT_SINK@ toggle",
+        "on-click-right": "pavucontrol",
+        "tooltip": true
+    },
+
+    "clock": {
+        "format": "KW {:%V, %a, %d.%m.%Y - %H:%M}",
+        "tooltip-format": "{:%a %d %b %Y}",
+        "interval": 60
+    }
+}

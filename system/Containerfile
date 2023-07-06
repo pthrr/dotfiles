@@ -1,0 +1,43 @@
+FROM quay.io/fedora/fedora-sway-atomic:latest
+
+RUN dnf group install -y --skip-unavailable \
+      kde-desktop \
+      c-development \
+      container-management \
+      development-tools \
+      system-tools \
+      virtualization && \
+    dnf install -y \
+      kde-connect \
+      rofi-wayland sway-contrib kanshi blueman \
+      syslinux \
+      clang llvm llvm-devel clang-tools-extra clang-analyzer clang-devel \
+      libstdc++-static glibc-static libasan libubsan libtsan \
+      arm-none-eabi-binutils-cs arm-none-eabi-gcc-cs-c++ arm-none-eabi-gcc-cs arm-none-eabi-newlib \
+      sshfs openocd dfu-util \
+      libxcrypt-compat ncurses-compat-libs \
+      mock && \
+    dnf clean all
+
+# Writable /nix via bind mount from /var/nix (writable on atomic)
+RUN mkdir -p /nix /var/nix && \
+    printf '[Unit]\n\
+Description=Nix Store Bind Mount\n\
+DefaultDependencies=no\n\
+Before=local-fs.target\n\
+\n\
+[Mount]\n\
+What=/var/nix\n\
+Where=/nix\n\
+Type=none\n\
+Options=bind\n\
+\n\
+[Install]\n\
+WantedBy=local-fs.target\n' > /etc/systemd/system/nix.mount && \
+    systemctl enable nix.mount
+
+# System hardening
+RUN mkdir -p /etc/systemd/journald.conf.d && \
+    printf '[Journal]\nSystemMaxUse=500M\n' > /etc/systemd/journald.conf.d/size.conf && \
+    printf 'vm.swappiness=10\n' > /etc/sysctl.d/99-swappiness.conf && \
+    printf 'kernel.panic=10\n' > /etc/sysctl.d/99-panic.conf
