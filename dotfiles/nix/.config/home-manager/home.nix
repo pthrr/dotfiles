@@ -41,10 +41,10 @@
             pkgs.nasm
             pkgs.wasmer
             pkgs.emscripten
-            pkgs.cmakeWithGui
+            pkgs.pipx
             pkgs.cmake-format
+            pkgs.cmakeWithGui
             pkgs.maven
-            pkgs.conan
             pkgs.scons
             pkgs.meson
             pkgs.buck

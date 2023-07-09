@@ -69,7 +69,6 @@ sudo apt install -y \
     python3-full \
     python3-pip \
     python3-dev \
-    pipx \
     python3-pynvim \
     cppman \
     openjdk-17-jdk-headless \
@@ -112,6 +111,7 @@ pipx install --force mypy
 pipx install --force ruff
 pipx install --force rofi-tmuxp
 pipx install --force rtcqs
+pipx install --force conan
 pipx upgrade-all
 sudo npm install -g npm n
 sudo n stable
