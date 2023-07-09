@@ -91,6 +91,7 @@
             pkgs.jq
             pkgs.fzf
             pkgs.exa
+            pkgs.pdfgrep
             pkgs.ripgrep
             pkgs.crun
             pkgs.fq
