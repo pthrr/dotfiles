@@ -31,7 +31,6 @@
             pkgs.hlint
             pkgs.clojure-lsp
             pkgs.zls
-            pkgs.zig
             pkgs.compcert
             pkgs.cling
             pkgs.shfmt
