@@ -52,7 +52,6 @@
             pkgs.bazelisk
             pkgs.podman
             pkgs.podman-compose
-            pkgs.emacs
             pkgs.zeal
             pkgs.picocom
             pkgs.yosys-bluespec
@@ -176,10 +175,6 @@
             source = ../../../misc/bin;
             recursive = true;
         };
-        file."scripts" = {
-            source = ../../../misc/scripts;
-            recursive = true;
-        };
 
         file."Vorlagen/snippets" = {
             source = ../../../nvim/Vorlagen/snippets;
@@ -236,11 +231,6 @@
 
         configFile."nvim" = {
             source = ../../../nvim/.config/nvim;
-            recursive = true;
-        };
-
-        configFile."emacs" = {
-            source = ../../../emacs/.config/emacs;
             recursive = true;
         };
     };
