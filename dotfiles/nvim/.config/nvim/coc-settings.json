@@ -51,4 +51,5 @@
     },
     "snippets.ultisnips.pythonPrompt": false,
     "zig.zls.path": "~/.config/coc/extensions/coc-zls-data/zls_install/zls",
+    "zig.zls.checkForUpdate": false,
 }
