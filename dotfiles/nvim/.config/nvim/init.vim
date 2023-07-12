@@ -221,8 +221,7 @@ lua << EOF
         "vim",
         "nix",
         "verilog",
-        "clojure",
-        "help"
+        "clojure"
     },
     sync_install = false,
     auto_install = false,
