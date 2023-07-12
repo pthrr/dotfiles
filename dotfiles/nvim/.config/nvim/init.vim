@@ -35,6 +35,8 @@ if dein#load_state(s:dein_dir)
     call dein#add('sirver/ultisnips')
     call dein#add('TimUntersberger/neogit', { 'depends': 'plenary.nvim' })
     call dein#add('tpope/vim-commentary')
+    " Vale
+    call dein#add('jfecher/vale.vim')
     " Zig
     call dein#add('ziglang/zig.vim')
     " C++
