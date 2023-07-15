@@ -80,3 +80,4 @@ alias dotfiles='git --git-dir="$HOME/.dotfiles/.git" --work-tree="$HOME/.dotfile
 source "$HOME/key-bindings.bash"
 source "$HOME/z.sh"
 source "$HOME/git-prompt.sh"
+command -v tmux &> /dev/null && [ -n "$PS1" ] && [[ ! "$TERM" =~ screen ]] && [[ ! "$TERM" =~ tmux ]] && [ -z "$TMUX" ] && exec tmux
