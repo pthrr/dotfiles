@@ -102,6 +102,7 @@
             pkgs.freecad
             pkgs.kicad
             pkgs.horizon-eda
+            pkgs.jetbrains.pycharm-community
             pkgs.pcb2gcode
             pkgs.candle
             pkgs.tlaplus
