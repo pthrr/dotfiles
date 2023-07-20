@@ -99,6 +99,7 @@
             pkgs.prusa-slicer
             pkgs.lynx
             pkgs.openscad
+            pkgs.freecad
             pkgs.kicad
             pkgs.horizon-eda
             pkgs.pcb2gcode

@@ -22,6 +22,7 @@ sudo apt install -y \
     fonts-dejavu \
     fonts-font-awesome \
     fonts-ubuntu \
+    fonts-jetbrains-mono \
     i3 \
     i3lock \
     i3status \

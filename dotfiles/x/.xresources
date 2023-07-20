@@ -1,4 +1,4 @@
-xterm*faceName: Ubuntu Mono
+xterm*faceName: JetBrains Mono
 xterm*faceSize: 11
 xterm*renderFont: true
 xterm*saveLines: 2000
