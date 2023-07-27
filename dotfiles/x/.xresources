@@ -1,5 +1,5 @@
 xterm*faceName: JetBrains Mono
-xterm*faceSize: 11
+xterm*faceSize: 10
 xterm*renderFont: true
 xterm*saveLines: 2000
 xterm*internalBorder: 0
