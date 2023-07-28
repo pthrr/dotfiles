@@ -14,9 +14,6 @@
 [http]
     sslVerify = false
 
-[credential]
-    helper = store
-
 [clean]
     requireForce = false
 
