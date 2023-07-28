@@ -19,41 +19,52 @@
         enableNixpkgsReleaseCheck = false;
 
         packages = [
-            pkgs.rustfmt
-            pkgs.rust-analyzer
+            pkgs.pipx
+            pkgs.shfmt
+            pkgs.rustup
+            pkgs.cargo-rr
+            pkgs.yamlfmt
             pkgs.yamllint
             pkgs.ansible
             pkgs.ansible-lint
             pkgs.ansible-language-server
-            pkgs.elixir-ls
             pkgs.elixir
-            pkgs.haskell-language-server
+            pkgs.elixir-ls
+            pkgs.ghc
+            pkgs.cabal-install
+            pkgs.cabal2nix
+            pkgs.stack
             pkgs.hlint
+            pkgs.haskell-language-server
+            pkgs.clojure
+            pkgs.leiningen
             pkgs.clojure-lsp
             pkgs.zls
             pkgs.compcert
             pkgs.cling
-            pkgs.shfmt
-            pkgs.cabal-install
-            pkgs.cabal2nix
-            pkgs.stack
-            pkgs.ghc
+            pkgs.rr
+            pkgs.openocd
+            pkgs.valgrind
+            pkgs.gdb
+            pkgs.clang-tools
             pkgs.nasm
             pkgs.wasmer
             pkgs.emscripten
-            pkgs.pipx
             pkgs.cmake-format
-            pkgs.cmakeWithGui
-            pkgs.maven
+            pkgs.cmake
             pkgs.scons
             pkgs.meson
             pkgs.buck
             pkgs.ninja
             pkgs.bazelisk
+            pkgs.go
+            pkgs.crun
             pkgs.podman
             pkgs.podman-compose
-            pkgs.zeal
-            pkgs.picocom
+            pkgs.qemu
+            pkgs.ripes
+            pkgs.winetricks
+            pkgs.wineWowPackages.full
             pkgs.yosys-bluespec
             pkgs.icestorm
             pkgs.nextpnrWithGui
@@ -61,23 +72,14 @@
             pkgs.verilator
             pkgs.gtkwave
             pkgs.bluespec
-            pkgs.dotnet-sdk
-            pkgs.slack
             pkgs.ngspice
-            pkgs.xyce
             pkgs.qucs-s
-            pkgs.go-task
-            pkgs.ripes
+            pkgs.xyce
             pkgs.thunderbird
             pkgs.librewolf
             pkgs.firefox
             pkgs.tor-browser-bundle-bin
-            pkgs.rr
-            pkgs.openocd
-            pkgs.age
-            pkgs.youtube-dl
-            pkgs.gitui
-            pkgs.git
+            pkgs.gitFull
             pkgs.git-lfs
             pkgs.git-filter-repo
             pkgs.poppler_utils
@@ -86,6 +88,7 @@
             pkgs.farbfeld
             pkgs.tmuxp
             pkgs.sent
+            pkgs.go-task
             pkgs.mc
             pkgs.fd
             pkgs.jq
@@ -93,16 +96,17 @@
             pkgs.exa
             pkgs.pdfgrep
             pkgs.ripgrep
-            pkgs.crun
             pkgs.fq
+            pkgs.zeal
+            pkgs.picocom
+            pkgs.age
+            pkgs.youtube-dl
             pkgs.redshift
-            pkgs.prusa-slicer
-            pkgs.lynx
             pkgs.openscad
             pkgs.freecad
             pkgs.kicad
             pkgs.horizon-eda
-            pkgs.jetbrains.pycharm-community
+            pkgs.prusa-slicer
             pkgs.pcb2gcode
             pkgs.candle
             pkgs.tlaplus
@@ -112,41 +116,31 @@
             pkgs.alloy6
             pkgs.coq
             pkgs.coqPackages.coqide
-            pkgs.ghidra
-            pkgs.gnucash
-            pkgs.winetricks
-            pkgs.wineWowPackages.full
             pkgs.drawio
+            pkgs.ipe
             pkgs.vlc
             pkgs.meld
-            pkgs.tectonic
+            pkgs.steam
             pkgs.spotify
             pkgs.discord
             pkgs.element-desktop
             pkgs.signal-desktop
             pkgs.whatsapp-for-linux
             pkgs.tdesktop
-            pkgs.anki
-            pkgs.reaper
-            pkgs.steam
             pkgs.zathura
-            pkgs.ipe
             pkgs.keepassxc
             pkgs.obsidian
             pkgs.zotero
-            pkgs.drumgizmo
+            pkgs.tectonic
+            pkgs.anki
+            pkgs.gnucash
+            pkgs.reaper
             pkgs.carla
-            pkgs.guitarix
-            pkgs.swh_lv2
-            pkgs.ladspaPlugins
+            pkgs.drumgizmo
+            pkgs.x42-avldrums
+            pkgs.x42-plugins
             pkgs.wolf-shaper
             pkgs.distrho
-            pkgs.x42-plugins
-            pkgs.x42-avldrums
-            pkgs.lv2lint
-            pkgs.lv2bm
-            pkgs.jalv
-            pkgs.statix
         ];
 
         # files in ~/
