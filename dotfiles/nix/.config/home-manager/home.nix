@@ -19,6 +19,7 @@
         enableNixpkgsReleaseCheck = false;
 
         packages = [
+            pkgs.expect
             pkgs.pipx
             pkgs.shfmt
             pkgs.rustup
