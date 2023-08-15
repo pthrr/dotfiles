@@ -41,6 +41,7 @@
             pkgs.leiningen
             pkgs.clojure-lsp
             pkgs.zls
+            pkgs.zig
             pkgs.compcert
             pkgs.cling
             pkgs.rr
