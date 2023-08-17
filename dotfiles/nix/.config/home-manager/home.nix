@@ -43,6 +43,7 @@
             pkgs.zls
             pkgs.zig
             pkgs.compcert
+            pkgs.mold
             pkgs.cling
             pkgs.rr
             pkgs.openocd
