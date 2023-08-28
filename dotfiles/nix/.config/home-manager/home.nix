@@ -19,6 +19,7 @@
         enableNixpkgsReleaseCheck = false;
 
         packages = [
+            pkgs.gitui
             pkgs.expect
             pkgs.pipx
             pkgs.shfmt
