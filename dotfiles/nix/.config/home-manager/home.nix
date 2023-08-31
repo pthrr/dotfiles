@@ -19,6 +19,7 @@
         enableNixpkgsReleaseCheck = false;
 
         packages = [
+            pkgs.olive-editor
             pkgs.gitui
             pkgs.expect
             pkgs.pipx
