@@ -23,20 +23,29 @@ function vo() {
     $EDITOR "$@"
     shopt -u nullglob
 }
+function ls() {
+    local cmd=$(command -v eza || command -v exa)
+    $cmd "$@"
+}
 function lla() {
-    eza -la --git --classify --color=always "$@" | less
+    local cmd=$(command -v eza || command -v exa)
+    $cmd -la --git --classify --color=always "$@" | less
 }
 function ll() {
-    eza -l --git --classify --color=always "$@" | less
+    local cmd=$(command -v eza || command -v exa)
+    $cmd -l --git --classify --color=always "$@" | less
 }
 function lls() {
-    eza -la --git --git-ignore --classify "$@"
+    local cmd=$(command -v eza || command -v exa)
+    $cmd -la --git --git-ignore --classify "$@"
 }
 function lsd() {
-    eza --tree --long --git --git-ignore --classify --color=always --level 6 -a -D -I ".git|venv|__pycache__|*_cache" "$@" | less
+    local cmd=$(command -v eza || command -v exa)
+    $cmd --tree --long --git --git-ignore --classify --color=always --level 6 -a -D -I ".git|venv|__pycache__|*_cache" "$@" | less
 }
 function lsf() {
-    eza --tree --long --git --git-ignore --classify --color=always --level 6 -a -I ".git|venv|__pycache__|*_cache" "$@" | less
+    local cmd=$(command -v eza || command -v exa)
+    $cmd --tree --long --git --git-ignore --classify --color=always --level 6 -a -I ".git|venv|__pycache__|*_cache" "$@" | less
 }
 function pb() {
     "$@" | pbcopy
@@ -52,7 +61,6 @@ alias vi='nvim'
 alias vim='nvim'
 alias em='emacs'
 alias top='htop'
-alias ls='eza'
 alias cp='cp -iv'
 alias mv='mv -iv'
 alias mkdir='mkdir -pv'
