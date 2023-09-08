@@ -19,6 +19,8 @@
         enableNixpkgsReleaseCheck = false;
 
         packages = [
+            pkgs.gdbgui
+            pkgs.tio
             pkgs.olive-editor
             pkgs.gitui
             pkgs.expect
@@ -98,7 +100,7 @@
             pkgs.fd
             pkgs.jq
             pkgs.fzf
-            pkgs.exa
+            pkgs.eza
             pkgs.pdfgrep
             pkgs.ripgrep
             pkgs.fq

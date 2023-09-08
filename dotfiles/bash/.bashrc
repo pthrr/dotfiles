@@ -24,19 +24,19 @@ function vo() {
     shopt -u nullglob
 }
 function lla() {
-    exa -la --git --classify --color=always "$@" | less
+    eza -la --git --classify --color=always "$@" | less
 }
 function ll() {
-    exa -l --git --classify --color=always "$@" | less
+    eza -l --git --classify --color=always "$@" | less
 }
 function lls() {
-    exa -la --git --git-ignore --classify "$@"
+    eza -la --git --git-ignore --classify "$@"
 }
 function lsd() {
-    exa --tree --long --git --git-ignore --classify --color=always --level 6 -a -D -I ".git|venv|__pycache__|*_cache" "$@" | less
+    eza --tree --long --git --git-ignore --classify --color=always --level 6 -a -D -I ".git|venv|__pycache__|*_cache" "$@" | less
 }
 function lsf() {
-    exa --tree --long --git --git-ignore --classify --color=always --level 6 -a -I ".git|venv|__pycache__|*_cache" "$@" | less
+    eza --tree --long --git --git-ignore --classify --color=always --level 6 -a -I ".git|venv|__pycache__|*_cache" "$@" | less
 }
 function pb() {
     "$@" | pbcopy
@@ -52,7 +52,7 @@ alias vi='nvim'
 alias vim='nvim'
 alias em='emacs'
 alias top='htop'
-alias ls='exa'
+alias ls='eza'
 alias cp='cp -iv'
 alias mv='mv -iv'
 alias mkdir='mkdir -pv'
