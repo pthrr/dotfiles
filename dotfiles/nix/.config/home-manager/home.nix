@@ -214,6 +214,10 @@
             source = ../../../i3/.config/i3;
             recursive = true;
         };
+        configFile."sway" = {
+            source = ../../../i3/.config/i3;
+            recursive = true;
+        };
         configFile."i3status" = {
             source = ../../../i3/.config/i3status;
             recursive = true;
