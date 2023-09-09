@@ -61,6 +61,7 @@ sudo apt install -y \
     xxd \
     xclip \
     xsel \
+    wl-clipboard \
     inotify-tools \
     gnupg2 \
     sshpass \

@@ -216,6 +216,10 @@
             source = ../../../sway/.config/sway;
             recursive = true;
         };
+        configFile."foot" = {
+            source = ../../../foot/.config/foot;
+            recursive = true;
+        };
 
         configFile."zathura" = {
             source = ../../../zathura/.config/zathura;
