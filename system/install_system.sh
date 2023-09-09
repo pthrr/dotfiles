@@ -23,6 +23,14 @@ sudo apt install -y \
     fonts-font-awesome \
     fonts-ubuntu \
     fonts-jetbrains-mono \
+    sway
+    swaylock
+    swayidle
+    swaybg
+    rofi
+    i3
+    i3lock
+    i3status
     python3-i3ipc \
     xterm \
     xorg \

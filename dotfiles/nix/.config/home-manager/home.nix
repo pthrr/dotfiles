@@ -19,14 +19,6 @@
         enableNixpkgsReleaseCheck = false;
 
         packages = [
-            pkgs.sway
-            pkgs.swaylock
-            pkgs.swayidle
-            pkgs.swaybg
-            pkgs.i3
-            pkgs.i3lock
-            pkgs.i3status
-            pkgs.rofi
             pkgs.river
             pkgs.gdbgui
             pkgs.tio
