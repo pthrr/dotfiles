@@ -36,10 +36,10 @@ bindsym $mod+Shift+s exec i3lock -c 000000
 bindsym $mod+Shift+x kill
 
 # start dmenu (a program launcher)
-bindsym $mod+u exec "rofi -theme solarized -show run -modi drun,run"
-bindsym $mod+i exec "rofi -theme solarized -show window"
-bindsym $mod+o exec "rofi -theme solarized -show ssh"
-bindsym $mod+p exec "rofi -theme solarized -show tmuxp"
+bindsym $mod+u exec "rofi -show run -modi drun,run"
+bindsym $mod+i exec "rofi -show window"
+bindsym $mod+o exec "rofi -show ssh"
+bindsym $mod+p exec "rofi -show tmuxp"
 
 # change focus
 bindsym $mod+h focus left
