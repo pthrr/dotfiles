@@ -19,6 +19,15 @@
         enableNixpkgsReleaseCheck = false;
 
         packages = [
+            pkgs.sway
+            pkgs.swaylock
+            pkgs.swayidle
+            pkgs.swaybg
+            pkgs.i3
+            pkgs.i3lock
+            pkgs.i3status
+            pkgs.rofi
+            pkgs.river
             pkgs.gdbgui
             pkgs.tio
             pkgs.olive-editor
@@ -109,22 +118,11 @@
             pkgs.age
             pkgs.youtube-dl
             pkgs.redshift
-            pkgs.openscad
-            pkgs.freecad
-            pkgs.kicad
-            pkgs.horizon-eda
-            pkgs.prusa-slicer
-            pkgs.pcb2gcode
-            pkgs.candle
-            pkgs.tlaplus
-            pkgs.tlaplusToolbox
-            pkgs.nuXmv
-            pkgs.nusmv
-            pkgs.alloy6
-            pkgs.coq
-            pkgs.coqPackages.coqide
-            pkgs.drawio
-            pkgs.ipe
+            pkgs.openscad pkgs.freecad pkgs.kicad pkgs.horizon-eda
+            pkgs.prusa-slicer pkgs.pcb2gcode pkgs.candle
+            pkgs.tlaplus pkgs.tlaplusToolbox pkgs.nuXmv pkgs.nusmv pkgs.alloy6
+            pkgs.coq pkgs.coqPackages.coqide
+            pkgs.drawio pkgs.ipe
             pkgs.vlc
             pkgs.meld
             pkgs.steam
@@ -214,16 +212,16 @@
             source = ../../../i3/.config/i3;
             recursive = true;
         };
-        configFile."sway" = {
-            source = ../../../i3/.config/i3;
-            recursive = true;
-        };
         configFile."i3status" = {
             source = ../../../i3/.config/i3status;
             recursive = true;
         };
         configFile."rofi" = {
             source = ../../../i3/.config/rofi;
+            recursive = true;
+        };
+        configFile."sway" = {
+            source = ../../../sway/.config/sway;
             recursive = true;
         };
 

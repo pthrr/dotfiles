@@ -23,13 +23,11 @@ sudo apt install -y \
     fonts-font-awesome \
     fonts-ubuntu \
     fonts-jetbrains-mono \
-    i3 \
-    i3lock \
-    i3status \
     python3-i3ipc \
-    rofi \
     xterm \
     xorg \
+    foot \
+    xwayland \
     cups \
     bash \
     tmux \
@@ -61,9 +59,7 @@ sudo apt install -y \
     sshfs \
     ssh-askpass \
     flatpak \
-    kdenlive \
     chromium \
-    labplot \
     spacefm \
     cppman \
     libcairomm-1.0-dev \
