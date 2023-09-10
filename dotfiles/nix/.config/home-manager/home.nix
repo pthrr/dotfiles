@@ -171,7 +171,8 @@
         };
 
         file.".xinitrc".source = ../../../x/.xinitrc;
-        file.".xresources".source = ../../../x/.xresources;
+        file.".Xresources".source = ../../../x/.Xresources;
+        file.".Xdefaults".source = ../../../x/.Xdefaults;
         file.".xsessionrc".source = ../../../x/.xsessionrc;
         file.".xprofile".source = ../../../x/.xprofile;
     };
