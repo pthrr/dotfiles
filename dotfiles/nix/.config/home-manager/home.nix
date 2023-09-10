@@ -19,6 +19,7 @@
         enableNixpkgsReleaseCheck = false;
 
         packages = [
+            pkgs.helix
             pkgs.river
             pkgs.gdbgui
             pkgs.tio
@@ -45,8 +46,7 @@
             pkgs.clojure
             pkgs.leiningen
             pkgs.clojure-lsp
-            pkgs.zls
-            pkgs.zig
+            pkgs.zls pkgs.zig
             pkgs.compcert
             pkgs.mold
             pkgs.cling
@@ -58,17 +58,11 @@
             pkgs.nasm
             pkgs.wasmer
             pkgs.emscripten
-            pkgs.cmake-format
-            pkgs.cmake
-            pkgs.scons
-            pkgs.meson
-            pkgs.buck
-            pkgs.ninja
-            pkgs.bazelisk
+            pkgs.cmake-format pkgs.cmake
+            pkgs.scons pkgs.meson pkgs.buck pkgs.ninja pkgs.bazelisk
             pkgs.go
             pkgs.crun
-            pkgs.podman
-            pkgs.podman-compose
+            pkgs.podman pkgs.podman-compose
             pkgs.qemu
             pkgs.ripes
             pkgs.winetricks
@@ -119,11 +113,8 @@
             pkgs.meld
             pkgs.steam
             pkgs.spotify
-            pkgs.discord
-            pkgs.element-desktop
-            pkgs.signal-desktop
-            pkgs.whatsapp-for-linux
-            pkgs.tdesktop
+            pkgs.discord pkgs.element-desktop
+            pkgs.signal-desktop pkgs.whatsapp-for-linux pkgs.tdesktop
             pkgs.zathura
             pkgs.keepassxc
             pkgs.obsidian
