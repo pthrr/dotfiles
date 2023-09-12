@@ -36,7 +36,7 @@ set $term foot
 set $menu rofi -show run -modi drun,run | xargs swaymsg exec --
 
 # hide window borders
-hide_edge_borders smart
+# hide_edge_borders smart
 default_border pixel 2
 default_floating_border pixel 2
 
