@@ -19,7 +19,6 @@
         enableNixpkgsReleaseCheck = false;
 
         packages = [
-            pkgs.helix
             pkgs.river
             pkgs.gdbgui
             pkgs.tio
@@ -30,19 +29,11 @@
             pkgs.shfmt
             pkgs.rustup
             pkgs.cargo-rr
-            pkgs.yamlfmt
-            pkgs.yamllint
-            pkgs.ansible
-            pkgs.ansible-lint
-            pkgs.ansible-language-server
-            pkgs.elixir
-            pkgs.elixir-ls
-            pkgs.ghc
-            pkgs.cabal-install
-            pkgs.cabal2nix
-            pkgs.stack
-            pkgs.hlint
-            pkgs.haskell-language-server
+            pkgs.yamlfmt pkgs.yamllint
+            pkgs.ansible pkgs.ansible-lint pkgs.ansible-language-server
+            pkgs.elixir pkgs.elixir-ls
+            pkgs.ghc pkgs.cabal-install pkgs.cabal2nix pkgs.stack
+            pkgs.hlint pkgs.haskell-language-server
             pkgs.clojure
             pkgs.leiningen
             pkgs.clojure-lsp
@@ -50,10 +41,7 @@
             pkgs.compcert
             pkgs.mold
             pkgs.cling
-            pkgs.rr
-            pkgs.openocd
-            pkgs.valgrind
-            pkgs.gdb
+            pkgs.rr pkgs.openocd pkgs.valgrind pkgs.gdb
             pkgs.clang-tools
             pkgs.nasm
             pkgs.wasmer
@@ -63,27 +51,13 @@
             pkgs.go
             pkgs.crun
             pkgs.podman pkgs.podman-compose
-            pkgs.qemu
-            pkgs.ripes
-            pkgs.winetricks
-            pkgs.wineWowPackages.full
-            pkgs.yosys-bluespec
-            pkgs.icestorm
-            pkgs.nextpnrWithGui
-            pkgs.yosys
-            pkgs.verilator
-            pkgs.gtkwave
-            pkgs.bluespec
-            pkgs.ngspice
-            pkgs.qucs-s
-            pkgs.xyce
-            pkgs.thunderbird
-            pkgs.librewolf
-            pkgs.firefox
-            pkgs.tor-browser-bundle-bin
-            pkgs.gitFull
-            pkgs.git-lfs
-            pkgs.git-filter-repo
+            pkgs.qemu pkgs.ripes
+            pkgs.winetricks pkgs.wineWowPackages.full
+            pkgs.yosys-bluespec pkgs.icestorm pkgs.nextpnrWithGui pkgs.yosys
+            pkgs.verilator pkgs.gtkwave pkgs.bluespec
+            pkgs.ngspice pkgs.qucs-s pkgs.xyce
+            pkgs.thunderbird pkgs.librewolf pkgs.firefox pkgs.tor-browser-bundle-bin
+            pkgs.gitFull pkgs.git-lfs pkgs.git-filter-repo
             pkgs.poppler_utils
             pkgs.graphviz
             pkgs.nsxiv
@@ -93,6 +67,7 @@
             pkgs.go-task
             pkgs.mc
             pkgs.fd
+            pkgs.bat
             pkgs.jq
             pkgs.fzf
             pkgs.eza
@@ -193,21 +168,22 @@
     xdg = {
         # files in ~/.config/
         configFile."i3" = {
-            source = ../../../i3/.config/i3;
+            source = ../../../wm/.config/i3;
             recursive = true;
         };
         configFile."i3status" = {
-            source = ../../../i3/.config/i3status;
+            source = ../../../wm/.config/i3status;
             recursive = true;
         };
         configFile."rofi" = {
-            source = ../../../i3/.config/rofi;
+            source = ../../../wm/.config/rofi;
             recursive = true;
         };
         configFile."sway" = {
-            source = ../../../sway/.config/sway;
+            source = ../../../wm/.config/sway;
             recursive = true;
         };
+
         configFile."foot" = {
             source = ../../../foot/.config/foot;
             recursive = true;

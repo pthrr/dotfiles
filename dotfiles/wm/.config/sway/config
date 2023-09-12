@@ -264,4 +264,5 @@ exec_always {
     redshift -PO 4000
     blueman-applet
     nm-applet --indicator
+    kdeconnect-indicator
 }
