@@ -118,6 +118,10 @@ if [ ! -d  "$HOME/business" ] ; then
     mkdir "$HOME/business"
 fi
 
+if [ ! -d  "$HOME/job" ] ; then
+    mkdir "$HOME/job"
+fi
+
 if [ ! -d  "$HOME/Drive" ] ; then
     mkdir "$HOME/Drive"
 fi
