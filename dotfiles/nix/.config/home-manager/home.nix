@@ -19,6 +19,7 @@
         enableNixpkgsReleaseCheck = false;
 
         packages = [
+            pkgs.yt-dlp
             pkgs.river
             pkgs.gdbgui
             pkgs.tio
@@ -34,34 +35,27 @@
             pkgs.elixir pkgs.elixir-ls
             pkgs.ghc pkgs.cabal-install pkgs.cabal2nix pkgs.stack
             pkgs.hlint pkgs.haskell-language-server
-            pkgs.clojure
-            pkgs.leiningen
-            pkgs.clojure-lsp
+            pkgs.clojure pkgs.leiningen pkgs.clojure-lsp
             pkgs.zls pkgs.zig
-            pkgs.compcert
-            pkgs.mold
-            pkgs.cling
+            pkgs.compcert pkgs.mold pkgs.cling
             pkgs.rr pkgs.openocd pkgs.valgrind pkgs.gdb
             pkgs.clang-tools
             pkgs.nasm
             pkgs.wasmer
             pkgs.emscripten
-            pkgs.cmake-format pkgs.cmake
             pkgs.scons pkgs.meson pkgs.buck pkgs.ninja pkgs.bazelisk
+            pkgs.cmake-format pkgs.cmake
             pkgs.go
-            pkgs.crun
-            pkgs.podman pkgs.podman-compose
+            pkgs.crun pkgs.podman pkgs.podman-compose
             pkgs.qemu pkgs.ripes
             pkgs.winetricks pkgs.wineWowPackages.full
-            pkgs.yosys-bluespec pkgs.icestorm pkgs.nextpnrWithGui pkgs.yosys
-            pkgs.verilator pkgs.gtkwave pkgs.bluespec
+            pkgs.verilator pkgs.gtkwave pkgs.icestorm pkgs.nextpnrWithGui
+            pkgs.bluespec pkgs.yosys pkgs.yosys-bluespec
             pkgs.ngspice pkgs.qucs-s pkgs.xyce
-            pkgs.thunderbird pkgs.librewolf pkgs.firefox pkgs.tor-browser-bundle-bin
+            pkgs.thunderbird pkgs.firefox pkgs.tor-browser-bundle-bin pkgs.librewolf
             pkgs.gitFull pkgs.git-lfs pkgs.git-filter-repo
-            pkgs.poppler_utils
-            pkgs.graphviz
-            pkgs.nsxiv
-            pkgs.farbfeld
+            pkgs.poppler_utils pkgs.graphviz
+            pkgs.nsxiv pkgs.farbfeld
             pkgs.tmuxp
             pkgs.sent
             pkgs.go-task
@@ -77,7 +71,6 @@
             pkgs.zeal
             pkgs.picocom
             pkgs.age
-            pkgs.youtube-dl
             pkgs.redshift
             pkgs.openscad pkgs.freecad pkgs.kicad pkgs.horizon-eda
             pkgs.prusa-slicer pkgs.pcb2gcode pkgs.candle
@@ -97,13 +90,9 @@
             pkgs.tectonic
             pkgs.anki
             pkgs.gnucash
-            pkgs.reaper
-            pkgs.carla
-            pkgs.drumgizmo
-            pkgs.x42-avldrums
-            pkgs.x42-plugins
-            pkgs.wolf-shaper
-            pkgs.distrho
+            pkgs.reaper pkgs.carla
+            pkgs.drumgizmo pkgs.x42-avldrums
+            pkgs.x42-plugins pkgs.wolf-shaper pkgs.distrho
         ];
 
         # files in ~/
