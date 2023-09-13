@@ -20,16 +20,10 @@
 
         packages = [
             pkgs.yt-dlp
-            pkgs.river
-            pkgs.gdbgui
-            pkgs.tio
-            pkgs.olive-editor
-            pkgs.gitui
             pkgs.expect
             pkgs.pipx
             pkgs.shfmt
-            pkgs.rustup
-            pkgs.cargo-rr
+            pkgs.rustup pkgs.cargo-rr
             pkgs.yamlfmt pkgs.yamllint
             pkgs.ansible pkgs.ansible-lint pkgs.ansible-language-server
             pkgs.elixir pkgs.elixir-ls
@@ -38,7 +32,8 @@
             pkgs.clojure pkgs.leiningen pkgs.clojure-lsp
             pkgs.zls pkgs.zig
             pkgs.compcert pkgs.mold pkgs.cling
-            pkgs.rr pkgs.openocd pkgs.valgrind pkgs.gdb
+            pkgs.rr pkgs.openocd pkgs.valgrind pkgs.gdb pkgs.gdbgui
+            pkgs.olive-editor
             pkgs.clang-tools
             pkgs.nasm
             pkgs.wasmer
@@ -53,23 +48,20 @@
             pkgs.bluespec pkgs.yosys pkgs.yosys-bluespec
             pkgs.ngspice pkgs.qucs-s pkgs.xyce
             pkgs.thunderbird pkgs.firefox pkgs.tor-browser-bundle-bin pkgs.librewolf
-            pkgs.gitFull pkgs.git-lfs pkgs.git-filter-repo
+            pkgs.gitFull pkgs.git-lfs pkgs.git-filter-repo pkgs.meld pkgs.gitui
             pkgs.poppler_utils pkgs.graphviz
             pkgs.nsxiv pkgs.farbfeld
             pkgs.tmuxp
             pkgs.sent
             pkgs.go-task
             pkgs.mc
-            pkgs.fd
-            pkgs.bat
             pkgs.jq
             pkgs.fzf
-            pkgs.eza
             pkgs.pdfgrep
-            pkgs.ripgrep
+            pkgs.eza pkgs.fd pkgs.bat pkgs.ripgrep
             pkgs.fq
             pkgs.zeal
-            pkgs.picocom
+            pkgs.picocom pkgs.tio
             pkgs.age
             pkgs.redshift
             pkgs.openscad pkgs.freecad pkgs.kicad pkgs.horizon-eda
@@ -77,12 +69,12 @@
             pkgs.tlaplus pkgs.tlaplusToolbox pkgs.nuXmv pkgs.nusmv pkgs.alloy6
             pkgs.coq pkgs.coqPackages.coqide
             pkgs.drawio pkgs.ipe
-            pkgs.vlc
-            pkgs.meld
-            pkgs.steam
-            pkgs.spotify
             pkgs.discord pkgs.element-desktop
             pkgs.signal-desktop pkgs.whatsapp-for-linux pkgs.tdesktop
+            pkgs.vlc
+            pkgs.river
+            pkgs.steam
+            pkgs.spotify
             pkgs.zathura
             pkgs.keepassxc
             pkgs.obsidian
