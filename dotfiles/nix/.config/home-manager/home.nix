@@ -19,9 +19,6 @@
         enableNixpkgsReleaseCheck = false;
 
         packages = [
-            pkgs.yt-dlp
-            pkgs.expect
-            pkgs.pipx
             pkgs.shfmt
             pkgs.rustup pkgs.cargo-rr
             pkgs.yamlfmt pkgs.yamllint
@@ -33,7 +30,6 @@
             pkgs.zls pkgs.zig
             pkgs.compcert pkgs.mold pkgs.cling
             pkgs.rr pkgs.openocd pkgs.valgrind pkgs.gdb pkgs.gdbgui
-            pkgs.olive-editor
             pkgs.clang-tools
             pkgs.nasm
             pkgs.wasmer
@@ -52,18 +48,16 @@
             pkgs.poppler_utils pkgs.graphviz
             pkgs.nsxiv pkgs.farbfeld
             pkgs.tmuxp
+            pkgs.expect
+            pkgs.pipx
             pkgs.sent
             pkgs.go-task
             pkgs.mc
-            pkgs.jq
-            pkgs.fzf
-            pkgs.pdfgrep
+            pkgs.jq pkgs.fzf pkgs.fq pkgs.pdfgrep
             pkgs.eza pkgs.fd pkgs.bat pkgs.ripgrep
-            pkgs.fq
             pkgs.zeal
             pkgs.picocom pkgs.tio
             pkgs.age
-            pkgs.redshift
             pkgs.openscad pkgs.freecad pkgs.kicad pkgs.horizon-eda
             pkgs.prusa-slicer pkgs.pcb2gcode pkgs.candle
             pkgs.tlaplus pkgs.tlaplusToolbox pkgs.nuXmv pkgs.nusmv pkgs.alloy6
@@ -71,15 +65,12 @@
             pkgs.drawio pkgs.ipe
             pkgs.discord pkgs.element-desktop
             pkgs.signal-desktop pkgs.whatsapp-for-linux pkgs.tdesktop
-            pkgs.vlc
-            pkgs.river
+            pkgs.river pkgs.redshift
             pkgs.steam
-            pkgs.spotify
-            pkgs.zathura
+            pkgs.olive-editor pkgs.spotify pkgs.vlc pkgs.yt-dlp
             pkgs.keepassxc
-            pkgs.obsidian
-            pkgs.zotero
-            pkgs.tectonic
+            pkgs.obsidian pkgs.zotero
+            pkgs.tectonic pkgs.zathura
             pkgs.anki
             pkgs.gnucash
             pkgs.reaper pkgs.carla
