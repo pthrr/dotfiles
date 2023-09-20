@@ -96,7 +96,3 @@ pipx install --force ruff
 pipx install --force rofi-tmuxp
 pipx install --force rtcqs
 pipx install --force conan
-sudo npm install -g npm n
-sudo n stable
-sudo npm install \
-    fixjson

@@ -53,6 +53,8 @@ endif
 let g:coc_global_extensions = [
     \ 'coc-docker',
     \ '@yaegassy/coc-ansible',
+    \ 'coc-tsserver',
+    \ 'coc-scala',
     \ 'coc-zls',
     \ 'coc-elixir',
     \ 'coc-cmake',

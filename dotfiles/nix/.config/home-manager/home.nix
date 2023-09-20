@@ -18,64 +18,49 @@
         stateVersion = "22.05";
         enableNixpkgsReleaseCheck = false;
 
-        packages = [
-            pkgs.shfmt
-            pkgs.rustup pkgs.cargo-rr
-            pkgs.yamlfmt pkgs.yamllint
-            pkgs.ansible pkgs.ansible-lint pkgs.ansible-language-server
-            pkgs.elixir pkgs.elixir-ls
-            pkgs.ghc pkgs.cabal-install pkgs.cabal2nix pkgs.stack
-            pkgs.hlint pkgs.haskell-language-server
-            pkgs.clojure pkgs.leiningen pkgs.clojure-lsp
-            pkgs.zls pkgs.zig
-            pkgs.compcert pkgs.mold pkgs.cling
-            pkgs.rr pkgs.openocd pkgs.valgrind pkgs.gdb pkgs.gdbgui
-            pkgs.clang-tools
-            pkgs.nasm
-            pkgs.wasmer
-            pkgs.emscripten
-            pkgs.scons pkgs.meson pkgs.buck pkgs.ninja pkgs.bazelisk
-            pkgs.cmake-format pkgs.cmake
-            pkgs.go
-            pkgs.crun pkgs.podman pkgs.podman-compose
-            pkgs.qemu pkgs.ripes
-            pkgs.winetricks pkgs.wineWowPackages.full
-            pkgs.verilator pkgs.gtkwave pkgs.icestorm pkgs.nextpnrWithGui
-            pkgs.bluespec pkgs.yosys pkgs.yosys-bluespec
-            pkgs.ngspice pkgs.qucs-s pkgs.xyce
-            pkgs.thunderbird pkgs.firefox pkgs.tor-browser-bundle-bin pkgs.librewolf
-            pkgs.gitFull pkgs.git-lfs pkgs.git-filter-repo pkgs.meld pkgs.gitui
-            pkgs.poppler_utils pkgs.graphviz
-            pkgs.nsxiv pkgs.farbfeld
-            pkgs.tmuxp
-            pkgs.expect
-            pkgs.pipx
-            pkgs.sent
-            pkgs.go-task
-            pkgs.mc
-            pkgs.jq pkgs.fzf pkgs.fq pkgs.pdfgrep
-            pkgs.eza pkgs.fd pkgs.bat pkgs.ripgrep
-            pkgs.zeal
-            pkgs.picocom pkgs.tio
-            pkgs.age
-            pkgs.openscad pkgs.freecad pkgs.kicad pkgs.horizon-eda
-            pkgs.prusa-slicer pkgs.pcb2gcode pkgs.candle
-            pkgs.tlaplus pkgs.tlaplusToolbox pkgs.nuXmv pkgs.nusmv pkgs.alloy6
-            pkgs.coq pkgs.coqPackages.coqide
-            pkgs.drawio pkgs.ipe
-            pkgs.discord pkgs.element-desktop
-            pkgs.signal-desktop pkgs.whatsapp-for-linux pkgs.tdesktop
-            pkgs.river pkgs.redshift
-            pkgs.steam
-            pkgs.olive-editor pkgs.spotify pkgs.vlc pkgs.yt-dlp
-            pkgs.keepassxc
-            pkgs.obsidian pkgs.zotero
-            pkgs.tectonic pkgs.zathura
-            pkgs.anki
-            pkgs.gnucash
-            pkgs.reaper pkgs.carla
-            pkgs.drumgizmo pkgs.x42-avldrums
-            pkgs.x42-plugins pkgs.wolf-shaper pkgs.distrho
+        packages = with pkgs; [
+            typescript nodejs_20 nodePackages_latest.eslint nodePackages_latest.fixjson
+            sbt-with-scala-native scala scalafmt scalafix scala-cli
+            verilator gtkwave yosys symbiyosys icestorm nextpnrWithGui
+            bluespec yosys-bluespec
+            shfmt
+            rustup cargo-rr
+            yamlfmt yamllint
+            ansible ansible-lint ansible-language-server
+            elixir elixir-ls
+            ghc cabal-install cabal2nix stack hlint haskell-language-server
+            clojure leiningen clojure-lsp
+            zls zig
+            compcert mold cling rr openocd valgrind gdb gdbgui clang-tools
+            nasm
+            wasmer emscripten
+            scons meson buck ninja bazelisk cmake-format cmake
+            go
+            crun podman podman-compose
+            qemu ripes
+            winetricks wineWowPackages.full
+            ngspice qucs-s xyce
+            thunderbird firefox tor-browser-bundle-bin librewolf
+            gitFull git-lfs git-filter-repo meld gitui
+            sent go-task age mc tmuxp pipx picocom tio
+            jq fzf fq pdfgrep expect
+            eza fd bat ripgrep
+            openscad freecad kicad horizon-eda prusa-slicer pcb2gcode candle
+            tlaplus tlaplusToolbox nuXmv nusmv alloy6
+            coq coqPackages.coqide
+            discord element-desktop signal-desktop whatsapp-for-linux tdesktop
+            redshift
+            olive-editor spotify vlc yt-dlp
+            obsidian zotero
+            poppler_utils graphviz tectonic drawio ipe
+            nsxiv farbfeld zathura
+            keepassxc
+            zeal
+            steam
+            anki
+            gnucash
+            reaper carla
+            drumgizmo x42-avldrums x42-plugins wolf-shaper distrho
         ];
 
         # files in ~/
