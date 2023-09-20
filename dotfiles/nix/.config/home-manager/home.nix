@@ -42,7 +42,7 @@
             qemu ripes
             winetricks wineWowPackages.full
             ngspice qucs-s xyce
-            thunderbird firefox tor-browser-bundle-bin librewolf
+            thunderbird firefox tor-browser-bundle-bin librewolf nyxt
             gitFull git-lfs git-filter-repo meld gitui
             sent go-task age mc tmuxp pipx picocom tio
             jq fzf fq pdfgrep expect tmux
