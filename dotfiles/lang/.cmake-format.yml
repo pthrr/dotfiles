@@ -1,0 +1,37 @@
+version: 1
+line_width: 110
+indent: 4
+# Whether to use tabs instead of spaces for indentation.
+use_tab: false
+# Whether to enforce spaces around operators.
+spaces_around_operators: true
+# Whether to break function arguments onto new lines if they exceed the line
+# width.
+break_args: true
+# Whether to put a space between the function name and the opening
+# parenthesis.
+space_before_parentheses: false
+# Whether to align the arguments of a function call.
+align_args: false
+# How to handle trailing commas in argument lists.
+# Options: "never", "always", "only-multiline"
+add_trailing_comma: "only-multiline"
+# Whether to use single quotes for string literals.
+single_quotes: false
+# Whether to use tabs for indentation in continuation lines.
+continuation_indent_width: 2
+# Whether to remove trailing whitespace from lines.
+strip_trailing_whitespace: true
+# Whether to format comments.
+format_comments: true
+# Whether to insert a space after '#' in comment lines.
+space_after_comment_marker: true
+# Whether to format if-else blocks with the "else()" on the same line as the
+# closing brace of the "if()" block.
+compact_if_else: false
+# List of file globs to exclude from formatting.
+exclude: []
+# List of file globs to include in formatting.
+include: []
+# Whether to apply the configuration to the included and excluded files.
+include/exclude_globs: true

@@ -81,6 +81,7 @@
 
         file.".clang-tidy".source = ../../../lang/.clang-tidy;
         file.".clang-format".source = ../../../lang/.clang-format;
+        file.".cmake-format.yml".source = ../../../lang/.cmake-format.yml;
 
         file.".ssh" = {
             source = ../../../ssh/.ssh;
