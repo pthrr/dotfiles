@@ -103,8 +103,7 @@
         };
 
         file.".xinitrc".source = ../../../x/.xinitrc;
-        file.".Xresources".source = ../../../x/.Xresources;
-        file.".Xdefaults".source = ../../../x/.Xdefaults;
+        file.".xresources".source = ../../../x/.xresources;
         file.".xsessionrc".source = ../../../x/.xsessionrc;
         file.".xprofile".source = ../../../x/.xprofile;
     };
