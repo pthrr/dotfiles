@@ -19,6 +19,7 @@
         enableNixpkgsReleaseCheck = false;
 
         packages = with pkgs; [
+            jdk
             typescript nodejs_20 nodePackages_latest.eslint
             nodePackages_latest.fixjson
             scala sbt-with-scala-native scalafmt scalafix scala-cli
@@ -44,13 +45,13 @@
             thunderbird firefox tor-browser-bundle-bin librewolf
             gitFull git-lfs git-filter-repo meld gitui
             sent go-task age mc tmuxp pipx picocom tio
-            jq fzf fq pdfgrep expect
+            jq fzf fq pdfgrep expect tmux
             eza fd bat ripgrep
             openscad freecad kicad horizon-eda prusa-slicer pcb2gcode candle
             tlaplus tlaplusToolbox nuXmv nusmv alloy6
             coq coqPackages.coqide
             discord element-desktop signal-desktop whatsapp-for-linux tdesktop
-            redshift
+            redshift wl-clipboard
             olive-editor spotify vlc yt-dlp
             obsidian zotero
             poppler_utils graphviz tectonic drawio ipe

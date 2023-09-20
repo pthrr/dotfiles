@@ -27,31 +27,31 @@ sudo apt install -y \
     swaylock \
     swayidle \
     swaybg \
-    rofi \
     i3 \
     i3lock \
     i3status \
-    python3-i3ipc \
+    rofi \
     xterm \
     xorg \
+    xclip \
+    xsel \
     foot \
     xwayland \
-    cups \
-    bash \
-    tmux \
-    gcc \
-    npm \
     python3-full \
     python3-pip \
     python3-dev \
+    python3-i3ipc \
     python3-pynvim \
     automake \
     autoconf \
     build-essential \
     pkg-config \
+    gcc \
     gcc-arm-none-eabi \
     libstdc++-arm-none-eabi-newlib \
     libnewlib-arm-none-eabi \
+    cups \
+    bash \
     strace \
     htop \
     tree \
@@ -59,9 +59,6 @@ sudo apt install -y \
     wget \
     stow \
     xxd \
-    xclip \
-    xsel \
-    wl-clipboard \
     inotify-tools \
     blueman \
     network-manager \
@@ -93,6 +90,5 @@ pipx install --force black
 pipx install --force isort
 pipx install --force mypy
 pipx install --force ruff
-pipx install --force rofi-tmuxp
 pipx install --force rtcqs
 pipx install --force conan
