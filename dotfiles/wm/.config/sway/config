@@ -33,7 +33,7 @@ set $term foot
 # Your preferred application launcher
 # Note: pass the final command to swaymsg so that the resulting window can be opened
 # on the original workspace that the command was run on.
-set $menu rofi -show run -modi drun,run | xargs swaymsg exec --
+set $menu dmenu_path | dmenu -fn 'JetBrains Mono:size=9' -nb '#646464' -nf '#000000' -sb '#000000' -sf '#646464' | xargs swaymsg exec --
 
 # hide window borders
 hide_edge_borders smart
