@@ -85,10 +85,11 @@ sudo flatpak remote-add --if-not-exists \
     flathub https://flathub.org/repo/flathub.flatpakrepo
 sudo flatpak install \
     jdownloader
-pipx install --force pre-commit
-pipx install --force black
-pipx install --force isort
-pipx install --force mypy
-pipx install --force ruff
-pipx install --force rtcqs
-pipx install --force conan
+pipx uninstall-all
+pipx install pre-commit
+pipx install black
+pipx install isort
+pipx install mypy
+pipx install ruff
+pipx install rtcqs
+pipx install conan
