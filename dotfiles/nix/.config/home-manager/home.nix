@@ -19,9 +19,10 @@
         enableNixpkgsReleaseCheck = false;
 
         packages = with pkgs; [
-            typescript nodejs_20 nodePackages_latest.eslint nodePackages_latest.fixjson
-            sbt-with-scala-native scala scalafmt scalafix scala-cli
-            verilator gtkwave yosys symbiyosys icestorm nextpnrWithGui
+            typescript nodejs_20 nodePackages_latest.eslint
+            nodePackages_latest.fixjson
+            scala sbt-with-scala-native scalafmt scalafix scala-cli
+            yosys verilator gtkwave symbiyosys icestorm nextpnrWithGui
             bluespec yosys-bluespec
             shfmt
             rustup cargo-rr
@@ -30,7 +31,7 @@
             elixir elixir-ls
             ghc cabal-install cabal2nix stack hlint haskell-language-server
             clojure leiningen clojure-lsp
-            zls zig
+            zig zls
             compcert mold cling rr openocd valgrind gdb gdbgui clang-tools
             nasm
             wasmer emscripten
