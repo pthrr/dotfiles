@@ -83,7 +83,6 @@ alias mirror='wget --mirror --convert-links --adjust-extension --page-requisites
 alias com='picocom -b 115200 --echo --omap=crcrlf'
 alias procs='pstree -Ap'
 alias ports='netstat -pln'
-alias nwcons='nm-connection-editor'
 alias pwgen='pb keepassxc-cli generate --lower --upper --numeric --special --length 32'
 alias mksomespace='nix-collect-garbage -d'
 alias dotfiles='git --git-dir="$HOME/.dotfiles/.git" --work-tree="$HOME/.dotfiles"'
