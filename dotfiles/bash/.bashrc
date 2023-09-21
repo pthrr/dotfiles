@@ -56,6 +56,12 @@ function kppw() {
 function kpusr() {
     pb keepassxc-cli search "$(kpdb)" "$@"
 }
+function jupnote() {
+    killall "jupyter-lab"
+    jupyter-lab --no-browser --notebook-dir="${@:-"$XDG_DOCUMENTS_DIR/notebooks"}" &
+    sleep 2
+    $BROWSER http://localhost:8888/
+}
 set -o vi
 alias vi='nvim'
 alias vim='nvim'
@@ -77,7 +83,6 @@ alias ....='cd ../../../'
 alias .....='cd ../../../../'
 alias pbclear='echo "" | pbcopy'
 alias pbclean='pbpaste | pbcopy'
-alias jupnote='jupyter-lab --no-browser --notebook-dir="$XDG_DOCUMENTS_DIR/notebooks"; $BROWSER http://localhost:8888/'
 alias yt='yt-dlp --recode-video mp4'
 alias mirror='wget --mirror --convert-links --adjust-extension --page-requisites --no-parent'
 alias com='picocom -b 115200 --echo --omap=crcrlf'
