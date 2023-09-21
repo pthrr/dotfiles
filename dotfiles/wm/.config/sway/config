@@ -258,7 +258,6 @@ include /etc/sway/config.d/*
 
 # Autostart
 exec_always {
-    redshift -PO 4000
-    blueman-applet
+    gammastep -PO 4000
     kdeconnect-indicator
 }

@@ -51,7 +51,7 @@
             tlaplus tlaplusToolbox nuXmv nusmv alloy6
             coq coqPackages.coqide
             discord element-desktop signal-desktop whatsapp-for-linux tdesktop
-            redshift wl-clipboard kanshi wlogout wdisplays
+            wl-clipboard kanshi wlogout wdisplays gammastep
             olive-editor spotify vlc yt-dlp
             obsidian zotero
             poppler_utils graphviz tectonic drawio ipe
