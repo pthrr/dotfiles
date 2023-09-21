@@ -67,6 +67,7 @@ sudo apt install -y \
     sshfs \
     ssh-askpass \
     flatpak \
+    pipx \
     chromium \
     spacefm \
     cppman \
@@ -93,3 +94,4 @@ pipx install mypy
 pipx install ruff
 pipx install rtcqs
 pipx install conan
+pipx install jupyterlab
