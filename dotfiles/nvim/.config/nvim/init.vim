@@ -39,6 +39,8 @@ if dein#load_state(s:dein_dir)
     call dein#add('jfecher/vale.vim')
     " Zig
     call dein#add('ziglang/zig.vim')
+    " Scala
+    call dein#add('scalameta/nvim-metals')
     " C++
     call dein#add('MunifTanjim/nui.nvim')
     call dein#add('madskjeldgaard/cppman.nvim', { 'depends': 'nui.nvim' })
@@ -54,7 +56,6 @@ let g:coc_global_extensions = [
     \ 'coc-docker',
     \ '@yaegassy/coc-ansible',
     \ 'coc-tsserver',
-    \ 'coc-scala',
     \ 'coc-zls',
     \ 'coc-elixir',
     \ 'coc-cmake',

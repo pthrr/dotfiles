@@ -19,6 +19,8 @@
         enableNixpkgsReleaseCheck = false;
 
         packages = with pkgs; [
+            metals
+            valent
             jdk
             typescript nodejs_20 nodePackages_latest.eslint
             nodePackages_latest.fixjson
