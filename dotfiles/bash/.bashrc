@@ -24,7 +24,7 @@ function vo() {
     shopt -u nullglob
 }
 function ls() {
-    local cmd=$(command -v eza || command -v exa)
+    local cmd=$(command -v eza || command -v exa || command -v ls)
     $cmd "$@"
 }
 function lla() {
@@ -66,6 +66,7 @@ set -o vi
 alias vi='nvim'
 alias vim='nvim'
 alias em='emacs'
+alias na='nano'
 alias top='htop'
 alias cat='bat'
 alias cp='cp -iv'
