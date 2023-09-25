@@ -19,12 +19,10 @@
         enableNixpkgsReleaseCheck = false;
 
         packages = with pkgs; [
-            metals
-            valent
             jdk
             typescript nodejs_20 nodePackages_latest.eslint
             nodePackages_latest.fixjson
-            scala sbt-with-scala-native scalafmt scalafix scala-cli
+            scala_3 sbt-with-scala-native scalafmt scalafix scala-cli metals
             yosys verilator gtkwave symbiyosys icestorm nextpnrWithGui
             bluespec yosys-bluespec
             shfmt
@@ -53,7 +51,7 @@
             tlaplus tlaplusToolbox nuXmv nusmv alloy6
             coq coqPackages.coqide
             discord element-desktop signal-desktop whatsapp-for-linux tdesktop
-            wl-clipboard kanshi wlogout wdisplays gammastep
+            wl-clipboard kanshi wlogout wdisplays gammastep valent
             olive-editor spotify vlc yt-dlp
             obsidian zotero
             poppler_utils graphviz tectonic drawio ipe
