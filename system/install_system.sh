@@ -61,6 +61,11 @@ sudo apt install -y \
     xxd \
     inotify-tools \
     blueman \
+    pipewire \
+    pipewire-pulse \
+    wireplumber \
+    playerctl \
+    brightnessctl \
     network-manager \
     gnupg2 \
     sshpass \
