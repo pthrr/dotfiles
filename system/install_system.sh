@@ -27,6 +27,8 @@ sudo apt install -y \
     swaylock \
     swayidle \
     swaybg \
+    foot \
+    xwayland \
     i3 \
     i3lock \
     i3status \
@@ -35,8 +37,6 @@ sudo apt install -y \
     xorg \
     xclip \
     xsel \
-    foot \
-    xwayland \
     python3-full \
     python3-pip \
     python3-dev \

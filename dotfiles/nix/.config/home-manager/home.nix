@@ -19,10 +19,10 @@
         enableNixpkgsReleaseCheck = false;
 
         packages = with pkgs; [
-            jdk
+            jetbrains.idea-community
             typescript nodejs_20 nodePackages_latest.eslint
             nodePackages_latest.fixjson
-            scala_3 sbt-with-scala-native scalafmt scalafix scala-cli metals
+            scala_3 sbt-with-scala-native scalafmt scalafix scala-cli metals jetbrains.jdk
             yosys verilator gtkwave symbiyosys icestorm nextpnrWithGui
             bluespec yosys-bluespec
             shfmt
@@ -113,7 +113,10 @@
 
     # Let Home Manager install and manage itself.
     programs.home-manager.enable = true;
-
+    programs.vscode = {
+        enable = true;
+        package = pkgs.vscode-fhs;
+    };
     programs.neovim = {
         enable = true;
         plugins = [
