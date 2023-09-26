@@ -86,6 +86,13 @@ input type:keyboard {
     repeat_rate 50
 }
 
+input type:touchpad {
+    tap enabled
+    click_method clickfinger
+    natural_scroll enabled
+    accel_profile "flat"
+}
+
 ### Key bindings
 #
 # Basics:
