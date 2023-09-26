@@ -89,7 +89,6 @@ input type:keyboard {
 input type:touchpad {
     tap enabled
     click_method clickfinger
-    natural_scroll enabled
     accel_profile "flat"
 }
 
@@ -268,5 +267,7 @@ include /etc/sway/config.d/*
 # Autostart
 exec_always {
     gammastep -PO 4000
+    blueman-applet
+    nm-tray
     kdeconnect-indicator
 }
