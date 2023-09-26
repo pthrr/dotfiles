@@ -22,7 +22,7 @@
             jetbrains.idea-community
             typescript nodejs_20 nodePackages_latest.eslint
             nodePackages_latest.fixjson
-            scala_3 sbt-with-scala-native scalafmt scalafix scala-cli metals jetbrains.jdk
+            scala sbt-with-scala-native scalafmt scalafix scala-cli metals jetbrains.jdk
             yosys verilator gtkwave symbiyosys icestorm nextpnrWithGui
             bluespec yosys-bluespec
             shfmt
