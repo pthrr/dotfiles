@@ -44,7 +44,7 @@
             ngspice qucs-s xyce
             thunderbird firefox tor-browser-bundle-bin librewolf nyxt
             gitFull git-lfs git-filter-repo meld gitui
-            sent go-task age mc tmuxp picocom tio nm-tray
+            sent go-task age mc tmuxp picocom tio nm-tray neofetch
             jq fzf fq pdfgrep expect tmux dos2unix
             eza fd bat ripgrep
             openscad freecad kicad horizon-eda prusa-slicer pcb2gcode candle
