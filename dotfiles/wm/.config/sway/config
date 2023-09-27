@@ -33,7 +33,7 @@ set $term foot
 # Your preferred application launcher
 # Note: pass the final command to swaymsg so that the resulting window can be opened
 # on the original workspace that the command was run on.
-set $menu dmenu_path | bemenu -i -p "" --fn "JetBrains Mono 9" | xargs swaymsg exec --
+set $menu bemenu-run -i --hp 5 -p "" --fn "JetBrains Mono 9" --fb "#646464" --ff "#000000" --nb "#646464" --nf "#000000" --tf "#646464" --tb "#000000" --hf "#646464" --hb "#000000" --nf "#000000" --af "#000000" --ab "#646464" | xargs swaymsg exec --
 
 # hide window borders
 hide_edge_borders smart
