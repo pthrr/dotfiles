@@ -104,11 +104,6 @@
             source = ../../../sent/Vorlagen/slides;
             recursive = true;
         };
-
-        file.".xinitrc".source = ../../../x/.xinitrc;
-        file.".xresources".source = ../../../x/.xresources;
-        file.".xsessionrc".source = ../../../x/.xsessionrc;
-        file.".xprofile".source = ../../../x/.xprofile;
     };
 
     # Let Home Manager install and manage itself.
@@ -129,23 +124,14 @@
 
     xdg = {
         # files in ~/.config/
-        configFile."i3" = {
-            source = ../../../wm/.config/i3;
-            recursive = true;
-        };
         configFile."i3status" = {
             source = ../../../wm/.config/i3status;
-            recursive = true;
-        };
-        configFile."rofi" = {
-            source = ../../../wm/.config/rofi;
             recursive = true;
         };
         configFile."sway" = {
             source = ../../../wm/.config/sway;
             recursive = true;
         };
-
         configFile."foot" = {
             source = ../../../foot/.config/foot;
             recursive = true;
