@@ -73,7 +73,7 @@
     process = git-lfs filter-process
 
 [commit]
-    template = ~/.git-commit-template.txt
+    template = ~/.config/git/git-commit-template.txt
 
 [alias]
     guidiff = difftool --dir-diff --no-symlinks

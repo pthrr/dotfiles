@@ -44,8 +44,8 @@
             ngspice qucs-s xyce
             thunderbird firefox tor-browser-bundle-bin librewolf nyxt
             gitFull git-lfs git-filter-repo meld gitui
-            sent go-task age mc tmuxp picocom tio nm-tray neofetch
-            jq fzf fq pdfgrep expect tmux dos2unix
+            sent go-task age mc tmuxp tmux picocom tio nm-tray neofetch
+            jq fzf fq pdfgrep expect dos2unix
             eza fd bat ripgrep
             openscad freecad kicad horizon-eda prusa-slicer pcb2gcode candle
             tlaplus tlaplusToolbox nuXmv nusmv alloy6
@@ -71,15 +71,6 @@
         file."key-bindings.bash".source = ../../../bash/key-bindings.bash;
         file."z.sh".source = ../../../bash/z.sh;
         file."git-prompt.sh".source = ../../../bash/git-prompt.sh;
-
-        file.".tmux.conf".source = ../../../tmux/.tmux.conf;
-        file.".tmuxp" = {
-            source = ../../../tmux/.tmuxp;
-            recursive = true;
-        };
-
-        file.".gitconfig".source = ../../../git/.gitconfig;
-        file.".git-commit-template.txt".source = ../../../git/.git-commit-template.txt;
 
         file.".clang-tidy".source = ../../../lang/.clang-tidy;
         file.".clang-format".source = ../../../lang/.clang-format;
@@ -132,6 +123,7 @@
             source = ../../../wm/.config/sway;
             recursive = true;
         };
+
         configFile."foot" = {
             source = ../../../foot/.config/foot;
             recursive = true;
@@ -139,6 +131,20 @@
 
         configFile."zathura" = {
             source = ../../../zathura/.config/zathura;
+            recursive = true;
+        };
+
+        configFile."git" = {
+            source = ../../../git/.config/git;
+            recursive = true;
+        };
+
+        configFile."tmux" = {
+            source = ../../../tmux/.config/tmux;
+            recursive = true;
+        };
+        configFile."tmuxp" = {
+            source = ../../../tmux/.config/tmuxp;
             recursive = true;
         };
 
