@@ -72,8 +72,6 @@ sudo apt install -y \
     ssh-askpass \
     flatpak \
     pipx \
-    chromium \
-    spacefm \
     cppman \
     libcairomm-1.0-dev \
     libx11-dev \
