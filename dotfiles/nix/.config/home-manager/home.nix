@@ -19,7 +19,11 @@
         enableNixpkgsReleaseCheck = false;
 
         packages = with pkgs; [
-            jetbrains.jdk jetbrains.idea-community
+            jetbrains.goland
+            jetbrains.clion
+            jetbrains.webstorm
+            jetbrains.pycharm-professional
+            jetbrains.jdk jetbrains.idea-ultimate
             typescript nodejs_20 nodePackages_latest.eslint
             nodePackages_latest.fixjson
             scala_3 sbt-with-scala-native scalafmt scalafix scala-cli metals
