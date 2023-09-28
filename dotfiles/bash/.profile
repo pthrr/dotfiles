@@ -98,20 +98,8 @@ if [ ! -d  "$HOME/fun" ] ; then
     mkdir "$HOME/fun"
 fi
 
-if [ ! -d  "$HOME/work" ] ; then
-    mkdir "$HOME/work"
-fi
-
-if [ ! -d  "$HOME/learn" ] ; then
-    mkdir "$HOME/learn"
-fi
-
 if [ ! -d  "$HOME/analysis" ] ; then
     mkdir "$HOME/analysis"
-fi
-
-if [ ! -d  "$HOME/practice" ] ; then
-    mkdir "$HOME/practice"
 fi
 
 if [ ! -d  "$HOME/business" ] ; then
