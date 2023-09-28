@@ -272,5 +272,5 @@ include /etc/sway/config.d/*
 # Autostart
 exec_always {
     blueman-applet
-    # kdeconnect-indicator
+    kdeconnect-indicator
 }
