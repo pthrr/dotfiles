@@ -47,6 +47,15 @@ function lsf() {
     local cmd=$(command -v eza || command -v exa)
     $cmd --tree --long --git --git-ignore --classify --color=always --level 6 -a -I ".git|venv|__pycache__|*_cache" "$@" | less
 }
+function fgs() {
+    if command -v fd >/dev/null 2>&1; then
+        fd -t d -HI "\.git$" "$@" | while read -r dir; do
+            git -C "$(dirname "$dir")" status -s | grep -q . && pwd
+        done
+    else
+        find . -type d -name .git "$@" -exec "cd \"{}\"/../ && git status -s | grep -q . && pwd" \;
+    fi
+}
 function pb() {
     "$@" | pbcopy
 }
