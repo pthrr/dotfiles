@@ -50,6 +50,7 @@
         "virtualTextPrefix": " —— "
     },
     "snippets.ultisnips.pythonPrompt": false,
-    "zig.zls.path": "~/.config/coc/extensions/coc-zls-data/zls_install/zls",
+    "zig.zls.path": "~/.nix-profile/bin/zls",
     "zig.zls.checkForUpdate": false,
+    "rust-analyzer.server.path": "~/.nix-profile/bin/rust-analyzer"
 }
