@@ -264,11 +264,13 @@ bar {
 
 include /etc/sway/config.d/*
 
+#
+# Autostart:
+#
 exec {
     gammastep -t 6000:5000 -b 0.9:0.8 -l 52.5:13.4 -m wayland
 }
 
-# Autostart
 exec_always {
     blueman-applet
     kdeconnect-indicator

@@ -43,6 +43,7 @@ sudo apt install -y \
     gcc-arm-none-eabi \
     libstdc++-arm-none-eabi-newlib \
     libnewlib-arm-none-eabi \
+    acpi \
     cups \
     bash \
     strace \
