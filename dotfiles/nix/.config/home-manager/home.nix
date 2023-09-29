@@ -58,7 +58,7 @@
             wl-clipboard kanshi wlogout wdisplays gammastep valent bemenu rofi
             olive-editor spotify vlc yt-dlp
             obsidian zotero
-            poppler_utils graphviz tectonic drawio ipe
+            poppler_utils graphviz tectonic drawio ipe pandoc
             nsxiv farbfeld zathura
             keepassxc
             zeal

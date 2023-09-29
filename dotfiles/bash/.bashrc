@@ -56,6 +56,9 @@ function fgs() {
         find . -type d -name .git "$@" -exec "cd \"{}\"/../ && git status -s | grep -q . && pwd" \;
     fi
 }
+function pmd() {
+    pandoc -t plain "$@" | less
+}
 function pb() {
     "$@" | pbcopy
 }
