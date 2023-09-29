@@ -103,10 +103,7 @@
 
     # Let Home Manager install and manage itself.
     programs.home-manager.enable = true;
-    programs.vscode = {
-        enable = true;
-        package = pkgs.vscode-fhs;
-    };
+
     programs.neovim = {
         enable = true;
         plugins = [
@@ -120,11 +117,11 @@
     xdg = {
         # files in ~/.config/
         configFile."i3status" = {
-            source = ../../../wm/.config/i3status;
+            source = ../../../sway/.config/i3status;
             recursive = true;
         };
         configFile."sway" = {
-            source = ../../../wm/.config/sway;
+            source = ../../../sway/.config/sway;
             recursive = true;
         };
 

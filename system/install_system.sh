@@ -23,19 +23,13 @@ sudo apt install -y \
     fonts-font-awesome \
     fonts-ubuntu \
     fonts-jetbrains-mono \
+    xwayland \
     sway \
     swaylock \
     swayidle \
     swaybg \
-    foot \
-    xwayland \
-    i3 \
-    i3lock \
     i3status \
-    xterm \
-    xorg \
-    xclip \
-    xsel \
+    foot \
     python3-full \
     python3-pip \
     python3-dev \
