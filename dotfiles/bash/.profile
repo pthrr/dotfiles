@@ -36,6 +36,10 @@ if [ -f "$HOME/.cargo/env" ] ; then
     . "$HOME/.cargo/env"
 fi
 
+if [ -d "$HOME/.cargo/bin" ] ; then
+    export PATH="$HOME/.cargo/bin:$PATH"
+fi
+
 # include Haskell environment
 if [ -d "$HOME/.cabal/bin" ] ; then
     export PATH="$HOME/.cabal/bin:$PATH"
