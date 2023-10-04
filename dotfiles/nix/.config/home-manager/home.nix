@@ -78,6 +78,7 @@
         file.".clang-tidy".source = ../../../lang/.clang-tidy;
         file.".clang-format".source = ../../../lang/.clang-format;
         file.".cmake-format.yml".source = ../../../lang/.cmake-format.yml;
+        file.".gdbinit".source = ../../../lang/.gdbinit;
 
         file.".ssh" = {
             source = ../../../ssh/.ssh;
@@ -110,6 +111,8 @@
             vimPlugins.nvim-treesitter-textobjects
             vimPlugins.plenary-nvim
             vimPlugins.telescope-nvim
+            vimPlugins.nvim-dap
+            vimPlugins.nvim-dap-ui
         ];
     };
 
