@@ -35,6 +35,8 @@ if dein#load_state(s:dein_dir)
     call dein#add('sirver/ultisnips')
     call dein#add('TimUntersberger/neogit', { 'depends': 'plenary.nvim' })
     call dein#add('tpope/vim-commentary')
+    " call dein#add("antoinemadec/FixCursorHold.nvim")
+    " call dein#add('nvim-neotest/neotest', { 'depends': ['plenary.nvim', 'nvim-treesitter', 'FixCursorHold.nvim'] })
     " Vale
     call dein#add('jfecher/vale.vim')
     " Zig
@@ -429,3 +431,14 @@ nmap <leader><leader>z <Plug>ZVKeyDocset
 if exists('g:wsl')
   let g:zv_zeal_executable = '/mnt/c/Program Files/Zeal/zeal.exe'
 endif
+" neotest
+" lua << EOF
+"   require("neotest").setup({
+"     adapters = {
+"       require("neotest-rust"),
+"       require("neotest-python"),
+"       require("neotest-scala"),
+"       require("neotest-java"),
+"     }
+"   })
+" EOF

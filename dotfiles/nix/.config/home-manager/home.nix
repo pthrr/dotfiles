@@ -19,7 +19,6 @@
         enableNixpkgsReleaseCheck = false;
 
         packages = with pkgs; [
-            jetbrains.goland
             jetbrains.clion
             jetbrains.webstorm
             jetbrains.pycharm-professional
@@ -106,11 +105,11 @@
 
     programs.neovim = {
         enable = true;
-        plugins = [
-            pkgs.vimPlugins.nvim-treesitter.withAllGrammars
-            pkgs.vimPlugins.nvim-treesitter-textobjects
-            pkgs.vimPlugins.plenary-nvim
-            pkgs.vimPlugins.telescope-nvim
+        plugins = with pkgs; [
+            vimPlugins.nvim-treesitter.withAllGrammars
+            vimPlugins.nvim-treesitter-textobjects
+            vimPlugins.plenary-nvim
+            vimPlugins.telescope-nvim
         ];
     };
 
