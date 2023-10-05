@@ -111,8 +111,6 @@
             vimPlugins.nvim-treesitter-textobjects
             vimPlugins.plenary-nvim
             vimPlugins.telescope-nvim
-            vimPlugins.nvim-dap
-            vimPlugins.nvim-dap-ui
         ];
     };
 

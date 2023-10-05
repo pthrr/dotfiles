@@ -38,10 +38,10 @@ if dein#load_state(s:dein_dir)
     call dein#add("antoinemadec/FixCursorHold.nvim")
     call dein#add('nvim-neotest/neotest', { 'depends': ['plenary.nvim', 'nvim-treesitter', 'FixCursorHold.nvim'] })
     call dein#add('rouge8/neotest-rust', { 'depends': 'neotest' })
-    call dein#add('nvim-neotest/neotest-python', { 'depends': 'neotest' })
-    call dein#add('stevanmilic/neotest-scala', { 'depends': 'neotest' })
-    call dein#add('epheien/termdbg')
-    call dein#add('vlopes11/rrust.nvim', { 'depends': 'termdbg' })
+    " call dein#add('nvim-neotest/neotest-python', { 'depends': 'neotest' })
+    " call dein#add('stevanmilic/neotest-scala', { 'depends': 'neotest' })
+    " call dein#add('epheien/termdbg')
+    " call dein#add('vlopes11/rrust.nvim', { 'depends': 'termdbg' })
     " Vale
     call dein#add('jfecher/vale.vim')
     " Zig
@@ -441,36 +441,36 @@ lua << EOF
   require("neotest").setup({
     adapters = {
       require("neotest-rust"),
-      require("neotest-python"),
-      require("neotest-scala"),
+      --require("neotest-python"),
+      --require("neotest-scala"),
     }
   })
 EOF
 " rrust
-lua << EOF
-  local rrust = require('rrust')
-  vim.cmd('packadd termdebug')
-  vim.keymap.set("n", "<leader>ed", function()
-    if rrust.RustRRTestRecord() then
-      rrust.RustRRTestReplay()
-      vim.cmd([[
-        wincmd L
-        wincmd h
-        vertical resize 73
-        wincmd l
-        stopinsert
-      ]])
-    end
-  end)
-  vim.keymap.set('n', '<F4>', function() vim.cmd('Stop') end)
-  vim.keymap.set('n', '<F5>', function() vim.cmd('Continue') end)
-  vim.keymap.set('n', '<F6>', function() vim.cmd('Finish') end)
-  vim.keymap.set('n', '<F7>', function() vim.cmd('Step') end)
-  vim.keymap.set('n', '<F8>', function() vim.cmd('Over') end)
-  vim.keymap.set('n', '<F9>', function() vim.cmd('Break') end)
-  vim.keymap.set('n', '<F10>', function() vim.cmd('Evaluate') end)
-EOF
-" dap
-lua << EOF
-  require("dapui").setup()
-EOF
+" lua << EOF
+"   local rrust = require('rrust')
+"   vim.cmd('packadd termdebug')
+"   vim.keymap.set("n", "<leader>ed", function()
+"     if rrust.RustRRTestRecord() then
+"       rrust.RustRRTestReplay()
+"       vim.cmd([[
+"         wincmd L
+"         wincmd h
+"         vertical resize 73
+"         wincmd l
+"         stopinsert
+"       ]])
+"     end
+"   end)
+"   vim.keymap.set('n', '<F4>', function() vim.cmd('Stop') end)
+"   vim.keymap.set('n', '<F5>', function() vim.cmd('Continue') end)
+"   vim.keymap.set('n', '<F6>', function() vim.cmd('Finish') end)
+"   vim.keymap.set('n', '<F7>', function() vim.cmd('Step') end)
+"   vim.keymap.set('n', '<F8>', function() vim.cmd('Over') end)
+"   vim.keymap.set('n', '<F9>', function() vim.cmd('Break') end)
+"   vim.keymap.set('n', '<F10>', function() vim.cmd('Evaluate') end)
+" EOF
+" " dap
+" lua << EOF
+"   require("dapui").setup()
+" EOF
