@@ -1,6 +1,6 @@
 [core]
     editor = nvim
-    autocrlf = true
+    autocrlf = false
     whitespace = fix,-indent-with-non-tab,trailing-space,cr-at-eol
     pager = less -+$LESS -FRX
 
