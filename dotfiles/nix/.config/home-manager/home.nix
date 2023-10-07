@@ -21,7 +21,7 @@
         packages = with pkgs; [
             jetbrains.clion
             jetbrains.webstorm
-            jetbrains.pycharm-professional
+            jetbrains.pycharm-professional micromamba
             jetbrains.jdk jetbrains.idea-ultimate
             typescript nodejs_20 nodePackages_latest.eslint
             nodePackages_latest.fixjson
@@ -41,13 +41,13 @@
             wasmer emscripten
             scons meson buck ninja bazelisk cmake-format cmake
             go
-            crun podman podman-compose
+            crun podman podman-compose podman-desktop
             qemu ripes
             winetricks wineWowPackages.full
             ngspice qucs-s xyce
             thunderbird firefox tor-browser-bundle-bin librewolf nyxt
             gitFull git-lfs git-filter-repo meld gitui
-            sent go-task age mc tmuxp tmux picocom tio neofetch
+            sent go-task age mc tmuxp tmux picocom minicom tio neofetch
             jq fzf fq pdfgrep expect dos2unix
             eza fd bat ripgrep
             openscad freecad kicad horizon-eda prusa-slicer pcb2gcode candle
