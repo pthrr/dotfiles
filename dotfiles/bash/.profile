@@ -103,6 +103,14 @@ unset __mamba_setup
 # <<< mamba initialize <<<
 
 # create standard dirs
+if [ ! -d  "$HOME/.lv2" ] ; then
+    mkdir "$HOME/.lv2"
+fi
+
+if [ ! -d  "$HOME/.clap" ] ; then
+    mkdir "$HOME/.clap"
+fi
+
 if [ ! -d  "$HOME/tmp" ] ; then
     mkdir "$HOME/tmp"
 fi

@@ -64,6 +64,7 @@
             steam
             anki
             gnucash
+            drumgizmo x42-avldrums x42-plugins wolf-shaper distrho calf
         ];
 
         # files in ~/
