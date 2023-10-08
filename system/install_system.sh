@@ -68,6 +68,7 @@ sudo apt install -y \
     flatpak \
     pipx \
     cppman \
+    spacefm \
     libspa-0.2-bluetooth \
     libcairomm-1.0-dev \
     libx11-dev \

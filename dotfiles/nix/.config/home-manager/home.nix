@@ -19,7 +19,6 @@
         enableNixpkgsReleaseCheck = false;
 
         packages = with pkgs; [
-            spaceFM
             jetbrains.clion
             jetbrains.webstorm
             jetbrains.pycharm-professional micromamba
