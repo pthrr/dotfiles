@@ -111,6 +111,7 @@
             scala-lang.scala
             ms-vscode.cpptools
             rust-lang.rust-analyzer
+            redhat.java
             vscodevim.vim
         ];
     };
@@ -167,6 +168,11 @@
 
         configFile."nvim" = {
             source = ../../../nvim/.config/nvim;
+            recursive = true;
+        };
+
+        configFile."Code" = {
+            source = ../../../vscode/.config/Code;
             recursive = true;
         };
     };

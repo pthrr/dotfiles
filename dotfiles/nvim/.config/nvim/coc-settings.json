@@ -1,21 +1,6 @@
 {
-    "suggest.noselect": true,
-    "[markdown][xml][json][yaml][toml][scala][typescript][zig][rust][c][cpp][python]": {
-        "coc.preferences.formatOnSave": true,
-    },
     "coc.preferences.enableMarkdown": true,
-    "pyright.organizeimports.provider": "isort",
-    "pyright.testing.provider": "pytest",
-    "python.formatting.provider": "black",
-    "python.linting.enabled": true,
-    "python.linting.mypyEnabled": false,
-    "python.linting.ruffEnabled": true,
-    "python.analysis.typeCheckingMode": "basic",
-    "python.venvPath": "venv",
-    "snippets.userSnippetsDirectory": "~/Vorlagen/snippets",
-    "clangd.arguments": [
-        "--compile-commands-dir=build"
-    ],
+    "suggest.noselect": true,
     "list.height": 20,
     "diagnostic": {
         "virtualText": true,
@@ -23,7 +8,21 @@
         "virtualTextLines": 1,
         "virtualTextPrefix": " —— "
     },
+    "[markdown][xml][json][yaml][toml][scala][typescript][zig][rust][c][cpp][python]": {
+        "coc.preferences.formatOnSave": true
+    },
+    "pyright.organizeimports.provider": "isort",
+    "pyright.testing.provider": "pytest",
+    "python.formatting.provider": "black",
+    "python.linting.enabled": true,
+    "python.linting.mypyEnabled": false,
+    "python.linting.ruffEnabled": true,
+    "python.venvPath": "venv",
+    "snippets.userSnippetsDirectory": "~/Vorlagen/snippets",
     "snippets.ultisnips.pythonPrompt": false,
+    "clangd.arguments": [
+        "--compile-commands-dir=build"
+    ],
     "zig.zls.path": "~/.nix-profile/bin/zls",
     "zig.zls.checkForUpdate": false,
     "rust-analyzer.server.path": "~/.nix-profile/bin/rust-analyzer"
