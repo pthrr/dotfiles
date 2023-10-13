@@ -1,6 +1,6 @@
 {
     "suggest.noselect": true,
-    "[markdown][xml][json][yaml][toml][elixir][haskell][zig][rust][c][cpp][python]": {
+    "[markdown][xml][json][yaml][toml][scala][typescript][zig][rust][c][cpp][python]": {
         "coc.preferences.formatOnSave": true,
     },
     "coc.preferences.enableMarkdown": true,
@@ -8,40 +8,14 @@
     "pyright.testing.provider": "pytest",
     "python.formatting.provider": "black",
     "python.linting.enabled": true,
-    "python.linting.mypyEnabled": true,
+    "python.linting.mypyEnabled": false,
     "python.linting.ruffEnabled": true,
-    "python.analysis.typeCheckingMode": "off",
+    "python.analysis.typeCheckingMode": "basic",
+    "python.venvPath": "venv",
     "snippets.userSnippetsDirectory": "~/Vorlagen/snippets",
     "clangd.arguments": [
         "--compile-commands-dir=build"
     ],
-    "languageserver": {
-        "haskell": {
-            "command": "haskell-language-server-wrapper",
-            "args": [
-                "--lsp"
-            ],
-            "rootPatterns": [
-                ".stack.yaml",
-                ".hie-bios",
-                "BUILD.bazel",
-                "cabal.config",
-                "package.yaml"
-            ],
-            "filetypes": [
-                "hs",
-                "lhs",
-                "haskell"
-            ],
-            "initializationOptions": {
-                "languageServerHaskell": {
-                    "hlintOn": true,
-                    "maxNumberOfProblems": 10,
-                    "completionSnippetsOn": true
-                }
-            }
-        }
-    },
     "list.height": 20,
     "diagnostic": {
         "virtualText": true,
