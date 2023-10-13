@@ -103,13 +103,25 @@
     # Let Home Manager install and manage itself.
     programs.home-manager.enable = true;
 
+    programs.vscode = {
+        enable = true;
+        package = pkgs.vscode;
+        extensions = with pkgs.vscode-extensions; [
+            alygin.vscode-tlaplus
+            scala-lang.scala
+            ms-vscode.cpptools
+            rust-lang.rust-analyzer
+            vscodevim.vim
+        ];
+    };
+
     programs.neovim = {
         enable = true;
-        plugins = with pkgs; [
-            vimPlugins.nvim-treesitter.withAllGrammars
-            vimPlugins.nvim-treesitter-textobjects
-            vimPlugins.plenary-nvim
-            vimPlugins.telescope-nvim
+        plugins = with pkgs.vimPlugins; [
+            nvim-treesitter.withAllGrammars
+            nvim-treesitter-textobjects
+            plenary-nvim
+            telescope-nvim
         ];
     };
 
