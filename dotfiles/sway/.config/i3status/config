@@ -28,8 +28,9 @@ cpu_usage {
 }
 
 cpu_temperature 1 {
-        format = "CPU %degrees°C"
-        path = "/sys/devices/platform/coretemp.0/hwmon/hwmon3/temp1_input"
+    format = "CPU %degrees°C"
+    path = "/sys/devices/platform/coretemp.0/hwmon/hwmon3/temp1_input"
+    max_threshold = 90
 }
 
 volume master {
