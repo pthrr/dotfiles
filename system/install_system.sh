@@ -44,6 +44,9 @@ sudo apt install -y \
     libstdc++-arm-none-eabi-newlib \
     libnewlib-arm-none-eabi \
     acpi \
+    cpufrequtils \
+    linux-cpupower \
+    lm-sensors \
     cups \
     bash \
     strace \
