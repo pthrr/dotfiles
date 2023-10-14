@@ -9,7 +9,7 @@ general {
 
 order += "memory"
 order += "disk /"
-order += "cpu_usage 0"
+order += "cpu_temperature 1"
 order += "battery 1"
 order += "volume master"
 order += "tztime local"
@@ -25,6 +25,11 @@ disk "/" {
 
 cpu_usage {
     format = "CPU %usage"
+}
+
+cpu_temperature 1 {
+        format = "CPU %degrees°C"
+        path = "/sys/devices/platform/coretemp.0/hwmon/hwmon3/temp1_input"
 }
 
 volume master {
