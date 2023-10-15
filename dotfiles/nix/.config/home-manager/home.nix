@@ -48,6 +48,7 @@
             thunderbird firefox tor-browser-bundle-bin librewolf nyxt
             gitFull git-lfs git-filter-repo meld gitui
             sent go-task age mc tmuxp tmux picocom minicom tio neofetch
+            unrar
             jq fzf fq pdfgrep expect dos2unix
             eza fd bat ripgrep
             openscad freecad kicad horizon-eda prusa-slicer pcb2gcode candle

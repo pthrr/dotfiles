@@ -46,8 +46,8 @@ sudo apt install -y \
     acpi \
     acpi-support \
     acpid \
-    linux-cpupower \
     lm-sensors \
+    linux-cpupower \
     cups \
     bash \
     strace \
@@ -57,6 +57,7 @@ sudo apt install -y \
     wget \
     stow \
     xxd \
+    gnupg2 \
     inotify-tools \
     blueman \
     pipewire \
@@ -65,20 +66,18 @@ sudo apt install -y \
     playerctl \
     brightnessctl \
     network-manager \
-    gnupg2 \
     sshpass \
     sshfs \
     ssh-askpass \
     flatpak \
     pipx \
-    unrar \
     cppman \
     spacefm \
+    virtualbox-7.0 \
     libspa-0.2-bluetooth \
     libcairomm-1.0-dev \
     libx11-dev \
-    libcairo2-dev \
-    virtualbox-7.0
+    libcairo2-dev
 sudo apt remove -y \
     firefox-esr \
     thunderbird \
