@@ -71,6 +71,7 @@ sudo apt install -y \
     ssh-askpass \
     flatpak \
     pipx \
+    unrar \
     cppman \
     spacefm \
     libspa-0.2-bluetooth \
