@@ -1,0 +1,14 @@
+[cpu]
+path_freqs = "/sys/devices/system/cpu/cpu*/cpufreq/scaling_available_frequencies"
+path_setfreq = "/sys/devices/system/cpu/cpu*/cpufreq/scaling_setspeed"
+path_getfreq = "/sys/devices/system/cpu/cpu*/cpufreq/scaling_cur_freq"
+path_gettemp_cur = "/sys/class/hwmon/hwmon3/temp*_input"
+path_gettemp_max = "/sys/class/hwmon/hwmon3/temp*_max"
+path_getusage = "/proc/stat"
+
+[governor]
+path_setgov = "/sys/devices/system/cpu/cpu*/cpufreq/scaling_governor"
+path_getgov = "/sys/devices/system/cpu/cpu*/cpufreq/scaling_governor"
+thresh_up_perc = 80.0
+thresh_down_perc = 70.0
+const_time = 1.0

@@ -47,6 +47,7 @@ sudo apt install -y \
     acpi-support \
     acpid \
     lm-sensors \
+    sysstat \
     linux-cpupower \
     cups \
     bash \
