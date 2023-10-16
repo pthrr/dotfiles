@@ -144,7 +144,7 @@
         };
 
         configFile."cpugovernor" = {
-            source = ../../../misc/.config/cpugovernor;
+            source = ../../../cpugovernor/.config/cpugovernor;
             recursive = true;
         };
 
