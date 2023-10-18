@@ -71,8 +71,6 @@ sudo apt install -y \
     sshpass \
     sshfs \
     ssh-askpass \
-    docker \
-    docker-compose \
     flatpak \
     pipx \
     cppman \
