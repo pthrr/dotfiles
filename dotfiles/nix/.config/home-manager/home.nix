@@ -41,7 +41,7 @@
             wasmer emscripten
             scons meson buck ninja bazelisk cmake-format cmake
             go
-            crun podman podman-compose podman-desktop
+            crun
             qemu ripes
             winetricks wineWowPackages.full
             ngspice qucs-s xyce
