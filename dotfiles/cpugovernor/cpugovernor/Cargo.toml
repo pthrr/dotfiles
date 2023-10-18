@@ -7,3 +7,4 @@ edition = "2021"
 clap = { version = "4.4.6", features = ["derive"] }
 regex = "1.10.2"
 toml = "0.8.2"
+mpc = { path = "mpc" }

@@ -56,6 +56,26 @@ fn cpu_usage_percentage(prev: &CPUStat, curr: &CPUStat) -> f64 {
         (curr.idle as f64 - prev.idle as f64) + (curr.iowait as f64 - prev.iowait as f64);
     100.0 * (1.0 - idle_diff / total_diff)
 }
+fn control_loop() {
+    let mut kalman_filter = KalmanFilter { /* ... initialize parameters ... */ };
+    let target_temperature = 70.0;
+    let horizon = 5;
+
+    loop {
+        let y = measure_temperature();
+        kalman_filter.update(current_cpu_frequency(), y);
+        let optimal_u = mpc(
+            kalman_filter.x_hat,
+            target_temperature,
+            horizon,
+            kalman_filter.A,
+            kalman_filter.B,
+        );
+        set_cpu_frequency(optimal_u);
+
+        // ... add delay, etc. ...
+    }
+}
 
 fn main() {
     let content = fs::read_to_string("/proc/stat").unwrap();

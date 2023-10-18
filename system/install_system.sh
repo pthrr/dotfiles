@@ -60,6 +60,7 @@ sudo apt install -y \
     xxd \
     gnupg2 \
     inotify-tools \
+    uidmap \
     blueman \
     pipewire \
     pipewire-pulse \
