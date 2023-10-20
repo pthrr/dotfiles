@@ -67,6 +67,7 @@ sudo apt install -y \
     wireplumber \
     playerctl \
     brightnessctl \
+    kdeconnect \
     network-manager \
     sshpass \
     sshfs \

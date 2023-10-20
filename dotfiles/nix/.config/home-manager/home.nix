@@ -55,7 +55,7 @@
             tlaplus tlaplusToolbox nuXmv nusmv alloy6
             coq coqPackages.coqide
             discord element-desktop signal-desktop whatsapp-for-linux tdesktop
-            wl-clipboard kanshi wlogout wdisplays gammastep valent bemenu rofi
+            wl-clipboard kanshi wlogout wdisplays gammastep bemenu rofi
             olive-editor spotify vlc yt-dlp
             obsidian zotero
             poppler_utils graphviz tectonic drawio ipe pandoc
@@ -109,10 +109,6 @@
         package = pkgs.vscode;
         extensions = with pkgs.vscode-extensions; [
             alygin.vscode-tlaplus
-            scala-lang.scala
-            ms-vscode.cpptools
-            rust-lang.rust-analyzer
-            redhat.java
             vscodevim.vim
         ];
     };
