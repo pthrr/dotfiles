@@ -38,7 +38,7 @@
             zig zls
             compcert mold cling rr openocd valgrind gdb gdbgui clang-tools
             nasm
-            wasmer emscripten
+            wasmer emscripten wasmtime
             scons meson buck ninja bazelisk cmake-format cmake
             go
             crun podman podman-desktop podman-compose
