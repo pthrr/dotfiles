@@ -19,7 +19,6 @@
         enableNixpkgsReleaseCheck = false;
 
         packages = with pkgs; [
-            hikari
             jetbrains.clion
             jetbrains.webstorm
             jetbrains.pycharm-professional micromamba
@@ -56,7 +55,8 @@
             tlaplus tlaplusToolbox nuXmv nusmv alloy6
             coq coqPackages.coqide
             discord element-desktop signal-desktop whatsapp-for-linux tdesktop
-            wl-clipboard kanshi wlogout wdisplays gammastep bemenu rofi
+            wl-clipboard wlogout wdisplays gammastep bemenu rofi wlr-randr
+            waybar mako kanshi
             olive-editor spotify vlc yt-dlp
             obsidian zotero
             poppler_utils graphviz tectonic drawio ipe pandoc
@@ -132,6 +132,15 @@
         };
         configFile."sway" = {
             source = ../../../sway/.config/sway;
+            recursive = true;
+        };
+
+        configFile."labwc" = {
+            source = ../../../labwc/.config/labwc;
+            recursive = true;
+        };
+        configFile."kanshi" = {
+            source = ../../../labwc/.config/kanshi;
             recursive = true;
         };
 

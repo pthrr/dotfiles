@@ -23,6 +23,9 @@ sudo apt install -y \
     fonts-font-awesome \
     fonts-ubuntu \
     fonts-jetbrains-mono \
+    libwlroots-dev \
+    wayland-utils \
+    wayland-protocols \
     xwayland \
     sway \
     swaylock \
