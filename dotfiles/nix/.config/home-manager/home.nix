@@ -46,7 +46,7 @@
             winetricks wineWowPackages.full
             ngspice qucs-s xyce
             thunderbird firefox tor-browser-bundle-bin librewolf nyxt
-            gitFull git-lfs git-filter-repo meld gitui
+            darcs gitFull git-lfs git-filter-repo meld gitui
             sent go-task age mc tmuxp tmux picocom minicom tio neofetch
             unrar
             jq fzf fq pdfgrep expect dos2unix
@@ -56,7 +56,7 @@
             coq coqPackages.coqide
             discord element-desktop signal-desktop whatsapp-for-linux tdesktop
             wl-clipboard wlogout wdisplays gammastep bemenu rofi wlr-randr
-            waybar mako kanshi
+            hikari waybar mako kanshi
             olive-editor spotify vlc yt-dlp
             obsidian zotero
             poppler_utils graphviz tectonic drawio ipe pandoc
@@ -135,12 +135,12 @@
             recursive = true;
         };
 
-        configFile."labwc" = {
-            source = ../../../labwc/.config/labwc;
+        configFile."hikari" = {
+            source = ../../../hikari/.config/hikari;
             recursive = true;
         };
         configFile."kanshi" = {
-            source = ../../../labwc/.config/kanshi;
+            source = ../../../hikari/.config/kanshi;
             recursive = true;
         };
 
