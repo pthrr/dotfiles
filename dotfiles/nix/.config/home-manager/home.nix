@@ -39,7 +39,7 @@
             compcert mold cling rr openocd valgrind gdb gdbgui clang-tools
             nasm
             wasmer emscripten wasmtime
-            scons meson buck ninja bazelisk cmake-format cmake
+            scons meson buck ninja bazelisk cmake-format cmake bmake
             go
             crun podman podman-desktop podman-compose
             qemu ripes

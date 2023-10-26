@@ -80,10 +80,7 @@ sudo apt install -y \
     cppman \
     spacefm \
     virtualbox-7.0 \
-    libspa-0.2-bluetooth \
-    libcairomm-1.0-dev \
-    libx11-dev \
-    libcairo2-dev
+    libspa-0.2-bluetooth
 sudo apt remove -y \
     firefox-esr \
     thunderbird \
