@@ -56,7 +56,7 @@
             coq coqPackages.coqide
             discord element-desktop signal-desktop whatsapp-for-linux tdesktop
             wl-clipboard wlogout wdisplays gammastep bemenu rofi wlr-randr
-            hikari waybar mako kanshi
+            waybar mako kanshi
             olive-editor spotify vlc yt-dlp
             obsidian zotero
             poppler_utils graphviz tectonic drawio ipe pandoc
