@@ -23,6 +23,11 @@ function vo() {
     $EDITOR "$@"
     shopt -u nullglob
 }
+function vrs() {
+    shopt -s nullglob
+    find . -type f -iname "*.rs" | xargs $EDITOR "$@"
+    shopt -u nullglob
+}
 function ls() {
     local cmd=$(command -v eza || command -v exa || command -v ls)
     $cmd "$@"
