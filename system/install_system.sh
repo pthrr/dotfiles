@@ -40,6 +40,7 @@ sudo apt install -y \
     python3-pynvim \
     automake \
     autoconf \
+    libtool \
     build-essential \
     pkg-config \
     gcc \
