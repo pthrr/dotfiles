@@ -1,0 +1,292 @@
+{
+    "workbench.sideBar.location": "right",
+    "workbench.editor.enablePreview": false,
+    "editor.renderWhitespace": "trailing",
+    "editor.accessibilitySupport": "off",
+    "editor.autoClosingBrackets": "never",
+    "editor.autoClosingDelete": "never",
+    "editor.autoClosingOvertype": "never",
+    "editor.autoClosingQuotes": "never",
+    "editor.autoSurround": "never",
+    "editor.bracketPairColorization.independentColorPoolPerBracketType": true,
+    "editor.codeLensFontFamily": "JetBrains Mono",
+    "editor.tabSize": 4,
+    "editor.lineNumbers": "relative",
+    "editor.wrappingIndent": "same",
+    "editor.wordWrapColumn": 110,
+    "editor.folding": false,
+    "editor.smoothScrolling": false,
+    "editor.minimap.enabled": false,
+    "editor.detectIndentation": true,
+    "editor.suggestSelection": "first",
+    "editor.scrollBeyondLastLine": true,
+    "editor.multiCursorModifier": "ctrlCmd",
+    "editor.renderControlCharacters": false,
+    "editor.unicodeHighlight.ambiguousCharacters": false,
+    "editor.quickSuggestionsDelay": 0,
+    "editor.glyphMargin": false,
+    "editor.scrollbar.horizontal": "hidden",
+    "editor.scrollbar.vertical": "hidden",
+    "editor.fontLigatures": true,
+    "editor.fontFamily": "JetBrains Mono",
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+        "source.organizeImports": true
+    },
+    "editor.inlineSuggest.enabled": true,
+    "window.openFilesInNewWindow": "off",
+    "window.menuBarVisibility": "toggle",
+    "terminal.integrated.fontFamily": "JetBrains Mono",
+    "terminal.integrated.fontSize": 9,
+    "terminal.integrated.tabs.enabled": false,
+    "terminal.external.linuxExec": "bash",
+    "explorer.confirmDelete": false,
+    "explorer.compactFolders": false,
+    "explorer.confirmDragAndDrop": false,
+    "debug.toolBarLocation": "hidden",
+    "debug.focusWindowOnBreak": false,
+    "debug.showInlineBreakpointCandidates": false,
+    "debug.showBreakpointsInOverviewRuler": false,
+    "vim.leader": "<space>",
+    "vim.easymotion": true,
+    "vim.incsearch": true,
+    "vim.useSystemClipboard": true,
+    "vim.useCtrlKeys": true,
+    "vim.hlsearch": true,
+    "vim.highlightedyank.enable": true,
+    "vim.insertModeKeyBindings": [
+        {
+            "before": [
+                "j",
+                "k"
+            ],
+            "after": [
+                "<Esc>"
+            ]
+        }
+    ],
+    "vim.normalModeKeyBindings": [
+        {
+            "before": [
+                "<leader>",
+                "s",
+                "a"
+            ],
+            "commands": [
+                "editor.action.selectAll"
+            ]
+        },
+        {
+            "before": [
+                "<leader>",
+                "w"
+            ],
+            "commands": [
+                "workbench.action.files.save"
+            ]
+        },
+        {
+            "before": [
+                "<leader>",
+                "e"
+            ],
+            "commands": [
+                "workbench.action.toggleSidebarVisibility"
+            ]
+        },
+        {
+            "before": [
+                "<leader>",
+                "q"
+            ],
+            "commands": [
+                "workbench.action.closeActiveEditor"
+            ]
+        },
+        {
+            "before": [
+                "<leader>",
+                "h"
+            ],
+            "commands": [
+                ":nohl"
+            ]
+        },
+        {
+            "before": [
+                "<leader>",
+                "s",
+                "v"
+            ],
+            "commands": [
+                "workbench.action.splitEditor"
+            ]
+        },
+        {
+            "before": [
+                "<leader>",
+                "s",
+                "h"
+            ],
+            "commands": [
+                "workbench.action.splitEditorDown"
+            ]
+        },
+        {
+            "before": [
+                "<leader>",
+                "t",
+                "o"
+            ],
+            "commands": [
+                ":tabnew"
+            ]
+        },
+        {
+            "before": [
+                "<leader>",
+                "t",
+                "x"
+            ],
+            "commands": [
+                ":tabclose"
+            ]
+        },
+        {
+            "before": [
+                "<S-h>"
+            ],
+            "commands": [
+                ":tabp"
+            ]
+        },
+        {
+            "before": [
+                "<S-l>"
+            ],
+            "commands": [
+                ":tabnext"
+            ]
+        },
+        {
+            "before": [
+                "<leader>",
+                "f",
+                "f"
+            ],
+            "commands": [
+                "workbench.action.quickOpen"
+            ]
+        },
+        {
+            "before": [
+                "<leader>",
+                "f",
+                "s"
+            ],
+            "commands": [
+                "workbench.action.findInFiles"
+            ]
+        },
+        {
+            "before": [
+                "<leader>",
+                "r",
+                "n"
+            ],
+            "commands": [
+                "editor.action.rename"
+            ]
+        },
+        {
+            "before": [
+                "<leader>",
+                "a",
+                "f"
+            ],
+            "commands": [
+                "editor.action.autoFix"
+            ]
+        },
+        {
+            "before": [
+                "<leader>",
+                "p",
+                "d"
+            ],
+            "commands": [
+                "editor.action.peekDefinition"
+            ]
+        },
+        {
+            "before": [
+                "<leader>",
+                "g",
+                "d"
+            ],
+            "commands": [
+                "editor.action.revealDefinition"
+            ]
+        },
+        {
+            "before": [
+                "<S-k>"
+            ],
+            "commands": [
+                "editor.action.showHover"
+            ]
+        }
+    ],
+    "vim.visualModeKeyBindings": [
+        {
+            "before": [
+                ">"
+            ],
+            "commands": [
+                "editor.action.indentLines"
+            ]
+        },
+        {
+            "before": [
+                "<"
+            ],
+            "commands": [
+                "editor.action.outdentLines"
+            ]
+        },
+        {
+            "before": [
+                "<S-j>"
+            ],
+            "commands": [
+                "editor.action.moveLinesDownAction"
+            ]
+        },
+        {
+            "before": [
+                "<S-k>"
+            ],
+            "commands": [
+                "editor.action.moveLinesUpAction"
+            ]
+        }
+    ],
+    "terminal.explorerKind": "external",
+    "editor.cursorBlinking": "solid",
+    "editor.cursorSurroundingLines": 1,
+    "editor.cursorSurroundingLinesStyle": "all",
+    "workbench.iconTheme": "vs-minimal",
+    "workbench.preferredDarkColorTheme": "Solarized Dark",
+    "workbench.colorTheme": "Solarized Dark",
+    "editor.semanticHighlighting.enabled": true,
+    "window.autoDetectHighContrast": false,
+    "terminal.integrated.gpuAcceleration": "off",
+    "files.hotExit": "off",
+    "window.restoreWindows": "none",
+    "workbench.editor.restoreViewState": false,
+    "workbench.startupEditor": "none",
+    "files.simpleDialog.enable": true,
+    "security.workspace.trust.untrustedFiles": "open",
+    "git.openRepositoryInParentFolders": "always",
+    "redhat.telemetry.enabled": false,
+}
