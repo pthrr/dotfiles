@@ -25,6 +25,7 @@
             jetbrains.jdk jetbrains.idea-ultimate
             typescript nodejs_20 nodePackages_latest.eslint
             nodePackages_latest.fixjson
+            typst typst-fmt typst-lsp
             scala_3 sbt-with-scala-native scalafmt scalafix scala-cli metals
             yosys verilator gtkwave symbiyosys icestorm nextpnrWithGui
             bluespec yosys-bluespec
