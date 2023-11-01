@@ -52,7 +52,7 @@
             unrar
             jq fzf fq pdfgrep expect dos2unix
             eza fd bat ripgrep
-            openscad freecad kicad horizon-eda prusa-slicer pcb2gcode candle
+            openscad kicad horizon-eda prusa-slicer pcb2gcode candle
             tlaplus tlaplusToolbox nuXmv nusmv alloy6
             coq coqPackages.coqide
             discord element-desktop signal-desktop whatsapp-for-linux tdesktop
