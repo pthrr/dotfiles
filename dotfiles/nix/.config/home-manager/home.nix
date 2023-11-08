@@ -19,6 +19,7 @@
         enableNixpkgsReleaseCheck = false;
 
         packages = with pkgs; [
+            systemc
             jetbrains.clion
             jetbrains.webstorm
             jetbrains.pycharm-professional micromamba
