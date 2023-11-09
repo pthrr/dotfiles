@@ -24,6 +24,7 @@
             jetbrains.webstorm
             jetbrains.pycharm-professional micromamba
             jetbrains.jdk jetbrains.idea-ultimate
+            kotlin kotlin-native kotlin-language-server detekt ktlint
             typescript nodejs_20 nodePackages_latest.eslint
             nodePackages_latest.fixjson
             typst typst-fmt typst-lsp

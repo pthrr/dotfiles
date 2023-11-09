@@ -66,6 +66,7 @@ let g:coc_global_extensions = [
     \ 'coc-zls',
     \ 'coc-typst',
     \ 'coc-elixir',
+    \ 'coc-kotlin',
     \ 'coc-cmake',
     \ 'coc-clangd',
     \ 'coc-toml',
