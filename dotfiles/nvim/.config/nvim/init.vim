@@ -39,7 +39,6 @@ if dein#load_state(s:dein_dir)
     call dein#add('nvim-neotest/neotest', { 'depends': ['plenary.nvim', 'nvim-treesitter', 'FixCursorHold.nvim'] })
     call dein#add('rouge8/neotest-rust', { 'depends': 'neotest' })
     " call dein#add('nvim-neotest/neotest-python', { 'depends': 'neotest' })
-    " call dein#add('stevanmilic/neotest-scala', { 'depends': 'neotest' })
     " call dein#add('epheien/termdbg')
     " call dein#add('vlopes11/rrust.nvim', { 'depends': 'termdbg' })
     " Vale

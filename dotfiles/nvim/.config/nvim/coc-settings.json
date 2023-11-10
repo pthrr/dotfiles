@@ -13,7 +13,7 @@
     },
     "pyright.organizeimports.provider": "isort",
     "pyright.testing.provider": "pytest",
-    "python.formatting.provider": "black",
+    "python.formatting.provider": "ruff",
     "python.linting.enabled": true,
     "python.linting.mypyEnabled": false,
     "python.linting.ruffEnabled": true,
