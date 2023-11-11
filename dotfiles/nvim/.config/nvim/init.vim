@@ -63,7 +63,6 @@ let g:coc_global_extensions = [
     \ '@yaegassy/coc-ansible',
     \ 'coc-tsserver',
     \ 'coc-zls',
-    \ 'coc-typst',
     \ 'coc-elixir',
     \ 'coc-kotlin',
     \ 'coc-cmake',
