@@ -11,13 +11,6 @@
     "[markdown][xml][json][yaml][toml][scala][typescript][zig][rust][c][cpp][python]": {
         "coc.preferences.formatOnSave": true
     },
-    "pyright.organizeimports.provider": "isort",
-    "pyright.testing.provider": "pytest",
-    "python.formatting.provider": "ruff",
-    "python.linting.enabled": true,
-    "python.linting.mypyEnabled": false,
-    "python.linting.ruffEnabled": true,
-    "python.venvPath": "venv",
     "snippets.userSnippetsDirectory": "~/Vorlagen/snippets",
     "snippets.ultisnips.pythonPrompt": false,
     "clangd.arguments": [
@@ -25,5 +18,10 @@
     ],
     "zig.zls.path": "~/.nix-profile/bin/zls",
     "zig.zls.checkForUpdate": false,
-    "rust-analyzer.server.path": "~/.nix-profile/bin/rust-analyzer"
+    "rust-analyzer.server.path": "~/.nix-profile/bin/rust-analyzer",
+    "python.venvPath": "venv",
+    "python.linting.ruffEnabled": true,
+    "python.formatting.provider": "black",
+    "pyright.testing.provider": "pytest",
+    "pyright.organizeimports.provider": "ruff"
 }
