@@ -62,6 +62,8 @@ let g:coc_global_extensions = [
     \ 'coc-docker',
     \ '@yaegassy/coc-ansible',
     \ 'coc-tsserver',
+    \ 'coc-eslint',
+    \ 'coc-prettier',
     \ 'coc-zls',
     \ 'coc-elixir',
     \ 'coc-kotlin',
