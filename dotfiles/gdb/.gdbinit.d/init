@@ -1,0 +1,13 @@
+set print pretty on
+
+define lb
+    set breakpoint pending on
+    source .gdbbreakpoints
+    echo breakpoints loaded\n
+    set breakpoint pending auto
+end
+
+define sb
+    save breakpoints .gdbbreakpoints
+    echo breakpoints saved\n
+end

@@ -25,7 +25,7 @@
             jetbrains.pycharm-professional micromamba
             jetbrains.jdk jetbrains.idea-ultimate
             kotlin kotlin-native kotlin-language-server detekt ktlint
-            typescript nodejs_20 nodePackages_latest.eslint deno
+            typescript nodejs_20 nodePackages_latest.eslint deno bun
             nodePackages_latest.fixjson
             typst typst-fmt typst-lsp
             scala_3 sbt-with-scala-native scalafmt scalafix scala-cli metals
@@ -82,7 +82,11 @@
         file.".clang-tidy".source = ../../../lang/.clang-tidy;
         file.".clang-format".source = ../../../lang/.clang-format;
         file.".cmake-format.yml".source = ../../../lang/.cmake-format.yml;
-        file.".gdbinit".source = ../../../lang/.gdbinit;
+
+        file.".gdbinit.d" = {
+            source = ../../../gdb/.gdbinit.d;
+            recursive = true;
+        };
 
         file.".ssh" = {
             source = ../../../ssh/.ssh;
@@ -129,6 +133,11 @@
 
     xdg = {
         # files in ~/.config/
+        configFile."gdb" = {
+            source = ../../../gdb/.config/gdb;
+            recursive = true;
+        };
+
         configFile."i3status" = {
             source = ../../../sway/.config/i3status;
             recursive = true;
