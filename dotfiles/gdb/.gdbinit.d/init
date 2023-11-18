@@ -1,5 +1,12 @@
 set print pretty on
 
+set pagination off
+set history save on
+set history expansion on
+
+set auto-load safe-path .
+set auto-load safe-path /usr/lib/x86_64-linux-gnu/
+
 define lb
     set breakpoint pending on
     source .gdbbreakpoints
