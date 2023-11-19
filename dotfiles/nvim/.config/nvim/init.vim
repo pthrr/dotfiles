@@ -33,21 +33,21 @@ if dein#load_state(s:dein_dir)
     call dein#add('neoclide/coc.nvim', { 'merged': 0, 'rev': 'release' })
     call dein#add('liuchengxu/vista.vim')
     call dein#add('sirver/ultisnips')
-    call dein#add('TimUntersberger/neogit', { 'depends': 'plenary.nvim' })
     call dein#add('tpope/vim-commentary')
-    call dein#add("antoinemadec/FixCursorHold.nvim")
-    call dein#add('nvim-neotest/neotest', { 'depends': ['plenary.nvim', 'nvim-treesitter', 'FixCursorHold.nvim'] })
-    call dein#add('rouge8/neotest-rust', { 'depends': 'neotest' })
+    " call dein#add('TimUntersberger/neogit', { 'depends': 'plenary.nvim' })
+    " call dein#add("antoinemadec/FixCursorHold.nvim")
+    " call dein#add('nvim-neotest/neotest', { 'depends': ['plenary.nvim', 'nvim-treesitter', 'FixCursorHold.nvim'] })
+    " call dein#add('rouge8/neotest-rust', { 'depends': 'neotest' })
     " call dein#add('nvim-neotest/neotest-python', { 'depends': 'neotest' })
-    " call dein#add('epheien/termdbg')
     " call dein#add('vlopes11/rrust.nvim', { 'depends': 'termdbg' })
     " Vale
-    call dein#add('jfecher/vale.vim')
+    " call dein#add('jfecher/vale.vim')
+    " Typescript
     " Zig
     call dein#add('ziglang/zig.vim')
-    " Scala
-    call dein#add('scalameta/nvim-metals')
+    " C
     " C++
+    call dein#add('sakhnik/nvim-gdb')
     call dein#add('MunifTanjim/nui.nvim')
     call dein#add('madskjeldgaard/cppman.nvim', { 'depends': 'nui.nvim' })
     call dein#add('derekwyatt/vim-fswitch')
@@ -59,26 +59,22 @@ if dein#check_install()
     call dein#install()
 endif
 let g:coc_global_extensions = [
-    \ 'coc-docker',
-    \ '@yaegassy/coc-ansible',
+    \ 'coc-pyright',
+    \ 'coc-zls',
+    \ 'coc-cmake',
+    \ 'coc-clangd',
+    \ 'coc-rust-analyzer',
     \ 'coc-tsserver',
     \ 'coc-eslint',
     \ 'coc-prettier',
-    \ 'coc-zls',
-    \ 'coc-elixir',
-    \ 'coc-kotlin',
-    \ 'coc-cmake',
-    \ 'coc-clangd',
     \ 'coc-toml',
     \ 'coc-yaml',
     \ 'coc-xml',
     \ 'coc-json',
-    \ 'coc-sh',
-    \ 'coc-pyright',
-    \ 'coc-clojure',
-    \ 'coc-rust-analyzer',
-    \ 'coc-java',
     \ 'coc-markdownlint',
+    \ 'coc-sh',
+    \ 'coc-docker',
+    \ '@yaegassy/coc-ansible',
     \ 'coc-snippets'
     \ ]
 set termguicolors
@@ -439,15 +435,15 @@ if exists('g:wsl')
   let g:zv_zeal_executable = '/mnt/c/Program Files/Zeal/zeal.exe'
 endif
 " neotest
-lua << EOF
-  require("neotest").setup({
-    adapters = {
-      require("neotest-rust"),
-      --require("neotest-python"),
-      --require("neotest-scala"),
-    }
-  })
-EOF
+" lua << EOF
+"   require("neotest").setup({
+"     adapters = {
+"       require("neotest-rust"),
+"       --require("neotest-python"),
+"       --require("neotest-scala"),
+"     }
+"   })
+" EOF
 " rrust
 " lua << EOF
 "   local rrust = require('rrust')
@@ -476,3 +472,32 @@ EOF
 " lua << EOF
 "   require("dapui").setup()
 " EOF
+" termdbg
+" let g:termdebug_wide = 1
+" command GdbStart :call TermDebugSendCommand('start')
+" command GdbUp :call TermDebugSendCommand('up')
+" command GdbDown :call TermDebugSendCommand('down')
+" command GdbSaveBreakpoints :call TermDebugSendCommand('sb')
+" command GdbLoadBreakpoints :call TermDebugSendCommand('lb')
+" command GdbQuit :call TermDebugSendCommand('quit')
+" nnoremap <F1> :Gdb<CR>
+" nnoremap <F2> :Program<CR>
+" nnoremap <F3> :Continue<CR>
+" nnoremap <F4> :Over<CR>
+" nnoremap <F5> :Step<CR>
+" nnoremap <F6> :Finish<CR>
+" nnoremap <F7> :GdbUp<CR>
+" nnoremap <F8> :GdbDown<CR>
+" nnoremap <F9> :GdbLoadBreakpoints<CR>
+" nnoremap <F10> :GdbSaveBreakpoints<CR>
+" nnoremap <F11> :Break<CR>
+" nnoremap <F12> :Clear<CR>
+" nnoremap <Leader>. :Termd<Up><CR>
+" nnoremap <C-e> :GdbStart<CR>
+" nnoremap <Leader>q :GdbQuit<CR>
+" nnoremap <Leader>' :Source<CR>
+tnoremap <Esc> <C-\><C-n>
+nnoremap <Leader>sa :mksession! .session.vim<CR>
+vnoremap <Leader>sa <Esc>:mksession! .session.vim<CR>v
+nnoremap <Leader>so :source .session.vim<CR>
+vnoremap <Leader>so <Esc>:source .session.vim<CR>v

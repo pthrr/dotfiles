@@ -18,6 +18,56 @@ function command_not_found_handle() {
         echo "Command was not found!"
     fi
 }
+# eval "$(_TMUXP_COMPLETE=source tmuxp)"
+# _tmuxp_project_completions() {
+#     local word
+#     local files=$(ls $HOME/.tmuxp/${COMP_WORDS[1]}*.yaml 2> /dev/null)
+#     for f in $files; do
+#         COMPREPLY+=($(basename "$f" .yaml))
+#     done
+#     if [ "$COMP_CWORD" -gt 1 ]; then
+#         local offset=0
+#         for (( i=1; i < COMP_CWORD; i++ )); do
+#             word="${COMP_WORDS[i]}"
+#             if [ "$word" != -* ]; then
+#                 offset=$(printf "$i + 1" | bc)
+#                 break
+#             fi
+#         done
+#         if [ $offset -ne 0 ]; then
+#             COMPREPLY=()
+#             _command_offset "$offset"
+#         fi
+#     fi
+# }
+# alias mux='tmuxp load'
+# complete -F _tmuxp_project_completions mux
+export GDBSETUP=".gdbsetup"
+setupgdb()
+{
+    if [ -e "$GDBSETUP" -a ! -f "$GDBSETUP" ]; then
+        printf '%s already exists and is not a file\n' "$GDBSETUP"
+        exit 1
+    fi
+    local _setupgdb_tty=$(tty)
+    printf 'dashboard -output %s\n' "$_setupgdb_tty" > "$GDBSETUP"
+}
+if `command -v tmux > /dev/null`; then
+    [ -z "${TMUX+set}" ] || export SESSION=`tmux display-message -p '#S'`
+fi
+function quit
+{
+    if `command -v tmux > /dev/null`; then
+        tmux kill-session -t $SESSION
+    fi
+}
+function killdetached
+{
+    tmux list-sessions | grep -E -v '\(attached\)$' - | while IFS='\n' read line; do
+        line="${line#*:}"
+        tmux kill-session -t "${line%%:*}"
+    done
+}
 function vo() {
     shopt -s nullglob
     $EDITOR "$@"

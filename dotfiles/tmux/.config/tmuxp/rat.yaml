@@ -1,0 +1,15 @@
+session_name: rat
+start_directory: /home/pthrr/rat-path
+windows:
+  - window_name: editor
+    layout: even-horizontal
+    panes:
+      - vim
+  - window_name: terminal
+    layout: even-horizontal
+    panes:
+      -
+  - window_name: gdb-dashboard
+    layout: even-horizontal
+    panes:
+      - setupgdb

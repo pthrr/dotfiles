@@ -79,6 +79,8 @@
         file."z.sh".source = ../../../bash/z.sh;
         file."git-prompt.sh".source = ../../../bash/git-prompt.sh;
 
+        file.".gitignore".source = ../../../git/.gitignore;
+
         file.".clang-tidy".source = ../../../lang/.clang-tidy;
         file.".clang-format".source = ../../../lang/.clang-format;
         file.".cmake-format.yml".source = ../../../lang/.cmake-format.yml;
