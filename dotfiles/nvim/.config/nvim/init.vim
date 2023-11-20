@@ -30,11 +30,12 @@ if dein#load_state(s:dein_dir)
     endif
     " common
     call dein#add('overcache/NeoSolarized')
+    " call dein#add('craftzdog/solarized-osaka.nvim')
     call dein#add('neoclide/coc.nvim', { 'merged': 0, 'rev': 'release' })
     call dein#add('liuchengxu/vista.vim')
+    call dein#add('TimUntersberger/neogit', { 'depends': 'plenary.nvim' })
     call dein#add('sirver/ultisnips')
     call dein#add('tpope/vim-commentary')
-    " call dein#add('TimUntersberger/neogit', { 'depends': 'plenary.nvim' })
     " call dein#add("antoinemadec/FixCursorHold.nvim")
     " call dein#add('nvim-neotest/neotest', { 'depends': ['plenary.nvim', 'nvim-treesitter', 'FixCursorHold.nvim'] })
     " call dein#add('rouge8/neotest-rust', { 'depends': 'neotest' })
@@ -42,7 +43,8 @@ if dein#load_state(s:dein_dir)
     " call dein#add('vlopes11/rrust.nvim', { 'depends': 'termdbg' })
     " Vale
     " call dein#add('jfecher/vale.vim')
-    " Typescript
+    " Py
+    " Typescript/Javascript
     " Zig
     call dein#add('ziglang/zig.vim')
     " C
@@ -183,6 +185,18 @@ let maplocalleader = "\\"
 " map ESC
 inoremap jk <ESC>
 tnoremap jk <C-\><C-n>
+tnoremap <Esc> <C-\><C-n>
+" Split window
+nmap ss :split<Return><C-w>w
+nmap sv :vsplit<Return><C-w>w
+" Move window
+map sh <C-w>h
+map sk <C-w>k
+map sj <C-w>j
+map sl <C-w>l
+" Switch tab
+nmap <S-Tab> :tabprev<Return>
+nmap <Tab> :tabnext<Return>
 " move among buffers with CTRL
 map <C-J> :bnext<CR>
 map <C-K> :bprev<CR>
@@ -496,7 +510,6 @@ endif
 " nnoremap <C-e> :GdbStart<CR>
 " nnoremap <Leader>q :GdbQuit<CR>
 " nnoremap <Leader>' :Source<CR>
-tnoremap <Esc> <C-\><C-n>
 nnoremap <Leader>sa :mksession! .session.vim<CR>
 vnoremap <Leader>sa <Esc>:mksession! .session.vim<CR>v
 nnoremap <Leader>so :source .session.vim<CR>
