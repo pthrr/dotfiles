@@ -162,6 +162,11 @@ set foldnestmax=2
 set foldlevelstart=10
 " automatically save view, load with :loadview
 autocmd BufWinLeave *.* mkview
+" save session
+nnoremap <Leader>sa :mksession! .session.vim<CR>
+vnoremap <Leader>sa <Esc>:mksession! .session.vim<CR>v
+nnoremap <Leader>so :source .session.vim<CR>
+vnoremap <Leader>so <Esc>:source .session.vim<CR>v
 " highlight cursorline
 autocmd BufEnter * setlocal cursorline
 autocmd BufLeave * setlocal nocursorline
@@ -186,6 +191,20 @@ let maplocalleader = "\\"
 inoremap jk <ESC>
 tnoremap jk <C-\><C-n>
 tnoremap <Esc> <C-\><C-n>
+" lua << EOF
+" -- New tab
+" keymap.set("n", "te", ":tabedit")
+" keymap.set("n", "<tab>", ":tabnext<Return>", opts)
+" keymap.set("n", "<s-tab>", ":tabprev<Return>", opts)
+" -- Split window
+" keymap.set("n", "ss", ":split<Return>", opts)
+" keymap.set("n", "sv", ":vsplit<Return>", opts)
+" -- Move window
+" keymap.set("n", "sh", "<C-w>h")
+" keymap.set("n", "sk", "<C-w>k")
+" keymap.set("n", "sj", "<C-w>j")
+" keymap.set("n", "sl", "<C-w>l")
+" EOF
 " Split window
 nmap ss :split<Return><C-w>w
 nmap sv :vsplit<Return><C-w>w
@@ -211,6 +230,11 @@ vnoremap <leader>d "_d
 nnoremap <leader>d "_d
 " replace currently selected text without yanking it
 vnoremap <leader>p "_dP
+" telescope
+nnoremap <leader>ff <cmd>Telescope find_files<cr>
+nnoremap <leader>fg <cmd>Telescope live_grep<cr>
+nnoremap <leader>fb <cmd>Telescope buffers<cr>
+nnoremap <leader>fh <cmd>Telescope help_tags<cr>
 " tree-sitter
 if exists('g:wsl')
 lua << EOF
@@ -360,11 +384,6 @@ lua <<EOF
   vim.keymap.set({ "n", "x", "o" }, "t", ts_repeat_move.builtin_t)
   vim.keymap.set({ "n", "x", "o" }, "T", ts_repeat_move.builtin_T)
 EOF
-" telescope
-nnoremap <leader>ff <cmd>Telescope find_files<cr>
-nnoremap <leader>fg <cmd>Telescope live_grep<cr>
-nnoremap <leader>fb <cmd>Telescope buffers<cr>
-nnoremap <leader>fh <cmd>Telescope help_tags<cr>
 " coc
 nmap <leader>rn <Plug>(coc-rename)
 nmap <silent> [g <Plug>(coc-diagnostic-prev)
@@ -510,7 +529,3 @@ endif
 " nnoremap <C-e> :GdbStart<CR>
 " nnoremap <Leader>q :GdbQuit<CR>
 " nnoremap <Leader>' :Source<CR>
-nnoremap <Leader>sa :mksession! .session.vim<CR>
-vnoremap <Leader>sa <Esc>:mksession! .session.vim<CR>v
-nnoremap <Leader>so :source .session.vim<CR>
-vnoremap <Leader>so <Esc>:source .session.vim<CR>v
