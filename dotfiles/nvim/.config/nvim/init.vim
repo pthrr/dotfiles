@@ -416,7 +416,7 @@ nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
 " vista
 nmap <F8> :Vista!!<CR>
 let g:vista_default_executive = 'ctags'
-let g:vista_sidebar_width = 80
+let g:vista_sidebar_width = 50
 let g:vista_echo_cursor = 0
 let g:vista_echo_cursor_startegy = 'scroll'
 let g:vista_enable_centering_jump = 1

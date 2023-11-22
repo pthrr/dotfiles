@@ -19,8 +19,6 @@
         enableNixpkgsReleaseCheck = false;
 
         packages = with pkgs; [
-            tldr
-            universal-ctags
             systemc
             jetbrains.clion
             jetbrains.webstorm
@@ -52,9 +50,9 @@
             ngspice qucs-s xyce
             thunderbird firefox tor-browser-bundle-bin librewolf nyxt
             darcs gitFull git-lfs git-filter-repo meld gitui
-            sent go-task age mc tmuxp tmux picocom minicom tio neofetch
+            sent go-task age mc tmuxp tmux picocom minicom tio neofetch tldr
             unrar
-            jq fzf fq pdfgrep expect dos2unix
+            jq fzf fq pdfgrep expect dos2unix universal-ctags
             eza fd bat ripgrep
             openscad kicad horizon-eda prusa-slicer pcb2gcode candle
             tlaplus tlaplusToolbox nuXmv nusmv alloy6
