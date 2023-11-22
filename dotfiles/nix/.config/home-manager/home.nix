@@ -19,6 +19,8 @@
         enableNixpkgsReleaseCheck = false;
 
         packages = with pkgs; [
+            tldr
+            universal-ctags
             systemc
             jetbrains.clion
             jetbrains.webstorm

@@ -30,7 +30,6 @@ if dein#load_state(s:dein_dir)
     endif
     " common
     call dein#add('overcache/NeoSolarized')
-    " call dein#add('craftzdog/solarized-osaka.nvim')
     call dein#add('neoclide/coc.nvim', { 'merged': 0, 'rev': 'release' })
     call dein#add('liuchengxu/vista.vim')
     call dein#add('TimUntersberger/neogit', { 'depends': 'plenary.nvim' })
@@ -416,23 +415,18 @@ nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
 nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
 " vista
 nmap <F8> :Vista!!<CR>
-let g:vista_default_executive = 'coc'
-let g:vista_sidebar_width = max([80, winwidth(0) / 4])
+let g:vista_default_executive = 'ctags'
+let g:vista_sidebar_width = 80
 let g:vista_echo_cursor = 0
 let g:vista_echo_cursor_startegy = 'scroll'
+let g:vista_enable_centering_jump = 1
+let g:vista_close_on_jump = 1
+let g:vista_close_on_fzf_select = 1
 let g:vista_stay_on_open = 0
 let g:vista_blink = [0, 0]
 let g:vista_top_level_blink = [0, 0]
 let g:vista_highlight_whole_line = 1
-let g:vista#renderer#enable_icon = 1
-let g:vista#renderer#icons = {
-    \ "function": "+",
-    \ "method": "+",
-    \ "variable": "-",
-    \ "class": "#",
-    \ "constant": "",
-    \ "struct": "#",
-    \ }
+let g:vista#renderer#ctags = 'kind'
 " ultisnips
 let g:UltiSnipsExpandTrigger = '<tab>'
 let g:UltiSnipsJumpForwardTrigger = '<tab>'
