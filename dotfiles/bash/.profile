@@ -59,20 +59,19 @@ if [ -d "$HOME/.nix-profile/lib/lv2" ] ; then
     export LV2_PATH="$HOME/.nix-profile/lib/lv2:$LV2_PATH"
 fi
 
-# include Guix environment
-if [ -f "$HOME/.guix-profile/etc/profile" ] ; then
-    #export GUIX_LOCPATH="$HOME/.guix-profile/lib/locale"
-    #export GUIX_PROFILE="$HOME/.guix-profile"
-    #. "$GUIX_PROFILE/etc/profile"
-    export XDG_DATA_DIRS="$XDG_DATA_DIRS:/usr/share/gnome:/usr/local/share:/usr/share"
+# include Nix environment
+if [ ! -f "$(which nix)" ] ; then
+    export NIX_PATH="$HOME/.nix-defexpr/channels:$NIX_PATH"
+    # export NIX_PATH=$HOME/.nix-defexpr/channels:/nix/var/nix/profiles/per-user/root/channels${NIX_PATH:+:$NIX_PATH}
+    export PATH="$HOME/.nix-profile/bin:$PATH"
+    export MANPATH="$HOME/.nix-profile/share/man:$MANPATH"
+    export XDG_DATA_DIRS="$HOME/.nix-profile/share:$XDG_DATA_DIRS"
+    export CPATH="$HOME/.nix-profile/include:$CPATH"
+    export LD_LIBRARY_PATH="$HOME/.nix-profile/lib:$LD_LIBRARY_PATH"
 fi
 
-# include Nix environment
 if [ -f "$HOME/.nix-profile/etc/profile.d/nix.sh" ] ; then
     . "$HOME/.nix-profile/etc/profile.d/nix.sh"
-    # export NIX_PATH=$HOME/.nix-defexpr/channels:/nix/var/nix/profiles/per-user/root/channels${NIX_PATH:+:$NIX_PATH}
-    export NIX_PATH="$HOME/.nix-defexpr/channels:$NIX_PATH"
-    export XDG_DATA_DIRS="$HOME/.nix-profile/share:$XDG_DATA_DIRS"
 fi
 
 if [ -f "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh" ] ; then
@@ -193,6 +192,7 @@ export MEDIAPLAYER='vlc'
 export FILEMANAGER='spacefm'
 export FZF_DEFAULT_COMMAND='rg --files'
 export FZF_DEFAULT_OPTS='-m --height 50% --border'
+export SYSTEMC_HOME='$HOME/.nix-profile/'
 export LESS='-r'
 export NO_AT_BRIDGE=1
 export DO_NOT_TRACK=1
