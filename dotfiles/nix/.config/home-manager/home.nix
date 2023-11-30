@@ -23,9 +23,7 @@
             jetbrains.webstorm
             jetbrains.pycharm-professional micromamba
             jetbrains.jdk jetbrains.idea-ultimate
-            kotlin kotlin-native kotlin-language-server detekt ktlint
-            typescript esbuild nodePackages_latest.eslint nodePackages_latest.nodemon
-            deno bun nodejs_20
+            typescript esbuild nodePackages_latest.eslint nodePackages_latest.nodemon deno bun nodejs_20
             nodePackages_latest.fixjson
             typst typst-fmt typst-lsp
             scala_3 sbt-with-scala-native scalafmt scalafix scala-cli metals
