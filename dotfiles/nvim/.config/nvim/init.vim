@@ -37,17 +37,12 @@ if dein#load_state(s:dein_dir)
     call dein#add('tpope/vim-commentary')
     call dein#add("antoinemadec/FixCursorHold.nvim")
     call dein#add('nvim-neotest/neotest', { 'depends': ['plenary.nvim', 'nvim-treesitter', 'FixCursorHold.nvim'] })
-    " Rust
-    " Vale
-    call dein#add('jfecher/vale.vim')
-    " Haskell
-    " Python
-    call dein#add('nvim-neotest/neotest-python', { 'depends': ['neotest-zig', 'plenary.nvim', 'nvim-treesitter', 'FixCursorHold.nvim'] })
     " Typescript/Javascript
+    " Python
+    call dein#add('nvim-neotest/neotest-python', { 'depends': ['neotest', 'plenary.nvim', 'nvim-treesitter', 'FixCursorHold.nvim'] })
     " Zig
     call dein#add('ziglang/zig.vim')
-    call dein#add('lawrence-laz/neotest-zig', { 'depends': ['neotest-zig', 'plenary.nvim', 'nvim-treesitter', 'FixCursorHold.nvim'] })
-    " C
+    call dein#add('lawrence-laz/neotest-zig', { 'depends': ['neotest', 'plenary.nvim', 'nvim-treesitter', 'FixCursorHold.nvim'] })
     " C++
     call dein#add('sakhnik/nvim-gdb')
     call dein#add('MunifTanjim/nui.nvim')
@@ -419,9 +414,9 @@ nmap <F8> :Vista!!<CR>
 let g:vista_default_executive = 'ctags'
 let g:vista_sidebar_width = 50
 let g:vista_echo_cursor = 0
-let g:vista_echo_cursor_startegy = 'scroll'
+let g:vista_echo_cursor_strategy = 'scroll'
 let g:vista_enable_centering_jump = 1
-let g:vista_close_on_jump = 1
+let g:vista_close_on_jump = 0
 let g:vista_close_on_fzf_select = 1
 let g:vista_stay_on_open = 0
 let g:vista_blink = [0, 0]
@@ -447,10 +442,9 @@ lua << EOF
   end)
 EOF
 " vim-fswitch
-au BufEnter *.hh  let b:fswitchdst = "cpp,cc" | let b:fswitchlocs = 'reg:|include.*|src/**|'
-au BufEnter *.cc let b:fswitchdst = "h,hpp,hh"
+au BufEnter *.h, *.hh, *.hpp  let b:fswitchdst = "c,cc,cpp" | let b:fswitchlocs = 'reg:|include.*|src/**|'
+au BufEnter *.c, *.cc, *.cpp  let b:fswitchdst = "h,hh,hpp"
 nnoremap <silent> <A-o> :FSHere<cr>
-" Extra hotkeys to open header/source in the split
 nnoremap <silent> <localleader>oh :FSSplitLeft<cr>
 nnoremap <silent> <localleader>oj :FSSplitBelow<cr>
 nnoremap <silent> <localleader>ok :FSSplitAbove<cr>
@@ -468,7 +462,7 @@ lua << EOF
   require("neotest").setup({
     adapters = {
       require("neotest-zig"),
-      --require("neotest-python"),
+      require("neotest-python"),
     }
   })
 EOF
