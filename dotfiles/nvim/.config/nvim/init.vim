@@ -35,17 +35,18 @@ if dein#load_state(s:dein_dir)
     call dein#add('TimUntersberger/neogit', { 'depends': 'plenary.nvim' })
     call dein#add('sirver/ultisnips')
     call dein#add('tpope/vim-commentary')
-    " call dein#add("antoinemadec/FixCursorHold.nvim")
-    " call dein#add('nvim-neotest/neotest', { 'depends': ['plenary.nvim', 'nvim-treesitter', 'FixCursorHold.nvim'] })
-    " call dein#add('rouge8/neotest-rust', { 'depends': 'neotest' })
-    " call dein#add('nvim-neotest/neotest-python', { 'depends': 'neotest' })
-    " call dein#add('vlopes11/rrust.nvim', { 'depends': 'termdbg' })
+    call dein#add("antoinemadec/FixCursorHold.nvim")
+    call dein#add('nvim-neotest/neotest', { 'depends': ['plenary.nvim', 'nvim-treesitter', 'FixCursorHold.nvim'] })
+    " Rust
     " Vale
-    " call dein#add('jfecher/vale.vim')
-    " Py
+    call dein#add('jfecher/vale.vim')
+    " Haskell
+    " Python
+    call dein#add('nvim-neotest/neotest-python', { 'depends': ['neotest-zig', 'plenary.nvim', 'nvim-treesitter', 'FixCursorHold.nvim'] })
     " Typescript/Javascript
     " Zig
     call dein#add('ziglang/zig.vim')
+    call dein#add('lawrence-laz/neotest-zig', { 'depends': ['neotest-zig', 'plenary.nvim', 'nvim-treesitter', 'FixCursorHold.nvim'] })
     " C
     " C++
     call dein#add('sakhnik/nvim-gdb')
@@ -463,39 +464,14 @@ if exists('g:wsl')
   let g:zv_zeal_executable = '/mnt/c/Program Files/Zeal/zeal.exe'
 endif
 " neotest
-" lua << EOF
-"   require("neotest").setup({
-"     adapters = {
-"       require("neotest-rust"),
-"       --require("neotest-python"),
-"       --require("neotest-scala"),
-"     }
-"   })
-" EOF
-" rrust
-" lua << EOF
-"   local rrust = require('rrust')
-"   vim.cmd('packadd termdebug')
-"   vim.keymap.set("n", "<leader>ed", function()
-"     if rrust.RustRRTestRecord() then
-"       rrust.RustRRTestReplay()
-"       vim.cmd([[
-"         wincmd L
-"         wincmd h
-"         vertical resize 73
-"         wincmd l
-"         stopinsert
-"       ]])
-"     end
-"   end)
-"   vim.keymap.set('n', '<F4>', function() vim.cmd('Stop') end)
-"   vim.keymap.set('n', '<F5>', function() vim.cmd('Continue') end)
-"   vim.keymap.set('n', '<F6>', function() vim.cmd('Finish') end)
-"   vim.keymap.set('n', '<F7>', function() vim.cmd('Step') end)
-"   vim.keymap.set('n', '<F8>', function() vim.cmd('Over') end)
-"   vim.keymap.set('n', '<F9>', function() vim.cmd('Break') end)
-"   vim.keymap.set('n', '<F10>', function() vim.cmd('Evaluate') end)
-" EOF
+lua << EOF
+  require("neotest").setup({
+    adapters = {
+      require("neotest-zig"),
+      --require("neotest-python"),
+    }
+  })
+EOF
 " " dap
 " lua << EOF
 "   require("dapui").setup()
