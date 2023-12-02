@@ -226,12 +226,98 @@ vnoremap <leader>d "_d
 nnoremap <leader>d "_d
 " replace currently selected text without yanking it
 vnoremap <leader>p "_dP
+" vim-fswitch
+au BufEnter *.h, *.hh, *.hpp  let b:fswitchdst = "c,cc,cpp" | let b:fswitchlocs = 'reg:|include.*|src/**|'
+au BufEnter *.c, *.cc, *.cpp  let b:fswitchdst = "h,hh,hpp"
+nnoremap <silent> <A-o> :FSHere<cr>
+nnoremap <silent> <localleader>oh :FSSplitLeft<cr>
+nnoremap <silent> <localleader>oj :FSSplitBelow<cr>
+nnoremap <silent> <localleader>ok :FSSplitAbove<cr>
+nnoremap <silent> <localleader>ol :FSSplitRight<cr>
+" zeal
+nmap <leader>z <Plug>Zeavim
+vmap <leader>z <Plug>ZVVisSelection
+nmap gz <Plug>ZVOperator
+nmap <leader><leader>z <Plug>ZVKeyDocset
+if exists('g:wsl')
+  let g:zv_zeal_executable = '/mnt/c/Program Files/Zeal/zeal.exe'
+endif
+" vista
+nmap <F8> :Vista!!<CR>
+let g:vista_default_executive = 'ctags'
+let g:vista_sidebar_width = 50
+let g:vista_echo_cursor = 0
+let g:vista_echo_cursor_strategy = 'scroll'
+let g:vista_enable_centering_jump = 1
+let g:vista_close_on_jump = 0
+let g:vista_close_on_fzf_select = 1
+let g:vista_stay_on_open = 0
+let g:vista_blink = [0, 0]
+let g:vista_top_level_blink = [0, 0]
+let g:vista_highlight_whole_line = 1
+let g:vista#renderer#ctags = 'kind'
+" ultisnips
+let g:UltiSnipsExpandTrigger = '<tab>'
+let g:UltiSnipsJumpForwardTrigger = '<tab>'
+let g:UltiSnipsJumpBackwardTrigger = '<s-tab>'
+let g:UltiSnipsSnippetDirectories = [$XDG_TEMPLATES_DIR.'/snippets']
 " telescope
 nnoremap <leader>ff <cmd>Telescope find_files<cr>
 nnoremap <leader>fg <cmd>Telescope live_grep<cr>
 nnoremap <leader>fb <cmd>Telescope buffers<cr>
 nnoremap <leader>fh <cmd>Telescope help_tags<cr>
-" tree-sitter
+" coc
+nmap <leader>rn <Plug>(coc-rename)
+nmap <silent> [g <Plug>(coc-diagnostic-prev)
+nmap <silent> ]g <Plug>(coc-diagnostic-next)
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+function! ShowDocumentation()
+  if CocAction('hasProvider', 'hover')
+    call CocActionAsync('doHover')
+  else
+    call feedkeys('K', 'in')
+  endif
+endfunction
+nnoremap <silent> K :call ShowDocumentation()<CR>
+command! -nargs=0 Format :call CocActionAsync('format')
+command! -nargs=? Fold :call CocAction('fold', <f-args>)
+command! -nargs=0 OR :call CocActionAsync('runCommand', 'editor.action.organizeImport')
+nmap <F6> :Format<CR>
+nmap <F7> :OR<CR>
+nnoremap <silent><nowait> <space>a  :<C-u>CocList diagnostics<cr>
+nnoremap <silent><nowait> <space>e  :<C-u>CocList extensions<cr>
+nnoremap <silent><nowait> <space>c  :<C-u>CocList commands<cr>
+nnoremap <silent><nowait> <space>o  :<C-u>CocList outline<cr>
+nnoremap <silent><nowait> <space>s  :<C-u>CocList -I symbols<cr>
+nnoremap <silent><nowait> <space>j  :<C-u>CocNext<CR>
+nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
+nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
+" cppman
+lua << EOF
+  local cppman = require"cppman"
+  cppman.setup()
+  -- Make a keymap to open the word under cursor in CPPman
+  vim.keymap.set("n", "<leader>cm", function()
+      cppman.open_cppman_for(vim.fn.expand("<cword>"))
+  end)
+  -- Open search box
+  vim.keymap.set("n", "<leader>cc", function()
+      cppman.input()
+  end)
+EOF
+" neotest
+lua << EOF
+  require("neotest").setup({
+    adapters = {
+      require("neotest-zig"),
+      require("neotest-python"),
+    }
+  })
+EOF
+" treesitter
 if exists('g:wsl')
 lua << EOF
   require'nvim-treesitter.configs'.setup {
@@ -380,117 +466,3 @@ lua <<EOF
   vim.keymap.set({ "n", "x", "o" }, "t", ts_repeat_move.builtin_t)
   vim.keymap.set({ "n", "x", "o" }, "T", ts_repeat_move.builtin_T)
 EOF
-" coc
-nmap <leader>rn <Plug>(coc-rename)
-nmap <silent> [g <Plug>(coc-diagnostic-prev)
-nmap <silent> ]g <Plug>(coc-diagnostic-next)
-nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> gy <Plug>(coc-type-definition)
-nmap <silent> gi <Plug>(coc-implementation)
-nmap <silent> gr <Plug>(coc-references)
-function! ShowDocumentation()
-  if CocAction('hasProvider', 'hover')
-    call CocActionAsync('doHover')
-  else
-    call feedkeys('K', 'in')
-  endif
-endfunction
-nnoremap <silent> K :call ShowDocumentation()<CR>
-command! -nargs=0 Format :call CocActionAsync('format')
-command! -nargs=? Fold :call CocAction('fold', <f-args>)
-command! -nargs=0 OR :call CocActionAsync('runCommand', 'editor.action.organizeImport')
-nmap <F6> :Format<CR>
-nmap <F7> :OR<CR>
-nnoremap <silent><nowait> <space>a  :<C-u>CocList diagnostics<cr>
-nnoremap <silent><nowait> <space>e  :<C-u>CocList extensions<cr>
-nnoremap <silent><nowait> <space>c  :<C-u>CocList commands<cr>
-nnoremap <silent><nowait> <space>o  :<C-u>CocList outline<cr>
-nnoremap <silent><nowait> <space>s  :<C-u>CocList -I symbols<cr>
-nnoremap <silent><nowait> <space>j  :<C-u>CocNext<CR>
-nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
-nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
-" vista
-nmap <F8> :Vista!!<CR>
-let g:vista_default_executive = 'ctags'
-let g:vista_sidebar_width = 50
-let g:vista_echo_cursor = 0
-let g:vista_echo_cursor_strategy = 'scroll'
-let g:vista_enable_centering_jump = 1
-let g:vista_close_on_jump = 0
-let g:vista_close_on_fzf_select = 1
-let g:vista_stay_on_open = 0
-let g:vista_blink = [0, 0]
-let g:vista_top_level_blink = [0, 0]
-let g:vista_highlight_whole_line = 1
-let g:vista#renderer#ctags = 'kind'
-" ultisnips
-let g:UltiSnipsExpandTrigger = '<tab>'
-let g:UltiSnipsJumpForwardTrigger = '<tab>'
-let g:UltiSnipsJumpBackwardTrigger = '<s-tab>'
-let g:UltiSnipsSnippetDirectories = [$XDG_TEMPLATES_DIR.'/snippets']
-" cppman
-lua << EOF
-  local cppman = require"cppman"
-  cppman.setup()
-  -- Make a keymap to open the word under cursor in CPPman
-  vim.keymap.set("n", "<leader>cm", function()
-      cppman.open_cppman_for(vim.fn.expand("<cword>"))
-  end)
-  -- Open search box
-  vim.keymap.set("n", "<leader>cc", function()
-      cppman.input()
-  end)
-EOF
-" vim-fswitch
-au BufEnter *.h, *.hh, *.hpp  let b:fswitchdst = "c,cc,cpp" | let b:fswitchlocs = 'reg:|include.*|src/**|'
-au BufEnter *.c, *.cc, *.cpp  let b:fswitchdst = "h,hh,hpp"
-nnoremap <silent> <A-o> :FSHere<cr>
-nnoremap <silent> <localleader>oh :FSSplitLeft<cr>
-nnoremap <silent> <localleader>oj :FSSplitBelow<cr>
-nnoremap <silent> <localleader>ok :FSSplitAbove<cr>
-nnoremap <silent> <localleader>ol :FSSplitRight<cr>
-" zeal
-nmap <leader>z <Plug>Zeavim
-vmap <leader>z <Plug>ZVVisSelection
-nmap gz <Plug>ZVOperator
-nmap <leader><leader>z <Plug>ZVKeyDocset
-if exists('g:wsl')
-  let g:zv_zeal_executable = '/mnt/c/Program Files/Zeal/zeal.exe'
-endif
-" neotest
-lua << EOF
-  require("neotest").setup({
-    adapters = {
-      require("neotest-zig"),
-      require("neotest-python"),
-    }
-  })
-EOF
-" " dap
-" lua << EOF
-"   require("dapui").setup()
-" EOF
-" termdbg
-" let g:termdebug_wide = 1
-" command GdbStart :call TermDebugSendCommand('start')
-" command GdbUp :call TermDebugSendCommand('up')
-" command GdbDown :call TermDebugSendCommand('down')
-" command GdbSaveBreakpoints :call TermDebugSendCommand('sb')
-" command GdbLoadBreakpoints :call TermDebugSendCommand('lb')
-" command GdbQuit :call TermDebugSendCommand('quit')
-" nnoremap <F1> :Gdb<CR>
-" nnoremap <F2> :Program<CR>
-" nnoremap <F3> :Continue<CR>
-" nnoremap <F4> :Over<CR>
-" nnoremap <F5> :Step<CR>
-" nnoremap <F6> :Finish<CR>
-" nnoremap <F7> :GdbUp<CR>
-" nnoremap <F8> :GdbDown<CR>
-" nnoremap <F9> :GdbLoadBreakpoints<CR>
-" nnoremap <F10> :GdbSaveBreakpoints<CR>
-" nnoremap <F11> :Break<CR>
-" nnoremap <F12> :Clear<CR>
-" nnoremap <Leader>. :Termd<Up><CR>
-" nnoremap <C-e> :GdbStart<CR>
-" nnoremap <Leader>q :GdbQuit<CR>
-" nnoremap <Leader>' :Source<CR>
