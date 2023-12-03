@@ -7,6 +7,13 @@ set history expansion on
 set auto-load safe-path .
 set auto-load safe-path /usr/lib/x86_64-linux-gnu/
 
+python
+import sys
+sys.path.insert(0, '/usr/share/gcc/python')
+from libstdcxx.v6.printers import register_libstdcxx_printers
+register_libstdcxx_printers(None)
+end
+
 define lb
     set breakpoint pending on
     source .gdbbreakpoints
