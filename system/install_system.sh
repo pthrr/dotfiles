@@ -48,6 +48,8 @@ sudo apt install -y \
     clang \
     clang-tools \
     clangd \
+    clang-format \
+    clang-tidy \
     libstdc++-arm-none-eabi-newlib \
     libnewlib-arm-none-eabi \
     acpi \
