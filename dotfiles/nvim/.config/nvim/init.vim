@@ -60,6 +60,7 @@ let g:coc_global_extensions = [
     \ 'coc-zls',
     \ 'coc-cmake',
     \ 'coc-clangd',
+    \ 'coc-sourcekit',
     \ 'coc-rust-analyzer',
     \ 'coc-tsserver',
     \ 'coc-tslint-plugin',
