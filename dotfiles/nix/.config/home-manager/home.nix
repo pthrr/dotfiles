@@ -37,7 +37,7 @@
             ghc cabal-install cabal2nix stack hlint haskell-language-server
             clojure leiningen clojure-lsp
             zig zls
-            compcert mold cling rr openocd valgrind gdb gdbgui clang-tools
+            compcert mold cling rr openocd valgrind gdb gdbgui
             nasm
             wasmer emscripten wasmtime
             scons meson buck ninja bazelisk cmake-format cmake bmake

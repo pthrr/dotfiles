@@ -45,6 +45,8 @@ sudo apt install -y \
     pkg-config \
     gcc \
     gcc-arm-none-eabi \
+    clang \
+    clang-tools \
     libstdc++-arm-none-eabi-newlib \
     libnewlib-arm-none-eabi \
     acpi \
