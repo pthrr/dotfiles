@@ -19,6 +19,7 @@
         enableNixpkgsReleaseCheck = false;
 
         packages = with pkgs; [
+            higan
             jetbrains.clion
             jetbrains.webstorm
             jetbrains.pycharm-professional micromamba
