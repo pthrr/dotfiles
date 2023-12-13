@@ -61,8 +61,6 @@ sudo apt install -y \
     cups \
     bash \
     strace \
-    htop \
-    tree \
     curl \
     wget \
     stow \

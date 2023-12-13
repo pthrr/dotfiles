@@ -52,7 +52,7 @@
             sent go-task age mc tmuxp tmux picocom minicom tio neofetch tldr
             unrar
             jq fzf fq pdfgrep expect dos2unix universal-ctags fdupes
-            eza fd bat ripgrep
+            eza fd sd bat ripgrep glow broot tree htop
             openscad kicad horizon-eda prusa-slicer pcb2gcode candle
             tlaplus tlaplusToolbox nuXmv nusmv alloy6
             coq coqPackages.coqide
