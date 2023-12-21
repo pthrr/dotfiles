@@ -473,3 +473,5 @@ EOF
 " Quint
 au BufRead,BufNewFile *.qnt setfiletype quint
 au BufNewFile,BufReadPost *.qnt runtime syntax/quint.vim
+" Typst
+au BufRead,BufNewFile *.typ set syntax=typst
