@@ -24,7 +24,7 @@
             jetbrains.webstorm
             jetbrains.pycharm-professional micromamba
             jetbrains.jdk jetbrains.idea-ultimate
-            typescript esbuild nodePackages_latest.eslint nodePackages_latest.nodemon deno bun nodejs_20
+            typescript esbuild deno bun
             nodePackages_latest.fixjson
             typst typst-fmt typst-lsp
             scala_3 sbt-with-scala-native scalafmt scalafix scala-cli metals

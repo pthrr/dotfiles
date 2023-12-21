@@ -8,7 +8,7 @@
     "virtualTextLines": 1,
     "virtualTextPrefix": " —— "
   },
-  "[markdown][xml][json][yaml][toml][scala][typescript][zig][rust][c][cpp][python]": {
+  "[markdown][xml][json][yaml][toml][quint][typst][typescript][zig][rust][c][cpp][python]": {
     "coc.preferences.formatOnSave": true
   },
   "snippets.userSnippetsDirectory": "~/Vorlagen/snippets",
@@ -22,5 +22,20 @@
   "python.linting.ruffEnabled": true,
   "python.formatting.provider": "black",
   "pyright.testing.provider": "pytest",
-  "pyright.organizeimports.provider": "ruff"
+  "pyright.organizeimports.provider": "isort",
+  "languageserver": {
+    "quint": {
+      "command": "quint-language-server",
+      "args": ["--stdio"],
+      "rootPatterns": [".gitignore"],
+      "trace.server": "verbose",
+      "filetypes": ["quint"]
+    },
+    "typst": {
+      "command": "typst-lsp",
+      "rootPatterns": [".gitignore"],
+      "trace.server": "verbose",
+      "filetypes": ["typst"]
+    }
+  }
 }

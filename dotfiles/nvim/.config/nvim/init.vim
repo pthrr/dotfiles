@@ -38,6 +38,9 @@ if dein#load_state(s:dein_dir)
     call dein#add("antoinemadec/FixCursorHold.nvim")
     call dein#add('nvim-neotest/neotest', { 'depends': ['plenary.nvim', 'nvim-treesitter', 'FixCursorHold.nvim'] })
     " Typescript/Javascript
+    " Typst
+    call dein#add('kaarmu/typst.vim')
+    " Quint
     " Python
     call dein#add('nvim-neotest/neotest-python', { 'depends': ['neotest', 'plenary.nvim', 'nvim-treesitter', 'FixCursorHold.nvim'] })
     " Zig
@@ -467,3 +470,6 @@ lua <<EOF
   vim.keymap.set({ "n", "x", "o" }, "t", ts_repeat_move.builtin_t)
   vim.keymap.set({ "n", "x", "o" }, "T", ts_repeat_move.builtin_T)
 EOF
+" Quint
+au BufRead,BufNewFile *.qnt setfiletype quint
+au BufNewFile,BufReadPost *.qnt runtime syntax/quint.vim

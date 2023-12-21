@@ -52,6 +52,8 @@ sudo apt install -y \
     clang-tidy \
     libstdc++-arm-none-eabi-newlib \
     libnewlib-arm-none-eabi \
+    nodejs \
+    npm \
     acpi \
     acpi-support \
     acpid \
@@ -96,6 +98,8 @@ sudo flatpak remote-add --if-not-exists \
     flathub https://flathub.org/repo/flathub.flatpakrepo
 sudo flatpak install \
     jdownloader
+sudo npm i @informalsystems/quint -g
+sudo npm i @informalsystems/quint-language-server -g
 pipx uninstall-all
 pipx install pre-commit
 pipx install black
