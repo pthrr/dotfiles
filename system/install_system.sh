@@ -108,4 +108,5 @@ pipx install mypy
 pipx install ruff
 pipx install rtcqs
 pipx install conan
+pipx install cmake
 pipx install jupyterlab
