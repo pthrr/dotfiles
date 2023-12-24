@@ -60,7 +60,7 @@ sudo apt install -y \
     lm-sensors \
     sysstat \
     linux-cpupower \
-    cups \
+    printer-driver-all cups hp-ppd openprinting-ppds system-config-printer \
     bash \
     strace \
     curl \
