@@ -91,7 +91,7 @@ set nobackup
 set nowritebackup
 set noswapfile
 set noshowmode
-set novisualbell
+set visualbell
 set noerrorbells
 set undofile
 set undolevels=1000
@@ -119,6 +119,7 @@ set ttimeoutlen=0
 set title
 set hidden
 set path+=**
+set magic
 set wildmode=list:longest,full
 set wildignore+=.git,.hg,.svn
 set wildignore+=*.aux,*.out,*.toc
@@ -141,9 +142,10 @@ function! CustomTabline()
     endif
     let tabname = fnamemodify(bufname(tabpagebuflist(i + 1)[0]), ':t')
     if tabname == ''
-      let tabname = '[No Name]'
+      let s .= '[No Name]'
+    else
+      let s .= tabname
     endif
-    let s .= tabname
     if getbufvar(tabpagebuflist(i + 1)[0], "&modified")
       let s .= '+'
     endif
