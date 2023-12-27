@@ -130,12 +130,38 @@ set wildignore+=*.otf,*.ttf
 set wildignore+=*.doc,*.pdf
 set wildignore+=*.zip,*.tar.gz,*.tar.bz2,*.rar,*.tar.xz
 set wildignore+=*.swp,.lock,.DS_Store,._*
-set statusline=
-set statusline+=%-4.(%n%)
-set statusline+=%f\ %h%m%r
-set statusline+=%=
-set statusline+=%-14.(%l,%c%V%)
-set statusline+=\ %P
+set showtabline=2
+function! CustomTabline()
+  let s = ''
+  for i in range(tabpagenr('$'))
+    if i + 1 == tabpagenr()
+      let s .= '*'
+    else
+      let s .= '-'
+    endif
+    let tabname = fnamemodify(bufname(tabpagebuflist(i + 1)[0]), ':t')
+    if tabname == ''
+      let tabname = '[No Name]'
+    endif
+    let s .= tabname
+    if getbufvar(tabpagebuflist(i + 1)[0], "&modified")
+      let s .= '+'
+    endif
+    let s .= ' '
+  endfor
+  return s
+endfunction
+set tabline=
+set tabline+=%{CustomTabline()}
+set tabline+=%=
+set tabline+=%-14.(%l,%c%V%)
+set tabline+=\ %P
+autocmd CursorMoved * :redrawtabline
+autocmd CursorMovedI * redrawtabline
+set laststatus=0
+set noruler
+set noshowmode
+set noshowcmd
 set colorcolumn=80,110
 set clipboard+=unnamedplus
 if exists('g:wsl')
@@ -160,9 +186,12 @@ set foldmethod=indent
 set nofoldenable
 set foldnestmax=2
 set foldlevelstart=10
-" automatically save view, load with :loadview
-autocmd BufWinLeave *.* mkview
-" save session
+" automatically restore cursor
+autocmd BufReadPost *
+  \ if line("'\"") > 0 && line("'\"") <= line("$") |
+  \   exe "normal! g`\"" |
+  \ endif
+" save/restore session
 nnoremap <Leader>sa :mksession! .session.vim<CR>
 vnoremap <Leader>sa <Esc>:mksession! .session.vim<CR>v
 nnoremap <Leader>so :source .session.vim<CR>
