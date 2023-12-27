@@ -131,39 +131,42 @@ set wildignore+=*.otf,*.ttf
 set wildignore+=*.doc,*.pdf
 set wildignore+=*.zip,*.tar.gz,*.tar.bz2,*.rar,*.tar.xz
 set wildignore+=*.swp,.lock,.DS_Store,._*
-set showtabline=2
 function! CustomTabline()
   let s = ''
-  for i in range(tabpagenr('$'))
-    if i + 1 == tabpagenr()
-      let s .= '*'
-    else
-      let s .= '-'
-    endif
-    let tabname = fnamemodify(bufname(tabpagebuflist(i + 1)[0]), ':t')
-    if tabname == ''
-      let s .= '[No Name]'
-    else
-      let s .= tabname
-    endif
-    if getbufvar(tabpagebuflist(i + 1)[0], "&modified")
-      let s .= '+'
-    endif
-    let s .= ' '
-  endfor
+  let t = tabpagenr('$')
+  if t > 1
+    for i in range(t)
+      if i + 1 == tabpagenr()
+        let s .= '*'
+      else
+        let s .= '-'
+      endif
+      let tabname = fnamemodify(bufname(tabpagebuflist(i + 1)[0]), ':t')
+      if tabname == ''
+        let s .= '[No Name]'
+      else
+        let s .= tabname
+      endif
+      if getbufvar(tabpagebuflist(i + 1)[0], "&modified")
+        let s .= '+'
+      endif
+      if i < t
+        let s .= ' '
+      endif
+    endfor
+  else
+    let s .= expand('%f')
+  endif
   return s
 endfunction
-set tabline=
-set tabline+=%{CustomTabline()}
-set tabline+=%=
-set tabline+=%-14.(%l,%c%V%)
-set tabline+=\ %P
-autocmd CursorMoved * :redrawtabline
-autocmd CursorMovedI * redrawtabline
-set laststatus=0
-set noruler
-set noshowmode
-set noshowcmd
+set showtabline=0
+set statusline=
+set statusline+=%-4.(%n%)
+set statusline+=%{CustomTabline()}
+set statusline+=\ %h%m%r
+set statusline+=%=
+set statusline+=%-14.(%l,%c%V%)
+set statusline+=\ %P
 set colorcolumn=80,110
 set clipboard+=unnamedplus
 if exists('g:wsl')
