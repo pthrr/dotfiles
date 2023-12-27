@@ -45,6 +45,7 @@
             scons meson buck ninja bazelisk cmake-format bmake
             go
             crun podman podman-desktop podman-compose
+            picotool
             qemu ripes
             winetricks wineWowPackages.full
             ngspice qucs-s xyce
@@ -59,7 +60,7 @@
             coq coqPackages.coqide
             discord element-desktop signal-desktop whatsapp-for-linux tdesktop
             wl-clipboard wlogout wdisplays gammastep bemenu rofi wlr-randr
-            waybar mako kanshi
+            waybar mako kanshi hikari
             olive-editor spotify vlc yt-dlp
             obsidian zotero
             poppler_utils graphviz tectonic drawio ipe pandoc
