@@ -19,6 +19,7 @@
         enableNixpkgsReleaseCheck = false;
 
         packages = with pkgs; [
+            w3m
             higan
             jetbrains.clion
             jetbrains.webstorm
