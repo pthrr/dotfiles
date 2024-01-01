@@ -132,32 +132,32 @@ set wildignore+=*.doc,*.pdf
 set wildignore+=*.zip,*.tar.gz,*.tar.bz2,*.rar,*.tar.xz
 set wildignore+=*.swp,.lock,.DS_Store,._*
 function! CustomTabline()
-  let s = ''
-  let t = tabpagenr('$')
-  if t > 1
-    for i in range(t)
-      if i + 1 == tabpagenr()
-        let s .= '*'
+  let str = ''
+  let num_tabs = tabpagenr('$')
+  if num_tabs > 1
+    for num_tab in range(num_tabs)
+      if num_tab + 1 == tabpagenr()
+        let str .= '*'
       else
-        let s .= '-'
+        let str .= '-'
       endif
-      let tabname = fnamemodify(bufname(tabpagebuflist(i + 1)[0]), ':t')
-      if tabname == ''
-        let s .= '[No Name]'
+      let name_tab = fnamemodify(bufname(tabpagebuflist(num_tab + 1)[0]), ':t')
+      if name_tab == ''
+        let str .= '[No Name]'
       else
-        let s .= tabname
+        let str .= name_tab
       endif
-      if getbufvar(tabpagebuflist(i + 1)[0], "&modified")
-        let s .= '+'
+      if getbufvar(tabpagebuflist(num_tab + 1)[0], "&modified")
+        let str .= '+'
       endif
-      if i < t
-        let s .= ' '
+      if num_tab < num_tabs " is last tab
+        let str .= ' '
       endif
     endfor
   else
-    let s .= expand('%f')
+    let str .= expand('%f')
   endif
-  return s
+  return str
 endfunction
 set showtabline=0
 set statusline=
@@ -212,10 +212,18 @@ autocmd BufLeave,FocusLost,InsertEnter * setlocal norelativenumber
 " remove trailing white space at save
 lua << EOF
 vim.api.nvim_create_autocmd({ "BufWritePre" }, {
-  pattern = { "*" },
-  command = [[%s/\s\+$//e]],
+    pattern = { "*" },
+    callback = function()
+        local cursor_pos = vim.api.nvim_win_get_cursor(0)
+        vim.cmd([[silent! %s/\s\+$//e]])
+        vim.api.nvim_win_set_cursor(0, cursor_pos)
+    end,
 })
 EOF
+" vim.api.nvim_create_autocmd({ "BufWritePre" }, {
+"   pattern = { "*" },
+"   command = [[%s/\s\+$//e]],
+" })
 " show matching brackets
 highlight MatchParen guibg=none guifg=white gui=bold ctermbg=none ctermfg=white cterm=bold
 " change leader key
