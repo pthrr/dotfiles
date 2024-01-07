@@ -66,7 +66,6 @@ let g:coc_global_extensions = [
     \ 'coc-sourcekit',
     \ 'coc-rust-analyzer',
     \ 'coc-tsserver',
-    \ 'coc-tslint-plugin',
     \ 'coc-eslint',
     \ 'coc-prettier',
     \ 'coc-toml',
