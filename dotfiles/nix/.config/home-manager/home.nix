@@ -19,6 +19,7 @@
         enableNixpkgsReleaseCheck = false;
 
         packages = with pkgs; [
+            protobuf protobufc
             w3m
             higan
             jetbrains.clion
