@@ -193,6 +193,11 @@
             recursive = true;
         };
 
+        configFile."Zeal" = {
+            source = ../../../misc/.config/zeal;
+            recursive = true;
+        };
+
         configFile."nvim" = {
             source = ../../../nvim/.config/nvim;
             recursive = true;
