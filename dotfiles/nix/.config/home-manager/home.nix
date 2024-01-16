@@ -171,6 +171,11 @@
             recursive = true;
         };
 
+        configFile."lvim" = {
+            source = ../../../lvim/.config/lvim;
+            recursive = true;
+        };
+
         configFile."zathura" = {
             source = ../../../zathura/.config/zathura;
             recursive = true;
