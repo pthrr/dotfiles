@@ -19,6 +19,7 @@
         enableNixpkgsReleaseCheck = false;
 
         packages = with pkgs; [
+            lunarvim
             protobuf protobufc
             w3m
             higan
