@@ -59,6 +59,8 @@
             eza fd sd bat ripgrep glow broot tree htop
             openscad kicad horizon-eda prusa-slicer pcb2gcode candle
             tlaplus tlaplusToolbox nuXmv nusmv alloy6
+            abseil-cpp
+            direnv
             coq coqPackages.coqide
             discord element-desktop signal-desktop whatsapp-for-linux tdesktop
             wl-clipboard wlogout wdisplays gammastep bemenu rofi wlr-randr

@@ -165,3 +165,4 @@ alias dotfiles='git --git-dir="$HOME/.dotfiles/.git" --work-tree="$HOME/.dotfile
 source "$HOME/key-bindings.bash"
 source "$HOME/z.sh"
 source "$HOME/git-prompt.sh"
+eval "$(direnv hook bash)"
