@@ -246,20 +246,20 @@ tnoremap <Esc> <C-\><C-n>
 " keymap.set("n", "sj", "<C-w>j")
 " keymap.set("n", "sl", "<C-w>l")
 " EOF
-" Split window
+" split window
 nmap ss :split<Return><C-w>w
 nmap sv :vsplit<Return><C-w>w
-" Move window
+" move window
 map sh <C-w>h
 map sk <C-w>k
 map sj <C-w>j
 map sl <C-w>l
-" Switch tab
-nmap <S-Tab> :tabprev<Return>
-nmap <Tab> :tabnext<Return>
-" move among buffers with CTRL
-map <C-J> :bnext<CR>
-map <C-K> :bprev<CR>
+" switch tab
+nnoremap <Tab> :bnext<CR>
+nnoremap <S-Tab> :bprev<CR>
+" switch buffer
+nnoremap <C-Tab> :tabnext<CR>
+nnoremap <C-S-Tab> :tabprev<CR>
 " map folding
 vnoremap <space> zf
 nnoremap <space> za
