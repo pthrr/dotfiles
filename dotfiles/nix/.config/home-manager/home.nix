@@ -124,7 +124,11 @@
         package = pkgs.vscode;
         extensions = with pkgs.vscode-extensions; [
             alygin.vscode-tlaplus
-            vscodevim.vim
+            asvetliakov.vscode-neovim
+            genieai.chatgpt-vscode
+            ms-vscode-remote.remote-ssh
+            kahole.magit
+            bierner.docs-view
         ];
     };
 
