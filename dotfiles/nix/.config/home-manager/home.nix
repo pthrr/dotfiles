@@ -19,15 +19,13 @@
         enableNixpkgsReleaseCheck = false;
 
         packages = with pkgs; [
-            lunarvim
             protobuf protobufc
             w3m
             higan
             jetbrains.clion
-            jetbrains.webstorm
+            jetbrains.webstorm deno bun
             jetbrains.pycharm-professional micromamba
             jetbrains.jdk jetbrains.idea-ultimate
-            deno bun
             nodePackages_latest.fixjson
             typst typst-fmt typst-lsp
             scala_3 sbt-with-scala-native scalafmt scalafix scala-cli metals
@@ -59,8 +57,6 @@
             eza fd sd bat ripgrep glow broot tree htop
             openscad kicad horizon-eda prusa-slicer pcb2gcode candle
             tlaplus tlaplusToolbox nuXmv nusmv alloy6
-            abseil-cpp
-            direnv
             coq coqPackages.coqide
             discord element-desktop signal-desktop whatsapp-for-linux tdesktop
             wl-clipboard wlogout wdisplays gammastep bemenu rofi wlr-randr
@@ -174,11 +170,6 @@
 
         configFile."cpugovernor" = {
             source = ../../../cpugovernor/.config/cpugovernor;
-            recursive = true;
-        };
-
-        configFile."lvim" = {
-            source = ../../../lvim/.config/lvim;
             recursive = true;
         };
 

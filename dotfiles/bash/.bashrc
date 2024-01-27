@@ -15,7 +15,7 @@ function command_not_found_handle() {
     elif [[ $1 =~ $regex_url ]] ; then
         wget "$1"
     else
-        echo "Command was not found!"
+        echo "Command was not found: ${1}"
     fi
 }
 # eval "$(_TMUXP_COMPLETE=source tmuxp)"
@@ -132,8 +132,6 @@ function jupnote() {
 set -o vi
 alias vi='nvim'
 alias vim='nvim'
-alias em='emacs'
-alias na='nano'
 alias top='htop'
 alias cat='bat'
 alias cp='cp -iv'
@@ -144,7 +142,7 @@ alias g='git'
 alias t='task'
 alias j='jobs'
 alias c='clear'
-alias py='python'
+alias py='python3'
 alias ..='cd ../'
 alias ...='cd ../../'
 alias ....='cd ../../../'
@@ -165,4 +163,3 @@ alias dotfiles='git --git-dir="$HOME/.dotfiles/.git" --work-tree="$HOME/.dotfile
 source "$HOME/key-bindings.bash"
 source "$HOME/z.sh"
 source "$HOME/git-prompt.sh"
-eval "$(direnv hook bash)"
