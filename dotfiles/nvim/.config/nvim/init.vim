@@ -46,6 +46,7 @@ if dein#load_state(s:dein_dir)
     " Zig
     call dein#add('ziglang/zig.vim')
     call dein#add('lawrence-laz/neotest-zig', { 'depends': ['neotest', 'plenary.nvim', 'nvim-treesitter', 'FixCursorHold.nvim'] })
+    " Cue
     " C++
     call dein#add('sakhnik/nvim-gdb')
     call dein#add('MunifTanjim/nui.nvim')

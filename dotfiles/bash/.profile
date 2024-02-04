@@ -200,3 +200,4 @@ export _JAVA_AWT_WM_NONREPARENTING=1
 export MC_XDG_OPEN="$HOME/bin/xdg"
 export MC_SKIN="$HOME/.config/mc/solarized.ini"
 export QT_LOGGING_RULES="kwin_*.debug=true"
+export CPM_SOURCE_CACHE="$XDG_CACHE_HOME/CPM"

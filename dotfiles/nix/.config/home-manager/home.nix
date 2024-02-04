@@ -19,6 +19,7 @@
         enableNixpkgsReleaseCheck = false;
 
         packages = with pkgs; [
+            cue cuelsp cuetools
             protobuf protobufc
             w3m
             higan

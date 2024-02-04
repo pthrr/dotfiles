@@ -36,6 +36,12 @@
       "rootPatterns": [".gitignore"],
       "trace.server": "verbose",
       "filetypes": ["typst"]
+    },
+    "cue": {
+      "command": "cuelsp",
+      "rootPatterns": [".gitignore"],
+      "trace.server": "verbose",
+      "filetypes": ["cue"]
     }
   }
 }
