@@ -6,7 +6,7 @@ wget -O- https://www.virtualbox.org/download/oracle_vbox_2016.asc | sudo gpg --d
 sudo apt update -y
 sudo apt purge -y \
     task-lxqt-desktop \
-    task-kde-desktop \
+    task-gnome-desktop \
     task-gnome-flashback-desktop \
     task-xfce-desktop \
     task-mate-desktop \
@@ -14,7 +14,7 @@ sudo apt purge -y \
     task-lxde-desktop
 sudo apt install -y \
     task-desktop \
-    task-gnome-desktop \
+    task-kde-desktop \
     task-german \
     task-laptop \
     firmware-misc-nonfree \
@@ -77,6 +77,7 @@ sudo apt install -y \
     wireplumber \
     playerctl \
     brightnessctl \
+    kdeconnect \
     network-manager \
     sshpass \
     sshfs \
@@ -92,8 +93,7 @@ sudo apt remove -y \
     thunderbird \
     firefox
 sudo apt purge -y \
-    kdegames \
-    gnome-games
+    kdegames
 sudo apt autoremove -y
 sudo flatpak remote-add --if-not-exists \
     flathub https://flathub.org/repo/flathub.flatpakrepo
