@@ -6,6 +6,7 @@ wget -O- https://www.virtualbox.org/download/oracle_vbox_2016.asc | sudo gpg --d
 sudo apt update -y
 sudo apt purge -y \
     task-lxqt-desktop \
+    task-kde-desktop \
     task-gnome-flashback-desktop \
     task-xfce-desktop \
     task-mate-desktop \
@@ -13,9 +14,9 @@ sudo apt purge -y \
     task-lxde-desktop
 sudo apt install -y \
     task-desktop \
+    task-gnome-desktop \
     task-german \
     task-laptop \
-    task-kde-desktop \
     firmware-misc-nonfree \
     intel-microcode \
     fonts-firacode \
@@ -44,12 +45,12 @@ sudo apt install -y \
     build-essential \
     pkg-config \
     gcc \
-    gcc-arm-none-eabi \
     clang \
     clang-tools \
     clangd \
     clang-format \
     clang-tidy \
+    gcc-arm-none-eabi \
     libstdc++-arm-none-eabi-newlib \
     libnewlib-arm-none-eabi \
     nodejs \
@@ -76,7 +77,6 @@ sudo apt install -y \
     wireplumber \
     playerctl \
     brightnessctl \
-    kdeconnect \
     network-manager \
     sshpass \
     sshfs \
@@ -92,7 +92,8 @@ sudo apt remove -y \
     thunderbird \
     firefox
 sudo apt purge -y \
-    kdegames
+    kdegames \
+    gnome-games
 sudo apt autoremove -y
 sudo flatpak remote-add --if-not-exists \
     flathub https://flathub.org/repo/flathub.flatpakrepo
