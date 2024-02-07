@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, lib, pkgs, ... }:
 
 {
     home = {
@@ -62,7 +62,7 @@
             discord element-desktop signal-desktop whatsapp-for-linux tdesktop
             wl-clipboard wlogout wdisplays gammastep bemenu rofi wlr-randr
             waybar mako kanshi hikari
-            olive-editor spotify vlc yt-dlp
+            olive-editor spotify vlc yt-dlp kdenlive
             obsidian zotero
             poppler_utils graphviz tectonic drawio ipe pandoc
             nsxiv farbfeld zathura
@@ -213,4 +213,8 @@
             recursive = true;
         };
     };
+
+  home.activation.runMyScript = lib.hm.dag.entryAfter ["writeBoundary"] ''
+    $HOME/bin/patchnixapps $HOME/.nix-profile/share/applications
+  '';
 }

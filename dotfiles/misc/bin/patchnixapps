@@ -2,7 +2,7 @@
 set -euo pipefail
 
 DIR=$1
-cd $DIR
+# cd $DIR
 
 kExecRegex='^Exec=.+$'
 kExecRegexNix='^Exec=nixGL.+$'
@@ -14,7 +14,7 @@ for file in *; do
             c=$((c+1))
             if [[ $line =~ $kExecRegex && ! $line =~ $kExecRegexNix ]]; then
                 echo " Replacing line $c: $line .."
-                sed -i "${c}s/Exec=/Exec=nixGL /" $file
+                sed -i "${c}s/Exec=/Exec=nixGL /" "$DIR/$file"
             fi
         done < $file
         chmod +x $file
