@@ -2,11 +2,10 @@
 set -euo pipefail
 
 DIR=$1
-# cd $DIR
 
 kExecRegex='^Exec=.+$'
 kExecRegexNix='^Exec=nixGL.+$'
-for file in *; do
+for file in $DIR/*; do
     if [[ -f $file && $file == *.desktop ]]; then
         echo "Entering file $file .."
         c=0
@@ -14,7 +13,7 @@ for file in *; do
             c=$((c+1))
             if [[ $line =~ $kExecRegex && ! $line =~ $kExecRegexNix ]]; then
                 echo " Replacing line $c: $line .."
-                sed -i "${c}s/Exec=/Exec=nixGL /" "$DIR/$file"
+                sed -i "${c}s/Exec=/Exec=nixGL /" $file
             fi
         done < $file
         chmod +x $file

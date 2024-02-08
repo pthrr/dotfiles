@@ -215,6 +215,6 @@
     };
 
   home.activation.runMyScript = lib.hm.dag.entryAfter ["writeBoundary"] ''
-    $HOME/bin/patchnixapps $HOME/.nix-profile/share/applications
+    sudo -n $HOME/bin/patchnixapps $HOME/.nix-profile/share/applications
   '';
 }
