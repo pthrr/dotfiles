@@ -19,7 +19,25 @@
         enableNixpkgsReleaseCheck = false;
 
         packages = with pkgs; [
+            # langs
             cue cuelsp cuetools
+            zig zls
+            typst typst-fmt typst-lsp
+            scala_3 sbt-with-scala-native scalafmt scalafix scala-cli metals
+            ansible ansible-lint ansible-language-server
+            yamlfmt yamllint
+            ghc cabal-install cabal2nix stack hlint haskell-language-server
+            compcert mold cling rr openocd valgrind gdb gdbgui
+            shfmt
+            nasm
+            wasmer emscripten wasmtime
+            rustup cargo-rr
+            elixir elixir-ls
+            clojure leiningen clojure-lsp
+            go
+            # build tools
+            scons meson buck ninja bazelisk cmake-format bmake
+            #
             protobuf protobufc
             w3m
             higan
@@ -28,23 +46,8 @@
             jetbrains.pycharm-professional micromamba
             jetbrains.jdk jetbrains.idea-ultimate
             nodePackages_latest.fixjson
-            typst typst-fmt typst-lsp
-            scala_3 sbt-with-scala-native scalafmt scalafix scala-cli metals
             yosys verilator gtkwave symbiyosys icestorm nextpnrWithGui
             bluespec yosys-bluespec
-            shfmt
-            rustup cargo-rr
-            yamlfmt yamllint
-            ansible ansible-lint ansible-language-server
-            elixir elixir-ls
-            ghc cabal-install cabal2nix stack hlint haskell-language-server
-            clojure leiningen clojure-lsp
-            zig zls
-            compcert mold cling rr openocd valgrind gdb gdbgui
-            nasm
-            wasmer emscripten wasmtime
-            scons meson buck ninja bazelisk cmake-format bmake
-            go
             crun podman podman-desktop podman-compose
             picotool
             qemu ripes
@@ -52,6 +55,7 @@
             ngspice qucs-s xyce
             thunderbird firefox tor-browser-bundle-bin librewolf nyxt
             darcs gitFull git-lfs git-filter-repo meld gitui
+            # tools
             sent go-task age mc tmuxp tmux picocom minicom tio neofetch tldr
             unrar
             jq fzf fq pdfgrep ugrep expect dos2unix universal-ctags fdupes
