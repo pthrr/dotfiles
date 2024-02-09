@@ -1,0 +1,17 @@
+# https://taskfile.dev
+
+version: "3"
+
+tasks:
+  default:
+    silent: true
+    cmds:
+      - cmd: task --list-all
+
+  switch:
+    cmds:
+      - cmd: home-manager switch --flake .
+
+  install:
+    cmds:
+      - cmd: nix run . switch --flake .
