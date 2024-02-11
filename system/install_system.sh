@@ -13,85 +13,34 @@ sudo apt purge -y \
     task-cinnamon-desktop \
     task-lxde-desktop
 sudo apt install -y \
-    task-desktop \
-    task-kde-desktop \
-    task-german \
-    task-laptop \
-    firmware-misc-nonfree \
-    intel-microcode \
-    fonts-firacode \
-    fonts-dejavu \
-    fonts-font-awesome \
-    fonts-ubuntu \
-    fonts-jetbrains-mono \
-    libwlroots-dev \
-    wayland-utils \
-    wayland-protocols \
-    xwayland \
-    sway \
-    swaylock \
-    swayidle \
-    swaybg \
-    i3status \
-    foot \
-    python3-full \
-    python3-pip \
-    python3-dev \
-    python3-i3ipc \
-    python3-pynvim \
-    automake \
-    autoconf \
-    libtool \
+    task-desktop task-kde-desktop task-german task-laptop \
+    firmware-misc-nonfree intel-microcode \
+    fonts-firacode fonts-dejavu fonts-font-awesome fonts-ubuntu fonts-jetbrains-mono \
+    libwlroots-dev wayland-utils wayland-protocols xwayland \
+    python3-full python3-pip python3-dev python3-pynvim pipx \
+    automake autoconf libtool pkg-config \
     build-essential \
-    pkg-config \
-    gcc \
-    clang \
-    clang-tools \
-    clangd \
-    clang-format \
-    clang-tidy \
-    gcc-arm-none-eabi \
-    libstdc++-arm-none-eabi-newlib \
-    libnewlib-arm-none-eabi \
-    nodejs \
-    npm \
-    acpi \
-    acpi-support \
-    acpid \
-    lm-sensors \
-    sysstat \
-    linux-cpupower \
+    clang clang-tools clangd clang-format clang-tidy \
+    gcc-arm-none-eabi libstdc++-arm-none-eabi-newlib libnewlib-arm-none-eabi \
+    nodejs npm \
+    acpi acpi-support acpid lm-sensors sysstat linux-cpupower \
     printer-driver-all cups hp-ppd openprinting-ppds system-config-printer \
-    bash \
-    strace \
-    curl \
-    wget \
-    stow \
-    xxd \
+    bash foot \
+    strace curl wget stow xxd \
     gnupg2 \
     inotify-tools \
     uidmap \
-    blueman \
-    pipewire \
-    pipewire-pulse \
-    wireplumber \
-    playerctl \
-    brightnessctl \
-    kdeconnect \
-    network-manager \
-    sshpass \
-    sshfs \
-    ssh-askpass \
+    pipewire pipewire-pulse wireplumber \
+    playerctl brightnessctl \
+    kdeconnect network-manager \
+    sshpass sshfs ssh-askpass \
     flatpak \
-    pipx \
     cppman \
     spacefm \
     virtualbox-7.0 \
     libspa-0.2-bluetooth
 sudo apt remove -y \
-    firefox-esr \
-    thunderbird \
-    firefox
+    firefox-esr thunderbird firefox
 sudo apt purge -y \
     kdegames
 sudo apt autoremove -y

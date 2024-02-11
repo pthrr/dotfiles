@@ -35,40 +35,42 @@
             elixir elixir-ls
             clojure leiningen clojure-lsp
             go
-            # build tools
-            scons meson buck ninja bazelisk cmake-format bmake
-            #
+            cmake-format
+            nodePackages_latest.fixjson
             protobuf protobufc
-            w3m
+            bluespec yosys-bluespec
+            # dev tools
+            gitFull git-lfs git-filter-repo meld
+            scons meson buck ninja bazelisk bmake
+            go-task
+            #
             higan
             jetbrains.clion
             jetbrains.webstorm deno bun
             jetbrains.pycharm-professional micromamba
             jetbrains.jdk jetbrains.idea-ultimate
-            nodePackages_latest.fixjson
             yosys verilator gtkwave symbiyosys icestorm nextpnrWithGui
-            bluespec yosys-bluespec
             crun podman podman-desktop podman-compose
             picotool
             qemu ripes
             winetricks wineWowPackages.full
             ngspice qucs-s xyce
-            thunderbird firefox tor-browser-bundle-bin librewolf nyxt
-            darcs gitFull git-lfs git-filter-repo meld gitui
+            thunderbird firefox tor-browser-bundle-bin nyxt w3m
             # tools
-            sent go-task age mc tmuxp tmux picocom minicom tio neofetch tldr
+            sent age mc tmuxp tmux picocom minicom tio tldr
             unrar
             jq fzf fq pdfgrep ugrep expect dos2unix universal-ctags fdupes
             eza fd sd bat ripgrep glow broot tree htop
-            openscad kicad horizon-eda prusa-slicer pcb2gcode candle
             tlaplus tlaplusToolbox nuXmv nusmv alloy6
             coq coqPackages.coqide
-            discord element-desktop signal-desktop whatsapp-for-linux tdesktop
             wl-clipboard wlogout wdisplays gammastep bemenu rofi wlr-randr
             waybar mako kanshi hikari
+            poppler_utils graphviz tectonic drawio ipe pandoc
+            #
+            openscad kicad horizon-eda prusa-slicer pcb2gcode candle
+            discord element-desktop signal-desktop whatsapp-for-linux tdesktop
             olive-editor spotify vlc yt-dlp kdenlive
             obsidian zotero
-            poppler_utils graphviz tectonic drawio ipe pandoc
             nsxiv farbfeld zathura
             keepassxc
             zeal
@@ -119,19 +121,6 @@
 
     # Let Home Manager install and manage itself.
     programs.home-manager.enable = true;
-
-    programs.vscode = {
-        enable = true;
-        package = pkgs.vscode;
-        extensions = with pkgs.vscode-extensions; [
-            alygin.vscode-tlaplus
-            asvetliakov.vscode-neovim
-            genieai.chatgpt-vscode
-            ms-vscode-remote.remote-ssh
-            kahole.magit
-            bierner.docs-view
-        ];
-    };
 
     programs.neovim = {
         enable = true;
