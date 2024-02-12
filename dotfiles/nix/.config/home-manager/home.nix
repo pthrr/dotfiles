@@ -20,6 +20,7 @@
 
         packages = with pkgs; [
             # langs
+            koka
             cue cuelsp cuetools
             zig zls
             typst typst-fmt typst-lsp
