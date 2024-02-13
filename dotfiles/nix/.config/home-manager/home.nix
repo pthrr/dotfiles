@@ -19,6 +19,11 @@
         enableNixpkgsReleaseCheck = false;
 
         packages = with pkgs; [
+            # ide
+            jetbrains.clion
+            jetbrains.webstorm deno bun
+            jetbrains.pycharm-professional micromamba
+            jetbrains.jdk jetbrains.idea-ultimate
             # langs
             koka
             cue cuelsp cuetools
@@ -44,19 +49,26 @@
             gitFull git-lfs git-filter-repo meld
             scons meson buck ninja bazelisk bmake
             go-task
-            #
-            higan
-            jetbrains.clion
-            jetbrains.webstorm deno bun
-            jetbrains.pycharm-professional micromamba
-            jetbrains.jdk jetbrains.idea-ultimate
-            yosys verilator gtkwave symbiyosys icestorm nextpnrWithGui
             crun podman podman-desktop podman-compose
+            #
+            yosys verilator gtkwave symbiyosys icestorm nextpnrWithGui
             picotool
             qemu ripes
             winetricks wineWowPackages.full
             ngspice qucs-s xyce
+            # sw
             thunderbird firefox tor-browser-bundle-bin nyxt w3m
+            discord element-desktop signal-desktop whatsapp-for-linux tdesktop
+            olive-editor
+            spotify
+            vlc
+            obsidian zotero
+            keepassxc
+            zeal
+            openscad kicad horizon-eda prusa-slicer pcb2gcode candle
+            anki
+            steam higan
+            gnucash
             # tools
             sent age mc tmuxp tmux picocom minicom tio tldr
             unrar
@@ -67,18 +79,11 @@
             wl-clipboard wlogout wdisplays gammastep bemenu rofi wlr-randr
             waybar mako kanshi hikari
             poppler_utils graphviz tectonic drawio ipe pandoc
-            #
-            openscad kicad horizon-eda prusa-slicer pcb2gcode candle
-            discord element-desktop signal-desktop whatsapp-for-linux tdesktop
-            olive-editor spotify vlc yt-dlp kdenlive
-            obsidian zotero
-            nsxiv farbfeld zathura
-            keepassxc
-            zeal
-            steam
-            anki
-            gnucash
+            yt-dlp
             drumgizmo x42-avldrums x42-plugins wolf-shaper distrho calf
+            # os
+            nsxiv farbfeld
+            zathura
         ];
 
         # files in ~/
