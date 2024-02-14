@@ -67,7 +67,7 @@ if [ ! -f "$(which nix)" ] ; then
     export MANPATH="$HOME/.nix-profile/share/man:$MANPATH"
     export XDG_DATA_DIRS="$HOME/.nix-profile/share:$XDG_DATA_DIRS"
     export CPATH="$HOME/.nix-profile/include:$CPATH"
-    export LD_LIBRARY_PATH="$HOME/.nix-profile/lib:$LD_LIBRARY_PATH"
+    # export LD_LIBRARY_PATH="$HOME/.nix-profile/lib:$LD_LIBRARY_PATH"
 fi
 
 if [ -f "$HOME/.nix-profile/etc/profile.d/nix.sh" ] ; then
