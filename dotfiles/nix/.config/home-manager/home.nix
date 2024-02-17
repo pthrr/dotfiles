@@ -28,6 +28,7 @@
             koka
             cue cuelsp cuetools
             zig zls
+            tectonic
             typst typst-fmt typst-lsp
             scala_3 sbt-with-scala-native scalafmt scalafix scala-cli metals
             ansible ansible-lint ansible-language-server
@@ -79,7 +80,7 @@
             coq coqPackages.coqide
             wl-clipboard wlogout wdisplays gammastep bemenu rofi wlr-randr
             waybar mako kanshi hikari
-            poppler_utils graphviz tectonic drawio ipe pandoc
+            poppler_utils graphviz drawio ipe pandoc
             yt-dlp
             drumgizmo x42-avldrums x42-plugins wolf-shaper distrho calf
             # os
