@@ -70,6 +70,7 @@
             steam higan
             gnucash
             # tools
+            vifm
             sent age mc tmuxp tmux picocom minicom tio tldr
             unrar
             jq fzf fq pdfgrep ugrep expect dos2unix universal-ctags fdupes
@@ -145,15 +146,6 @@
             recursive = true;
         };
 
-        configFile."i3status" = {
-            source = ../../../sway/.config/i3status;
-            recursive = true;
-        };
-        configFile."sway" = {
-            source = ../../../sway/.config/sway;
-            recursive = true;
-        };
-
         configFile."hikari" = {
             source = ../../../hikari/.config/hikari;
             recursive = true;
@@ -192,23 +184,13 @@
             recursive = true;
         };
 
-        configFile."mc" = {
-            source = ../../../mc/.config/mc;
-            recursive = true;
-        };
-
-        configFile."Zeal" = {
-            source = ../../../misc/.config/zeal;
+        configFile."vifm" = {
+            source = ../../../vifm/.config/vifm;
             recursive = true;
         };
 
         configFile."nvim" = {
             source = ../../../nvim/.config/nvim;
-            recursive = true;
-        };
-
-        configFile."Code" = {
-            source = ../../../vscode/.config/Code;
             recursive = true;
         };
     };

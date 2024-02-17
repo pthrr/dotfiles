@@ -40,6 +40,7 @@ if dein#load_state(s:dein_dir)
     " Typescript/Javascript
     " Typst
     call dein#add('kaarmu/typst.vim')
+    " Koka
     " Quint
     " Python
     call dein#add('nvim-neotest/neotest-python', { 'depends': ['neotest', 'plenary.nvim', 'nvim-treesitter', 'FixCursorHold.nvim'] })
