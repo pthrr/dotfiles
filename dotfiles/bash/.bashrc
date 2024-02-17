@@ -132,7 +132,7 @@ function jupnote() {
 set -o vi
 alias vi='nvim'
 alias vim='nvim'
-alias vifm='vifm . .'
+alias fm='vifm . .'
 alias top='htop'
 alias cat='bat'
 alias cp='cp -iv'

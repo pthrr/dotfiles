@@ -153,6 +153,15 @@ nnoremap w :view<cr>
 fileviewer {*.gp*} echo "nop"
 fileviewer {*.mp*} echo "nop"
 
+" useful options
+set syscalls dotfiles wildmenu wildstyle=popup
+set history=100 undolevels=100 followlinks norunexec
+set ignorecase smartcase nohlsearch incsearch
+
+" enable trash and set trash folder
+set trash
+set trashdir=~/.local/share/Trash/files
+
 " :filetype pattern1,pattern2 defaultprogram,program2
 " :fileviewer pattern1,pattern2 consoleviewer
 "
