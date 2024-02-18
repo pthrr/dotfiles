@@ -161,11 +161,6 @@
             recursive = true;
         };
 
-        configFile."cpugovernor" = {
-            source = ../../../cpugovernor/.config/cpugovernor;
-            recursive = true;
-        };
-
         configFile."zathura" = {
             source = ../../../zathura/.config/zathura;
             recursive = true;
