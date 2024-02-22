@@ -19,7 +19,7 @@ set $mod Mod4
 
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below.
-font pango:JetBrains Mono 9
+font pango:JetBrains Mono 10
 
 # Home row direction keys, like vim
 set $left h
@@ -33,7 +33,14 @@ set $term foot
 # Your preferred application launcher
 # Note: pass the final command to swaymsg so that the resulting window can be opened
 # on the original workspace that the command was run on.
-set $menu bemenu-run -i --hp 5 -p "" --fn "JetBrains Mono 9" --fb "#646464" --ff "#000000" --nb "#646464" --nf "#000000" --tf "#646464" --tb "#000000" --hf "#646464" --hb "#000000" --nf "#000000" --af "#000000" --ab "#646464" | xargs swaymsg exec --
+set $menu bemenu-run -i \
+    --hp 5 -p "" \
+    --fn "JetBrains Mono 10" \
+    --fb "#646464" --ff "#000000" \
+    --nb "#646464" --nf "#000000" \
+    --tb "#000000" --tf "#646464" \
+    --hb "#000000" --hf "#646464" \
+    --ab "#646464" --af "#000000" | xargs swaymsg exec --
 
 # hide window borders
 hide_edge_borders smart
@@ -67,7 +74,11 @@ output eDP-1 scale 1.5
 #
 # Example configuration:
 #
-exec swayidle -w timeout 300 'swaylock -f -c 000000' timeout 600 'swaymsg "output * dpms off"' resume 'swaymsg "output * dpms on"' before-sleep 'swaylock -f -c 000000'
+exec swayidle -w \
+    timeout 300 'swaylock -f -c 000000' \
+    timeout 600 'swaymsg "output * dpms off"' \
+    resume 'swaymsg "output * dpms on"' \
+    before-sleep 'swaylock -f -c 000000'
 #
 # This will lock your screen after 300 seconds of inactivity, then turn off
 # your displays after another 300 seconds, and turn your screens back on when
@@ -201,11 +212,11 @@ input type:touchpad {
     # You can send windows there and get them back later.
 
     # Move the currently focused window to the scratchpad
-    bindsym $mod+Shift+minus move scratchpad
+    # bindsym $mod+Shift+minus move scratchpad
 
     # Show the next scratchpad window or hide the focused scratchpad window.
     # If there are multiple scratchpad windows, this command cycles through them.
-    bindsym $mod+minus scratchpad show
+    # bindsym $mod+minus scratchpad show
 #
 # Resizing containers:
 #
