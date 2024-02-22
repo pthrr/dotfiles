@@ -161,6 +161,16 @@
             recursive = true;
         };
 
+
+        configFile."i3status" = {
+            source = ../../../sway/.config/i3status;
+            recursive = true;
+        };
+        configFile."sway" = {
+            source = ../../../sway/.config/sway;
+            recursive = true;
+        };
+
         configFile."zathura" = {
             source = ../../../zathura/.config/zathura;
             recursive = true;
