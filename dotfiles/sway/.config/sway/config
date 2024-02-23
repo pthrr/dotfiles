@@ -284,6 +284,8 @@ exec {
 }
 
 exec_always {
+    pkill kanshi
+    kanshi &
     blueman-applet
     kdeconnect-indicator
 }

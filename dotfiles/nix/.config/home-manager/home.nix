@@ -151,10 +151,6 @@
             source = ../../../hikari/.config/hikari;
             recursive = true;
         };
-        configFile."kanshi" = {
-            source = ../../../hikari/.config/kanshi;
-            recursive = true;
-        };
 
         configFile."foot" = {
             source = ../../../foot/.config/foot;
@@ -168,6 +164,10 @@
         };
         configFile."sway" = {
             source = ../../../sway/.config/sway;
+            recursive = true;
+        };
+        configFile."kanshi" = {
+            source = ../../../sway/.config/kanshi;
             recursive = true;
         };
 
