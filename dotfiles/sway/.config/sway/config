@@ -106,11 +106,18 @@ input type:keyboard {
     repeat_rate 50
 }
 
+input type:pointer {
+    dwt true
+    accel_profile "adaptive"
+    pointer_accel 0.7
+}
+
 input type:touchpad {
+    dwt true
     tap enabled
     click_method clickfinger
     accel_profile "adaptive"
-    pointer_accel 0.75
+    pointer_accel 0.7
 }
 
 ### Key bindings
