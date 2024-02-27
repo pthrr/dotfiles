@@ -109,7 +109,7 @@ input type:keyboard {
 input type:pointer {
     dwt true
     accel_profile "adaptive"
-    pointer_accel 0.7
+    pointer_accel 0.6
 }
 
 input type:touchpad {
@@ -117,7 +117,7 @@ input type:touchpad {
     tap enabled
     click_method clickfinger
     accel_profile "adaptive"
-    pointer_accel 0.7
+    pointer_accel 0.6
 }
 
 ### Key bindings
@@ -126,7 +126,9 @@ input type:touchpad {
 #
     # Start a terminal
     bindsym $mod+Return exec $term
-    bindsym $mod+Shift+Return exec $term
+    bindsym $mod+Shift+Return exec $term --app-id foot_floating
+
+    for_window [app_id="foot_floating"] floating enable, resize set 800 600, move position center
 
     # Kill focused window
     bindsym $mod+Shift+q kill
