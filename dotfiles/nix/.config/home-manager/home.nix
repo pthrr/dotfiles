@@ -166,6 +166,10 @@
             source = ../../../sway/.config/sway;
             recursive = true;
         };
+        configFile."swaync" = {
+            source = ../../../sway/.config/swaync;
+            recursive = true;
+        };
         configFile."kanshi" = {
             source = ../../../sway/.config/kanshi;
             recursive = true;
