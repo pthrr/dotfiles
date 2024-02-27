@@ -25,7 +25,7 @@ sudo apt install -y \
     nodejs npm \
     acpi acpi-support acpid lm-sensors sysstat linux-cpupower \
     printer-driver-all cups hp-ppd openprinting-ppds system-config-printer \
-    sway swaylock swayidle swaybg \
+    sway swaylock swayidle swaybg sway-notification-center \
     i3status \
     bash foot \
     strace curl wget stow xxd \
