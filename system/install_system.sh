@@ -27,6 +27,7 @@ sudo apt install -y \
     printer-driver-all cups hp-ppd openprinting-ppds system-config-printer \
     sway swaylock swayidle swaybg sway-notification-center \
     i3status \
+    thermald \
     bash foot \
     strace curl wget stow xxd \
     gnupg2 \
