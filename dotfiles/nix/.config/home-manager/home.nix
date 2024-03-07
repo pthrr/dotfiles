@@ -84,6 +84,7 @@
             yt-dlp
             drumgizmo x42-avldrums x42-plugins wolf-shaper distrho calf
             # os
+            swayr
             nsxiv farbfeld
             zathura
         ];
@@ -168,6 +169,10 @@
         };
         configFile."swaync" = {
             source = ../../../sway/.config/swaync;
+            recursive = true;
+        };
+        configFile."swayr" = {
+            source = ../../../sway/.config/swayr;
             recursive = true;
         };
         configFile."kanshi" = {
