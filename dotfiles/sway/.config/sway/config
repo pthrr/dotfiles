@@ -171,8 +171,8 @@ input type:touchpad {
 #
 # Workspaces:
 #
-    bindsym $mod+Tab swayr next-tabbed-or-stacked-window current-workspace
-    bindsym $mod+Shift+Tab swayr prev-tabbed-or-stacked-window current-workspace
+    bindsym $mod+Tab exec swayr next-tabbed-or-stacked-window current-workspace
+    bindsym $mod+Shift+Tab exec swayr prev-tabbed-or-stacked-window current-workspace
 
     # Switch to workspace
     bindsym $mod+1 workspace number 1
