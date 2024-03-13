@@ -75,7 +75,7 @@
             sent age mc tmuxp tmux picocom minicom tio tldr
             unrar
             jq fzf fq pdfgrep ugrep expect dos2unix universal-ctags fdupes
-            eza fd sd bat ripgrep glow broot tree htop
+            eza fd sd bat ripgrep glow broot tree htop nvtop
             tlaplus tlaplusToolbox nuXmv nusmv alloy6
             coq coqPackages.coqide
             wl-clipboard wlogout wdisplays gammastep bemenu rofi wlr-randr
