@@ -27,7 +27,7 @@ sudo apt install -y \
     printer-driver-all cups hp-ppd openprinting-ppds system-config-printer \
     sway swaylock swayidle swaybg sway-notification-center \
     i3status \
-    thermald \
+    thermald tlp \
     bash foot \
     strace curl wget stow xxd \
     gnupg2 \
@@ -63,3 +63,4 @@ pipx install rtcqs
 pipx install conan
 pipx install cmake
 pipx install jupyterlab
+pipx install tlp-ui
