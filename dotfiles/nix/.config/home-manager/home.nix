@@ -47,7 +47,7 @@
             protobuf protobufc
             bluespec yosys-bluespec
             # dev tools
-            gitFull git-lfs git-filter-repo meld
+            gitFull git-lfs git-filter-repo meld difftastic
             scons meson buck ninja bazelisk bmake
             go-task
             crun podman podman-desktop podman-compose

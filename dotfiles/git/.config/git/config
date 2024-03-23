@@ -24,16 +24,22 @@
     recurse = true
 
 [diff]
-    tool = meld
+    tool = difftastic
 
 [difftool]
-    prompt = true
+    prompt = false
 
 [merge]
     tool = meld
 
 [mergetool]
     keepBackup = false
+
+[pager]
+    difftool = true
+
+[difftool "difftastic"]
+    cmd = difft "$LOCAL" "$REMOTE"
 
 [difftool "meld"]
     cmd = meld \"$LOCAL\" \"$REMOTE\"
@@ -76,6 +82,7 @@
     template = ~/.config/git/git-commit-template.txt
 
 [alias]
+    dft = difftool
     guidiff = difftool --dir-diff --no-symlinks
     a = add
     b = branch
