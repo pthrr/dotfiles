@@ -82,7 +82,7 @@
     template = ~/.config/git/git-commit-template.txt
 
 [alias]
-    dft = difftool
+    dt = difftool
     guidiff = difftool --dir-diff --no-symlinks
     a = add
     b = branch
