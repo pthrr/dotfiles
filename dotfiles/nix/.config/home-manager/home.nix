@@ -20,10 +20,10 @@
 
         packages = with pkgs; [
             # ide
-            jetbrains.clion
-            jetbrains.webstorm deno bun
-            jetbrains.pycharm-professional micromamba
-            jetbrains.jdk jetbrains.idea-ultimate
+            #jetbrains.clion
+            #jetbrains.webstorm deno bun
+            #jetbrains.pycharm-professional micromamba
+            #jetbrains.jdk jetbrains.idea-ultimate
             # langs
             koka
             cue cuelsp cuetools
@@ -45,7 +45,7 @@
             cmake-format
             nodePackages_latest.fixjson
             protobuf protobufc
-            bluespec yosys-bluespec
+            #bluespec yosys-bluespec
             # dev tools
             gitFull git-lfs git-filter-repo meld difftastic
             scons meson buck ninja bazelisk bmake
@@ -75,7 +75,7 @@
             sent age mc tmuxp tmux picocom minicom tio tldr
             unrar
             jq fzf fq pdfgrep ugrep expect dos2unix universal-ctags fdupes
-            eza fd sd bat ripgrep glow broot tree htop nvtop
+            eza fd sd bat ripgrep glow broot tree htop nvtopPackages.full
             tlaplus tlaplusToolbox nuXmv nusmv alloy6
             coq coqPackages.coqide
             wl-clipboard wlogout wdisplays gammastep bemenu rofi wlr-randr
@@ -91,7 +91,7 @@
 
         # files in ~/
         file.".bashrc".source = ../../../bash/.bashrc;
-        file.".profile".source = ../../../bash/.profile;
+        file.".bash_profile".source = ../../../bash/.bash_profile;
         file."key-bindings.bash".source = ../../../bash/key-bindings.bash;
         file."z.sh".source = ../../../bash/z.sh;
         file."git-prompt.sh".source = ../../../bash/git-prompt.sh;

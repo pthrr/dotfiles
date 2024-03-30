@@ -36,7 +36,8 @@ if dein#load_state(s:dein_dir)
     call dein#add('sirver/ultisnips')
     call dein#add('tpope/vim-commentary')
     call dein#add("antoinemadec/FixCursorHold.nvim")
-    call dein#add('nvim-neotest/neotest', { 'depends': ['plenary.nvim', 'nvim-treesitter', 'FixCursorHold.nvim'] })
+    call dein#add("nvim-neotest/nvim-nio")
+    call dein#add('nvim-neotest/neotest', { 'depends': ['nvim-nio', 'plenary.nvim', 'nvim-treesitter', 'FixCursorHold.nvim'] })
     " Typescript/Javascript
     " Typst
     call dein#add('kaarmu/typst.vim')
