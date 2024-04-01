@@ -9,9 +9,8 @@ sudo dnf install -y \
     tlp tlp-rdw \
     pipx \
     flatpak \
-    cairo \
     bash foot \
-    sshpass sshfs openssh-askpass \
+    sshpass sshfs openssh-askpass gnupg2 \
     kde-connect \
     dejavu-fonts-all fira-code-fonts jetbrains-mono-fonts \
     clang llvm clang-tools-extra clang-analyzer clang-devel \
