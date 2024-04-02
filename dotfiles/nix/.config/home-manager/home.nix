@@ -50,7 +50,7 @@
             gitFull git-lfs git-filter-repo meld difftastic
             scons meson buck ninja bazelisk bmake
             go-task
-            crun podman podman-desktop podman-compose
+            crun docker docker-compose
             #
             yosys verilator gtkwave symbiyosys icestorm nextpnrWithGui
             picotool
@@ -78,7 +78,7 @@
             eza fd sd bat ripgrep glow broot tree htop nvtopPackages.full
             tlaplus tlaplusToolbox nuXmv nusmv alloy6
             coq coqPackages.coqide
-            wl-clipboard wlogout wdisplays gammastep bemenu rofi wlr-randr
+            wl-clipboard wlr-randr
             waybar mako kanshi hikari
             poppler_utils graphviz drawio ipe pandoc
             yt-dlp

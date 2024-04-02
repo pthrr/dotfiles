@@ -37,16 +37,6 @@ if [ -d "$HOME/.nix-profile/lib/lv2" ] ; then
 fi
 
 # include Nix environment
-if [ -d "$HOME/.nix-profile" ] ; then
-    export NIX_PATH="$HOME/.nix-defexpr/channels:$NIX_PATH"
-    # export NIX_PATH=$HOME/.nix-defexpr/channels:/nix/var/nix/profiles/per-user/root/channels${NIX_PATH:+:$NIX_PATH}
-    export PATH="$HOME/.nix-profile/bin:$PATH"
-    export MANPATH="$HOME/.nix-profile/share/man:$MANPATH"
-    export XDG_DATA_DIRS="$HOME/.nix-profile/share:$XDG_DATA_DIRS"
-    export CPATH="$HOME/.nix-profile/include:$CPATH"
-    # export LD_LIBRARY_PATH="$HOME/.nix-profile/lib:$LD_LIBRARY_PATH"
-fi
-
 if [ -f "$HOME/.nix-profile/etc/profile.d/nix.sh" ] ; then
     . "$HOME/.nix-profile/etc/profile.d/nix.sh"
 fi
@@ -63,67 +53,67 @@ fi
 
 # create standard dirs
 if [ ! -d  "$HOME/.lv2" ] ; then
-    mkdir "$HOME/.lv2"
+    mkdir "$HOME/.lv2" 2>/dev/null
 fi
 
 if [ ! -d  "$HOME/.clap" ] ; then
-    mkdir "$HOME/.clap"
+    mkdir "$HOME/.clap" 2>/dev/null
 fi
 
 if [ ! -d  "$HOME/tmp" ] ; then
-    mkdir "$HOME/tmp"
+    mkdir "$HOME/tmp" 2>/dev/null
 fi
 
 if [ ! -d  "$HOME/bin" ] ; then
-    mkdir "$HOME/bin"
+    mkdir "$HOME/bin" 2>/dev/null
 fi
 
 if [ ! -d  "$HOME/opt" ] ; then
-    mkdir "$HOME/opt"
+    mkdir "$HOME/opt" 2>/dev/null
 fi
 
 if [ ! -d  "$HOME/fun" ] ; then
-    mkdir "$HOME/fun"
+    mkdir "$HOME/fun" 2>/dev/null
 fi
 
 if [ ! -d  "$HOME/analysis" ] ; then
-    mkdir "$HOME/analysis"
+    mkdir "$HOME/analysis" 2>/dev/null
 fi
 
 if [ ! -d  "$HOME/business" ] ; then
-    mkdir "$HOME/business"
+    mkdir "$HOME/business" 2>/dev/null
 fi
 
 if [ ! -d  "$HOME/job" ] ; then
-    mkdir "$HOME/job"
+    mkdir "$HOME/job" 2>/dev/null
 fi
 
 if [ ! -d  "$HOME/Drive" ] ; then
-    mkdir "$HOME/Drive"
+    mkdir "$HOME/Drive" 2>/dev/null
 fi
 
 if [ ! -d  "$HOME/Dokumente/notes" ] ; then
-    mkdir -p "$HOME/Dokumente/notes"
+    mkdir -p "$HOME/Dokumente/notes" 2>/dev/null
 fi
 
 if [ ! -d  "$HOME/Dokumente/notebooks" ] ; then
-    mkdir -p "$HOME/Dokumente/notebooks"
+    mkdir -p "$HOME/Dokumente/notebooks" 2>/dev/null
 fi
 
 if [ ! -d  "$HOME/Dokumente/letters" ] ; then
-    mkdir -p "$HOME/Dokumente/letters"
+    mkdir -p "$HOME/Dokumente/letters" 2>/dev/null
 fi
 
 if [ ! -d  "$HOME/Vorlagen/slides" ] ; then
-    mkdir -p "$HOME/Vorlagen/slides"
+    mkdir -p "$HOME/Vorlagen/slides" 2>/dev/null
 fi
 
 if [ ! -d  "$HOME/Vorlagen/snippets" ] ; then
-    mkdir -p "$HOME/Vorlagen/snippets"
+    mkdir -p "$HOME/Vorlagen/snippets" 2>/dev/null
 fi
 
 if [ ! -d  "$HOME/Audio" ] ; then
-    mkdir -p "$HOME/Audio"
+    mkdir -p "$HOME/Audio" 2>/dev/null
 fi
 
 export LANG=de_DE.UTF-8
