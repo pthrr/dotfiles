@@ -53,7 +53,7 @@ if dein#load_state(s:dein_dir)
     call dein#add('sakhnik/nvim-gdb')
     call dein#add('MunifTanjim/nui.nvim')
     call dein#add('madskjeldgaard/cppman.nvim', { 'depends': 'nui.nvim' })
-    call dein#add('derekwyatt/vim-fswitch')
+    " call dein#add('derekwyatt/vim-fswitch')
     call dein#add('KabbAmine/zeavim.vim')
     call dein#end()
     call dein#save_state()
@@ -274,15 +274,15 @@ vnoremap <leader>d "_d
 nnoremap <leader>d "_d
 " replace currently selected text without yanking it
 vnoremap <leader>p "_dP
-" vim-fswitch
-au BufEnter *.h  let b:fswitchdst = "c,cc,cpp" | let b:fswitchlocs = 'reg:|include.*|src/**|'
-au BufEnter *.c  let b:fswitchdst = "h"
-au BufEnter *.cpp  let b:fswitchdst = "h,hh,hpp"
-nnoremap <silent> <A-o> :FSHere<cr>
-nnoremap <silent> <localleader>oh :FSSplitLeft<cr>
-nnoremap <silent> <localleader>oj :FSSplitBelow<cr>
-nnoremap <silent> <localleader>ok :FSSplitAbove<cr>
-nnoremap <silent> <localleader>ol :FSSplitRight<cr>
+" " vim-fswitch
+" au BufEnter *.h  let b:fswitchdst = "c,cc,cpp" | let b:fswitchlocs = 'reg:|include.*|src/**|'
+" au BufEnter *.c  let b:fswitchdst = "h"
+" au BufEnter *.cpp  let b:fswitchdst = "h,hh,hpp"
+nnoremap <silent> <A-o> :CocCommand clangd.switchSourceHeader vsplit<cr>
+" nnoremap <silent> <localleader>oh :FSSplitLeft<cr>
+" nnoremap <silent> <localleader>oj :FSSplitBelow<cr>
+" nnoremap <silent> <localleader>ok :FSSplitAbove<cr>
+" nnoremap <silent> <localleader>ol :FSSplitRight<cr>
 " zeal
 nmap <leader>z <Plug>Zeavim
 vmap <leader>z <Plug>ZVVisSelection

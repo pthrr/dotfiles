@@ -50,7 +50,7 @@
             gitFull git-lfs git-filter-repo meld difftastic
             scons meson buck ninja bazelisk bmake
             go-task
-            crun docker docker-compose
+            crun
             #
             yosys verilator gtkwave symbiyosys icestorm nextpnrWithGui
             picotool
