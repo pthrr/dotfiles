@@ -11,7 +11,7 @@ sudo dnf install -y \
     flatpak \
     bash foot \
     sshpass sshfs openssh-askpass gnupg2 \
-    kde-connect \
+    kde-connect kdenlive \
     dejavu-fonts-all fira-code-fonts jetbrains-mono-fonts \
     clang llvm clang-tools-extra clang-analyzer clang-devel \
     arm-none-eabi-binutils-cs arm-none-eabi-gcc-cs arm-none-eabi-newlib \

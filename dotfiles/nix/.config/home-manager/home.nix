@@ -59,7 +59,7 @@
             ngspice qucs-s xyce
             # sw
             thunderbird firefox tor-browser-bundle-bin nyxt w3m
-            discord element-desktop signal-desktop whatsapp-for-linux tdesktop
+            discord element-desktop signal-desktop tdesktop
             olive-editor
             spotify
             vlc
