@@ -57,6 +57,7 @@
             qemu ripes
             winetricks wineWowPackages.full
             ngspice qucs-s xyce
+            svdtools svd2rust
             # sw
             thunderbird firefox tor-browser-bundle-bin nyxt w3m
             discord element-desktop signal-desktop tdesktop
@@ -79,7 +80,7 @@
             tlaplus tlaplusToolbox nuXmv nusmv alloy6
             coq coqPackages.coqide
             wl-clipboard wlr-randr
-            waybar mako kanshi hikari
+            waybar mako kanshi
             poppler_utils graphviz drawio ipe pandoc
             yt-dlp
             drumgizmo x42-avldrums x42-plugins wolf-shaper distrho calf
@@ -112,6 +113,7 @@
             recursive = true;
         };
 
+        file.".local/share/applications/Reaper.desktop".source = ../../../misc/.local/share/applications/Reaper.desktop;
         file.".local/share/applications/Joplin.desktop".source = ../../../misc/.local/share/applications/Joplin.desktop;
         file."bin" = {
             source = ../../../misc/bin;

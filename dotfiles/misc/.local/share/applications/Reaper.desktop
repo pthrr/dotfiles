@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=Reaper
+Comment=Some Audio DAW
+Exec=reaper
+Terminal=false
+Categories=AudioVideo;Player;Recorder;
