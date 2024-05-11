@@ -67,7 +67,7 @@
             obsidian zotero
             keepassxc
             zeal
-            openscad kicad horizon-eda prusa-slicer pcb2gcode candle
+            openscad kicad horizon-eda prusa-slicer pcb2gcode candle freecad
             anki
             steam higan
             gnucash

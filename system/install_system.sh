@@ -7,14 +7,13 @@ sudo dnf update -y
 sudo dnf install -y \
     @kde-desktop \
     tlp tlp-rdw \
-    pipx \
-    flatpak \
+    pipx flatpak \
     bash foot \
     sshpass sshfs openssh-askpass gnupg2 \
     kde-connect kdenlive \
     dejavu-fonts-all fira-code-fonts jetbrains-mono-fonts \
     clang llvm clang-tools-extra clang-analyzer clang-devel \
-    arm-none-eabi-binutils-cs arm-none-eabi-gcc-cs arm-none-eabi-newlib \
+    arm-none-eabi-binutils-cs arm-none-eabi-gcc-cs arm-none-eabi-newlib stlink stlink-gui arm-none-eabi-gcc-cs-c++ \
     stow inotify-tools \
     nodejs npm \
     strace xxd
