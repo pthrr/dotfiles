@@ -67,6 +67,7 @@
             obsidian zotero
             keepassxc
             zeal
+            rofi
             openscad kicad horizon-eda prusa-slicer pcb2gcode candle freecad
             anki
             steam higan
@@ -145,6 +146,11 @@
 
     xdg = {
         # files in ~/.config/
+        configFile."plasma-workspace/env" = {
+            source = ../../../nix/.config/plasma-workspace/env;
+            recursive = true;
+        };
+
         configFile."gdb" = {
             source = ../../../gdb/.config/gdb;
             recursive = true;
@@ -159,7 +165,6 @@
             source = ../../../foot/.config/foot;
             recursive = true;
         };
-
 
         configFile."i3status" = {
             source = ../../../sway/.config/i3status;
