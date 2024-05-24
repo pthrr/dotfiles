@@ -59,6 +59,7 @@
             ngspice qucs-s xyce
             svdtools svd2rust
             # sw
+            labplot
             thunderbird firefox tor-browser-bundle-bin nyxt w3m
             discord element-desktop signal-desktop tdesktop
             olive-editor
