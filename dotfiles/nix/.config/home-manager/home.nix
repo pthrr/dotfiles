@@ -115,6 +115,7 @@
             recursive = true;
         };
 
+        file.".local/share/applications/Zed.desktop".source = ../../../misc/.local/share/applications/Zed.desktop;
         file.".local/share/applications/Reaper.desktop".source = ../../../misc/.local/share/applications/Reaper.desktop;
         file.".local/share/applications/Joplin.desktop".source = ../../../misc/.local/share/applications/Joplin.desktop;
         file."bin" = {
