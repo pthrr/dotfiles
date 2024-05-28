@@ -207,6 +207,11 @@
             recursive = true;
         };
 
+        configFile."mc" = {
+            source = ../../../mc/.config/mc;
+            recursive = true;
+        };
+
         configFile."vifm" = {
             source = ../../../vifm/.config/vifm;
             recursive = true;
