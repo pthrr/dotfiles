@@ -286,7 +286,7 @@ function jupnote() {
 set -o vi
 alias vi='nvim'
 alias vim='nvim'
-alias fm='vifm . .'
+alias fm='mc . .'
 alias top='htop'
 alias cat='bat'
 alias cp='cp -iv'

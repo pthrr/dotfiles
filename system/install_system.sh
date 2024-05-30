@@ -12,7 +12,9 @@ sudo dnf install -y \
     sshpass sshfs openssh-askpass gnupg2 \
     kde-connect kdenlive \
     dejavu-fonts-all fira-code-fonts jetbrains-mono-fonts \
-    clang llvm clang-tools-extra clang-analyzer clang-devel \
+    clang llvm llvm-devel clang-tools-extra clang-analyzer clang-devel \
+    gcc-c++ libstdc++-static glibc-static \
+    x11-dev xkbcommon-x11 xkbcommon-x11-devel \
     arm-none-eabi-binutils-cs arm-none-eabi-gcc-cs arm-none-eabi-newlib stlink stlink-gui arm-none-eabi-gcc-cs-c++ \
     stow inotify-tools \
     nodejs npm \

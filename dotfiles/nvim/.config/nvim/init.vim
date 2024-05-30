@@ -278,7 +278,8 @@ vnoremap <leader>p "_dP
 " au BufEnter *.h  let b:fswitchdst = "c,cc,cpp" | let b:fswitchlocs = 'reg:|include.*|src/**|'
 " au BufEnter *.c  let b:fswitchdst = "h"
 " au BufEnter *.cpp  let b:fswitchdst = "h,hh,hpp"
-nnoremap <silent> <A-o> :CocCommand clangd.switchSourceHeader vsplit<cr>
+" nnoremap <silent> <A-o> :CocCommand clangd.switchSourceHeader vsplit<cr>
+nnoremap <silent> <A-o> :CocCommand clangd.switchSourceHeader edit<cr>
 " nnoremap <silent> <localleader>oh :FSSplitLeft<cr>
 " nnoremap <silent> <localleader>oj :FSSplitBelow<cr>
 " nnoremap <silent> <localleader>ok :FSSplitAbove<cr>
