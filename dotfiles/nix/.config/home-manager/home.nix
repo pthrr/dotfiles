@@ -19,13 +19,7 @@
         enableNixpkgsReleaseCheck = false;
 
         packages = with pkgs; [
-            # ide
-            #jetbrains.clion
-            #jetbrains.webstorm deno bun
-            #jetbrains.pycharm-professional micromamba
-            #jetbrains.jdk jetbrains.idea-ultimate
             # langs
-            koka
             cue cuelsp cuetools
             zig zls
             tectonic
@@ -34,7 +28,7 @@
             ansible ansible-lint ansible-language-server
             yamlfmt yamllint
             ghc cabal-install cabal2nix stack hlint haskell-language-server
-            compcert mold cling rr openocd valgrind gdb gdbgui
+            compcert mold cling rr openocd valgrind gdb gdbgui ccache
             shfmt
             nasm
             wasmer emscripten wasmtime
@@ -47,47 +41,32 @@
             protobuf protobufc
             #bluespec yosys-bluespec
             # dev tools
-            gitFull git-lfs git-filter-repo meld difftastic
-            scons meson buck ninja bazelisk bmake
-            go-task
-            crun
+            gitFull git-lfs git-filter-repo difftastic
+            scons meson buck ninja bazelisk bmake go-task
             #
             yosys verilator gtkwave symbiyosys icestorm nextpnrWithGui
             picotool
-            qemu ripes
+            qemu ripes crun
             winetricks wineWowPackages.full
             ngspice qucs-s xyce
             svdtools svd2rust
             # sw
-            labplot
-            thunderbird firefox tor-browser-bundle-bin nyxt w3m
-            discord element-desktop signal-desktop tdesktop
-            olive-editor
-            spotify
-            vlc
+            thunderbird firefox tor-browser-bundle-bin birdtray
             obsidian zotero
-            keepassxc
-            zeal
-            rofi
-            openscad kicad horizon-eda prusa-slicer pcb2gcode candle freecad
-            anki
-            steam higan
-            gnucash
+            pcb2gcode candle
+            tlaplus tlaplusToolbox nuXmv nusmv alloy6
+            coq coqPackages.coqide
             # tools
             vifm
             sent age mc tmuxp tmux picocom minicom tio tldr
             unrar
             jq fzf fq pdfgrep ugrep expect dos2unix universal-ctags fdupes
             eza fd sd bat ripgrep glow broot tree htop nvtopPackages.full
-            tlaplus tlaplusToolbox nuXmv nusmv alloy6
-            coq coqPackages.coqide
             wl-clipboard wlr-randr
-            waybar mako kanshi
+            waybar mako kanshi rofi
             poppler_utils graphviz drawio ipe pandoc
-            yt-dlp
             drumgizmo x42-avldrums x42-plugins wolf-shaper distrho calf
             # os
-            swayr
             nsxiv farbfeld
             zathura
         ];
@@ -116,8 +95,6 @@
         };
 
         file.".local/share/applications/Zed.desktop".source = ../../../misc/.local/share/applications/Zed.desktop;
-        file.".local/share/applications/Reaper.desktop".source = ../../../misc/.local/share/applications/Reaper.desktop;
-        file.".local/share/applications/Joplin.desktop".source = ../../../misc/.local/share/applications/Joplin.desktop;
         file."bin" = {
             source = ../../../misc/bin;
             recursive = true;

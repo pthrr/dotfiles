@@ -1,7 +1,0 @@
-[Desktop Entry]
-Type=Application
-Name=Joplin
-Comment=Free your notes
-Exec=nixGL joplin-desktop
-Terminal=false
-Categories=Office
