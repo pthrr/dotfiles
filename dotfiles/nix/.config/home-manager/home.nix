@@ -51,7 +51,7 @@
             ngspice qucs-s xyce
             svdtools svd2rust
             # sw
-            thunderbird firefox tor-browser-bundle-bin birdtray
+            thunderbird firefox tor-browser-bundle-bin
             obsidian zotero
             pcb2gcode candle
             tlaplus tlaplusToolbox nuXmv nusmv alloy6

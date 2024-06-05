@@ -39,7 +39,6 @@ sudo flatpak install \
     org.keepassxc.KeePassXC \
     io.github.shiftey.Desktop \
     org.openmw.OpenMW \
-    com.jetbrains.CLion \
     org.gnome.meld \
     org.olivevideoeditor.Olive \
     org.kde.yakuake \
