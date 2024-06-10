@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# wget -O- https://www.virtualbox.org/download/oracle_vbox_2016.asc | sudo gpg --dearmor --yes --output /usr/share/keyrings/oracle-virtualbox-2016.gpg
-# [[ ! $(grep "virtualbox" /etc/dnf/sources.list) ]] && echo "deb [arch=amd64 signed-by=/usr/share/keyrings/oracle-virtualbox-2016.gpg] https://download.virtualbox.org/virtualbox/debian bookworm contrib" | sudo tee -a /etc/dnf/sources.list
 sudo dnf update -y
 sudo dnf install -y \
     @kde-desktop kde-connect \
@@ -23,6 +21,10 @@ sudo dnf remove -y \
 sudo flatpak remote-add --if-not-exists \
     flathub https://flathub.org/repo/flathub.flatpakrepo
 sudo flatpak install \
+    org.mozilla.firefox \
+    org.mozilla.Thunderbird \
+    md.obsidian.Obsidian \
+    org.zotero.Zotero \
     org.jdownloader.JDownloader \
     org.kde.labplot2 \
     fm.reaper.Reaper \
