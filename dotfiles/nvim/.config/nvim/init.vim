@@ -407,6 +407,7 @@ lua << EOF
       enable = true,
       additional_vim_regex_highlighting = false,
     },
+    parser_install_dir = vim.fn.expand('~/.config/nvim/treesitter-parsers'),
   }
 EOF
 else
