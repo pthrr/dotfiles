@@ -1,5 +1,8 @@
 { config, lib, pkgs, ... }:
 
+let
+  disableGitConfig = builtins.pathExists "${config.home.homeDirectory}/.config/git/disable-gitconfig";
+in
 {
     home = {
         # Home Manager needs a bit of information about you and the
@@ -76,8 +79,6 @@
         file."key-bindings.bash".source = ../../../bash/key-bindings.bash;
         file."z.sh".source = ../../../bash/z.sh;
         file."git-prompt.sh".source = ../../../bash/git-prompt.sh;
-
-        file.".gitignore".source = ../../../git/.gitignore;
 
         file.".clang-tidy".source = ../../../lang/.clang-tidy;
         file.".clang-format".source = ../../../lang/.clang-format;
