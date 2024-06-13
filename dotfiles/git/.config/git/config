@@ -8,6 +8,9 @@
     name = pthrr
     email = pthrr@posteo.de
 
+[safe]
+    directory = *
+
 [gpg]
     program = gpg2
 
