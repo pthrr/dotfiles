@@ -78,6 +78,9 @@
     smudge = git-lfs smudge -- %f
     process = git-lfs filter-process
 
+[core]
+    excludesfile = ~/.config/git/.gitignore_global
+
 [commit]
     template = ~/.config/git/git-commit-template.txt
 
