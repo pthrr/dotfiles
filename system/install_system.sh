@@ -20,9 +20,9 @@ sudo dnf remove -y \
     thunderbird firefox
 sudo flatpak remote-add --if-not-exists \
     flathub https://flathub.org/repo/flathub.flatpakrepo
+    # org.mozilla.firefox \
+    # org.mozilla.Thunderbird \
 sudo flatpak install \
-    org.mozilla.firefox \
-    org.mozilla.Thunderbird \
     md.obsidian.Obsidian \
     org.zotero.Zotero \
     org.jdownloader.JDownloader \
@@ -37,15 +37,14 @@ sudo flatpak install \
     com.discordapp.Discord \
     com.spotify.Client \
     im.riot.Riot \
-    org.freecadweb.FreeCAD \
     org.keepassxc.KeePassXC \
     io.github.shiftey.Desktop \
     org.openmw.OpenMW \
-    org.gnome.meld \
     org.olivevideoeditor.Olive \
-    org.kde.yakuake \
-    com.prusa3d.PrusaSlicer \
+    org.gnome.meld \
     org.zealdocs.Zeal \
+    com.prusa3d.PrusaSlicer \
+    org.freecadweb.FreeCAD \
     org.openscad.OpenSCAD \
     org.kicad.KiCad \
     org.gnucash.GnuCash

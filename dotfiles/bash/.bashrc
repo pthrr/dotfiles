@@ -72,6 +72,10 @@ if [ ! -d  "$HOME/opt" ] ; then
     mkdir "$HOME/opt" 2>/dev/null
 fi
 
+if [ ! -d  "$HOME/datasets" ] ; then
+    mkdir "$HOME/datasets" 2>/dev/null
+fi
+
 if [ ! -d  "$HOME/fun" ] ; then
     mkdir "$HOME/fun" 2>/dev/null
 fi

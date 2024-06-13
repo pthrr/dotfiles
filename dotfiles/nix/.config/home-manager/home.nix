@@ -51,6 +51,7 @@
             ngspice qucs-s xyce
             svdtools svd2rust
             # sw
+            thunderbird firefox
             pcb2gcode candle
             tlaplus tlaplusToolbox nuXmv alloy6
             coq coqPackages.coqide
