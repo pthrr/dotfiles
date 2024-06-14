@@ -22,12 +22,6 @@ if &runtimepath !~# '/dein.vim'
 endif
 if dein#load_state(s:dein_dir)
     call dein#begin(s:dein_dir)
-    if exists('g:wsl')
-        call dein#add('nvim-treesitter/nvim-treesitter')
-        call dein#add('nvim-treesitter/nvim-treesitter-textobjects')
-        call dein#add('nvim-lua/plenary.nvim')
-        call dein#add('nvim-telescope/telescope.nvim')
-    endif
     " common
     call dein#add('overcache/NeoSolarized')
     call dein#add('neoclide/coc.nvim', { 'merged': 0, 'rev': 'release' })
@@ -368,49 +362,6 @@ lua << EOF
   })
 EOF
 " treesitter
-if exists('g:wsl')
-lua << EOF
-  require'nvim-treesitter.configs'.setup {
-    ensure_installed = {
-        "c",
-        "go",
-        "zig",
-        "cpp",
-        "java",
-        "rust",
-        "lua",
-        "python",
-        "yaml",
-        "toml",
-        "json",
-        "markdown",
-        "bash",
-        "cmake",
-        "meson",
-        "dockerfile",
-        "git_rebase",
-        "gitattributes",
-        "gitcommit",
-        "elixir",
-        "eex",
-        "heex",
-        "haskell",
-        "ocaml",
-        "vim",
-        "nix",
-        "verilog",
-        "clojure"
-    },
-    sync_install = false,
-    auto_install = false,
-    highlight = {
-      enable = true,
-      additional_vim_regex_highlighting = false,
-    },
-    parser_install_dir = vim.fn.expand('~/.config/nvim/treesitter-parsers'),
-  }
-EOF
-else
 lua << EOF
   require'nvim-treesitter.configs'.setup {
     highlight = {
@@ -497,7 +448,6 @@ lua << EOF
     },
   }
 EOF
-endif
 " treesitter-textobjects
 lua <<EOF
   local ts_repeat_move = require "nvim-treesitter.textobjects.repeatable_move"
