@@ -80,6 +80,7 @@ set background=dark
 colorscheme NeoSolarized
 syntax off
 filetype plugin indent on
+set modelines=5
 set encoding=utf-8
 set fileencodings=ucs-bom,utf-8,latin1,cp1252,default
 set nobomb
