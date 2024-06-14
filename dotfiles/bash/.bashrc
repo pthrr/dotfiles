@@ -1,122 +1,122 @@
 # set PATH so it includes bin if it exists
-if [ -d "/usr/sbin" ] ; then
+if [ -d "/usr/sbin" ]; then
     export PATH="/usr/sbin:$PATH"
 fi
 
 # set PATH so it includes user's private bin if it exists
-if [ -d "$HOME/bin" ] ; then
+if [ -d "$HOME/bin" ]; then
     export PATH="$HOME/bin:$PATH"
 fi
 
 # set PATH so it includes user's private bin if it exists
-if [ -d "$HOME/.local/bin" ] ; then
+if [ -d "$HOME/.local/bin" ]; then
     export PATH="$HOME/.local/bin:$PATH"
 fi
 
 # include Rust environment
-if [ -f "$HOME/.cargo/env" ] ; then
+if [ -f "$HOME/.cargo/env" ]; then
     . "$HOME/.cargo/env"
 fi
 
-if [ -d "$HOME/.cargo/bin" ] ; then
+if [ -d "$HOME/.cargo/bin" ]; then
     export PATH="$HOME/.cargo/bin:$PATH"
 fi
 
 # include Haskell environment
-if [ -d "$HOME/.cabal/bin" ] ; then
+if [ -d "$HOME/.cabal/bin" ]; then
     export PATH="$HOME/.cabal/bin:$PATH"
 fi
 
 # include LV2 plugins
-if [ -d "$HOME/.lv2" ] ; then
+if [ -d "$HOME/.lv2" ]; then
     export LV2_PATH="$HOME/.lv2:$LV2_PATH"
 fi
 
-if [ -d "$HOME/.nix-profile/lib/lv2" ] ; then
+if [ -d "$HOME/.nix-profile/lib/lv2" ]; then
     export LV2_PATH="$HOME/.nix-profile/lib/lv2:$LV2_PATH"
 fi
 
 # include Nix environment
-if [ -f "$HOME/.nix-profile/etc/profile.d/nix.sh" ] ; then
+if [ -f "$HOME/.nix-profile/etc/profile.d/nix.sh" ]; then
     . "$HOME/.nix-profile/etc/profile.d/nix.sh"
 fi
 
-if [ -f "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh" ] ; then
+if [ -f "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh" ]; then
     . "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
 fi
 
 # include pyenv
-if command -v pyenv >/dev/null 2>&1 ; then
+if command -v pyenv >/dev/null 2>&1; then
     export PYENV_ROOT="$HOME/.pyenv"
     export PATH="$PYENV_ROOT/bin:$PATH"
 fi
 
 # create standard dirs
-if [ ! -d  "$HOME/.lv2" ] ; then
+if [ ! -d "$HOME/.lv2" ]; then
     mkdir "$HOME/.lv2" 2>/dev/null
 fi
 
-if [ ! -d  "$HOME/.clap" ] ; then
+if [ ! -d "$HOME/.clap" ]; then
     mkdir "$HOME/.clap" 2>/dev/null
 fi
 
-if [ ! -d  "$HOME/tmp" ] ; then
+if [ ! -d "$HOME/tmp" ]; then
     mkdir "$HOME/tmp" 2>/dev/null
 fi
 
-if [ ! -d  "$HOME/bin" ] ; then
+if [ ! -d "$HOME/bin" ]; then
     mkdir "$HOME/bin" 2>/dev/null
 fi
 
-if [ ! -d  "$HOME/opt" ] ; then
+if [ ! -d "$HOME/opt" ]; then
     mkdir "$HOME/opt" 2>/dev/null
 fi
 
-if [ ! -d  "$HOME/datasets" ] ; then
+if [ ! -d "$HOME/datasets" ]; then
     mkdir "$HOME/datasets" 2>/dev/null
 fi
 
-if [ ! -d  "$HOME/fun" ] ; then
+if [ ! -d "$HOME/fun" ]; then
     mkdir "$HOME/fun" 2>/dev/null
 fi
 
-if [ ! -d  "$HOME/analysis" ] ; then
+if [ ! -d "$HOME/analysis" ]; then
     mkdir "$HOME/analysis" 2>/dev/null
 fi
 
-if [ ! -d  "$HOME/business" ] ; then
+if [ ! -d "$HOME/business" ]; then
     mkdir "$HOME/business" 2>/dev/null
 fi
 
-if [ ! -d  "$HOME/job" ] ; then
+if [ ! -d "$HOME/job" ]; then
     mkdir "$HOME/job" 2>/dev/null
 fi
 
-if [ ! -d  "$HOME/Drive" ] ; then
+if [ ! -d "$HOME/Drive" ]; then
     mkdir "$HOME/Drive" 2>/dev/null
 fi
 
-if [ ! -d  "$HOME/Dokumente/notes" ] ; then
+if [ ! -d "$HOME/Dokumente/notes" ]; then
     mkdir -p "$HOME/Dokumente/notes" 2>/dev/null
 fi
 
-if [ ! -d  "$HOME/Dokumente/notebooks" ] ; then
+if [ ! -d "$HOME/Dokumente/notebooks" ]; then
     mkdir -p "$HOME/Dokumente/notebooks" 2>/dev/null
 fi
 
-if [ ! -d  "$HOME/Dokumente/letters" ] ; then
+if [ ! -d "$HOME/Dokumente/letters" ]; then
     mkdir -p "$HOME/Dokumente/letters" 2>/dev/null
 fi
 
-if [ ! -d  "$HOME/Vorlagen/slides" ] ; then
+if [ ! -d "$HOME/Vorlagen/slides" ]; then
     mkdir -p "$HOME/Vorlagen/slides" 2>/dev/null
 fi
 
-if [ ! -d  "$HOME/Vorlagen/snippets" ] ; then
+if [ ! -d "$HOME/Vorlagen/snippets" ]; then
     mkdir -p "$HOME/Vorlagen/snippets" 2>/dev/null
 fi
 
-if [ ! -d  "$HOME/Audio" ] ; then
+if [ ! -d "$HOME/Audio" ]; then
     mkdir -p "$HOME/Audio" 2>/dev/null
 fi
 
@@ -168,9 +168,9 @@ function command_not_found_handle() {
     regex_url='(https?|ftp|file)://[-[:alnum:]\+&@#/%?=~_|!:,.;]*[-[:alnum:]\+&@#/%=~_|]'
     regex_git='.*.git'
 
-    if [[ $1 =~ $regex_git ]] ; then
+    if [[ $1 =~ $regex_git ]]; then
         git cloner "$1"
-    elif [[ $1 =~ $regex_url ]] ; then
+    elif [[ $1 =~ $regex_url ]]; then
         wget "$1"
     else
         echo "Command was not found: ${1}"
@@ -201,26 +201,23 @@ function command_not_found_handle() {
 # alias mux='tmuxp load'
 # complete -F _tmuxp_project_completions mux
 export GDBSETUP=".gdbsetup"
-setupgdb()
-{
+setupgdb() {
     if [ -e "$GDBSETUP" -a ! -f "$GDBSETUP" ]; then
         printf '%s already exists and is not a file\n' "$GDBSETUP"
         exit 1
     fi
     local _setupgdb_tty=$(tty)
-    printf 'dashboard -output %s\n' "$_setupgdb_tty" > "$GDBSETUP"
+    printf 'dashboard -output %s\n' "$_setupgdb_tty" >"$GDBSETUP"
 }
-if `command -v tmux > /dev/null`; then
-    [ -z "${TMUX+set}" ] || export SESSION=`tmux display-message -p '#S'`
+if $(command -v tmux >/dev/null); then
+    [ -z "${TMUX+set}" ] || export SESSION=$(tmux display-message -p '#S')
 fi
-function quit
-{
-    if `command -v tmux > /dev/null`; then
+function quit {
+    if $(command -v tmux >/dev/null); then
         tmux kill-session -t $SESSION
     fi
 }
-function killdetached
-{
+function killdetached {
     tmux list-sessions | grep -E -v '\(attached\)$' - | while IFS='\n' read line; do
         line="${line#*:}"
         tmux kill-session -t "${line%%:*}"
@@ -231,34 +228,29 @@ function vo() {
     $EDITOR "$@"
     shopt -u nullglob
 }
-function vrs() {
-    shopt -s nullglob
-    find . -type f -iname "*.rs" | xargs $EDITOR "$@"
-    shopt -u nullglob
-}
 function ls() {
     local cmd=$(command -v eza || command -v exa || command -v ls)
     $cmd "$@"
 }
-function lla() {
-    local cmd=$(command -v eza || command -v exa)
-    $cmd -la --git --classify --color=always "$@" | less
-}
 function ll() {
     local cmd=$(command -v eza || command -v exa)
-    $cmd -l --git --classify --color=always "$@" | less
+    $cmd -l --classify --color=always "$@" | less
+}
+function lla() {
+    local cmd=$(command -v eza || command -v exa)
+    $cmd -la --classify --color=always "$@" | less
 }
 function lls() {
     local cmd=$(command -v eza || command -v exa)
-    $cmd -la --git --git-ignore --classify "$@"
+    $cmd -la --classify "$@"
 }
 function lsd() {
     local cmd=$(command -v eza || command -v exa)
-    $cmd --tree --long --git --git-ignore --classify --color=always --level 6 -a -D -I ".git|venv|__pycache__|*_cache" "$@" | less
+    $cmd --tree --long --classify --color=always --level 6 -a -D -I ".git|venv|__pycache__|*_cache" "$@" | less
 }
 function lsf() {
     local cmd=$(command -v eza || command -v exa)
-    $cmd --tree --long --git --git-ignore --classify --color=always --level 6 -a -I ".git|venv|__pycache__|*_cache" "$@" | less
+    $cmd --tree --long --classify --color=always --level 6 -a -I ".git|venv|__pycache__|*_cache" "$@" | less
 }
 function fgs() {
     if command -v fd >/dev/null 2>&1; then
