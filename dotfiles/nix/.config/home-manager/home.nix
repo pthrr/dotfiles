@@ -1,7 +1,12 @@
 { config, lib, pkgs, ... }:
 
 let
-  disableGitConfig = builtins.pathExists "${config.home.homeDirectory}/.config/git/disable-gitconfig";
+  defaultUserName = "pthrr";
+  defaultUserEmail = "pthrr@posteo.de";
+  gitUserNameFile = "${config.home.homeDirectory}/.config/git/name.txt";
+  gitUserEmailFile = "${config.home.homeDirectory}/.config/git/email.txt";
+  gitUserName = if builtins.pathExists gitUserNameFile then builtins.readFile gitUserNameFile else defaultUserName;
+  gitUserEmail = if builtins.pathExists gitUserEmailFile then builtins.readFile gitUserEmailFile else defaultUserEmail;
 in
 {
     home = {
@@ -44,14 +49,14 @@ in
             protobuf protobufc
             #bluespec yosys-bluespec
             # dev tools
-            gitFull git-lfs git-filter-repo difftastic
+            git-lfs git-filter-repo difftastic
             scons meson buck ninja bazelisk bmake go-task
             #
             yosys verilator gtkwave symbiyosys icestorm nextpnrWithGui
             picotool
             qemu ripes crun
             winetricks wineWowPackages.full
-            ngspice qucs-s xyce
+            ngspice qucs-s xyce openems
             svdtools svd2rust
             # sw
             thunderbird firefox
@@ -112,6 +117,102 @@ in
 
     # Let Home Manager install and manage itself.
     programs.home-manager.enable = true;
+
+    programs.git = {
+      enable = true;
+      userName = gitUserName;
+      userEmail = gitUserEmail;
+      extraConfig = ''
+        [core]
+            editor = nvim
+            autocrlf = false
+            whitespace = fix,-indent-with-non-tab,trailing-space,cr-at-eol
+            pager = less -+$LESS -FRX
+            excludesfile = ~/.config/git/.gitignore_global
+        [credential]
+            helper = store
+        [safe]
+            directory = *
+        [gpg]
+            program = gpg2
+        [http]
+            sslVerify = false
+        [submodule]
+            recurse = true
+        [pull]
+            rebase = false
+        [push]
+            default = simple
+            recurseSubmodules = on-demand
+        [commit]
+            template = ~/.config/git/git-commit-template.txt
+        [clean]
+            requireForce = false
+        [status]
+            submoduleSummary = true
+        [diff]
+            tool = difftastic
+        [difftool]
+            prompt = false
+        [merge]
+            tool = meld
+        [mergetool]
+            keepBackup = false
+        [pager]
+            difftool = true
+        [difftool "difftastic"]
+            cmd = difft "$LOCAL" "$REMOTE"
+        [difftool "meld"]
+            cmd = meld \"$LOCAL\" \"$REMOTE\"
+            trustExitCode = false
+        [mergetool "meld"]
+            cmd = meld --auto-merge \"$LOCAL\" \"$BASE\" \"$REMOTE\" --output \"$MERGED\" --label=Local --label=Base --label=Remote --diff \"$BASE\" \"$LOCAL\" --diff \"$BASE\" \"$REMOTE\"
+            trustExitCode = false
+        [difftool "kdiff3"]
+            cmd = kdiff3 \"$LOCAL\" \"$REMOTE\"
+            trustExitCode = false
+        [mergetool "kdiff3"]
+            cmd = kdiff3 \"$LOCAL\" \"$BASE\" \"$REMOTE\" \"$MERGED\"
+            trustExitCode = false
+        [difftool "bcomp4"]
+            cmd = \"/mnt/c/Program Files/Beyond Compare 4/BComp.exe\" "$(wslpath -w $LOCAL)" "$(wslpath -w $REMOTE)"
+            trustExitCode = true
+        [mergetool "bcomp4"]
+            cmd = \"/mnt/c/Program Files/Beyond Compare 4/BComp.exe\" "$(wslpath -w $LOCAL)" "$(wslpath -w $REMOTE)" "$(wslpath -w $BASE)" "$(wslpath -w $MERGED)"
+            trustExitCode = true
+        [filter "lfs"]
+            required = true
+            clean = git-lfs clean -- %f
+            smudge = git-lfs smudge -- %f
+            process = git-lfs filter-process
+        [alias]
+            a = add
+            aa = add --all
+            b = branch
+            c = commit
+            d = diff
+            dt = difftool
+            f = fetch
+            g = grep
+            l = log
+            m = merge
+            o = checkout
+            p = pull
+            r = remote
+            s = status
+            w = whatchanged
+            lg = log --graph
+            lo = log --oneline
+            lp = log --patch
+            lfp = log --first-parent
+            # log with items appearing in topological order, i.e. descendant commits are shown before their parents.
+            lt = log --topo-order
+            # log like - we like this summarization our key performance indicators. Also aliased as `log-like`.
+            ll = log --graph --topo-order --date=short --abbrev-commit --decorate --all --boundary --pretty=format:'%Cgreen%ad %Cred%h%Creset -%C(yellow)%d%Creset %s %Cblue[%cn]%Creset %Cblue%G?%Creset'
+            # log like long  - we like this summarization our key performance indicators. Also aliased as `log-like-long`.
+            lll = log --graph --topo-order --date=iso8601-strict --no-abbrev-commit --abbrev=40 --decorate --all --boundary --pretty=format:'%Cgreen%ad %Cred%h%Creset -%C(yellow)%d%Creset %s %Cblue[%cn <%ce>]%Creset %Cblue%G?%Creset'
+      '';
+    };
 
     programs.neovim = {
         enable = true;
