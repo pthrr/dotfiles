@@ -5,8 +5,20 @@ let
   defaultUserEmail = "pthrr@posteo.de";
   gitUserNameFile = "${config.home.homeDirectory}/.config/git/name.txt";
   gitUserEmailFile = "${config.home.homeDirectory}/.config/git/email.txt";
-  gitUserName = if builtins.pathExists gitUserNameFile then builtins.readFile gitUserNameFile else defaultUserName;
-  gitUserEmail = if builtins.pathExists gitUserEmailFile then builtins.readFile gitUserEmailFile else defaultUserEmail;
+  gitUserName = if builtins.pathExists gitUserNameFile then
+    let
+      content = builtins.readFile gitUserNameFile;
+    in
+      builtins.trace "gitUserNameFile exists: ${content}" content
+    else
+      builtins.trace "gitUserNameFile does not exist, using default" defaultUserName;
+  gitUserEmail = if builtins.pathExists gitUserEmailFile then
+    let
+      content = builtins.readFile gitUserEmailFile;
+    in
+      builtins.trace "gitUserEmailFile exists: ${content}" content
+    else
+      builtins.trace "gitUserEmailFile does not exist, using default" defaultUserEmail;
 in
 {
     home = {
