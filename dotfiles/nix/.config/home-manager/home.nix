@@ -63,6 +63,7 @@ in
             # dev tools
             git-lfs git-filter-repo difftastic
             scons meson buck ninja bazelisk bmake go-task
+            hotspot
             #
             yosys verilator gtkwave symbiyosys icestorm nextpnrWithGui
             picotool
@@ -141,6 +142,12 @@ in
             whitespace = fix,-indent-with-non-tab,trailing-space,cr-at-eol
             pager = less -+$LESS -FRX
             excludesfile = ~/.config/git/.gitignore_global
+            attributesfile = ~/.config/git/.gitattributes_global
+        [diff "zip"]
+            textconv = unzip -c -a
+        [filter "zippey"]
+            smudge = zippey d
+            clean = zippey e
         [credential]
             helper = store
         [safe]
