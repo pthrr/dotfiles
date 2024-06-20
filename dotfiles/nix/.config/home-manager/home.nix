@@ -145,6 +145,10 @@ in
             attributesfile = ~/.config/git/.gitattributes_global
         [diff "zip"]
             textconv = unzip -c -a
+        [merge]
+            conflictstyle = diff3
+        [rerere]
+            enabled = true
         [filter "zippey"]
             smudge = zippey d
             clean = zippey e
