@@ -84,7 +84,7 @@ in
             eza fd sd bat ripgrep glow broot tree htop nvtopPackages.full
             wl-clipboard wlr-randr
             waybar mako kanshi rofi
-            poppler_utils graphviz drawio ipe pandoc
+            poppler_utils graphviz drawio ipe pandoc libwebp
             drumgizmo x42-avldrums x42-plugins wolf-shaper distrho calf
             # os
             nsxiv farbfeld
