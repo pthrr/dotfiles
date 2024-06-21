@@ -47,6 +47,7 @@ sudo flatpak install \
     org.freecadweb.FreeCAD \
     org.openscad.OpenSCAD \
     org.kicad.KiCad \
+    org.gimp.GIMP \
     org.gnucash.GnuCash
 sudo npm i @informalsystems/quint -g
 sudo npm i @informalsystems/quint-language-server -g
