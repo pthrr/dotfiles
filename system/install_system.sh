@@ -48,6 +48,7 @@ sudo flatpak install \
     org.openscad.OpenSCAD \
     org.kicad.KiCad \
     org.gimp.GIMP \
+    net.runelite.RuneLite \
     org.gnucash.GnuCash
 sudo npm i @informalsystems/quint -g
 sudo npm i @informalsystems/quint-language-server -g
