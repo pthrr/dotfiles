@@ -35,7 +35,6 @@ if dein#load_state(s:dein_dir)
     " Typescript/Javascript
     " Typst
     call dein#add('kaarmu/typst.vim')
-    " Koka
     " Quint
     " Python
     call dein#add('nvim-neotest/neotest-python', { 'depends': ['neotest', 'plenary.nvim', 'nvim-treesitter', 'FixCursorHold.nvim'] })
@@ -44,6 +43,7 @@ if dein#load_state(s:dein_dir)
     call dein#add('lawrence-laz/neotest-zig', { 'depends': ['neotest', 'plenary.nvim', 'nvim-treesitter', 'FixCursorHold.nvim'] })
     " Cue
     " C++
+    call dein#add('jonboh/nvim-dap-rr', { 'depends': ["nvim-dap", "telescope.nvim"] })
     call dein#add('sakhnik/nvim-gdb')
     call dein#add('MunifTanjim/nui.nvim')
     call dein#add('madskjeldgaard/cppman.nvim', { 'depends': 'nui.nvim' })

@@ -48,7 +48,7 @@ in
             ansible ansible-lint ansible-language-server
             yamlfmt yamllint
             ghc cabal-install cabal2nix stack hlint haskell-language-server
-            compcert mold cling rr openocd valgrind gdb gdbgui ccache
+            compcert mold cling rr openocd valgrind gdb gdbgui ccache ddd
             shfmt
             nasm
             wasmer emscripten wasmtime
@@ -80,7 +80,7 @@ in
             vifm
             sent age mc tmuxp tmux picocom minicom tio tldr
             unrar
-            jq fzf fq pdfgrep ugrep expect dos2unix universal-ctags fdupes
+            jq fzf fq pdfgrep ugrep expect dos2unix universal-ctags fdupes okular
             eza fd sd bat ripgrep glow broot tree htop nvtopPackages.full
             wl-clipboard wlr-randr
             waybar mako kanshi rofi
@@ -165,6 +165,7 @@ in
         [pull]
             rebase = false
         [push]
+            autoSetupRemote = true
             default = simple
             recurseSubmodules = on-demand
         [commit]
@@ -244,6 +245,9 @@ in
             nvim-treesitter-textobjects
             plenary-nvim
             telescope-nvim
+            nvim-dap
+            nvim-dap-ui
+
         ];
     };
 
