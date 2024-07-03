@@ -48,7 +48,7 @@ in
             ansible ansible-lint ansible-language-server
             yamlfmt yamllint
             ghc cabal-install cabal2nix stack hlint haskell-language-server
-            compcert mold cling rr openocd valgrind gdb gdbgui ccache ddd
+            compcert mold cling rr openocd valgrind gdb gdbgui sccache ddd
             shfmt
             nasm
             wasmer emscripten wasmtime
@@ -80,7 +80,7 @@ in
             vifm
             sent age mc tmuxp tmux picocom minicom tio tldr
             unrar
-            jq fzf fq pdfgrep ugrep expect dos2unix universal-ctags fdupes okular
+            jq fzf fq pdfgrep ugrep expect dos2unix universal-ctags fdupes
             eza fd sd bat ripgrep glow broot tree htop nvtopPackages.full
             wl-clipboard wlr-randr
             waybar mako kanshi rofi
