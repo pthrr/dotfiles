@@ -68,7 +68,7 @@ in
             yosys verilator gtkwave symbiyosys icestorm nextpnrWithGui
             picotool
             qemu ripes crun
-            winetricks wineWowPackages.full
+            winetricks wineWow64Packages.stagingFull
             ngspice qucs-s xyce openems
             svdtools svd2rust
             # sw
