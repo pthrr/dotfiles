@@ -156,6 +156,9 @@ export MC_SKIN="$HOME/.config/mc/solarized.ini"
 export QT_LOGGING_RULES="kwin_*.debug=true"
 export CPM_SOURCE_CACHE="$XDG_CACHE_HOME/CPM"
 export TMPDIR="/tmp"
+export SYSTEMC_HOME="/opt/systemc"
+export SYSTEMC_AMS_HOME="/opt/systemc-ams"
+export ICSC_HOME="$HOME/opt/sc_tools"
 export HISTCONTROL=ignorespace:erasedups
 export HISTSIZE=1000
 export HISTFILESIZE=2000
@@ -314,3 +317,4 @@ alias dotfiles='git --git-dir="$HOME/.dotfiles/.git" --work-tree="$HOME/.dotfile
 source "$HOME/key-bindings.bash"
 source "$HOME/z.sh"
 source "$HOME/git-prompt.sh"
+source "$ICSC_HOME/setenv.sh"
