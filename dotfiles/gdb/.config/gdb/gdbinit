@@ -1,5 +1,25 @@
 python
 
+# To enable pretty-printing for SystemC/SingleSource data types
+#  copy/rename gdbinit-example.txt to ~/.gdbinit
+
+import sys
+import os
+
+sysc23x_printers_path = os.path.expandvars('$ICSC_HOME/share/gdb/python/sysc23x_printers/')
+sys.path.insert(0, sysc23x_printers_path)
+
+from sysc23x_printers import register_sysc23x_printers
+register_sysc23x_printers (None)
+
+from singlsrc_printers import register_singlsrc_printers
+register_singlsrc_printers (None)
+
+# If you are debugging systemc, the following idioms break in the debugger
+# when you hit an error
+#break sc_core::sc_report_handler::report if (severity >= sc_core::SC_ERROR)
+#break sc_core::sc_report_handler::report
+
 # GDB dashboard - Modular visual interface for GDB in Python.
 #
 # https://github.com/cyrus-and/gdb-dashboard

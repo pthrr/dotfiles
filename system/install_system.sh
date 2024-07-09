@@ -49,6 +49,7 @@ sudo flatpak install \
     org.kicad.KiCad \
     org.gimp.GIMP \
     net.lutris.Lutris \
+    org.sqlitebrowser.sqlitebrowser \
     net.runelite.RuneLite \
     org.gnucash.GnuCash
 sudo npm i @informalsystems/quint -g

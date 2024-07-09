@@ -9,7 +9,7 @@ set auto-load safe-path /usr/lib/x86_64-linux-gnu/
 
 python
 import sys
-sys.path.insert(0, '/usr/share/gcc/python')
+sys.path.insert(0, '/usr/share/gcc-14/python')
 from libstdcxx.v6.printers import register_libstdcxx_printers
 register_libstdcxx_printers(None)
 end
