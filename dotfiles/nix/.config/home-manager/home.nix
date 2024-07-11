@@ -61,7 +61,7 @@ in
             protobuf protobufc
             #bluespec yosys-bluespec
             # dev tools
-            git-lfs git-filter-repo git-imerge difftastic
+            git-lfs git-filter-repo git-imerge difftastic jujutsu
             scons meson buck ninja bazelisk bmake go-task
             hotspot
             #
