@@ -62,9 +62,8 @@ in
             #bluespec yosys-bluespec
             # dev tools
             git-lfs git-filter-repo git-imerge difftastic jujutsu
-            scons meson buck ninja bazelisk bmake go-task
+            scons meson ninja bazelisk bmake go-task
             hotspot
-            zed-editor
             #
             yosys verilator gtkwave symbiyosys icestorm nextpnrWithGui
             picotool
@@ -113,7 +112,8 @@ in
             recursive = true;
         };
 
-        file.".local/share/applications/Zed.desktop".source = ../../../misc/.local/share/applications/Zed.desktop;
+        file.".local/share/applications/Zed.desktop".source = ../../../zed/.local/share/applications/Zed.desktop;
+
         file."bin" = {
             source = ../../../misc/bin;
             recursive = true;
@@ -254,6 +254,11 @@ in
 
     xdg = {
         # files in ~/.config/
+        configFile."zed" = {
+            source = ../../../zed/.config/zed;
+            recursive = true;
+        };
+
         configFile."plasma-workspace/env" = {
             source = ../../../nix/.config/plasma-workspace/env;
             recursive = true;
