@@ -64,6 +64,7 @@ in
             git-lfs git-filter-repo git-imerge difftastic jujutsu
             scons meson buck ninja bazelisk bmake go-task
             hotspot
+            zed-editor
             #
             yosys verilator gtkwave symbiyosys icestorm nextpnrWithGui
             picotool
