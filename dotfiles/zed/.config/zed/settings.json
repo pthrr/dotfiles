@@ -5,6 +5,12 @@
     "metrics": false
   },
   "vim_mode": true,
+  "vim": {
+    "use_system_clipboard": "always",
+    "use_multiline_find": true
+  },
+  "cursor_blink": false,
+  "vertical_scroll_margin": 2,
   "ui_font_size": 14,
   "buffer_font_size": 14,
   "buffer_font_family": "JetBrains Mono",
@@ -14,5 +20,13 @@
   },
   "scrollbar": {
     "show": "never"
+  },
+  "buffer_line_height": {
+    "custom": 1.5
+  },
+  "terminal": {
+    "line_height": {
+      "custom": 1.5
+    }
   }
 }
