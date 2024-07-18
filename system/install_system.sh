@@ -64,3 +64,4 @@ pipx install conan
 pipx install cmake
 pipx install jupyterlab
 pipx install cppman
+pipx install grip
