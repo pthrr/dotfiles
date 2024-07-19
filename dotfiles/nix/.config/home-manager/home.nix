@@ -59,7 +59,7 @@ in
             cmake-format
             nodePackages_latest.fixjson
             protobuf protobufc
-            #bluespec yosys-bluespec
+            bluespec yosys-bluespec
             # dev tools
             git-lfs git-filter-repo git-imerge difftastic jujutsu
             scons meson ninja bazelisk bmake go-task
@@ -82,7 +82,6 @@ in
             jq fzf fq pdfgrep ugrep expect dos2unix universal-ctags fdupes
             eza fd sd bat ripgrep glow broot tree htop nvtopPackages.full
             wl-clipboard wlr-randr
-            waybar mako kanshi rofi
             poppler_utils graphviz drawio ipe pandoc libwebp
             drumgizmo x42-avldrums x42-plugins wolf-shaper distrho calf
             # os
