@@ -77,7 +77,6 @@ in
             tlaplus tlaplusToolbox nuXmv alloy6
             coq coqPackages.coqide
             # tools
-            vifm
             sent age mc tmuxp tmux picocom minicom tio tldr
             unrar
             jq fzf fq pdfgrep ugrep expect dos2unix universal-ctags fdupes
@@ -111,8 +110,6 @@ in
             source = ../../../ssh/.ssh;
             recursive = true;
         };
-
-        file.".local/share/applications/Zed.desktop".source = ../../../zed/.local/share/applications/Zed.desktop;
 
         file."bin" = {
             source = ../../../misc/bin;
@@ -254,11 +251,6 @@ in
 
     xdg = {
         # files in ~/.config/
-        configFile."zed" = {
-            source = ../../../zed/.config/zed;
-            recursive = true;
-        };
-
         configFile."plasma-workspace/env" = {
             source = ../../../nix/.config/plasma-workspace/env;
             recursive = true;
@@ -269,34 +261,8 @@ in
             recursive = true;
         };
 
-        configFile."hikari" = {
-            source = ../../../hikari/.config/hikari;
-            recursive = true;
-        };
-
         configFile."foot" = {
             source = ../../../foot/.config/foot;
-            recursive = true;
-        };
-
-        configFile."i3status" = {
-            source = ../../../sway/.config/i3status;
-            recursive = true;
-        };
-        configFile."sway" = {
-            source = ../../../sway/.config/sway;
-            recursive = true;
-        };
-        configFile."swaync" = {
-            source = ../../../sway/.config/swaync;
-            recursive = true;
-        };
-        configFile."swayr" = {
-            source = ../../../sway/.config/swayr;
-            recursive = true;
-        };
-        configFile."kanshi" = {
-            source = ../../../sway/.config/kanshi;
             recursive = true;
         };
 
@@ -321,11 +287,6 @@ in
 
         configFile."mc" = {
             source = ../../../mc/.config/mc;
-            recursive = true;
-        };
-
-        configFile."vifm" = {
-            source = ../../../vifm/.config/vifm;
             recursive = true;
         };
 

@@ -1,7 +1,0 @@
-[Desktop Entry]
-Type=Application
-Name=Zed
-Comment=Code at the speed of thought
-Exec=~/bin/zed %f
-Terminal=false
-Categories=Office
