@@ -9,7 +9,7 @@ sudo dnf install -y \
     sshpass sshfs openssh-askpass gnupg2 \
     dejavu-fonts-all fira-code-fonts jetbrains-mono-fonts \
     clang llvm llvm-devel clang-tools-extra clang-analyzer clang-devel \
-    gcc-c++ libstdc++-static glibc-static \
+    gcc-c++ libstdc++-static glibc-static libasan libubsan libtsan \
     arm-none-eabi-binutils-cs arm-none-eabi-gcc-cs arm-none-eabi-newlib \
     stlink stlink-gui arm-none-eabi-gcc-cs-c++ \
     libxkbcommon libX11 \
