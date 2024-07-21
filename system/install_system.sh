@@ -3,6 +3,7 @@ set -euo pipefail
 
 sudo dnf update -y
 sudo dnf install -y \
+    @virtualization \
     @kde-desktop kde-connect \
     pipx flatpak \
     bash foot \

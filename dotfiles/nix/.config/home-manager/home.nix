@@ -51,7 +51,7 @@ in
             compcert mold cling rr openocd valgrind gdb gdbgui sccache ddd
             shfmt
             nasm
-            wasmer emscripten wasmtime
+            wasmer emscripten wasmtime wabt
             rustup cargo-rr
             elixir elixir-ls
             clojure leiningen clojure-lsp
@@ -68,7 +68,7 @@ in
             #
             yosys verilator gtkwave symbiyosys icestorm nextpnrWithGui
             picotool
-            qemu ripes crun
+            ripes crun
             winetricks wineWow64Packages.stagingFull
             ngspice qucs-s xyce openems
             svdtools svd2rust
