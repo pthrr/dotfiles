@@ -24,6 +24,7 @@ sudo flatpak remote-add --if-not-exists \
     # org.mozilla.firefox \
     # org.mozilla.Thunderbird \
 sudo flatpak install \
+    org.torproject.torbrowser-launcher \
     md.obsidian.Obsidian \
     org.zotero.Zotero \
     org.jdownloader.JDownloader \
