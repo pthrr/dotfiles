@@ -40,6 +40,7 @@ in
 
         packages = with pkgs; [
             # langs
+            swift
             cue cuelsp cuetools
             zig zls
             tectonic
