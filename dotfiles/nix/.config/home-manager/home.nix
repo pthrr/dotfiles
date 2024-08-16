@@ -81,7 +81,7 @@ in
             # tools
             sent age mc tmuxp tmux picocom minicom tio tldr
             unrar
-            jq fzf fq pdfgrep ugrep expect dos2unix universal-ctags fdupes
+            jq fzf fq pdfgrep ugrep expect dos2unix universal-ctags fdupes pdftk
             eza fd sd bat ripgrep glow broot tree htop nvtopPackages.full
             wl-clipboard wlr-randr
             poppler_utils graphviz drawio ipe pandoc libwebp
