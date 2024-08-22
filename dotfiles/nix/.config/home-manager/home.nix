@@ -40,6 +40,7 @@ in
 
         packages = with pkgs; [
             # langs
+            dotenv-linter
             swift
             cue cuelsp cuetools
             zig zls

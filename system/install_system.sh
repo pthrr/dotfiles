@@ -7,16 +7,21 @@ sudo dnf install -y \
     @kde-desktop kde-connect \
     pipx flatpak \
     bash foot \
+    wget curl \
     sshpass sshfs openssh-askpass gnupg2 \
+    cloud-utils \
     dejavu-fonts-all fira-code-fonts jetbrains-mono-fonts \
     clang llvm llvm-devel clang-tools-extra clang-analyzer clang-devel \
     gcc-c++ libstdc++-static glibc-static libasan libubsan libtsan \
-    arm-none-eabi-binutils-cs arm-none-eabi-gcc-cs arm-none-eabi-newlib \
-    stlink stlink-gui arm-none-eabi-gcc-cs-c++ \
+    arm-none-eabi-binutils-cs arm-none-eabi-gcc-cs-c++ arm-none-eabi-gcc-cs arm-none-eabi-newlib \
+    gcc-arm-linux-gnu binutils-arm-linux-gnu \
+    gcc-riscv64-linux-gnu binutils-riscv64-linux-gnu \
+    stlink stlink-gui picocom \
     libxkbcommon libX11 \
     stow inotify-tools \
     nodejs npm \
-    strace xxd
+    strace xxd \
+    mock
 sudo dnf remove -y \
     thunderbird firefox
 sudo flatpak remote-add --if-not-exists \
