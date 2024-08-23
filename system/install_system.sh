@@ -16,7 +16,7 @@ sudo dnf install -y \
     arm-none-eabi-binutils-cs arm-none-eabi-gcc-cs-c++ arm-none-eabi-gcc-cs arm-none-eabi-newlib \
     gcc-arm-linux-gnu binutils-arm-linux-gnu \
     gcc-riscv64-linux-gnu binutils-riscv64-linux-gnu \
-    stlink stlink-gui picocom \
+    stlink stlink-gui picocom openocd \
     libxkbcommon libX11 \
     stow inotify-tools \
     nodejs npm \

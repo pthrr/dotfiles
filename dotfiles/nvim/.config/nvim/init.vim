@@ -27,28 +27,29 @@ if dein#load_state(s:dein_dir)
     call dein#add('neoclide/coc.nvim', { 'merged': 0, 'rev': 'release' })
     call dein#add('liuchengxu/vista.vim')
     call dein#add('TimUntersberger/neogit', { 'depends': 'plenary.nvim' })
-    call dein#add('sirver/ultisnips')
+    " call dein#add('sirver/ultisnips')
     call dein#add('tpope/vim-commentary')
-    call dein#add("antoinemadec/FixCursorHold.nvim")
-    call dein#add("nvim-neotest/nvim-nio")
-    call dein#add('nvim-neotest/neotest', { 'depends': ['nvim-nio', 'plenary.nvim', 'nvim-treesitter', 'FixCursorHold.nvim'] })
+    " call dein#add("antoinemadec/FixCursorHold.nvim")
+    " call dein#add("nvim-neotest/nvim-nio")
+    " call dein#add('nvim-neotest/neotest', { 'depends': ['nvim-nio', 'plenary.nvim', 'nvim-treesitter', 'FixCursorHold.nvim'] })
     " Typescript/Javascript
     " Typst
     call dein#add('kaarmu/typst.vim')
     " Quint
+    " TLA
     " Python
-    call dein#add('nvim-neotest/neotest-python', { 'depends': ['neotest', 'plenary.nvim', 'nvim-treesitter', 'FixCursorHold.nvim'] })
+    " call dein#add('nvim-neotest/neotest-python', { 'depends': ['neotest', 'plenary.nvim', 'nvim-treesitter', 'FixCursorHold.nvim'] })
     " Zig
-    call dein#add('ziglang/zig.vim')
-    call dein#add('lawrence-laz/neotest-zig', { 'depends': ['neotest', 'plenary.nvim', 'nvim-treesitter', 'FixCursorHold.nvim'] })
+    " call dein#add('ziglang/zig.vim')
+    " call dein#add('lawrence-laz/neotest-zig', { 'depends': ['neotest', 'plenary.nvim', 'nvim-treesitter', 'FixCursorHold.nvim'] })
     " Cue
     " C++
-    call dein#add('jonboh/nvim-dap-rr', { 'depends': ["nvim-dap", "telescope.nvim"] })
-    call dein#add('sakhnik/nvim-gdb')
+    " call dein#add('jonboh/nvim-dap-rr', { 'depends': ["nvim-dap", "telescope.nvim"] })
+    " call dein#add('sakhnik/nvim-gdb')
     call dein#add('MunifTanjim/nui.nvim')
     call dein#add('madskjeldgaard/cppman.nvim', { 'depends': 'nui.nvim' })
-    " call dein#add('derekwyatt/vim-fswitch')
     call dein#add('KabbAmine/zeavim.vim')
+    " call dein#add('derekwyatt/vim-fswitch')
     call dein#end()
     call dein#save_state()
 endif
@@ -302,10 +303,10 @@ let g:vista_top_level_blink = [0, 0]
 let g:vista_highlight_whole_line = 1
 let g:vista#renderer#ctags = 'kind'
 " ultisnips
-let g:UltiSnipsExpandTrigger = '<tab>'
-let g:UltiSnipsJumpForwardTrigger = '<tab>'
-let g:UltiSnipsJumpBackwardTrigger = '<s-tab>'
-let g:UltiSnipsSnippetDirectories = [$XDG_TEMPLATES_DIR.'/snippets']
+" let g:UltiSnipsExpandTrigger = '<tab>'
+" let g:UltiSnipsJumpForwardTrigger = '<tab>'
+" let g:UltiSnipsJumpBackwardTrigger = '<s-tab>'
+" let g:UltiSnipsSnippetDirectories = [$XDG_TEMPLATES_DIR.'/snippets']
 " telescope
 nnoremap <leader>ff <cmd>Telescope find_files<cr>
 nnoremap <leader>fg <cmd>Telescope live_grep<cr>
@@ -354,14 +355,14 @@ lua << EOF
   end)
 EOF
 " neotest
-lua << EOF
-  require("neotest").setup({
-    adapters = {
-      require("neotest-zig"),
-      require("neotest-python"),
-    }
-  })
-EOF
+" lua << EOF
+"   require("neotest").setup({
+"     adapters = {
+"       require("neotest-zig"),
+"       require("neotest-python"),
+"     }
+"   })
+" EOF
 " treesitter
 lua << EOF
   require'nvim-treesitter.configs'.setup {

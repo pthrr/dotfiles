@@ -172,7 +172,7 @@ function command_not_found_handle() {
     regex_git='.*.git'
 
     if [[ $1 =~ $regex_git ]]; then
-        git cloner "$1"
+        git clone --recursive "$1"
     elif [[ $1 =~ $regex_url ]]; then
         wget "$1"
     else
@@ -203,24 +203,25 @@ function command_not_found_handle() {
 # }
 # alias mux='tmuxp load'
 # complete -F _tmuxp_project_completions mux
-export GDBSETUP=".gdbsetup"
-setupgdb() {
-    if [ -e "$GDBSETUP" -a ! -f "$GDBSETUP" ]; then
-        printf '%s already exists and is not a file\n' "$GDBSETUP"
-        exit 1
-    fi
-    local _setupgdb_tty=$(tty)
-    printf 'dashboard -output %s\n' "$_setupgdb_tty" >"$GDBSETUP"
-}
+# export GDBSETUP=".gdbsetup"
+# setupgdb() {
+#     if [ -e "$GDBSETUP" -a ! -f "$GDBSETUP" ]; then
+#         printf '%s already exists and is not a file\n' "$GDBSETUP"
+#         exit 1
+#     fi
+
+#     local _setupgdb_tty=$(tty)
+#     printf 'dashboard -output %s\n' "$_setupgdb_tty" >"$GDBSETUP"
+# }
 if $(command -v tmux >/dev/null); then
     [ -z "${TMUX+set}" ] || export SESSION=$(tmux display-message -p '#S')
 fi
-function quit {
+function quit() {
     if $(command -v tmux >/dev/null); then
         tmux kill-session -t $SESSION
     fi
 }
-function killdetached {
+function killdetached() {
     tmux list-sessions | grep -E -v '\(attached\)$' - | while IFS='\n' read line; do
         line="${line#*:}"
         tmux kill-session -t "${line%%:*}"

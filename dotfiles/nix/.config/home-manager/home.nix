@@ -50,7 +50,7 @@ in
             ansible ansible-lint ansible-language-server
             yamlfmt yamllint
             ghc cabal-install cabal2nix stack hlint haskell-language-server
-            compcert mold cling rr openocd valgrind gdb gdbgui sccache ddd
+            compcert mold cling rr valgrind gdb gdbgui sccache ddd
             shfmt
             nasm
             wasmer emscripten wasmtime wabt
@@ -80,7 +80,7 @@ in
             tlaplus tlaplusToolbox nuXmv alloy6
             coq coqPackages.coqide
             # tools
-            sent age mc tmuxp tmux picocom minicom tio tldr
+            sent age mc tmuxp tmux tio tldr
             unrar
             jq fzf fq pdfgrep ugrep expect dos2unix universal-ctags fdupes pdftk
             eza fd sd bat ripgrep glow broot tree htop nvtopPackages.full
@@ -245,9 +245,7 @@ in
             nvim-treesitter-textobjects
             plenary-nvim
             telescope-nvim
-            nvim-dap
-            nvim-dap-ui
-
+            vimspector
         ];
     };
 
@@ -280,10 +278,6 @@ in
 
         configFile."tmux" = {
             source = ../../../tmux/.config/tmux;
-            recursive = true;
-        };
-        configFile."tmuxp" = {
-            source = ../../../tmux/.config/tmuxp;
             recursive = true;
         };
 
