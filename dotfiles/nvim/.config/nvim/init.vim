@@ -289,7 +289,7 @@ if exists('g:wsl')
   let g:zv_zeal_executable = '/mnt/c/Program Files/Zeal/zeal.exe'
 endif
 " vista
-nmap <F8> :Vista!!<CR>
+nmap <Leader><F8> :Vista!!<CR>
 let g:vista_default_executive = 'ctags'
 let g:vista_sidebar_width = 50
 let g:vista_echo_cursor = 0
@@ -331,8 +331,8 @@ nnoremap <silent> K :call ShowDocumentation()<CR>
 command! -nargs=0 Format :call CocActionAsync('format')
 command! -nargs=? Fold :call CocAction('fold', <f-args>)
 command! -nargs=0 OR :call CocActionAsync('runCommand', 'editor.action.organizeImport')
-nmap <F6> :Format<CR>
-nmap <F7> :OR<CR>
+nmap <Leader><F6> :Format<CR>
+nmap <Leader><F7> :OR<CR>
 nnoremap <silent><nowait> <space>a  :<C-u>CocList diagnostics<cr>
 nnoremap <silent><nowait> <space>e  :<C-u>CocList extensions<cr>
 nnoremap <silent><nowait> <space>c  :<C-u>CocList commands<cr>
@@ -344,9 +344,13 @@ nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
 " vimspector
 nmap <Leader>di <Plug>VimspectorBalloonEval
 xmap <Leader>di <Plug>VimspectorBalloonEval
+nmap <LocalLeader><F11> <Plug>VimspectorUpFrame
+nmap <LocalLeader><F12> <Plug>VimspectorDownFrame
+nmap <LocalLeader>B     <Plug>VimspectorBreakpoints
+nmap <LocalLeader>D     <Plug>VimspectorDisassemble
 let g:vimspector_install_gadgets = [ 'CodeLLDB', 'vscode-cpptools' ]
 let g:vimspector_base_dir = $CACHE . '/vimspector'
-let g:vimspector_enable_mappings = 'VISUAL_STUDIO'
+let g:vimspector_enable_mappings = 'HUMAN'
 " cppman
 lua << EOF
   local cppman = require"cppman"

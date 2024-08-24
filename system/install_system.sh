@@ -15,7 +15,9 @@ sudo dnf install -y \
     gcc-c++ libstdc++-static glibc-static libasan libubsan libtsan \
     arm-none-eabi-binutils-cs arm-none-eabi-gcc-cs-c++ arm-none-eabi-gcc-cs arm-none-eabi-newlib \
     libxcrypt-compat ncurses-compat-libs \
-    stlink stlink-gui picocom openocd \
+    stlink stlink-gui \
+    picocom openocd \
+    gdb rust-gdb \
     libxkbcommon libX11 \
     stow inotify-tools \
     nodejs npm \

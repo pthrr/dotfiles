@@ -50,7 +50,7 @@ in
             ansible ansible-lint ansible-language-server
             yamlfmt yamllint
             ghc cabal-install cabal2nix stack hlint haskell-language-server
-            compcert mold cling rr valgrind gdb gdbgui sccache ddd
+            compcert mold cling rr valgrind gdbgui sccache ddd
             shfmt
             nasm
             wasmer emscripten wasmtime wabt
