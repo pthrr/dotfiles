@@ -14,8 +14,7 @@ sudo dnf install -y \
     clang llvm llvm-devel clang-tools-extra clang-analyzer clang-devel \
     gcc-c++ libstdc++-static glibc-static libasan libubsan libtsan \
     arm-none-eabi-binutils-cs arm-none-eabi-gcc-cs-c++ arm-none-eabi-gcc-cs arm-none-eabi-newlib \
-    gcc-arm-linux-gnu binutils-arm-linux-gnu \
-    gcc-riscv64-linux-gnu binutils-riscv64-linux-gnu \
+    libxcrypt-compat ncurses-compat-libs \
     stlink stlink-gui picocom openocd \
     libxkbcommon libX11 \
     stow inotify-tools \

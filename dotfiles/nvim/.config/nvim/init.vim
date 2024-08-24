@@ -341,6 +341,12 @@ nnoremap <silent><nowait> <space>s  :<C-u>CocList -I symbols<cr>
 nnoremap <silent><nowait> <space>j  :<C-u>CocNext<CR>
 nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
 nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
+" vimspector
+nmap <Leader>di <Plug>VimspectorBalloonEval
+xmap <Leader>di <Plug>VimspectorBalloonEval
+let g:vimspector_install_gadgets = [ 'CodeLLDB', 'vscode-cpptools' ]
+let g:vimspector_base_dir = $CACHE . '/vimspector'
+let g:vimspector_enable_mappings = 'VISUAL_STUDIO'
 " cppman
 lua << EOF
   local cppman = require"cppman"
