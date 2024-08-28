@@ -104,11 +104,6 @@ in
         file.".clang-format".source = ../../../lang/.clang-format;
         file.".cmake-format.yml".source = ../../../lang/.cmake-format.yml;
 
-        file.".gdbinit.d" = {
-            source = ../../../gdb/.gdbinit.d;
-            recursive = true;
-        };
-
         file.".ssh" = {
             source = ../../../ssh/.ssh;
             recursive = true;
