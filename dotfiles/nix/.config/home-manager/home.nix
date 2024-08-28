@@ -40,6 +40,7 @@ in
 
         packages = with pkgs; [
             # langs
+            hare harec haredo haredoc
             dotenv-linter
             swift
             cue cuelsp cuetools
@@ -146,7 +147,7 @@ in
         [diff "zip"]
             textconv = unzip -c -a
         [merge]
-            conflictstyle = diff3
+            conflictstyle = zdiff3
         [rerere]
             enabled = true
         [filter "zippey"]

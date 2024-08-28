@@ -5,6 +5,7 @@ sudo dnf update -y
 sudo dnf install -y \
     @virtualization \
     @kde-desktop kde-connect \
+    syslinux \
     pipx flatpak \
     bash foot \
     wget curl \
