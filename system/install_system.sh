@@ -70,6 +70,7 @@ pipx install black
 pipx install isort
 pipx install mypy
 pipx install ruff
+pipx install uv
 pipx install conan
 pipx install cmake
 pipx install jupyterlab
