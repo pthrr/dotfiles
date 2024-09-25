@@ -68,6 +68,7 @@ in
             scons meson ninja bazelisk bmake go-task
             hotspot
             unifdef
+            kind minikube
             #
             yosys verilator gtkwave symbiyosys icestorm nextpnrWithGui
             picotool
