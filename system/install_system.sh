@@ -50,7 +50,6 @@ sudo flatpak install \
     org.keepassxc.KeePassXC \
     io.github.shiftey.Desktop \
     org.openmw.OpenMW \
-    org.olivevideoeditor.Olive \
     org.gnome.meld \
     org.zealdocs.Zeal \
     com.prusa3d.PrusaSlicer \
