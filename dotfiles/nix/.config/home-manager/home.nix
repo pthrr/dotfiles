@@ -41,6 +41,7 @@ in
         packages = with pkgs; [
             # langs
             hare harec haredo haredoc
+            cbmc
             dotenv-linter
             swift
             cue cuelsp cuetools
@@ -65,7 +66,7 @@ in
             bluespec yosys-bluespec
             # dev tools
             git-lfs git-filter-repo git-imerge difftastic jujutsu
-            scons meson ninja bazelisk bmake go-task
+            scons meson ninja bazelisk bmake go-task bear
             hotspot
             unifdef
             kind minikube
