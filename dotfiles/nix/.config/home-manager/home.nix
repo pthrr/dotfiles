@@ -41,7 +41,6 @@ in
         packages = with pkgs; [
             # langs
             hare harec haredo haredoc
-            cbmc
             dotenv-linter
             swift
             cue cuelsp cuetools
@@ -52,7 +51,7 @@ in
             ansible ansible-lint ansible-language-server
             yamlfmt yamllint
             ghc cabal-install cabal2nix stack hlint haskell-language-server
-            compcert mold cling rr valgrind gdbgui sccache ddd
+            compcert mold cling rr valgrind gdbgui sccache ddd cbmc
             shfmt
             nasm
             wasmer emscripten wasmtime wabt
@@ -64,6 +63,7 @@ in
             nodePackages_latest.fixjson
             protobuf protobufc
             bluespec yosys-bluespec
+            bun
             # dev tools
             git-lfs git-filter-repo git-imerge difftastic jujutsu
             scons meson ninja bazelisk bmake go-task bear
@@ -82,6 +82,7 @@ in
             pcb2gcode candle
             tlaplus tlaplusToolbox nuXmv alloy6
             coq coqPackages.coqide
+            tigerbeetle
             # tools
             sent age mc tmuxp tmux tio tldr
             unrar
