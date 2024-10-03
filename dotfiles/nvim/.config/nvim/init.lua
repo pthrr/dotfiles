@@ -22,7 +22,7 @@ require('mini.deps').setup({ path = { package = path_package } })
 local add, now, later = MiniDeps.add, MiniDeps.now, MiniDeps.later
 now(function()
   add({
-    source = 'EdenEast/nightfox.nvim',
+    source = 'overcache/NeoSolarized',
   })
   add({
     source = 'puremourning/vimspector',
@@ -33,7 +33,8 @@ now(function()
 end)
 later(function()
   vim.o.termguicolors = true
-  vim.cmd.colorscheme('nightfox')
+  vim.o.background = "dark"
+  vim.cmd.colorscheme('NeoSolarized')
 end)
 vim.cmd('syntax off')
 vim.cmd('filetype plugin indent on')
