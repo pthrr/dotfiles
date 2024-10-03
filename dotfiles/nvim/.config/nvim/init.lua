@@ -20,6 +20,9 @@ now(function()
   add({
     source = 'puremourning/vimspector',
   })
+  add({
+    source = 'kaarmu/typst.vim',
+  })
 end)
 later(function()
   vim.o.termguicolors = true
@@ -168,10 +171,31 @@ vim.g.maplocalleader = "\\"
 vim.api.nvim_set_keymap('i', 'jk', '<ESC>', { noremap = true })
 vim.api.nvim_set_keymap('t', 'jk', '<C-\\><C-n>', { noremap = true })
 vim.api.nvim_set_keymap('t', '<Esc>', '<C-\\><C-n>', { noremap = true })
-vim.api.nvim_set_keymap('n', '<Tab>', ':bnext<CR>', { noremap = true })
-vim.api.nvim_set_keymap('n', '<S-Tab>', ':bprev<CR>', { noremap = true })
-vim.api.nvim_set_keymap('n', '<C-Tab>', ':tabnext<CR>', { noremap = true })
-vim.api.nvim_set_keymap('n', '<C-S-Tab>', ':tabprev<CR>', { noremap = true })
+-- Splitting windows
+vim.api.nvim_set_keymap('n', 'ss', ':split<CR><C-w>w', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', 'sv', ':vsplit<CR><C-w>w', { noremap = true, silent = true })
+-- Move between windows
+vim.api.nvim_set_keymap('n', 'sh', '<C-w>h', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', 'sk', '<C-w>k', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', 'sj', '<C-w>j', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', 'sl', '<C-w>l', { noremap = true, silent = true })
+-- Switch tabs (buffers)
+vim.api.nvim_set_keymap('n', '<Tab>', ':bnext<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<S-Tab>', ':bprev<CR>', { noremap = true, silent = true })
+-- Switch buffers (tabs)
+vim.api.nvim_set_keymap('n', '<C-Tab>', ':tabnext<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<C-S-Tab>', ':tabprev<CR>', { noremap = true, silent = true })
+-- Folding
+vim.api.nvim_set_keymap('v', '<space>', 'zf', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<space>', 'za', { noremap = true, silent = true })
+-- Paste from register 0 multiple times
+vim.api.nvim_set_keymap('x', '<leader>p', '"0p', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>p', '"0p', { noremap = true, silent = true })
+-- Delete without yanking
+vim.api.nvim_set_keymap('v', '<leader>d', '"_d', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>d', '"_d', { noremap = true, silent = true })
+-- Replace currently selected text without yanking it
+vim.api.nvim_set_keymap('v', '<leader>p', '"_dP', { noremap = true, silent = true })
 -- completion
 require('lspconfig').tsserver.setup{}
 require('mini.completion').setup{}
@@ -186,27 +210,45 @@ vim.api.nvim_create_autocmd({"BufWritePre"}, {
     MiniTrailspace.trim_last_lines()
   end,
 })
-
-
--- now(function()
---   require('mini.notify').setup()
---   vim.notify = require('mini.notify').make_notify()
--- end)
--- now(function() require('mini.icons').setup() end)
--- now(function() require('mini.tabline').setup() end)
--- now(function() require('mini.statusline').setup() end)
-
--- later(function() require('mini.ai').setup() end)
--- later(function() require('mini.comment').setup() end)
--- later(function() require('mini.pick').setup() end)
--- later(function() require('mini.surround').setup() end)
-
--- vim.o.showmode = false
--- require('mini.ai').setup()         -- a/i textobjects
--- require('mini.align').setup()      -- aligning
--- require('mini.bracketed').setup()  -- unimpaired bindings with TS
--- require('mini.comment').setup()    -- TS-wise comments
--- require('mini.icons').setup()      -- minimal icons
--- require('mini.jump').setup()       -- fFtT work past a line
--- require('mini.pairs').setup()      -- pair brackets
--- require('mini.statusline').setup() -- minimal statusline
+-- syntax highlighting
+require'nvim-treesitter.configs'.setup{
+  highlight = {
+    enable = true,
+    additional_vim_regex_highlighting = false,
+  },
+}
+-- quint
+vim.api.nvim_create_autocmd({"BufRead", "BufNewFile"}, {
+  pattern = "*.qnt",
+  callback = function()
+    vim.bo.filetype = "quint"
+  end,
+})
+vim.api.nvim_create_autocmd({"BufNewFile", "BufReadPost"}, {
+  pattern = "*.qnt",
+  callback = function()
+    vim.cmd("runtime syntax/quint.vim")
+  end,
+})
+-- Function to switch between .cpp/.hpp and .c/.h files
+function switch_source_header()
+  local current_file = vim.fn.expand("%:t")
+  local extension = vim.fn.expand("%:e")
+  local base_name = vim.fn.expand("%:r")
+  local counterpart_file = nil
+  if extension == "hpp" then
+    counterpart_file = base_name .. ".cpp"
+  elseif extension == "cpp" then
+    counterpart_file = base_name .. ".hpp"
+  elseif extension == "h" then
+    counterpart_file = base_name .. ".c"
+  elseif extension == "c" then
+    counterpart_file = base_name .. ".h"
+  end
+  if counterpart_file and vim.fn.filereadable(counterpart_file) == 1 then
+    vim.cmd("edit " .. counterpart_file)
+  else
+    print("No corresponding file found!")
+  end
+end
+vim.api.nvim_set_keymap('n', '<A-o>', '<cmd>lua switch_source_header()<CR>', { noremap = true, silent = true })
