@@ -245,7 +245,7 @@ in
             nvim-treesitter-textobjects
             plenary-nvim
             telescope-nvim
-            vimspector
+            nvim-lspconfig
         ];
     };
 
