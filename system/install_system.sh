@@ -57,6 +57,7 @@ sudo flatpak install \
     org.openscad.OpenSCAD \
     org.kicad.KiCad \
     org.gimp.GIMP \
+    org.flarerpg.Flare \
     net.lutris.Lutris \
     org.sqlitebrowser.sqlitebrowser \
     net.runelite.RuneLite \

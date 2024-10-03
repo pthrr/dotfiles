@@ -70,6 +70,7 @@ in
             hotspot
             unifdef
             kind minikube
+            netpbm
             #
             yosys verilator gtkwave symbiyosys icestorm nextpnrWithGui
             picotool
