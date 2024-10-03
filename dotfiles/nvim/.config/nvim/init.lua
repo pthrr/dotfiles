@@ -1,3 +1,10 @@
+local version_file = io.open("/proc/version", "rb")
+if version_file ~= nil then
+  if string.find(version_file:read("*a"), "microsoft") then
+    vim.g.wsl = true
+  end
+  version_file:close()
+end
 local path_package = vim.fn.stdpath('data') .. '/site'
 local mini_path = path_package .. '/pack/deps/start/mini.nvim'
 if not vim.loop.fs_stat(mini_path) then
