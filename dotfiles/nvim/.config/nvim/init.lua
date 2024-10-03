@@ -211,7 +211,7 @@ vim.api.nvim_create_autocmd({"BufWritePre"}, {
   end,
 })
 -- syntax highlighting
-require'nvim-treesitter.configs'.setup{
+require('nvim-treesitter.configs').setup{
   highlight = {
     enable = true,
     additional_vim_regex_highlighting = false,
@@ -228,6 +228,13 @@ vim.api.nvim_create_autocmd({"BufNewFile", "BufReadPost"}, {
   pattern = "*.qnt",
   callback = function()
     vim.cmd("runtime syntax/quint.vim")
+  end,
+})
+-- typst
+vim.api.nvim_create_autocmd("BufWritePost", {
+  pattern = "*.typ",
+  callback = function()
+    vim.cmd("silent! make")
   end,
 })
 -- Function to switch between .cpp/.hpp and .c/.h files
