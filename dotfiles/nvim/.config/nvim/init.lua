@@ -31,8 +31,7 @@ now(function()
     source = 'kaarmu/typst.vim',
   })
   add({
-    source = 'madskjeldgaard/cppman.nvim',
-    depends = { 'MunifTanjim/nui.nvim' },
+    source = 'v1nh1shungry/cppman.nvim',
   })
 end)
 later(function()
@@ -251,7 +250,8 @@ vim.api.nvim_create_autocmd("BufWritePost", {
 })
 -- cppman
 require('cppman').setup{}
-vim.api.nvim_set_keymap('n', '<leader>cm', ':CPPMan <C-R><C-W><CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', 'K', ":lua require('cppman').open(vim.fn.expand('<cword>'))<CR>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>cm', ":lua require('cppman').search()<CR>", { noremap = true, silent = true })
 -- Function to switch between .cpp/.hpp and .c/.h files
 function switch_source_header()
   local current_file = vim.fn.expand("%:t")
