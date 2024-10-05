@@ -1,43 +1,91 @@
+-- check env
 local version_file = io.open("/proc/version", "rb")
 if version_file ~= nil then
-  if string.find(version_file:read("*a"), "microsoft") then
-    vim.g.wsl = true
-  end
-  version_file:close()
+    vim.g.wsl = false
+    if string.find(version_file:read("*a"), "microsoft") then
+        vim.g.wsl = true
+    end
+    version_file:close()
 end
+-- mini.nvim
 local path_package = vim.fn.stdpath('data') .. '/site'
 local mini_path = path_package .. '/pack/deps/start/mini.nvim'
 if not vim.loop.fs_stat(mini_path) then
-  vim.cmd('echo "Installing `mini.nvim`" | redraw')
-  local clone_cmd = {
-    'git', 'clone', '--filter=blob:none',
-    '--branch', 'stable',
-    'https://github.com/echasnovski/mini.nvim', mini_path
-  }
-  vim.fn.system(clone_cmd)
-  vim.cmd('packadd mini.nvim | helptags ALL')
-  vim.cmd('echo "Installed `mini.nvim`" | redraw')
+    vim.cmd('echo "Installing `mini.nvim`" | redraw')
+    local clone_cmd = {
+        'git', 'clone', '--filter=blob:none',
+        '--branch', 'stable',
+        'https://github.com/echasnovski/mini.nvim', mini_path
+    }
+    vim.fn.system(clone_cmd)
+    vim.cmd('packadd mini.nvim | helptags ALL')
+    vim.cmd('echo "Installed `mini.nvim`" | redraw')
 end
 require('mini.deps').setup({ path = { package = path_package } })
 local add, now, later = MiniDeps.add, MiniDeps.now, MiniDeps.later
+-- enable completion
+later(function()
+    require('lspconfig').tsserver.setup{}
+    require('mini.completion').setup{}
+end)
+-- enable comments
+later(function()
+    require('mini.comment').setup{}
+end)
+-- remove trailing whitespaces
+later(function()
+    require('mini.trailspace').setup{}
+    vim.api.nvim_create_autocmd({"BufWritePre"}, {
+        pattern = "*",
+        callback = function()
+            MiniTrailspace.trim()
+            MiniTrailspace.trim_last_lines()
+        end,
+    })
+end)
+-- NeoSolarized
 now(function()
-  add({
-    source = 'overcache/NeoSolarized',
-  })
-  add({
-    source = 'puremourning/vimspector',
-  })
-  add({
-    source = 'kaarmu/typst.vim',
-  })
-  add({
-    source = 'v1nh1shungry/cppman.nvim',
-  })
+    add({
+        source = 'overcache/NeoSolarized',
+    })
+    vim.o.termguicolors = true
+    vim.o.background = "dark"
+    vim.cmd.colorscheme('NeoSolarized')
+end)
+-- syntax highlighting
+now(function()
+    require('nvim-treesitter.configs').setup{
+        highlight = {
+            enable = true,
+            additional_vim_regex_highlighting = false,
+        },
+    }
 end)
 later(function()
-  vim.o.termguicolors = true
-  vim.o.background = "dark"
-  vim.cmd.colorscheme('NeoSolarized')
+    add({
+        source = 'puremourning/vimspector',
+    })
+end)
+-- typst
+later(function()
+    add({
+        source = 'kaarmu/typst.vim',
+    })
+    vim.api.nvim_create_autocmd("BufWritePost", {
+        pattern = "*.typ",
+        callback = function()
+            vim.cmd("silent! make")
+        end,
+    })
+end)
+-- cppman
+later(function()
+    add({
+        source = 'v1nh1shungry/cppman.nvim',
+    })
+    require('cppman').setup{}
+    vim.api.nvim_set_keymap('n', 'K', ":lua require('cppman').open(vim.fn.expand('<cword>'))<CR>", { noremap = true, silent = true })
+    vim.api.nvim_set_keymap('n', '<leader>cm', ":lua require('cppman').search()<CR>", { noremap = true, silent = true })
 end)
 vim.cmd('syntax off')
 vim.cmd('filetype plugin indent on')
@@ -131,15 +179,15 @@ end
 vim.o.statusline = "%-4.(%n%)%{v:lua.CustomTabline()} %h%m%r%=%-14.(%l,%c%V%) %P"
 -- clipboard
 if vim.g.wsl then
-  vim.g.clipboard = {
-    name = 'WslClipboard',
-    copy = { ['+'] = 'clip.exe', ['*'] = 'clip.exe' },
-    paste = { ['+'] = 'powershell.exe -c [Console]::Out.Write($(Get-Clipboard -Raw).tostring().replace("`r", ""))',
-              ['*'] = 'powershell.exe -c [Console]::Out.Write($(Get-Clipboard -Raw).tostring().replace("`r", ""))' },
-    cache_enabled = 0,
-  }
+    vim.g.clipboard = {
+        name = 'WslClipboard',
+        copy = { ['+'] = 'clip.exe', ['*'] = 'clip.exe' },
+        paste = { ['+'] = 'powershell.exe -c [Console]::Out.Write($(Get-Clipboard -Raw).tostring().replace("`r", ""))',
+                  ['*'] = 'powershell.exe -c [Console]::Out.Write($(Get-Clipboard -Raw).tostring().replace("`r", ""))' },
+        cache_enabled = 0,
+    }
 else
-  vim.o.clipboard = "unnamedplus"
+    vim.o.clipboard = "unnamedplus"
 end
 -- cursorline
 vim.api.nvim_create_autocmd("BufEnter", {
@@ -207,70 +255,38 @@ vim.api.nvim_set_keymap('v', '<leader>d', '"_d', { noremap = true, silent = true
 vim.api.nvim_set_keymap('n', '<leader>d', '"_d', { noremap = true, silent = true })
 -- Replace currently selected text without yanking it
 vim.api.nvim_set_keymap('v', '<leader>p', '"_dP', { noremap = true, silent = true })
--- completion
-require('lspconfig').tsserver.setup{}
-require('mini.completion').setup{}
--- comments
-require('mini.comment').setup{}
--- remove trailing whitespaces
-require('mini.trailspace').setup{}
-vim.api.nvim_create_autocmd({"BufWritePre"}, {
-  pattern = "*",
-  callback = function()
-    MiniTrailspace.trim()
-    MiniTrailspace.trim_last_lines()
-  end,
-})
--- syntax highlighting
-require('nvim-treesitter.configs').setup{
-  highlight = {
-    enable = true,
-    additional_vim_regex_highlighting = false,
-  },
-}
 -- quint
 vim.api.nvim_create_autocmd({"BufRead", "BufNewFile"}, {
-  pattern = "*.qnt",
-  callback = function()
-    vim.bo.filetype = "quint"
-  end,
+    pattern = "*.qnt",
+    callback = function()
+        vim.bo.filetype = "quint"
+    end,
 })
 vim.api.nvim_create_autocmd({"BufNewFile", "BufReadPost"}, {
-  pattern = "*.qnt",
-  callback = function()
-    vim.cmd("runtime syntax/quint.vim")
-  end,
+    pattern = "*.qnt",
+    callback = function()
+        vim.cmd("runtime syntax/quint.vim")
+    end,
 })
--- typst
-vim.api.nvim_create_autocmd("BufWritePost", {
-  pattern = "*.typ",
-  callback = function()
-    vim.cmd("silent! make")
-  end,
-})
--- cppman
-require('cppman').setup{}
-vim.api.nvim_set_keymap('n', 'K', ":lua require('cppman').open(vim.fn.expand('<cword>'))<CR>", { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<leader>cm', ":lua require('cppman').search()<CR>", { noremap = true, silent = true })
 -- Function to switch between .cpp/.hpp and .c/.h files
 function switch_source_header()
-  local current_file = vim.fn.expand("%:t")
-  local extension = vim.fn.expand("%:e")
-  local base_name = vim.fn.expand("%:r")
-  local counterpart_file = nil
-  if extension == "hpp" then
-    counterpart_file = base_name .. ".cpp"
-  elseif extension == "cpp" then
-    counterpart_file = base_name .. ".hpp"
-  elseif extension == "h" then
-    counterpart_file = base_name .. ".c"
-  elseif extension == "c" then
-    counterpart_file = base_name .. ".h"
-  end
-  if counterpart_file and vim.fn.filereadable(counterpart_file) == 1 then
-    vim.cmd("edit " .. counterpart_file)
-  else
-    print("No corresponding file found!")
-  end
+    local current_file = vim.fn.expand("%:t")
+    local extension = vim.fn.expand("%:e")
+    local base_name = vim.fn.expand("%:r")
+    local counterpart_file = nil
+    if extension == "hpp" then
+        counterpart_file = base_name .. ".cpp"
+    elseif extension == "cpp" then
+        counterpart_file = base_name .. ".hpp"
+    elseif extension == "h" then
+        counterpart_file = base_name .. ".c"
+    elseif extension == "c" then
+        counterpart_file = base_name .. ".h"
+    end
+    if counterpart_file and vim.fn.filereadable(counterpart_file) == 1 then
+        vim.cmd("edit " .. counterpart_file)
+    else
+        print("No corresponding file found!")
+    end
 end
 vim.api.nvim_set_keymap('n', '<A-o>', '<cmd>lua switch_source_header()<CR>', { noremap = true, silent = true })
