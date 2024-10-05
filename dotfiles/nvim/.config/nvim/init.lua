@@ -34,21 +34,14 @@ now(function()
         },
         signs = false,
         underline = true,
-        update_in_insert = false,
+        update_in_insert = true,
         severity_sort = true,
         float = {
-            show_header = true,
             source = 'always',
-            border = 'rounded',
+            border = 'single',
             severity = { min = vim.diagnostic.severity.INFO },
         },
     })
-    vim.api.nvim_create_autocmd("CursorHold", {
-        callback = function()
-            vim.diagnostic.open_float(nil, { focusable = false })
-        end,
-    })
-    local lspconfig = require('lspconfig')
     local on_attach = function(client, bufnr)
         local bufopts = { noremap=true, silent=true, buffer=bufnr }
         vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
@@ -59,8 +52,67 @@ now(function()
     end
     local servers = { 'pyright', 'bashls', 'clangd' }
     for _, lsp in ipairs(servers) do
-      lspconfig[lsp].setup{ on_attach = on_attach }
+        require('lspconfig')[lsp].setup({ on_attach = on_attach })
     end
+
+    local diagnostic_float_win = nil
+
+    local function open_corner_float()
+      if diagnostic_float_win ~= nil and vim.api.nvim_win_is_valid(diagnostic_float_win) then
+        vim.api.nvim_win_close(diagnostic_float_win, true)
+      end
+
+      local diagnostics = vim.diagnostic.get(0, { lnum = vim.fn.line('.') - 1 })
+      if #diagnostics == 0 then return end
+
+      local messages = {}
+      local max_width = 0
+
+      for _, diagnostic in ipairs(diagnostics) do
+        local message = string.format("[%s] %s", vim.diagnostic.severity[diagnostic.severity], diagnostic.message)
+        table.insert(messages, message)
+        max_width = math.max(max_width, #message)
+      end
+
+      local editor_width = vim.api.nvim_get_option("columns")
+      max_width = math.min(max_width, editor_width - 10)
+
+      local buf = vim.api.nvim_create_buf(false, true)
+      vim.api.nvim_buf_set_lines(buf, 0, -1, false, messages)
+
+      local height = vim.api.nvim_get_option("lines")
+      local max_height = math.min(#messages, 5)
+
+      local row = height - max_height - 4
+      local col = editor_width - max_width - 2
+
+      diagnostic_float_win = vim.api.nvim_open_win(buf, false, {
+        relative = "editor",
+        width = max_width,
+        height = max_height,
+        row = row,
+        col = col,
+        style = "minimal",
+        border = "rounded",
+        focusable = false,
+      })
+
+      vim.api.nvim_create_autocmd({"CursorMoved", "InsertEnter", "BufLeave", "FocusLost"}, {
+        once = true,
+        callback = function()
+          if diagnostic_float_win ~= nil and vim.api.nvim_win_is_valid(diagnostic_float_win) then
+            vim.api.nvim_win_close(diagnostic_float_win, true)
+            diagnostic_float_win = nil
+          end
+        end,
+      })
+    end
+
+    vim.api.nvim_create_autocmd("CursorHold", {
+      callback = function()
+        open_corner_float()
+      end,
+    })
 end)
 -- comments
 later(function()
