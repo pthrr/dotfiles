@@ -23,18 +23,52 @@ if not vim.loop.fs_stat(mini_path) then
 end
 require('mini.deps').setup({ path = { package = path_package } })
 local add, now, later = MiniDeps.add, MiniDeps.now, MiniDeps.later
--- enable completion
-later(function()
-    require('lspconfig').tsserver.setup{}
-    require('mini.completion').setup{}
+-- completion
+now(function()
+    vim.o.completeopt = "menuone,noselect"
+    vim.diagnostic.config({
+        virtual_text = {
+            spacing = 4,
+            prefix = '●',
+            severity = { min = vim.diagnostic.severity.WARN },
+        },
+        signs = false,
+        underline = true,
+        update_in_insert = false,
+        severity_sort = true,
+        float = {
+            show_header = true,
+            source = 'always',
+            border = 'rounded',
+            severity = { min = vim.diagnostic.severity.INFO },
+        },
+    })
+    vim.api.nvim_create_autocmd("CursorHold", {
+        callback = function()
+            vim.diagnostic.open_float(nil, { focusable = false })
+        end,
+    })
+    local lspconfig = require('lspconfig')
+    local on_attach = function(client, bufnr)
+        local bufopts = { noremap=true, silent=true, buffer=bufnr }
+        vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
+        vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
+        vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, bufopts)
+        vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)
+        vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, bufopts)
+    end
+    local servers = { 'pyright', 'bashls', 'clangd' }
+    for _, lsp in ipairs(servers) do
+      lspconfig[lsp].setup{ on_attach = on_attach }
+    end
 end)
--- enable comments
+-- comments
 later(function()
-    require('mini.comment').setup{}
+    require('mini.comment').setup({})
 end)
 -- remove trailing whitespaces
 later(function()
-    require('mini.trailspace').setup{}
+    require('mini.trailspace').setup({})
     vim.api.nvim_create_autocmd({"BufWritePre"}, {
         pattern = "*",
         callback = function()
@@ -61,6 +95,7 @@ now(function()
         },
     }
 end)
+-- gdb
 later(function()
     add({
         source = 'puremourning/vimspector',
@@ -83,7 +118,7 @@ later(function()
     add({
         source = 'v1nh1shungry/cppman.nvim',
     })
-    require('cppman').setup{}
+    require('cppman').setup({})
     vim.api.nvim_set_keymap('n', 'K', ":lua require('cppman').open(vim.fn.expand('<cword>'))<CR>", { noremap = true, silent = true })
     vim.api.nvim_set_keymap('n', '<leader>cm', ":lua require('cppman').search()<CR>", { noremap = true, silent = true })
 end)
