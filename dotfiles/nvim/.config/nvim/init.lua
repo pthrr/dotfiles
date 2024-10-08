@@ -54,64 +54,81 @@ now(function()
     for _, lsp in ipairs(servers) do
         require('lspconfig')[lsp].setup({ on_attach = on_attach })
     end
-
     local diagnostic_float_win = nil
-
     local function open_corner_float()
-      if diagnostic_float_win ~= nil and vim.api.nvim_win_is_valid(diagnostic_float_win) then
-        vim.api.nvim_win_close(diagnostic_float_win, true)
-      end
-
-      local diagnostics = vim.diagnostic.get(0, { lnum = vim.fn.line('.') - 1 })
-      if #diagnostics == 0 then return end
-
-      local messages = {}
-      local max_width = 0
-
-      for _, diagnostic in ipairs(diagnostics) do
-        local message = string.format("[%s] %s", vim.diagnostic.severity[diagnostic.severity], diagnostic.message)
-        table.insert(messages, message)
-        max_width = math.max(max_width, #message)
-      end
-
-      local editor_width = vim.api.nvim_get_option("columns")
-      max_width = math.min(max_width, editor_width - 10)
-
-      local buf = vim.api.nvim_create_buf(false, true)
-      vim.api.nvim_buf_set_lines(buf, 0, -1, false, messages)
-
-      local height = vim.api.nvim_get_option("lines")
-      local max_height = math.min(#messages, 5)
-
-      local row = height - max_height - 4
-      local col = editor_width - max_width - 2
-
-      diagnostic_float_win = vim.api.nvim_open_win(buf, false, {
-        relative = "editor",
-        width = max_width,
-        height = max_height,
-        row = row,
-        col = col,
-        style = "minimal",
-        border = "rounded",
-        focusable = false,
-      })
-
-      vim.api.nvim_create_autocmd({"CursorMoved", "InsertEnter", "BufLeave", "FocusLost"}, {
-        once = true,
-        callback = function()
-          if diagnostic_float_win ~= nil and vim.api.nvim_win_is_valid(diagnostic_float_win) then
+        if diagnostic_float_win ~= nil and vim.api.nvim_win_is_valid(diagnostic_float_win) then
             vim.api.nvim_win_close(diagnostic_float_win, true)
-            diagnostic_float_win = nil
-          end
-        end,
-      })
+        end
+        local diagnostics = vim.diagnostic.get(0, { lnum = vim.fn.line('.') - 1 })
+        if #diagnostics == 0 then return end
+        local messages = {}
+        local max_width = 0
+        for _, diagnostic in ipairs(diagnostics) do
+            local message = string.format("[%s] %s", vim.diagnostic.severity[diagnostic.severity], diagnostic.message)
+            table.insert(messages, message)
+            max_width = math.max(max_width, #message)
+        end
+        local editor_width = vim.api.nvim_get_option("columns")
+        max_width = math.min(max_width, editor_width - 10)
+        local buf = vim.api.nvim_create_buf(false, true)
+        vim.api.nvim_buf_set_lines(buf, 0, -1, false, messages)
+        local height = vim.api.nvim_get_option("lines")
+        local max_height = math.min(#messages, 5)
+        local row = height - max_height - 4
+        local col = editor_width - max_width - 2
+        diagnostic_float_win = vim.api.nvim_open_win(buf, false, {
+            relative = "editor",
+            width = max_width,
+            height = max_height,
+            row = row,
+            col = col,
+            style = "minimal",
+            border = "rounded",
+            focusable = false,
+        })
+        vim.api.nvim_create_autocmd({"CursorMoved", "InsertEnter", "BufLeave", "FocusLost"}, {
+            once = true,
+            callback = function()
+                if diagnostic_float_win ~= nil and vim.api.nvim_win_is_valid(diagnostic_float_win) then
+                    vim.api.nvim_win_close(diagnostic_float_win, true)
+                    diagnostic_float_win = nil
+                end
+            end,
+        })
     end
-
     vim.api.nvim_create_autocmd("CursorHold", {
-      callback = function()
-        open_corner_float()
-      end,
+        callback = function()
+            open_corner_float()
+        end,
+    })
+end)
+-- colorscheme
+now(function()
+    add({
+        source = 'overcache/NeoSolarized',
+    })
+    vim.o.termguicolors = true
+    vim.o.background = "dark"
+    vim.cmd.colorscheme('NeoSolarized')
+end)
+-- highlighting
+now(function()
+    require('nvim-treesitter.configs').setup{
+        highlight = {
+            enable = true,
+            additional_vim_regex_highlighting = false,
+        },
+    }
+end)
+later(function()
+    require("mini.hipatterns").setup({
+        highlighters = {
+            fixme = { pattern = "%f[%w]()FIXME()%f[%W]", group = "MiniHipatternsFixme" },
+            hack = { pattern = "%f[%w]()HACK()%f[%W]", group = "MiniHipatternsHack" },
+            todo = { pattern = "%f[%w]()TODO()%f[%W]", group = "MiniHipatternsTodo" },
+            note = { pattern = "%f[%w]()NOTE()%f[%W]", group = "MiniHipatternsNote" },
+            hex_color = require("mini.hipatterns").gen_highlighter.hex_color(),
+        },
     })
 end)
 -- comments
@@ -128,24 +145,6 @@ later(function()
             MiniTrailspace.trim_last_lines()
         end,
     })
-end)
--- NeoSolarized
-now(function()
-    add({
-        source = 'overcache/NeoSolarized',
-    })
-    vim.o.termguicolors = true
-    vim.o.background = "dark"
-    vim.cmd.colorscheme('NeoSolarized')
-end)
--- syntax highlighting
-now(function()
-    require('nvim-treesitter.configs').setup{
-        highlight = {
-            enable = true,
-            additional_vim_regex_highlighting = false,
-        },
-    }
 end)
 -- gdb
 later(function()
@@ -174,6 +173,7 @@ later(function()
     vim.api.nvim_set_keymap('n', 'K', ":lua require('cppman').open(vim.fn.expand('<cword>'))<CR>", { noremap = true, silent = true })
     vim.api.nvim_set_keymap('n', '<leader>cm', ":lua require('cppman').search()<CR>", { noremap = true, silent = true })
 end)
+--
 vim.cmd('syntax off')
 vim.cmd('filetype plugin indent on')
 -- ergonomics
@@ -196,7 +196,7 @@ vim.o.scrolloff = 1
 vim.o.sidescrolloff = 5
 vim.o.wrap = false
 vim.o.list = true
-vim.o.listchars = "tab:› ,trail:-,extends:>,precedes:<,nbsp:+"
+vim.o.listchars = table.concat({ "extends:…", "trail:-", "nbsp:␣", "precedes:…", "tab:> " }, ",")
 vim.o.colorcolumn = "80,120"
 vim.o.signcolumn = "yes"
 vim.o.splitbelow = true
@@ -224,7 +224,7 @@ vim.o.ttyfast = true
 -- search
 vim.o.hlsearch = true
 vim.o.incsearch = true
-vim.o.path = vim.o.path .. "**"
+vim.o.path = vim.o.path .. ",**"
 vim.o.magic = true
 vim.o.wildmode = "list:longest,full"
 vim.o.wildignore = ".git,.hg,.svn,*.aux,*.out,*.toc,*.o,*.obj,*.exe,*.dll,*.ai,*.bmp,*.gif,*.ico,*.jpg,*.jpeg,*.png,*.psd,*.webp,*.avi,*.divx,*.mp4,*.webm,*.mov,*.mkv,*.vob,*.mpg,*.mpeg,*.mp3,*.oga,*.ogg,*.wav,*.flac,*.otf,*.ttf,*.doc,*.pdf,*.zip,*.tar.gz,*.tar.bz2,*.rar,*.tar.xz,*.swp,.lock,.DS_Store,._*"
@@ -274,7 +274,7 @@ if vim.g.wsl then
         cache_enabled = 0,
     }
 else
-    vim.o.clipboard = "unnamedplus"
+    vim.o.clipboard = "unnamed,unnamedplus"
 end
 -- cursorline
 vim.api.nvim_create_autocmd("BufEnter", {
@@ -356,24 +356,26 @@ vim.api.nvim_create_autocmd({"BufNewFile", "BufReadPost"}, {
     end,
 })
 -- Function to switch between .cpp/.hpp and .c/.h files
-function switch_source_header()
-    local current_file = vim.fn.expand("%:t")
-    local extension = vim.fn.expand("%:e")
-    local base_name = vim.fn.expand("%:r")
-    local counterpart_file = nil
-    if extension == "hpp" then
-        counterpart_file = base_name .. ".cpp"
-    elseif extension == "cpp" then
-        counterpart_file = base_name .. ".hpp"
-    elseif extension == "h" then
-        counterpart_file = base_name .. ".c"
-    elseif extension == "c" then
-        counterpart_file = base_name .. ".h"
+later(function()
+    function switch_source_header()
+        local current_file = vim.fn.expand("%:t")
+        local extension = vim.fn.expand("%:e")
+        local base_name = vim.fn.expand("%:r")
+        local counterpart_file = nil
+        if extension == "hpp" then
+            counterpart_file = base_name .. ".cpp"
+        elseif extension == "cpp" then
+            counterpart_file = base_name .. ".hpp"
+        elseif extension == "h" then
+            counterpart_file = base_name .. ".c"
+        elseif extension == "c" then
+            counterpart_file = base_name .. ".h"
+        end
+        if counterpart_file and vim.fn.filereadable(counterpart_file) == 1 then
+            vim.cmd("edit " .. counterpart_file)
+        else
+            print("No corresponding file found!")
+        end
     end
-    if counterpart_file and vim.fn.filereadable(counterpart_file) == 1 then
-        vim.cmd("edit " .. counterpart_file)
-    else
-        print("No corresponding file found!")
-    end
-end
-vim.api.nvim_set_keymap('n', '<A-o>', '<cmd>lua switch_source_header()<CR>', { noremap = true, silent = true })
+    vim.api.nvim_set_keymap('n', '<A-o>', '<cmd>lua switch_source_header()<CR>', { noremap = true, silent = true })
+end)
