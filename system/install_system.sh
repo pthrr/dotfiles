@@ -24,7 +24,7 @@ sudo dnf install -y \
     stow inotify-tools \
     nodejs npm \
     strace xxd \
-    kdenlive tokodon \
+    kdenlive \
     mock
 sudo dnf remove -y \
     thunderbird firefox
@@ -33,6 +33,7 @@ sudo flatpak remote-add --if-not-exists \
     # org.mozilla.firefox \
     # org.mozilla.Thunderbird \
 sudo flatpak install \
+    org.kde.tokodon \
     org.torproject.torbrowser-launcher \
     md.obsidian.Obsidian \
     org.zotero.Zotero \
