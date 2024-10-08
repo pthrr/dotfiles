@@ -24,6 +24,7 @@ sudo dnf install -y \
     stow inotify-tools \
     nodejs npm \
     strace xxd \
+    kdenlive tokodon \
     mock
 sudo dnf remove -y \
     thunderbird firefox
@@ -64,6 +65,7 @@ sudo flatpak install \
     org.gnucash.GnuCash
 sudo npm i @informalsystems/quint -g
 sudo npm i @informalsystems/quint-language-server -g
+sudo npm i bash-language-server -g
 pipx uninstall-all
 pipx install pre-commit
 pipx install black
