@@ -358,23 +358,38 @@ vim.api.nvim_create_autocmd({"BufNewFile", "BufReadPost"}, {
 -- Function to switch between .cpp/.hpp and .c/.h files
 later(function()
     function switch_source_header()
-        local current_file = vim.fn.expand("%:t")
         local extension = vim.fn.expand("%:e")
         local base_name = vim.fn.expand("%:r")
         local counterpart_file = nil
         if extension == "hpp" then
-            counterpart_file = base_name .. ".cpp"
+            if vim.fn.filereadable(base_name .. ".cpp") == 1 then
+                counterpart_file = base_name .. ".cpp"
+            elseif vim.fn.filereadable(base_name .. ".c") == 1 then
+                counterpart_file = base_name .. ".c"
+            end
         elseif extension == "cpp" then
-            counterpart_file = base_name .. ".hpp"
+            if vim.fn.filereadable(base_name .. ".hpp") == 1 then
+                counterpart_file = base_name .. ".hpp"
+            elseif vim.fn.filereadable(base_name .. ".h") == 1 then
+                counterpart_file = base_name .. ".h"
+            end
         elseif extension == "h" then
-            counterpart_file = base_name .. ".c"
+            if vim.fn.filereadable(base_name .. ".c") == 1 then
+                counterpart_file = base_name .. ".c"
+            elseif vim.fn.filereadable(base_name .. ".cpp") == 1 then
+                counterpart_file = base_name .. ".cpp"
+            end
         elseif extension == "c" then
-            counterpart_file = base_name .. ".h"
+            if vim.fn.filereadable(base_name .. ".h") == 1 then
+                counterpart_file = base_name .. ".h"
+            elseif vim.fn.filereadable(base_name .. ".hpp") == 1 then
+                counterpart_file = base_name .. ".hpp"
+            end
         end
-        if counterpart_file and vim.fn.filereadable(counterpart_file) == 1 then
+        if counterpart_file then
             vim.cmd("edit " .. counterpart_file)
         else
-            print("No corresponding file found!")
+            print("No corresponding file found for " .. base_name .. "." .. extension)
         end
     end
     vim.api.nvim_set_keymap('n', '<A-o>', '<cmd>lua switch_source_header()<CR>', { noremap = true, silent = true })
