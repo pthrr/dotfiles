@@ -54,6 +54,7 @@ in
             compcert mold cling rr valgrind gdbgui sccache ddd cbmc tinycc
             shfmt
             nasm
+            pyright
             wasmer emscripten wasmtime wabt
             rustup cargo-rr
             elixir elixir-ls
