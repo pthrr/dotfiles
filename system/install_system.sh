@@ -21,7 +21,7 @@ sudo dnf install -y \
     minicom picocom openocd \
     gdb rust-gdb \
     libxkbcommon libX11 \
-    stow inotify-tools \
+    stow inotify-tools go-task \
     nodejs npm \
     strace xxd \
     kdenlive \

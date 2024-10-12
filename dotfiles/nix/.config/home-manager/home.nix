@@ -51,11 +51,11 @@ in
             ansible ansible-lint ansible-language-server
             yamlfmt yamllint
             ghc cabal-install cabal2nix stack hlint haskell-language-server
-            compcert mold cling rr valgrind gdbgui sccache ddd cbmc tinycc
+            mold cling rr valgrind gdbgui sccache ddd cbmc tinycc
             shfmt
             nasm
             pyright
-            wasmer emscripten wasmtime wabt
+            emscripten wasmtime wabt
             rustup cargo-rr
             elixir elixir-ls
             clojure leiningen clojure-lsp
@@ -67,7 +67,7 @@ in
             bun
             # dev tools
             git-lfs git-filter-repo git-imerge difftastic jujutsu
-            scons meson ninja bazelisk bmake go-task bear
+            scons meson ninja bazelisk bmake bear
             hotspot
             unifdef
             kind minikube
