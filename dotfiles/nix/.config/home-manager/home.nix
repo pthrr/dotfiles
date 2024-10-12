@@ -85,6 +85,7 @@ in
             tlaplus tlaplusToolbox nuXmv alloy6
             coq coqPackages.coqide
             tigerbeetle
+            gnuradio
             # tools
             sent age mc tmuxp tmux tio tldr
             unrar
