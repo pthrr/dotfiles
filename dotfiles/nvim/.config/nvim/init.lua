@@ -23,6 +23,20 @@ if not vim.loop.fs_stat(mini_path) then
 end
 require('mini.deps').setup({ path = { package = path_package } })
 local add, now, later = MiniDeps.add, MiniDeps.now, MiniDeps.later
+-- autoformat
+vim.api.nvim_create_autocmd("BufWritePre", {
+  pattern = {"*.c", "*.cpp", "*.h", "*.hpp"},
+  callback = function()
+    if vim.bo.modified then
+      local current_file = vim.fn.expand('%')
+      vim.loop.spawn("clang-format", {
+        args = {"-i", current_file},
+      }, function()
+        vim.schedule(function() vim.cmd('checktime') end)
+      end)
+    end
+  end
+})
 -- completion
 now(function()
     vim.o.completeopt = "menuone,noselect"
