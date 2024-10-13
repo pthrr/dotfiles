@@ -37,7 +37,7 @@ vim.api.nvim_create_autocmd("BufWritePre", {
         end
     end
 })
--- completion
+-- completion/diagnostics
 now(function()
     vim.o.completeopt = "menuone,noselect"
     vim.diagnostic.config({
@@ -64,7 +64,7 @@ now(function()
         vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)
         vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, bufopts)
     end
-    local servers = { 'pyright', 'bashls', 'clangd' }
+    local servers = { 'pyright', 'bashls', 'clangd', 'zls' }
     for _, lsp in ipairs(servers) do
         require('lspconfig')[lsp].setup({ on_attach = on_attach })
     end
@@ -174,8 +174,11 @@ later(function()
     vim.api.nvim_create_autocmd("BufWritePost", {
         pattern = "*.typ",
         callback = function()
-            vim.cmd("silent! make")
-        end,
+            local current_file = vim.fn.expand('%')
+            vim.loop.spawn("typst", {
+                args = {"compile", current_file},
+            })
+        end
     })
 end)
 -- cppman
