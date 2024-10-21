@@ -166,6 +166,12 @@ later(function()
         source = 'puremourning/vimspector',
     })
 end)
+-- zig
+later(function()
+    add({
+        source = 'ziglang/zig.vim',
+    })
+end)
 -- typst
 later(function()
     add({
