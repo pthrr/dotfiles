@@ -44,8 +44,8 @@ sudo dnf remove -y \
 sudo flatpak remote-add --if-not-exists \
     flathub https://flathub.org/repo/flathub.flatpakrepo
     # org.mozilla.firefox \
-    # org.mozilla.Thunderbird \
 sudo flatpak install \
+    org.claws_mail.Claws-Mail \
     org.torproject.torbrowser-launcher \
     md.obsidian.Obsidian \
     org.zotero.Zotero \
