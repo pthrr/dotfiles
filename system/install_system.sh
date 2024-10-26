@@ -2,11 +2,25 @@
 set -euo pipefail
 
 sudo dnf update -y
+sudo dnf groupremove -y \
+    "LibreOffice"
+sudo dnf groupinstall -y \
+    "KDE Plasma Workspaces" \
+    "Administration Tools" \
+    "C Development Tools and Libraries" \
+    "Container Management" \
+    "Desktop accessibility" \
+    "Development Tools" \
+    "Office/Productivity" \
+    "Sound and Video" \
+    "System Tools"
+# TODO remove whats in groups already
 sudo dnf install -y \
     @virtualization \
     @kde-desktop kde-connect \
-    syslinux \
+    kdenlive \
     qemu \
+    syslinux \
     pipx flatpak \
     bash foot \
     wget curl \
@@ -24,7 +38,6 @@ sudo dnf install -y \
     stow inotify-tools go-task \
     nodejs npm \
     strace xxd \
-    kdenlive \
     mock
 sudo dnf remove -y \
     thunderbird firefox
@@ -33,7 +46,6 @@ sudo flatpak remote-add --if-not-exists \
     # org.mozilla.firefox \
     # org.mozilla.Thunderbird \
 sudo flatpak install \
-    org.kde.tokodon \
     org.torproject.torbrowser-launcher \
     md.obsidian.Obsidian \
     org.zotero.Zotero \
@@ -50,8 +62,6 @@ sudo flatpak install \
     com.spotify.Client \
     im.riot.Riot \
     org.keepassxc.KeePassXC \
-    io.github.shiftey.Desktop \
-    org.openmw.OpenMW \
     org.gnome.meld \
     org.zealdocs.Zeal \
     com.prusa3d.PrusaSlicer \
@@ -59,11 +69,7 @@ sudo flatpak install \
     org.openscad.OpenSCAD \
     org.kicad.KiCad \
     org.gimp.GIMP \
-    org.flarerpg.Flare \
-    net.lutris.Lutris \
     org.sqlitebrowser.sqlitebrowser \
-    net.runelite.RuneLite \
-    org.gnucash.GnuCash
 sudo npm i @informalsystems/quint -g
 sudo npm i @informalsystems/quint-language-server -g
 sudo npm i bash-language-server -g
