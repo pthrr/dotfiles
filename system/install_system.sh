@@ -19,6 +19,7 @@ sudo dnf install -y \
     @virtualization \
     @kde-desktop kde-connect \
     kdenlive \
+    korganizer \
     qemu \
     syslinux \
     pipx flatpak \
