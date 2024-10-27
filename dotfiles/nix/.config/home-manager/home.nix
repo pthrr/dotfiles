@@ -80,7 +80,7 @@ in
             ngspice qucs-s xyce openems
             svdtools svd2rust
             # sw
-            thunderbird firefox
+            firefox
             pcb2gcode candle
             tlaplus tlaplusToolbox nuXmv alloy6
             coq coqPackages.coqide
