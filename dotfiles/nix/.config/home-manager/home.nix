@@ -82,7 +82,7 @@ in
             # sw
             firefox
             pcb2gcode candle
-            tlaplus tlaplusToolbox nuXmv alloy6
+            nuXmv alloy6
             coq coqPackages.coqide
             tigerbeetle
             gnuradio
@@ -93,7 +93,7 @@ in
             eza fd sd bat ripgrep glow broot tree htop nvtopPackages.full
             wl-clipboard wlr-randr
             poppler_utils graphviz drawio ipe pandoc libwebp
-            drumgizmo x42-avldrums x42-plugins wolf-shaper distrho calf
+            drumgizmo x42-avldrums x42-plugins wolf-shaper calf
             # os
             nsxiv farbfeld
             zathura
