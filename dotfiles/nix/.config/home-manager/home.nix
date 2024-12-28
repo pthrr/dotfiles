@@ -40,51 +40,52 @@ in
 
         packages = with pkgs; [
             # langs
-            hare harec haredo haredoc
+            # hare harec haredo haredoc
             dotenv-linter
-            swift
+            # swift
             cue cuelsp cuetools
-            zig zls
-            tectonic
+            # zig zls
+            # tectonic
             typst typst-fmt typst-lsp
-            scala_3 sbt-with-scala-native scalafmt scalafix scala-cli metals
-            ansible ansible-lint ansible-language-server
+            # scala_3 sbt-with-scala-native scalafmt scalafix scala-cli metals
+            # ansible ansible-lint ansible-language-server
             yamlfmt yamllint
-            ghc cabal-install cabal2nix stack hlint haskell-language-server
-            mold cling rr valgrind gdbgui sccache ddd cbmc tinycc
+            # ghc cabal-install cabal2nix stack hlint haskell-language-server
+            mold cling rr valgrind gdbgui sccache ddd cbmc
+            # tinycc
             shfmt
             nasm
             pyright
             emscripten wasmtime wabt
             rustup cargo-rr
-            elixir elixir-ls
-            clojure leiningen clojure-lsp
-            go
+            # elixir elixir-ls
+            # clojure leiningen clojure-lsp
+            # go
             cmake-format
             nodePackages_latest.fixjson
             protobuf protobufc
-            bluespec yosys-bluespec
-            bun
+            # bluespec yosys-bluespec
+            # bun
             # dev tools
             git-lfs git-filter-repo git-imerge difftastic jujutsu
             scons meson ninja bazelisk bmake bear
-            hotspot
+            # hotspot
             unifdef
             kind minikube
             netpbm
             #
-            yosys verilator gtkwave symbiyosys icestorm nextpnrWithGui
+            # yosys verilator gtkwave symbiyosys icestorm nextpnrWithGui
             picotool
-            ripes crun
+            # ripes crun
             winetricks wineWow64Packages.stagingFull
-            ngspice qucs-s xyce openems
+            # ngspice qucs-s xyce openems
             svdtools svd2rust
             # sw
             firefox
             pcb2gcode candle
             nuXmv alloy6
             coq coqPackages.coqide
-            tigerbeetle
+            # tigerbeetle
             gnuradio
             # tools
             sent age mc tmuxp tmux tio tldr
@@ -92,7 +93,7 @@ in
             jq fzf fq pdfgrep ugrep expect dos2unix universal-ctags fdupes pdftk
             eza fd sd bat ripgrep glow broot tree htop nvtopPackages.full
             wl-clipboard wlr-randr
-            poppler_utils graphviz drawio ipe pandoc libwebp
+            poppler_utils graphviz pandoc libwebp
             drumgizmo x42-avldrums x42-plugins wolf-shaper calf
             # os
             nsxiv farbfeld

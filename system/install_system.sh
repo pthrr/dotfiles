@@ -45,8 +45,9 @@ sudo flatpak remote-add --if-not-exists \
     flathub https://flathub.org/repo/flathub.flatpakrepo
     # org.mozilla.firefox \
 sudo flatpak install \
+    org.otfried.Ipe \
+    com.jgraph.drawio.desktop \
     org.mozilla.Thunderbird \
-    org.claws_mail.Claws-Mail \
     org.torproject.torbrowser-launcher \
     md.obsidian.Obsidian \
     org.zotero.Zotero \
