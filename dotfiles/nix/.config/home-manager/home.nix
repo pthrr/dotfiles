@@ -293,6 +293,11 @@ in
             source = ../../../nvim/.config/nvim;
             recursive = true;
         };
+
+        configFile."ghostty" = {
+            source = ../../../ghostty/.config/ghostty;
+            recursive = true;
+        };
     };
 
   home.activation.runMyScript = lib.hm.dag.entryAfter ["writeBoundary"] ''
