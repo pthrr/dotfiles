@@ -1,0 +1,21 @@
+[user]
+name = "pthrr"
+email = "pthrr@posteo.de"
+
+[snapshot]
+auto-update-stale = true
+
+[git]
+colocate = true
+subprocess = true
+
+[ui]
+default-command = "status"
+diff.tool = "difft"
+pager = { command = ["less", "-FRX"], env = { LESSCHARSET = "utf-8", LESS = "-R" } }
+
+[merge-tools.meld]
+merge-args = ["$base", "$local", "$other", "--output", "$output", "--auto-merge"]
+
+[diff-tools.difft]
+diff-args = ["--color=always", "$old", "$new"]

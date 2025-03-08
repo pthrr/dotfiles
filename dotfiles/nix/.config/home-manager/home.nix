@@ -41,7 +41,7 @@ in
         packages = with pkgs; [
             # langs
             # hare harec haredo haredoc
-            dotenv-linter
+            # dotenv-linter
             # swift
             cue cuelsp cuetools
             # zig zls
@@ -51,10 +51,11 @@ in
             # ansible ansible-lint ansible-language-server
             yamlfmt yamllint
             # ghc cabal-install cabal2nix stack hlint haskell-language-server
-            mold cling rr valgrind gdbgui sccache ddd cbmc
+            # cling gdbgui ddd cbmc
+            mold rr valgrind sccache
             # tinycc
             shfmt
-            nasm
+            # nasm
             pyright
             emscripten wasmtime wabt
             rustup cargo-rr
@@ -71,7 +72,7 @@ in
             scons meson ninja bazelisk bmake bear
             # hotspot
             unifdef
-            kind minikube
+            kind minikube kubernetes helm
             netpbm
             #
             # yosys verilator gtkwave symbiyosys icestorm nextpnrWithGui
@@ -82,13 +83,16 @@ in
             svdtools svd2rust
             # sw
             firefox
-            pcb2gcode candle
+            # pcb2gcode
+            candle
             nuXmv alloy6
-            coq coqPackages.coqide
+            # coq coqPackages.coqide
+            lean4
             # tigerbeetle
             gnuradio
             # tools
-            sent age mc tmuxp tmux tio tldr
+            # sent age tio tldr
+            sent mc tmuxp tmux
             unrar
             jq fzf fq pdfgrep ugrep expect dos2unix universal-ctags fdupes pdftk
             eza fd sd bat ripgrep glow broot tree htop nvtopPackages.full
@@ -120,6 +124,10 @@ in
             source = ../../../misc/bin;
             recursive = true;
         };
+        file.".local/share/applications" = {
+            source = ../../../misc/.local/share/applications;
+            recursive = true;
+        };
 
         file."Vorlagen/snippets" = {
             source = ../../../nvim/Vorlagen/snippets;
@@ -138,107 +146,137 @@ in
       enable = true;
       userName = gitUserName;
       userEmail = gitUserEmail;
-      extraConfig = ''
-        [core]
-            editor = nvim
-            autocrlf = false
-            whitespace = fix,-indent-with-non-tab,trailing-space,cr-at-eol
-            pager = less -+$LESS -FRX
-            excludesfile = ~/.config/git/.gitignore_global
-            attributesfile = ~/.config/git/.gitattributes_global
-        [diff "zip"]
-            textconv = unzip -c -a
-        [merge]
-            conflictstyle = zdiff3
-        [rerere]
-            enabled = true
-        [filter "zippey"]
-            smudge = zippey d
-            clean = zippey e
-        [credential]
-            helper = store
-        [safe]
-            directory = *
-        [gpg]
-            program = gpg2
-        [http]
-            sslVerify = false
-        [submodule]
-            recurse = true
-        [pull]
-            rebase = false
-        [push]
-            autoSetupRemote = true
-            default = simple
-            recurseSubmodules = on-demand
-        [commit]
-            template = ~/.config/git/git-commit-template.txt
-        [clean]
-            requireForce = false
-        [status]
-            submoduleSummary = true
-        [diff]
-            tool = difftastic
-        [difftool]
-            prompt = false
-        [merge]
-            tool = meld
-        [mergetool]
-            keepBackup = false
-        [pager]
-            difftool = true
-        [difftool "difftastic"]
-            cmd = difft "$LOCAL" "$REMOTE"
-        [difftool "meld"]
-            cmd = meld \"$LOCAL\" \"$REMOTE\"
-            trustExitCode = false
-        [mergetool "meld"]
-            cmd = meld --auto-merge \"$LOCAL\" \"$BASE\" \"$REMOTE\" --output \"$MERGED\" --label=Local --label=Base --label=Remote --diff \"$BASE\" \"$LOCAL\" --diff \"$BASE\" \"$REMOTE\"
-            trustExitCode = false
-        [difftool "kdiff3"]
-            cmd = kdiff3 \"$LOCAL\" \"$REMOTE\"
-            trustExitCode = false
-        [mergetool "kdiff3"]
-            cmd = kdiff3 \"$LOCAL\" \"$BASE\" \"$REMOTE\" \"$MERGED\"
-            trustExitCode = false
-        [difftool "bcomp4"]
-            cmd = \"/mnt/c/Program Files/Beyond Compare 4/BComp.exe\" "$(wslpath -w $LOCAL)" "$(wslpath -w $REMOTE)"
-            trustExitCode = true
-        [mergetool "bcomp4"]
-            cmd = \"/mnt/c/Program Files/Beyond Compare 4/BComp.exe\" "$(wslpath -w $LOCAL)" "$(wslpath -w $REMOTE)" "$(wslpath -w $BASE)" "$(wslpath -w $MERGED)"
-            trustExitCode = true
-        [filter "lfs"]
-            required = true
-            clean = git-lfs clean -- %f
-            smudge = git-lfs smudge -- %f
-            process = git-lfs filter-process
-        [alias]
-            a = add
-            aa = add --all
-            b = branch
-            c = commit
-            d = diff
-            dt = difftool
-            f = fetch
-            g = grep
-            l = log
-            m = merge
-            o = checkout
-            p = pull
-            r = remote
-            s = status
-            w = whatchanged
-            lg = log --graph
-            lo = log --oneline
-            lp = log --patch
-            lfp = log --first-parent
-            # log with items appearing in topological order, i.e. descendant commits are shown before their parents.
-            lt = log --topo-order
-            # log like - we like this summarization our key performance indicators. Also aliased as `log-like`.
-            ll = log --graph --topo-order --date=short --abbrev-commit --decorate --all --boundary --pretty=format:'%Cgreen%ad %Cred%h%Creset -%C(yellow)%d%Creset %s %Cblue[%cn]%Creset %Cblue%G?%Creset'
-            # log like long  - we like this summarization our key performance indicators. Also aliased as `log-like-long`.
-            lll = log --graph --topo-order --date=iso8601-strict --no-abbrev-commit --abbrev=40 --decorate --all --boundary --pretty=format:'%Cgreen%ad %Cred%h%Creset -%C(yellow)%d%Creset %s %Cblue[%cn <%ce>]%Creset %Cblue%G?%Creset'
-      '';
+      extraConfig = {
+        core = {
+          editor = "nvim";
+          autocrlf = false;
+          pager = "less -+$LESS -FRX";
+          excludesfile = "~/.config/git/.gitignore_global";
+          attributesfile = "~/.config/git/.gitattributes_global";
+        };
+        branch = {
+          sort = "-committerdate";
+        };
+        tag = {
+          sort = "version:refname";
+        };
+        init = {
+          defaultBranch = "main";
+        };
+        merge = {
+          conflictstyle = "zdiff3";
+          tool = "meld";
+        };
+        diff = {
+          algorithm = "histogram";
+          colorMoved = "plain";
+          mnemonicPrefix = true;
+          renames = true;
+          tool = "difftastic";
+        };
+        credential = {
+          helper = "cache --timeout=3600";
+        };
+        safe = {
+          directory = "*";
+        };
+        gpg = {
+          program = "gpg2";
+        };
+        submodule = {
+          recurse = true;
+        };
+        fetch = {
+          prune = true;
+          pruneTags = true;
+          all = true;
+        };
+        pull = {
+          rebase = true;
+        };
+        push = {
+          recurseSubmodules = "on-demand";
+          default = "simple";
+          autoSetupRemote = true;
+          followTags = true;
+        };
+        commit = {
+          verbose = true;
+          template = "~/.config/git/git-commit-template.txt";
+        };
+        rerere = {
+          enabled = true;
+          autoupdate = true;
+        };
+        rebase = {
+          autoSquash = true;
+          autoStash = true;
+          updateRefs = true;
+        };
+        status = {
+          submoduleSummary = true;
+        };
+        difftool = {
+          prompt = false;
+          "difftastic" = {
+            cmd = "difft \"$LOCAL\" \"$REMOTE\"";
+            trustExitCode = true;
+          };
+          "meld" = {
+            cmd = "meld \"$LOCAL\" \"$REMOTE\"";
+            trustExitCode = false;
+          };
+          "kdiff3" = {
+            cmd = "kdiff3 \"$LOCAL\" \"$REMOTE\"";
+            trustExitCode = false;
+          };
+          "bcomp4" = {
+            cmd = "\"/mnt/c/Program Files/Beyond Compare 4/BComp.exe\" \"$(wslpath -w $LOCAL)\" \"$(wslpath -w $REMOTE)\"";
+            trustExitCode = true;
+          };
+        };
+        mergetool = {
+          keepBackup = false;
+          "meld" = {
+            cmd = "meld --auto-merge \"$LOCAL\" \"$BASE\" \"$REMOTE\" --output \"$MERGED\" --label=Local --label=Base --label=Remote --diff \"$BASE\" \"$LOCAL\" --diff \"$BASE\" \"$REMOTE\"";
+            trustExitCode = false;
+          };
+          "kdiff3" = {
+            cmd = "kdiff3 \"$LOCAL\" \"$BASE\" \"$REMOTE\" \"$MERGED\"";
+            trustExitCode = false;
+          };
+          "bcomp4" = {
+            cmd = "\"/mnt/c/Program Files/Beyond Compare 4/BComp.exe\" \"$(wslpath -w $LOCAL)\" \"$(wslpath -w $REMOTE)\" \"$(wslpath -w $BASE)\" \"$(wslpath -w $MERGED)\"";
+            trustExitCode = true;
+          };
+        };
+        pager = {
+          difftool = true;
+        };
+        filter = {
+          "lfs" = {
+            required = true;
+            clean = "git-lfs clean -- %f";
+            smudge = "git-lfs smudge -- %f";
+            process = "git-lfs filter-process";
+          };
+        };
+        alias = {
+          a = "add";
+          aa = "add --all";
+          b = "branch";
+          c = "commit";
+          s = "status";
+          l = "log";
+          lg = "log --graph";
+          lo = "log --oneline";
+          lp = "log --patch";
+          lfp = "log --first-parent";
+          lt = "log --topo-order";
+          ll = "log --graph --topo-order --date=short --abbrev-commit --decorate --all --boundary --pretty=format:'%Cgreen%ad %Cred%h%Creset -%C(yellow)%d%Creset %s %Cblue[%cn]%Creset %Cblue%G?%Creset'";
+          lll = "log --graph --topo-order --date=iso8601-strict --no-abbrev-commit --abbrev=40 --decorate --all --boundary --pretty=format:'%Cgreen%ad %Cred%h%Creset -%C(yellow)%d%Creset %s %Cblue[%cn <%ce>]%Creset %Cblue%G?%Creset'";
+        };
+      };
     };
 
     programs.neovim = {
@@ -254,6 +292,11 @@ in
 
     xdg = {
         # files in ~/.config/
+        configFile."jj" = {
+            source = ../../../jj/.config/jj;
+            recursive = true;
+        };
+
         configFile."plasma-workspace/env" = {
             source = ../../../nix/.config/plasma-workspace/env;
             recursive = true;
@@ -291,11 +334,6 @@ in
 
         configFile."nvim" = {
             source = ../../../nvim/.config/nvim;
-            recursive = true;
-        };
-
-        configFile."ghostty" = {
-            source = ../../../ghostty/.config/ghostty;
             recursive = true;
         };
     };
