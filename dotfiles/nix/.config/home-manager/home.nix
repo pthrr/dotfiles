@@ -267,6 +267,10 @@ in
           b = "branch";
           c = "commit";
           s = "status";
+          d = "diff";
+          dt = "difftool";
+          m = "merge";
+          mt = "mergetool";
           l = "log";
           lg = "log --graph";
           lo = "log --oneline";
