@@ -154,19 +154,24 @@ in
           excludesfile = "~/.config/git/.gitignore_global";
           attributesfile = "~/.config/git/.gitattributes_global";
         };
+
         branch = {
           sort = "-committerdate";
         };
+
         tag = {
           sort = "version:refname";
         };
+
         init = {
           defaultBranch = "main";
         };
+
         merge = {
           conflictstyle = "zdiff3";
           tool = "meld";
         };
+
         diff = {
           algorithm = "histogram";
           colorMoved = "plain";
@@ -174,85 +179,105 @@ in
           renames = true;
           tool = "difftastic";
         };
+
         credential = {
           helper = "cache --timeout=3600";
         };
+
         safe = {
           directory = "*";
         };
+
         gpg = {
           program = "gpg2";
         };
+
         submodule = {
           recurse = true;
         };
+
         fetch = {
           prune = true;
           pruneTags = true;
           all = true;
         };
+
         pull = {
           rebase = true;
         };
+
         push = {
           recurseSubmodules = "on-demand";
           default = "simple";
           autoSetupRemote = true;
           followTags = true;
         };
+
         commit = {
           verbose = true;
           template = "~/.config/git/git-commit-template.txt";
         };
+
         rerere = {
           enabled = true;
           autoupdate = true;
         };
+
         rebase = {
           autoSquash = true;
           autoStash = true;
           updateRefs = true;
         };
+
         status = {
           submoduleSummary = true;
         };
+
         difftool = {
           prompt = false;
           "difftastic" = {
             cmd = "difft \"$LOCAL\" \"$REMOTE\"";
             trustExitCode = true;
           };
+
           "meld" = {
             cmd = "meld \"$LOCAL\" \"$REMOTE\"";
             trustExitCode = false;
           };
+
           "kdiff3" = {
             cmd = "kdiff3 \"$LOCAL\" \"$REMOTE\"";
             trustExitCode = false;
           };
+
           "bcomp4" = {
             cmd = "\"/mnt/c/Program Files/Beyond Compare 4/BComp.exe\" \"$(wslpath -w $LOCAL)\" \"$(wslpath -w $REMOTE)\"";
             trustExitCode = true;
           };
         };
+
         mergetool = {
           keepBackup = false;
           "meld" = {
             cmd = "meld --auto-merge \"$LOCAL\" \"$BASE\" \"$REMOTE\" --output \"$MERGED\" --label=Local --label=Base --label=Remote --diff \"$BASE\" \"$LOCAL\" --diff \"$BASE\" \"$REMOTE\"";
             trustExitCode = false;
           };
+
           "kdiff3" = {
             cmd = "kdiff3 \"$LOCAL\" \"$BASE\" \"$REMOTE\" \"$MERGED\"";
             trustExitCode = false;
           };
+
           "bcomp4" = {
             cmd = "\"/mnt/c/Program Files/Beyond Compare 4/BComp.exe\" \"$(wslpath -w $LOCAL)\" \"$(wslpath -w $REMOTE)\" \"$(wslpath -w $BASE)\" \"$(wslpath -w $MERGED)\"";
             trustExitCode = true;
           };
         };
+
         pager = {
           difftool = true;
         };
+
         filter = {
           "lfs" = {
             required = true;
@@ -261,6 +286,7 @@ in
             process = "git-lfs filter-process";
           };
         };
+
         alias = {
           a = "add";
           aa = "add --all";
