@@ -1,2 +1,0 @@
-#!/usr/bin/env sh
-code --enable-features=UseOzonePlatform --ozone-platform=wayland "$@"

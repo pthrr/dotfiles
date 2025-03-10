@@ -68,7 +68,7 @@ in
             # bluespec yosys-bluespec
             # bun
             # dev tools
-            git-lfs git-filter-repo git-imerge difftastic jujutsu
+            git-lfs git-filter-repo git-imerge difftastic
             scons meson ninja bazelisk bmake bear
             # hotspot
             unifdef
@@ -113,7 +113,7 @@ in
 
         file.".clang-tidy".source = ../../../lang/.clang-tidy;
         file.".clang-format".source = ../../../lang/.clang-format;
-        file.".cmake-format.yml".source = ../../../lang/.cmake-format.yml;
+        file.".cmake-format.yaml".source = ../../../lang/.cmake-format.yaml;
 
         file.".ssh" = {
             source = ../../../ssh/.ssh;
@@ -122,10 +122,6 @@ in
 
         file."bin" = {
             source = ../../../misc/bin;
-            recursive = true;
-        };
-        file.".local/share/applications" = {
-            source = ../../../misc/.local/share/applications;
             recursive = true;
         };
 
@@ -141,6 +137,85 @@ in
 
     # Let Home Manager install and manage itself.
     programs.home-manager.enable = true;
+
+    programs.jujutsu = {
+      enable = true;
+      settings = {
+        user = {
+          name = gitUserName;
+          email = gitUserEmail;
+        };
+
+        core = {
+          editor = "nvim";
+          pager = "less -+$LESS -FRX";
+        };
+
+        git = {
+          auto-local-branch = true;
+          push-branch-prefix = "";
+          fetch-tags = true;
+          track-branches = true;
+        };
+
+        operation = {
+          allow-empty = true;
+
+          rebase = {
+            auto-squash = true;
+            update-refs = true;
+          };
+        };
+
+        aliases = {
+          # Git-equivalent aliases
+          co = "checkout";
+          br = "branch list";
+          cm = "new";
+          df = "diff";
+          lg = "log --graph";
+          rb = "rebase";
+          mt = "resolve";
+          st = "status";
+
+          # Git command aliases
+          git-fetch = "git fetch --prune";
+          git-push = "git push --follow-tags";
+          git-status = "git status";
+          git-log = "git log --oneline --graph --decorate";
+          git-diff = "git diff";
+          git-commit = "git commit -v";
+          git-branch = "git branch";
+          git-rebase = "git rebase";
+          git-merge = "git merge";
+        };
+
+        diff = {
+          tool = "difftastic";
+        };
+
+        merge = {
+          tool = "meld";
+        };
+
+        fetch = {
+          all = true;
+        };
+
+        push = {
+          auto-setup-remote = true;
+        };
+
+        pager = {
+          enabled = true;
+        };
+
+        ui = {
+          default-command = "status";
+          color = "auto";
+        };
+      };
+    };
 
     programs.git = {
       enable = true;
@@ -291,6 +366,7 @@ in
           a = "add";
           aa = "add --all";
           b = "branch";
+          p = "push";
           c = "commit";
           s = "status";
           d = "diff";
