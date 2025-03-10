@@ -146,7 +146,6 @@ export MEDIAPLAYER='vlc'
 export FILEMANAGER='spacefm'
 export FZF_DEFAULT_COMMAND='rg --files'
 export FZF_DEFAULT_OPTS='-m --height 50% --border'
-export SYSTEMC_HOME='$HOME/opt/systemc'
 export LESS='-r'
 export NO_AT_BRIDGE=1
 export DO_NOT_TRACK=1
@@ -172,7 +171,7 @@ function command_not_found_handle() {
     regex_git='.*.git'
 
     if [[ $1 =~ $regex_git ]]; then
-        git clone --recursive "$1"
+        git clone "$1"
     elif [[ $1 =~ $regex_url ]]; then
         wget "$1"
     else
