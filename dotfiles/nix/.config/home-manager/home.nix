@@ -398,11 +398,6 @@ in
 
     xdg = {
         # files in ~/.config/
-        configFile."jj" = {
-            source = ../../../jj/.config/jj;
-            recursive = true;
-        };
-
         configFile."plasma-workspace/env" = {
             source = ../../../nix/.config/plasma-workspace/env;
             recursive = true;
