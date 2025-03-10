@@ -143,7 +143,7 @@ export TERMINAL='foot'
 export PDFVIEWER='zathura'
 export IMAGEVIEWER='nsxiv'
 export MEDIAPLAYER='vlc'
-export FILEMANAGER='spacefm'
+export FILEMANAGER='mc'
 export FZF_DEFAULT_COMMAND='rg --files'
 export FZF_DEFAULT_OPTS='-m --height 50% --border'
 export LESS='-r'
@@ -154,7 +154,7 @@ export MC_XDG_OPEN="$HOME/bin/xdg"
 export MC_SKIN="$HOME/.config/mc/solarized.ini"
 export QT_LOGGING_RULES="kwin_*.debug=true"
 export CPM_SOURCE_CACHE="$XDG_CACHE_HOME/CPM"
-export TMPDIR="/tmp"
+export TMPDIR="$HOME/tmp"
 export SYSTEMC_HOME="/opt/systemc"
 export SYSTEMC_AMS_HOME="/opt/systemc-ams"
 export ICSC_HOME="$HOME/opt/sc_tools"
