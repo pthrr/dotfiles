@@ -146,7 +146,7 @@ export MEDIAPLAYER='vlc'
 export FILEMANAGER='mc'
 export FZF_DEFAULT_COMMAND='rg --files'
 export FZF_DEFAULT_OPTS='-m --height 50% --border'
-export LESS='-r'
+export LESS='-R'
 export NO_AT_BRIDGE=1
 export DO_NOT_TRACK=1
 export _JAVA_AWT_WM_NONREPARENTING=1
@@ -226,46 +226,11 @@ function killdetached() {
         tmux kill-session -t "${line%%:*}"
     done
 }
-function vo() {
-    shopt -s nullglob
-    $EDITOR "$@"
-    shopt -u nullglob
-}
-function ls() {
-    local cmd=$(command -v eza || command -v exa || command -v ls)
-    $cmd "$@"
-}
-function ll() {
-    local cmd=$(command -v eza || command -v exa)
-    $cmd -l --classify --color=always "$@" | less
-}
-function lla() {
-    local cmd=$(command -v eza || command -v exa)
-    $cmd -la --classify --color=always "$@" | less
-}
-function lls() {
-    local cmd=$(command -v eza || command -v exa)
-    $cmd -la --classify "$@"
-}
 function lsd() {
-    local cmd=$(command -v eza || command -v exa)
-    $cmd --tree --long --classify --color=always --level 6 -a -D -I ".git|venv|__pycache__|*_cache" "$@" | less
+    tree -a -C -L 6 -d -I '.git|.venv|__pycache__|*_cache' "${@:-.}" | less -R
 }
 function lsf() {
-    local cmd=$(command -v eza || command -v exa)
-    $cmd --tree --long --classify --color=always --level 6 -a -I ".git|venv|__pycache__|*_cache" "$@" | less
-}
-function fgs() {
-    if command -v fd >/dev/null 2>&1; then
-        fd -t d -HI "\.git$" "$@" | while read -r dir; do
-            git -C "$(dirname "$dir")" status -s | grep -q . && pwd
-        done
-    else
-        find . -type d -name .git "$@" -exec "cd \"{}\"/../ && git status -s | grep -q . && pwd" \;
-    fi
-}
-function pmd() {
-    pandoc -t plain "$@" | less
+    tree -a -C -L 6 -I '.git|.venv|__pycache__|*_cache' "${@:-.}" | less -R
 }
 function pb() {
     "$@" | pbcopy
@@ -282,22 +247,27 @@ function jupnote() {
     sleep 2
     $BROWSER http://localhost:8888/
 }
+shopt -s extglob
+shopt -s globstar
 set -o vi
 alias vi='nvim'
 alias vim='nvim'
-alias task='go-task'
 alias fm='mc . .'
-alias top='htop'
-alias cat='bat'
+alias top='top -o %MEM'
+alias grep='LC_ALL=C grep --color=auto --binary-files=without-match --exclude-dir={.git,.venv}'
+alias ls='ls -h --classify --color=auto --group-directories-first'
+alias lls='ls -lah --classify --color=auto --group-directories-first'
+alias free='free -h'
+alias df='df -h --total'
+alias cat='cat -n'
 alias cp='cp -iv'
 alias mv='mv -iv'
-alias mkdir='mkdir -pv'
 alias rm='rm -Iv'
+alias mkdir='mkdir -pv'
 alias task='go-task'
-alias t='go-task'
-alias g='git'
 alias j='jobs'
 alias c='clear'
+alias h='history'
 alias ..='cd ../'
 alias ...='cd ../../'
 alias ....='cd ../../../'
@@ -305,13 +275,11 @@ alias .....='cd ../../../../'
 alias pbclear='echo "" | pbcopy'
 alias pbclean='pbpaste | pbcopy'
 alias yt='yt-dlp --recode-video mp4'
-alias mirror='wget --mirror --convert-links --adjust-extension --page-requisites --no-parent'
 alias com='picocom -b 115200 --echo --omap=crcrlf'
 alias procs='pstree -Ap'
 alias ports='netstat -pln'
 alias weather='curl wttr.in/munich'
 alias wifi='nmcli dev wifi show-password'
-alias ddg='w3m lite.duckduckgo.com'
 alias pwgen='pb keepassxc-cli generate --lower --upper --numeric --special --length 32'
 alias mksomespace='nix-collect-garbage -d'
 alias dotfiles='git --git-dir="$HOME/.dotfiles/.git" --work-tree="$HOME/.dotfiles"'
