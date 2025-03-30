@@ -221,6 +221,7 @@ in
       enable = true;
       userName = gitUserName;
       userEmail = gitUserEmail;
+      package = pkgs.gitAndTools.gitFull;
       extraConfig = {
         core = {
           editor = "nvim";
@@ -368,6 +369,7 @@ in
           b = "branch";
           p = "push";
           c = "commit";
+          co = "checkout";
           s = "status";
           d = "diff";
           dt = "difftool";
