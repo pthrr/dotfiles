@@ -227,10 +227,10 @@ function killdetached() {
     done
 }
 function lsd() {
-    tree -a -C -L 6 -d -I '.git|.venv|__pycache__|*_cache' "${@:-.}" | less -R
+    tree -a -C -L 6 -d -I '.git|.venv|__pycache__|*cache' "${@:-.}" | less -R
 }
 function lsf() {
-    tree -a -C -L 6 -I '.git|.venv|__pycache__|*_cache' "${@:-.}" | less -R
+    tree -a -C -L 6 -I '.git|.venv|__pycache__|*cache' "${@:-.}" | less -R
 }
 function pb() {
     "$@" | pbcopy
@@ -247,18 +247,28 @@ function jupnote() {
     sleep 2
     $BROWSER http://localhost:8888/
 }
+shopt -s histappend
+shopt -s cmdhist
 shopt -s extglob
 shopt -s globstar
+shopt -s dotglob
+shopt -s checkwinsize
 set -o vi
+set -o noclobber
 alias vi='nvim'
 alias vim='nvim'
 alias fm='mc . .'
 alias top='top -o %MEM'
-alias grep='LC_ALL=C grep --color=auto --binary-files=without-match --exclude-dir={.git,.venv,*_cache}'
+alias grep='LC_ALL=C grep --color=auto --binary-files=without-match --exclude-dir={.git,.venv,__pycache__,*cache}'
+alias diff='diff --strip-trailing-cr --color=auto'
 alias ls='ls -h --classify --color=auto --group-directories-first'
 alias lls='ls -lah --classify --color=auto --group-directories-first'
 alias free='free -h'
 alias df='df -h --total'
+alias du='du -h'
+alias dd='dd status=progress'
+alias chmod='chmod --preserve-root'
+alias chown='chown --preserve-root'
 alias cat='cat -n'
 alias cp='cp -iv'
 alias mv='mv -iv'
