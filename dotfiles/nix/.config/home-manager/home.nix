@@ -40,6 +40,7 @@ in
 
         packages = with pkgs; [
             # langs
+            # tlaplus18 tlaps
             # hare harec haredo haredoc
             # dotenv-linter
             # swift

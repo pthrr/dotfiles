@@ -227,10 +227,10 @@ function killdetached() {
     done
 }
 function lsd() {
-    tree -a -C -L 6 -d -I '.git|.venv|__pycache__|*cache' "${@:-.}" | less -R
+    tree -a -C -L 6 -d -I '.git|.venv|__pycache__|*cache|build|target' "${@:-.}" | less -R
 }
 function lsf() {
-    tree -a -C -L 6 -I '.git|.venv|__pycache__|*cache' "${@:-.}" | less -R
+    tree -a -C -L 6 -I '.git|.venv|__pycache__|*cache|build|target' "${@:-.}" | less -R
 }
 function pb() {
     "$@" | pbcopy
@@ -259,7 +259,7 @@ alias vi='nvim'
 alias vim='nvim'
 alias fm='mc . .'
 alias top='top -o %MEM'
-alias grep='LC_ALL=C grep --color=auto --binary-files=without-match --exclude-dir={.git,.venv,__pycache__,*cache}'
+alias grep='LC_ALL=C grep --color=auto --binary-files=without-match --exclude-dir={.git,.venv,__pycache__,*cache,build,target}'
 alias diff='diff --strip-trailing-cr --color=auto'
 alias ls='ls -h --classify --color=auto --group-directories-first'
 alias lls='ls -lah --classify --color=auto --group-directories-first'
