@@ -92,6 +92,7 @@ in
             # tigerbeetle
             gnuradio
             # tools
+            cookiecutter
             # sent age tio tldr
             sent mc tmuxp tmux
             unrar
