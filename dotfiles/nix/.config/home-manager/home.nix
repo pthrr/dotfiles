@@ -80,7 +80,8 @@ in
             picotool
             # ripes crun
             winetricks wineWow64Packages.stagingFull
-            # ngspice qucs-s xyce openems
+            ngspice xyce-parallel
+            # qucs-s openems
             svdtools svd2rust
             # sw
             firefox
