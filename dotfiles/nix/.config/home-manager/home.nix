@@ -67,13 +67,13 @@ in
             nodePackages_latest.fixjson
             protobuf protobufc
             # bluespec yosys-bluespec
-            # bun
+            bun
             # dev tools
             git-lfs git-filter-repo git-imerge difftastic
             scons meson ninja bazelisk bmake bear
             # hotspot
             unifdef
-            kind minikube kubernetes helm
+            kind minikube helm k3s k3d envsubst
             netpbm
             #
             # yosys verilator gtkwave symbiyosys icestorm nextpnrWithGui
