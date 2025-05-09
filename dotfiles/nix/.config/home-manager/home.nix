@@ -75,6 +75,7 @@ in
             unifdef
             kind minikube helm k3s k3d envsubst
             netpbm
+            potrace
             #
             # yosys verilator gtkwave symbiyosys icestorm nextpnrWithGui
             picotool
