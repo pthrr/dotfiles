@@ -17,7 +17,7 @@ sudo dnf groupinstall -y \
 # TODO remove whats in groups already
 sudo dnf install -y \
     @virtualization \
-    @kde-desktop kde-connect \
+    @kde-desktop kde-connect krdc \
     kdenlive \
     qemu \
     syslinux \

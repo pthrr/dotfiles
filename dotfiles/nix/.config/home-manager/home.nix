@@ -71,7 +71,7 @@ in
             # dev tools
             git-lfs git-filter-repo git-imerge difftastic
             scons meson ninja bazelisk bmake bear
-            # hotspot
+            hotspot
             unifdef
             kind minikube helm k3s k3d envsubst
             netpbm
