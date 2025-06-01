@@ -47,7 +47,7 @@ in
             cue cuelsp cuetools
             # zig zls
             # tectonic
-            typst typst-fmt typst-lsp
+            typst typst-fmt tinymist
             # scala_3 sbt-with-scala-native scalafmt scalafix scala-cli metals
             # ansible ansible-lint ansible-language-server
             yamlfmt yamllint
