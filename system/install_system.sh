@@ -45,6 +45,7 @@ sudo flatpak remote-add --if-not-exists \
     flathub https://flathub.org/repo/flathub.flatpakrepo
     # org.mozilla.firefox \
 sudo flatpak install \
+    com.usebottles.bottles \
     org.otfried.Ipe \
     com.jgraph.drawio.desktop \
     org.mozilla.Thunderbird \

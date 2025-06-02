@@ -80,7 +80,6 @@ in
             # yosys verilator gtkwave symbiyosys icestorm nextpnrWithGui
             picotool
             # ripes crun
-            winetricks wineWow64Packages.stagingFull
             ngspice xyce-parallel
             # qucs-s openems
             svdtools svd2rust
