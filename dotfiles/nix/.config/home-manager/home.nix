@@ -40,15 +40,9 @@ in
 
         packages = with pkgs; [
             # langs
-            # tlaplus18 tlaps
-            # hare harec haredo haredoc
-            # dotenv-linter
-            # swift
             cue cuelsp cuetools
-            # zig zls
             # tectonic
             typst typst-fmt tinymist
-            # scala_3 sbt-with-scala-native scalafmt scalafix scala-cli metals
             # ansible ansible-lint ansible-language-server
             yamlfmt yamllint
             # ghc cabal-install cabal2nix stack hlint haskell-language-server
@@ -60,8 +54,6 @@ in
             pyright
             emscripten wasmtime wabt
             rustup cargo-rr
-            # elixir elixir-ls
-            # clojure leiningen clojure-lsp
             # go
             cmake-format
             nodePackages_latest.fixjson
@@ -86,7 +78,7 @@ in
             # sw
             firefox
             # pcb2gcode
-            candle
+            # candle
             nuXmv alloy6
             # coq coqPackages.coqide
             lean4
@@ -94,7 +86,7 @@ in
             gnuradio
             # tools
             cookiecutter
-            # sent age tio tldr
+            # age tio tldr
             sent mc tmuxp tmux
             unrar
             jq fzf fq pdfgrep ugrep expect dos2unix universal-ctags fdupes pdftk
