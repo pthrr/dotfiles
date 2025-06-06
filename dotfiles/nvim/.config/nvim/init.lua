@@ -23,22 +23,45 @@ if not vim.loop.fs_stat(mini_path) then
 end
 require('mini.deps').setup({ path = { package = path_package } })
 local add, now, later = MiniDeps.add, MiniDeps.now, MiniDeps.later
--- autoformat
 vim.api.nvim_create_autocmd("BufWritePre", {
-    pattern = {"*.c", "*.cpp", "*.h", "*.hpp"},
+    pattern = {
+        "*.c", "*.cpp", "*.h", "*.hpp",       -- C++
+        "*.rs",                               -- Rust
+        "*.ts", "*.tsx", "*.js", "*.jsx",     -- Typescript
+        "*.sh", "*.bash", "*.zsh",            -- Bash
+        "*.py",                               -- Python
+    },
     callback = function()
-        if vim.bo.modified then
-            local current_file = vim.fn.expand('%')
-            vim.loop.spawn("clang-format", {
-                args = {"-i", current_file},
-            }, function()
+        if not vim.bo.modified then return end
+        local file = vim.fn.expand('%')
+        local function run_external(cmd, args)
+            vim.loop.spawn(cmd, { args = args }, function()
                 vim.schedule(function() vim.cmd('checktime') end)
             end)
+        end
+        if file:match("%.rs$") then
+            run_external("rustfmt", { file })
+        elseif file:match("%.[ch]pp?$") then
+            run_external("clang-format", { "-i", file })
+        elseif file:match("%.sh$") or file:match("%.bash$") or file:match("%.zsh$") then
+            run_external("shfmt", { "-w", file })
+        elseif file:match("%.py$") then
+            run_external("black", { "--quiet", file })
+        elseif file:match("%.ts$") or file:match("%.tsx$") or file:match("%.js$") or file:match("%.jsx$") then
+            run_external("prettier", { "--write", file })
+        else
+            vim.lsp.buf.format({ async = false })
         end
     end
 })
 -- completion/diagnostics
 now(function()
+    local severity_names = {
+        [vim.diagnostic.severity.ERROR] = "Error",
+        [vim.diagnostic.severity.WARN]  = "Warning",
+        [vim.diagnostic.severity.INFO]  = "Info",
+        [vim.diagnostic.severity.HINT]  = "Hint",
+    }
     vim.o.completeopt = "menuone,noselect"
     vim.diagnostic.config({
         virtual_text = {
@@ -64,7 +87,7 @@ now(function()
         vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)
         vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, bufopts)
     end
-    local servers = { 'pyright', 'bashls', 'clangd', 'zls' }
+    local servers = { 'pyright', 'bashls', 'clangd', 'rust_analyzer', 'ts_ls' }
     for _, lsp in ipairs(servers) do
         require('lspconfig')[lsp].setup({ on_attach = on_attach })
     end
@@ -78,9 +101,13 @@ now(function()
         local messages = {}
         local max_width = 0
         for _, diagnostic in ipairs(diagnostics) do
-            local message = string.format("[%s] %s", vim.diagnostic.severity[diagnostic.severity], diagnostic.message)
-            table.insert(messages, message)
-            max_width = math.max(max_width, #message)
+            local prefix = string.format("[%s] ", severity_names[diagnostic.severity] or "Unknown")
+            for line in diagnostic.message:gmatch("[^\n]+") do
+                local msg = prefix .. line
+                table.insert(messages, msg)
+                max_width = math.max(max_width, #msg)
+                prefix = "         "
+            end
         end
         local editor_width = vim.api.nvim_get_option("columns")
         max_width = math.min(max_width, editor_width - 10)
@@ -166,12 +193,6 @@ later(function()
         source = 'puremourning/vimspector',
     })
 end)
--- zig
-later(function()
-    add({
-        source = 'ziglang/zig.vim',
-    })
-end)
 -- typst
 later(function()
     add({
@@ -196,7 +217,7 @@ later(function()
     vim.api.nvim_set_keymap('n', 'K', ":lua require('cppman').open(vim.fn.expand('<cword>'))<CR>", { noremap = true, silent = true })
     vim.api.nvim_set_keymap('n', '<leader>cm', ":lua require('cppman').search()<CR>", { noremap = true, silent = true })
 end)
---
+-- settings
 vim.cmd('syntax off')
 vim.cmd('filetype plugin indent on')
 -- ergonomics
