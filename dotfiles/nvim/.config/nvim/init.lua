@@ -23,6 +23,7 @@ if not vim.loop.fs_stat(mini_path) then
 end
 require('mini.deps').setup({ path = { package = path_package } })
 local add, now, later = MiniDeps.add, MiniDeps.now, MiniDeps.later
+-- autoformat
 vim.api.nvim_create_autocmd("BufWritePre", {
     pattern = {
         "*.c", "*.cpp", "*.h", "*.hpp",       -- C++

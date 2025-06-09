@@ -248,7 +248,7 @@ in
           colorMoved = "plain";
           mnemonicPrefix = true;
           renames = true;
-          tool = "difftastic";
+          tool = "meld";
         };
 
         credential = {
@@ -305,7 +305,8 @@ in
         };
 
         difftool = {
-          prompt = false;
+          prompt = true;
+
           "difftastic" = {
             cmd = "difft \"$LOCAL\" \"$REMOTE\"";
             trustExitCode = true;
@@ -329,6 +330,7 @@ in
 
         mergetool = {
           keepBackup = false;
+
           "meld" = {
             cmd = "meld --auto-merge \"$LOCAL\" \"$BASE\" \"$REMOTE\" --output \"$MERGED\" --label=Local --label=Base --label=Remote --diff \"$BASE\" \"$LOCAL\" --diff \"$BASE\" \"$REMOTE\"";
             trustExitCode = false;
@@ -346,7 +348,7 @@ in
         };
 
         pager = {
-          difftool = true;
+          difftool = false;
         };
 
         filter = {

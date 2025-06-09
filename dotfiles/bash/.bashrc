@@ -212,19 +212,34 @@ function command_not_found_handle() {
 #     local _setupgdb_tty=$(tty)
 #     printf 'dashboard -output %s\n' "$_setupgdb_tty" >"$GDBSETUP"
 # }
-if $(command -v tmux >/dev/null); then
-    [ -z "${TMUX+set}" ] || export SESSION=$(tmux display-message -p '#S')
-fi
-function quit() {
-    if $(command -v tmux >/dev/null); then
-        tmux kill-session -t $SESSION
+# if $(command -v tmux >/dev/null); then
+#     [ -z "${TMUX+set}" ] || export SESSION=$(tmux display-message -p '#S')
+# fi
+# function quit() {
+#     if $(command -v tmux >/dev/null); then
+#         tmux kill-session -t $SESSION
+#     fi
+# }
+# function killdetached() {
+#     tmux list-sessions | grep -E -v '\(attached\)$' - | while IFS='\n' read line; do
+#         line="${line#*:}"
+#         tmux kill-session -t "${line%%:*}"
+#     done
+# }
+function tmux() {
+    [[ -n "$TMUX" ]] && { command tmux "$@"; return; }
+    [[ $# -gt 0 ]] && { command tmux "$@"; return; }
+    if command tmux list-sessions &>/dev/null; then
+        command tmux attach
+    else
+        if [[ -f ~/.cache/tmux/resurrect/last ]] && [[ -s ~/.cache/tmux/resurrect/last ]]; then
+            command tmux new-session -d
+            ~/.cache/tmux/plugins/tmux-resurrect/scripts/restore.sh
+            command tmux attach
+        else
+            command tmux new-session
+        fi
     fi
-}
-function killdetached() {
-    tmux list-sessions | grep -E -v '\(attached\)$' - | while IFS='\n' read line; do
-        line="${line#*:}"
-        tmux kill-session -t "${line%%:*}"
-    done
 }
 function lsd() {
     tree -a -C -L 6 -d -I '.git|.venv|__pycache__|*cache|build|target' "${@:-.}" | less -R
