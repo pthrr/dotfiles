@@ -90,7 +90,8 @@ in
             sent mc tmuxp tmux
             unrar
             jq fzf fq pdfgrep ugrep expect dos2unix universal-ctags fdupes pdftk
-            eza fd sd bat ripgrep glow broot tree htop nvtopPackages.full
+            sd bat glow broot
+            tree htop
             wl-clipboard wlr-randr
             poppler_utils graphviz pandoc libwebp
             drumgizmo x42-avldrums x42-plugins wolf-shaper calf
