@@ -88,7 +88,7 @@ now(function()
         vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)
         vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, bufopts)
     end
-    local servers = { 'pyright', 'bashls', 'clangd', 'rust_analyzer', 'ts_ls' }
+    local servers = { 'pyright', 'bashls', 'clangd', 'rust_analyzer', 'ts_ls', 'leanls' }
     for _, lsp in ipairs(servers) do
         require('lspconfig')[lsp].setup({ on_attach = on_attach })
     end
