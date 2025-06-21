@@ -173,6 +173,17 @@ later(function()
         },
     })
 end)
+-- list symbols
+later(function()
+  require('mini.pick').setup()
+  require('mini.extra').setup()
+  vim.keymap.set('n', '<leader>ss', function()
+    require('mini.extra').pickers.lsp({ scope = 'document_symbol' })
+  end, { desc = 'Document symbols' })
+  vim.keymap.set('n', '<leader>sS', function()
+    require('mini.extra').pickers.lsp({ scope = 'workspace_symbol' })
+  end, { desc = 'Workspace symbols' })
+end)
 -- comments
 later(function()
     require('mini.comment').setup({})
