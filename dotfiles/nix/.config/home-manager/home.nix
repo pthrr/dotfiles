@@ -111,6 +111,8 @@ in
         file.".clang-format".source = ../../../lang/.clang-format;
         file.".cmake-format.yaml".source = ../../../lang/.cmake-format.yaml;
 
+        file.".bazelrc".source = ../../../bazel/.bazelrc;
+
         file.".ssh" = {
             source = ../../../ssh/.ssh;
             recursive = true;
