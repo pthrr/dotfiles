@@ -268,6 +268,7 @@ shopt -s extglob
 shopt -s globstar
 shopt -s dotglob
 shopt -s checkwinsize
+shopt -s checkjobs
 set -o vi
 set -o noclobber
 alias vi='nvim'
@@ -276,7 +277,6 @@ alias fm='mc . .'
 alias top='top -o %MEM'
 alias diff='diff --strip-trailing-cr --ignore-trailing-space'
 alias grep='LC_ALL=C grep -Hn --color=auto --binary-files=without-match --exclude-dir={.git,.venv,__pycache__,*cache,build,target}'
-alias diff='diff --strip-trailing-cr --color=auto'
 alias ls='ls -h --classify --color=auto --group-directories-first'
 alias lls='ls -lah --classify --color=auto --group-directories-first'
 alias free='free -h'
@@ -313,6 +313,7 @@ alias pwgen='pb keepassxc-cli generate --lower --upper --numeric --special --len
 alias mksomespace='nix-collect-garbage -d'
 alias dotfiles='git --git-dir="$HOME/.dotfiles/.git" --work-tree="$HOME/.dotfiles"'
 alias srv='ssh nwv-srv -p 2225'
+alias srvreb='ssh nwv-srv -p 2225 "cd ~/server && git pull && sudo task deploy"'
 source "$HOME/key-bindings.bash"
 source "$HOME/z.sh"
 source "$HOME/git-prompt.sh"
