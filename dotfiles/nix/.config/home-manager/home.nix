@@ -150,7 +150,7 @@ in
         };
 
         git = {
-          auto-local-branch = true;
+          auto-local-bookmark = true;
           push-branch-prefix = "";
           fetch-tags = true;
           track-branches = true;
@@ -174,7 +174,6 @@ in
           lg = "log --graph";
           rb = "rebase";
           mt = "resolve";
-          st = "status";
 
           # Git command aliases
           git-fetch = "git fetch --prune";
@@ -211,6 +210,7 @@ in
         ui = {
           default-command = "status";
           color = "auto";
+          diff-context = 8;
         };
       };
     };
