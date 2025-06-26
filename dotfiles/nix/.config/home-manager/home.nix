@@ -39,65 +39,41 @@ in
         enableNixpkgsReleaseCheck = false;
 
         packages = with pkgs; [
-            # langs
-            cue cuelsp cuetools
-            # tectonic
+            deno
+            mold valgrind sccache
+            mc tmux
+            tree htop
+            nixd nil
             typst typst-fmt tinymist
-            # ansible ansible-lint ansible-language-server
+            ngspice xyce-parallel
             yamlfmt yamllint
-            # ghc cabal-install cabal2nix stack hlint haskell-language-server
-            # cling gdbgui ddd cbmc
-            mold rr valgrind sccache
-            # tinycc
             shfmt
-            # nasm
+            cmake-format
+            lean4
+            cue cuelsp cuetools
+            protobuf protobufc
+            rustup
+            scons meson ninja bazelisk bmake bear
             pyright
             emscripten wasmtime wabt
-            rustup cargo-rr
-            # go
-            cmake-format
-            nodePackages_latest.fixjson
-            protobuf protobufc
-            # bluespec yosys-bluespec
-            bun
-            # dev tools
-            git-lfs git-filter-repo git-imerge difftastic
-            scons meson ninja bazelisk bmake bear
-            hotspot
-            unifdef
+            difftastic
             kind minikube helm k3s k3d envsubst
-            netpbm
-            potrace
-            #
-            # yosys verilator gtkwave symbiyosys icestorm nextpnrWithGui
-            picotool
-            # ripes crun
-            ngspice xyce-parallel
-            # qucs-s openems
-            svdtools svd2rust
-            # sw
             firefox
-            # pcb2gcode
-            # candle
-            nuXmv alloy6
-            # coq coqPackages.coqide
-            lean4
-            # tigerbeetle
-            gnuradio
-            # tools
-            cookiecutter
-            # age tio tldr
-            sent mc tmuxp tmux
-            unrar
-            jq fzf fq pdfgrep ugrep expect dos2unix universal-ctags fdupes pdftk
-            sd bat glow broot
-            tree htop
-            wl-clipboard wlr-randr
-            poppler_utils graphviz pandoc libwebp
-            drumgizmo x42-avldrums x42-plugins wolf-shaper calf
-            # os
             nsxiv farbfeld
             zathura
+            yosys verilator symbiyosys icestorm nextpnrWithGui
+            jq fzf fq
+            sent
+            drumgizmo x42-avldrums x42-plugins wolf-shaper calf
+            unrar
+            bluespec yosys-bluespec
+            pcb2gcode candle
+            gdbgui rr hotspot
+            poppler_utils graphviz pandoc libwebp netpbm potrace
+            svdtools svd2rust
+            nuXmv alloy6
+            ripes crun
+            wl-clipboard wlr-randr
         ];
 
         # files in ~/
@@ -131,6 +107,29 @@ in
             source = ../../../sent/Vorlagen/slides;
             recursive = true;
         };
+    };
+
+    systemd.user.services.sccache = {
+      Unit = {
+        Description = "sccache daemon";
+        After = [ "graphical-session-pre.target" ];
+        PartOf = [ "graphical-session.target" ];
+      };
+
+      Install = {
+        WantedBy = [ "graphical-session.target" ];
+      };
+
+      Service = {
+        Type = "simple";
+        Environment = [
+          "SCCACHE_REDIS=redis://nwv-srv:6380"
+          "SCCACHE_REDIS_TTL=604800"
+        ];
+        ExecStart = "${pkgs.sccache}/bin/sccache --start-server";
+        ExecStop = "${pkgs.sccache}/bin/sccache --stop-server";
+        Restart = "on-failure";
+      };
     };
 
     # Let Home Manager install and manage itself.

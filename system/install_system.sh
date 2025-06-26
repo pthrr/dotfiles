@@ -45,6 +45,8 @@ sudo flatpak remote-add --if-not-exists \
 	flathub https://flathub.org/repo/flathub.flatpakrepo
 # org.mozilla.firefox \
 sudo flatpak install \
+	io.github.gtkwave.GTKWave \
+	dev.zed.Zed \
 	io.github.ra3xdh.qucs_s \
 	org.kde.calligra \
 	org.inkscape.Inkscape \
