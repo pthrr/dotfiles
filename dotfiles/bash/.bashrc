@@ -242,10 +242,10 @@ function tmux() {
     fi
 }
 function lsd() {
-    tree -a -C -L 6 -d -I '.git|.venv|__pycache__|*cache|build|target' "${@:-.}" | less -R
+    tree -a -C -L 6 -d -I '.git|.jj|.venv|__pycache__|*cache|build|target' "${@:-.}" | less -R
 }
 function lsf() {
-    tree -a -C -L 6 -I '.git|.venv|__pycache__|*cache|build|target' "${@:-.}" | less -R
+    tree -a -C -L 6 -I '.git|.jj|.venv|__pycache__|*cache|build|target' "${@:-.}" | less -R
 }
 function pb() {
     "$@" | pbcopy
@@ -276,7 +276,7 @@ alias vim='nvim'
 alias fm='mc . .'
 alias top='top -o %MEM'
 alias diff='diff --strip-trailing-cr --ignore-trailing-space'
-alias grep='LC_ALL=C grep -Hn --color=auto --binary-files=without-match --exclude-dir={.git,.venv,__pycache__,*cache,build,target}'
+alias grep='LC_ALL=C grep -Hn --color=auto --binary-files=without-match --exclude-dir={.git,.jj,.venv,__pycache__,*cache,build,target}'
 alias ls='ls -h --classify --color=auto --group-directories-first'
 alias lls='ls -lah --classify --color=auto --group-directories-first'
 alias free='free -h'
