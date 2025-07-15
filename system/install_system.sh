@@ -2,9 +2,9 @@
 set -euo pipefail
 
 sudo dnf update -y
-sudo dnf groupremove -y \
+sudo dnf group remove -y \
 	"LibreOffice"
-sudo dnf groupinstall -y \
+sudo dnf group install -y --skip-unavailable \
 	"KDE Plasma Workspaces" \
 	"Administration Tools" \
 	"C Development Tools and Libraries" \

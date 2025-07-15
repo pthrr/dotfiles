@@ -7,4 +7,4 @@ curl -L https://nixos.org/nix/install | sh
 nix-env -i hello
 which hello
 hello
-nix profile install -L github:garnix-io/garn
+nix profile add -L github:garnix-io/garn
