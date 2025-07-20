@@ -39,6 +39,8 @@ in
         enableNixpkgsReleaseCheck = false;
 
         packages = with pkgs; [
+            zig zls
+            sqlite
             deno
             mold valgrind sccache
             mc tmux

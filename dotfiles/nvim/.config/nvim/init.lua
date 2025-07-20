@@ -31,6 +31,7 @@ vim.api.nvim_create_autocmd("BufWritePre", {
         "*.ts", "*.tsx", "*.js", "*.jsx",     -- Typescript
         "*.sh", "*.bash", "*.zsh",            -- Bash
         "*.py",                               -- Python
+        "*.zig",                              -- Zig
     },
     callback = function()
         if not vim.bo.modified then return end
@@ -42,6 +43,8 @@ vim.api.nvim_create_autocmd("BufWritePre", {
         end
         if file:match("%.rs$") then
             run_external("rustfmt", { file })
+        elseif file:match("%.zig$") then
+            run_external("zig", { "fmt", file })
         elseif file:match("%.[ch]pp?$") then
             run_external("clang-format", { "-i", file })
         elseif file:match("%.sh$") or file:match("%.bash$") or file:match("%.zsh$") then
@@ -88,7 +91,7 @@ now(function()
         vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)
         vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, bufopts)
     end
-    local servers = { 'pyright', 'bashls', 'clangd', 'rust_analyzer', 'ts_ls', 'leanls' }
+    local servers = { 'pyright', 'bashls', 'clangd', 'rust_analyzer', 'ts_ls', 'leanls', 'zls' }
     for _, lsp in ipairs(servers) do
         require('lspconfig')[lsp].setup({ on_attach = on_attach })
     end
