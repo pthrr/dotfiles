@@ -43,8 +43,8 @@ sudo dnf remove -y \
 	thunderbird firefox
 sudo flatpak remote-add --if-not-exists \
 	flathub https://flathub.org/repo/flathub.flatpakrepo
-# org.mozilla.firefox \
 sudo flatpak install \
+	org.mozilla.firefox \
 	io.github.gtkwave.GTKWave \
 	dev.zed.Zed \
 	io.github.ra3xdh.qucs_s \
