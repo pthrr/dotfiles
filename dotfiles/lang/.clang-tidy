@@ -1,13 +1,11 @@
 Checks: >
-  bugprone-*,
-  cppcoreguidelines-*,
-  hicpp-*,
-  modernize-*,
-  performance-*,
-  portability-*,
+  -,
   readability-*,
+  portability-*,
+  modernize-*,
+  bugprone-*,
   concurrency-*,
-  cert-*,
+  performance-*,
   misc-*,
   clang-analyzer-*
 

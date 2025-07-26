@@ -149,6 +149,7 @@ export FZF_DEFAULT_OPTS='-m --height 50% --border'
 export LESS='-R'
 export NO_AT_BRIDGE=1
 export DO_NOT_TRACK=1
+export NINJA_STATUS="%p [%f:%s/%t] %o/s, %es"
 export _JAVA_AWT_WM_NONREPARENTING=1
 export MC_XDG_OPEN="$HOME/bin/xdg"
 export MC_SKIN="$HOME/.config/mc/solarized.ini"
