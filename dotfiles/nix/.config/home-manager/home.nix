@@ -115,14 +115,10 @@ in
     systemd.user.services.sccache = {
       Unit = {
         Description = "sccache daemon";
-        After = [ "graphical-session-pre.target" ];
-        PartOf = [ "graphical-session.target" ];
       };
-
       Install = {
-        WantedBy = [ "graphical-session.target" ];
+        WantedBy = [ "default.target" ];
       };
-
       Service = {
         Type = "simple";
         Environment = [
