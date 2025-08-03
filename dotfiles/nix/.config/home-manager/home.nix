@@ -39,6 +39,8 @@ in
         enableNixpkgsReleaseCheck = false;
 
         packages = with pkgs; [
+            ghostty
+            ripgrep fd
             zig zls
             sqlite
             deno

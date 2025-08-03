@@ -318,9 +318,14 @@ vim.o.statusline = "%-4.(%n%)%{v:lua.CustomTabline()} %h%m%r%=%-14.(%l,%c%V%) %P
 if vim.g.wsl then
     vim.g.clipboard = {
         name = 'WslClipboard',
-        copy = { ['+'] = 'clip.exe', ['*'] = 'clip.exe' },
-        paste = { ['+'] = 'powershell.exe -c [Console]::Out.Write($(Get-Clipboard -Raw).tostring().replace("`r", ""))',
-                  ['*'] = 'powershell.exe -c [Console]::Out.Write($(Get-Clipboard -Raw).tostring().replace("`r", ""))' },
+        copy = {
+            ['+'] = 'clip.exe',
+            ['*'] = 'clip.exe'
+        },
+        paste = {
+            ['+'] = 'powershell.exe -c [Console]::Out.Write($(Get-Clipboard -Raw).tostring().replace("`r", ""))',
+            ['*'] = 'powershell.exe -c [Console]::Out.Write($(Get-Clipboard -Raw).tostring().replace("`r", ""))'
+        },
         cache_enabled = 0,
     }
 end
