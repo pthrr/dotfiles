@@ -223,15 +223,6 @@ later(function()
         end
     })
 end)
--- cppman
-later(function()
-    add({
-        source = 'v1nh1shungry/cppman.nvim',
-    })
-    require('cppman').setup({})
-    vim.api.nvim_set_keymap('n', 'K', ":lua require('cppman').open(vim.fn.expand('<cword>'))<CR>", { noremap = true, silent = true })
-    vim.api.nvim_set_keymap('n', '<leader>cm', ":lua require('cppman').search()<CR>", { noremap = true, silent = true })
-end)
 -- settings
 vim.cmd('syntax off')
 vim.cmd('filetype plugin indent on')
@@ -332,8 +323,6 @@ if vim.g.wsl then
                   ['*'] = 'powershell.exe -c [Console]::Out.Write($(Get-Clipboard -Raw).tostring().replace("`r", ""))' },
         cache_enabled = 0,
     }
-else
-    vim.o.clipboard = "unnamed,unnamedplus"
 end
 -- cursorline
 vim.api.nvim_create_autocmd("BufEnter", {
