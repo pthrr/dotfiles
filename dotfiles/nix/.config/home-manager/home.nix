@@ -39,7 +39,7 @@ in
         enableNixpkgsReleaseCheck = false;
 
         packages = with pkgs; [
-            ripgrep fd
+            ghostty
             zig zls
             sqlite
             deno
@@ -65,7 +65,8 @@ in
             nsxiv farbfeld
             zathura
             yosys verilator symbiyosys icestorm nextpnrWithGui
-            jq fzf fq
+            jq fq
+            fzf ripgrep fd
             sent
             drumgizmo x42-avldrums x42-plugins wolf-shaper calf
             unrar
@@ -82,7 +83,6 @@ in
         # files in ~/
         file.".bashrc".source = ../../../bash/.bashrc;
         file.".bash_profile".source = ../../../bash/.bash_profile;
-        file."key-bindings.bash".source = ../../../bash/key-bindings.bash;
         file."z.sh".source = ../../../bash/z.sh;
         file."git-prompt.sh".source = ../../../bash/git-prompt.sh;
 
