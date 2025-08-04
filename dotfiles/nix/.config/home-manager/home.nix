@@ -39,6 +39,7 @@ in
         enableNixpkgsReleaseCheck = false;
 
         packages = with pkgs; [
+            redis
             zig zls
             sqlite
             deno
@@ -119,7 +120,7 @@ in
         WantedBy = [ "default.target" ];
       };
       Service = {
-        Type = "simple";
+        Type = "forking";
         Environment = [
           "SCCACHE_REDIS=redis://nwv-srv:6380"
           "SCCACHE_REDIS_TTL=604800"
