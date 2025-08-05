@@ -39,6 +39,7 @@ in
         enableNixpkgsReleaseCheck = false;
 
         packages = with pkgs; [
+            go-task
             redis
             zig zls
             sqlite
