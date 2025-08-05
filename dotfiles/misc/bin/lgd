@@ -1,0 +1,21 @@
+#!/bin/bash
+
+if [[ $# -eq 0 ]]; then
+    echo "Usage: $0 <directory>"
+    exit 1
+fi
+
+dir="$1"
+
+if [[ -d "$dir" ]]; then
+    find "$dir" -type d -name ".git" | while read -r git_dir; do
+        repo_dir=$(dirname "$git_dir")
+
+        if [[ -n $(git -C "$repo_dir" status --porcelain 2>/dev/null) ]]; then
+            echo "$repo_dir"
+        fi
+    done
+else
+    echo "Directory '$dir' does not exist"
+    exit 1
+fi
