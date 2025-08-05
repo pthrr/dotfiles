@@ -72,7 +72,7 @@ in
             drumgizmo x42-avldrums x42-plugins wolf-shaper calf
             unrar
             bluespec yosys-bluespec
-            pcb2gcode candle
+            # pcb2gcode candle
             gdbgui rr hotspot
             poppler_utils graphviz pandoc libwebp netpbm potrace
             svdtools svd2rust
