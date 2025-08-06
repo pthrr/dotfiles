@@ -32,6 +32,8 @@ vim.api.nvim_create_autocmd("BufWritePre", {
         "*.sh", "*.bash", "*.zsh",            -- Bash
         "*.py",                               -- Python
         "*.zig",                              -- Zig
+        "*.tla",                              -- TLA+
+        "*.typ",                              -- Typst
     },
     callback = function()
         if not vim.bo.modified then return end
@@ -43,6 +45,10 @@ vim.api.nvim_create_autocmd("BufWritePre", {
         end
         if file:match("%.rs$") then
             run_external("rustfmt", { file })
+        elseif file:match("%.typ$") then
+            run_external("typstyle", { "-i", file })
+        elseif file:match("%.tla$") then
+            run_external("tlafmt", { file })
         elseif file:match("%.zig$") then
             run_external("zig", { "fmt", file })
         elseif file:match("%.[ch]pp?$") then
@@ -91,7 +97,7 @@ now(function()
         vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)
         vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, bufopts)
     end
-    local servers = { 'pyright', 'bashls', 'clangd', 'rust_analyzer', 'ts_ls', 'leanls', 'zls' }
+    local servers = { 'pyright', 'bashls', 'clangd', 'rust_analyzer', 'ts_ls', 'leanls', 'zls', 'tinymist' }
     for _, lsp in ipairs(servers) do
         require('lspconfig')[lsp].setup({ on_attach = on_attach })
     end
@@ -200,27 +206,6 @@ later(function()
             MiniTrailspace.trim()
             MiniTrailspace.trim_last_lines()
         end,
-    })
-end)
--- gdb
-later(function()
-    add({
-        source = 'puremourning/vimspector',
-    })
-end)
--- typst
-later(function()
-    add({
-        source = 'kaarmu/typst.vim',
-    })
-    vim.api.nvim_create_autocmd("BufWritePost", {
-        pattern = "*.typ",
-        callback = function()
-            local current_file = vim.fn.expand('%')
-            vim.loop.spawn("typst", {
-                args = {"compile", current_file},
-            })
-        end
     })
 end)
 -- settings
@@ -395,19 +380,6 @@ vim.api.nvim_set_keymap('v', '<leader>d', '"_d', { noremap = true, silent = true
 vim.api.nvim_set_keymap('n', '<leader>d', '"_d', { noremap = true, silent = true })
 -- Replace currently selected text without yanking it
 vim.api.nvim_set_keymap('v', '<leader>p', '"_dP', { noremap = true, silent = true })
--- quint
-vim.api.nvim_create_autocmd({"BufRead", "BufNewFile"}, {
-    pattern = "*.qnt",
-    callback = function()
-        vim.bo.filetype = "quint"
-    end,
-})
-vim.api.nvim_create_autocmd({"BufNewFile", "BufReadPost"}, {
-    pattern = "*.qnt",
-    callback = function()
-        vim.cmd("runtime syntax/quint.vim")
-    end,
-})
 -- Function to switch between .cpp/.hpp and .c/.h files
 later(function()
     function switch_source_header()

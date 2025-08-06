@@ -48,12 +48,12 @@ in
             mc tmux
             tree htop
             nixd nil
-            typst typst-fmt tinymist
+            typst tinymist typstyle
             ngspice xyce-parallel
             yamlfmt yamllint
             shfmt
             cmake-format
-            lean4
+            lean4 tlafmt
             cue cuelsp cuetools
             protobuf protobufc
             rustup
