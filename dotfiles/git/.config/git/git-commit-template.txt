@@ -1,26 +1,57 @@
-# ------------------------------------------------
-# <type>(<scope>): <short summary> (max 50 chars)
-# ------------------------------------------------
+# ================================================
+# TITLE: <type>[optional scope]: <description> (max 50 chars)
+# ================================================
 Add your title here
 
-# Example:
-# feat(logging): add timestamp to log output
-# fix(parser): handle null values correctly
+# REQUIRED TYPES:
+# - feat: A new feature (MINOR)
+# - fix: A bug fix (PATCH)
 #
-# Types:
-# - feat: A new feature
-# - fix: A bug fix
-# - refactor: Code changes that neither fix a bug nor add a feature
-# - docs: Documentation updates
-# - test: Adding or improving tests
-# - chore: Maintenance tasks (e.g., build process, CI changes)
+# ADDITIONAL TYPES:
+# - build: Changes to build system or external dependencies
+# - chore: Other changes that don't modify src or test files
+# - ci: Changes to CI configuration files and scripts
+# - docs: Documentation only changes
 # - perf: Performance improvements
-# - style: Code style changes (e.g., formatting, linting)
+# - refactor: Code changes that neither fix a bug nor add a feature
+# - revert: Reverts a previous commit
+# - style: Code style changes (formatting, whitespace, etc.)
+# - test: Adding missing tests or correcting existing tests
 #
-# ----------------------------------------------------------------------
-# Body (optional, explain what and why) - Wrap at 72 chars per line
-# ----------------------------------------------------------------------
+# BREAKING CHANGES:
+# - feat!: description (MAJOR)
+# - feat(scope)!: description (MAJOR)
+#
+# EXAMPLES:
+# feat: add user authentication
+# fix(parser): handle null values
+# feat(api)!: remove deprecated endpoints
+#
+# ================================================
+# BODY (Optional - wrap at 72 chars)
+# ================================================
 
-# ----------------------------------------------------------------------
-# Footer (optional, e.g., issue tracker links) - Wrap at 72 chars per line
-# ----------------------------------------------------------------------
+# Free-form text explaining what and why
+# Separate from title with blank line
+
+# ================================================
+# FOOTER (Optional - wrap at 72 chars)
+# ================================================
+
+# BREAKING CHANGES:
+# - BREAKING CHANGE: description (MUST be uppercase, MAJOR)
+#
+# ISSUE REFERENCES:
+# - Closes: #123
+# - Fixes: #123
+# - Refs: #123
+#
+# COLLABORATION:
+# - Reviewed-by: Name <email>
+# - Co-authored-by: Name <email>
+# - Signed-off-by: Name <email>
+#
+# EXAMPLES:
+# BREAKING CHANGE: environment variables now take precedence
+# Closes: #123, #456
+# Reviewed-by: John Doe <john@example.com>
