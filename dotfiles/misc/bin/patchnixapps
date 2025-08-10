@@ -3,17 +3,28 @@ set -euo pipefail
 
 DIR=$1
 
-kExecRegex='^Exec=.+$'
-kExecRegexNix='^Exec=nixGL.+$'
+if lspci | grep -i "vga.*intel" > /dev/null; then
+    NIXGL_VARIANT="nixGLIntel"
+elif lspci | grep -i "vga.*amd\|vga.*radeon" > /dev/null; then
+    NIXGL_VARIANT="nixGLAMD"
+else
+    echo "Could not detect Intel or AMD graphics, defaulting to nixGLIntel"
+    NIXGL_VARIANT="nixGLIntel"
+fi
+
+echo "Using $NIXGL_VARIANT"
+RX_EXEC='^Exec=.+$'
+RX_EXEC_NIXGL='^Exec=nixGL.+$'
+
 for file in $DIR/*; do
     if [[ -f $file && $file == *.desktop ]]; then
         echo "Entering file $file .."
         c=0
         while read line; do
             c=$((c+1))
-            if [[ $line =~ $kExecRegex && ! $line =~ $kExecRegexNix ]]; then
+            if [[ $line =~ $RX_EXEC && ! $line =~ $RX_EXEC_NIXGL ]]; then
                 echo " Replacing line $c: $line .."
-                sed -i "${c}s/Exec=/Exec=nixGL /" $file
+                sed -i "${c}s/Exec=/Exec=$NIXGL_VARIANT /" $file
             fi
         done < $file
         chmod +x $file

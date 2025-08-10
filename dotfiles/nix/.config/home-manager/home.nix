@@ -39,11 +39,12 @@ in
         enableNixpkgsReleaseCheck = false;
 
         packages = with pkgs; [
+            usbutils pciutils coreutils findutils
             go-task
             redis
             zig zls
             sqlite
-            deno
+            deno bun
             mold valgrind sccache
             mc tmux
             tree htop
