@@ -39,6 +39,7 @@ in
         enableNixpkgsReleaseCheck = false;
 
         packages = with pkgs; [
+            nodePackages.typescript-language-server
             usbutils pciutils coreutils findutils
             go-task
             redis
