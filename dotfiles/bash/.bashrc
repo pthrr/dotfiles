@@ -159,6 +159,7 @@ export TMPDIR="$HOME/tmp"
 export SYSTEMC_HOME="/opt/systemc"
 export SYSTEMC_AMS_HOME="/opt/systemc-ams"
 export ICSC_HOME="$HOME/opt/sc_tools"
+export SCCACHE_REDIS="redis://mwv-srv:6380"
 export HISTCONTROL=ignorespace:erasedups
 export HISTSIZE=1000
 export HISTFILESIZE=2000

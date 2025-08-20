@@ -93,8 +93,12 @@ in
         file.".clang-tidy".source = ../../../lang/.clang-tidy;
         file.".clang-format".source = ../../../lang/.clang-format;
         file.".cmake-format.yaml".source = ../../../lang/.cmake-format.yaml;
+        file.".bazelrc".source = ../../../lang/.bazelrc;
 
-        file.".bazelrc".source = ../../../bazel/.bazelrc;
+        file.".cargo" = {
+            source = ../../../lang/.cargo;
+            recursive = true;
+        };
 
         file.".ssh" = {
             source = ../../../ssh/.ssh;
