@@ -39,6 +39,7 @@ in
         enableNixpkgsReleaseCheck = false;
 
         packages = with pkgs; [
+            openssl
             nodejs_24
             nodePackages.typescript-language-server
             usbutils pciutils coreutils findutils
