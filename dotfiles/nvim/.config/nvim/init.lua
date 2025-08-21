@@ -97,9 +97,17 @@ now(function()
         vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)
         vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, bufopts)
     end
-    local servers = { 'pyright', 'bashls', 'clangd', 'rust_analyzer', 'ts_ls', 'leanls', 'zls', 'tinymist' }
+    local servers = { 'pyright', 'bashls', 'clangd', 'rust_analyzer', 'ts_ls', 'leanls', 'zls', 'tinymist', 'eslint' }
+    local server_configs = {
+        eslint = {
+            settings = {
+                packageManager = "bun"
+            }
+        }
+    }
     for _, lsp in ipairs(servers) do
-        require('lspconfig')[lsp].setup({ on_attach = on_attach })
+        local config = vim.tbl_deep_extend("force", { on_attach = on_attach }, server_configs[lsp] or {})
+        require('lspconfig')[lsp].setup(config)
     end
     local diagnostic_float_win = nil
     local function open_corner_float()

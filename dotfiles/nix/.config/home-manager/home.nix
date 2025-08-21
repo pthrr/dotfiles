@@ -40,14 +40,12 @@ in
 
         packages = with pkgs; [
             openssl
-            nodejs_24
-            nodePackages.typescript-language-server
             usbutils pciutils coreutils findutils
             go-task
             redis
             zig zls
             sqlite
-            deno bun
+            deno bun nodejs_24 eslint nodePackages.typescript-language-server
             mold valgrind sccache
             mc tmux
             tree htop
