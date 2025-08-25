@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-REDIS_HOST="${SCCACHE_REDIS_HOST:-'mwv-srv'}"
+REDIS_HOST="${SCCACHE_REDIS_HOST:-'nwv-srv'}"
 REDIS_PORT="${SCCACHE_REDIS_PORT:-6380}"
 
 if timeout 2 bash -c "</dev/tcp/${REDIS_HOST}/${REDIS_PORT}" 2>/dev/null; then
