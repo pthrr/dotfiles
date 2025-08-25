@@ -427,3 +427,12 @@ later(function()
     end
     vim.api.nvim_set_keymap('n', '<A-o>', '<cmd>lua switch_source_header()<CR>', { noremap = true, silent = true })
 end)
+-- neogit
+now(function()
+    add({
+        source = 'NeogitOrg/neogit',
+    })
+end)
+later(function()
+    require('neogit').setup {}
+end)
