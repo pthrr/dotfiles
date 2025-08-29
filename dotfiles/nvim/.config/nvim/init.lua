@@ -97,7 +97,7 @@ now(function()
         vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)
         vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, bufopts)
     end
-    local servers = { 'ty', 'bashls', 'clangd', 'rust_analyzer', 'ts_ls', 'leanls', 'zls', 'tinymist', 'eslint' }
+    local servers = { 'pyright', 'ty', 'bashls', 'clangd', 'rust_analyzer', 'ts_ls', 'leanls', 'zls', 'tinymist', 'eslint' }
     local server_configs = {
         eslint = {
             settings = {
