@@ -39,6 +39,7 @@ in
         enableNixpkgsReleaseCheck = false;
 
         packages = with pkgs; [
+            ty
             wineWow64Packages.waylandFull
             openssl
             usbutils pciutils coreutils findutils
