@@ -44,6 +44,7 @@ sudo dnf remove -y \
 sudo flatpak remote-add --if-not-exists \
 	flathub https://flathub.org/repo/flathub.flatpakrepo
 sudo flatpak install \
+	it.fabiodistasio.AntaresSQL \
 	com.bitwig.BitwigStudio \
 	net.lutris.Lutris \
 	org.mozilla.firefox \

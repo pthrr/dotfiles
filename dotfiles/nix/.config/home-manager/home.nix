@@ -39,6 +39,7 @@ in
         enableNixpkgsReleaseCheck = false;
 
         packages = with pkgs; [
+            claude-code
             ty
             wineWow64Packages.waylandFull
             openssl

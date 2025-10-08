@@ -1,6 +1,0 @@
-build --action_env=SCCACHE_REDIS="redis://nwv-srv:6380"
-
-build --action_env=CC="sccache cc"
-build --action_env=CXX="sccache c++"
-
-build --action_env=RUSTC_WRAPPER="sccache"
