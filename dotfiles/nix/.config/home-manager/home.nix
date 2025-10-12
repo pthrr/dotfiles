@@ -62,7 +62,7 @@ in
             cue cuelsp cuetools
             protobuf protobufc
             rustup
-            scons meson ninja bazelisk bmake bear buck2
+            scons meson ninja bazelisk bmake bear buck2 git-repo
             pyright
             emscripten wasmtime wabt
             difftastic
