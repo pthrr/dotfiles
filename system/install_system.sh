@@ -44,6 +44,7 @@ sudo dnf remove -y \
 sudo flatpak remote-add --if-not-exists \
 	flathub https://flathub.org/repo/flathub.flatpakrepo
 sudo flatpak install \
+	org.libreoffice.LibreOffice \
 	it.fabiodistasio.AntaresSQL \
 	com.bitwig.BitwigStudio \
 	net.lutris.Lutris \
@@ -51,7 +52,6 @@ sudo flatpak install \
 	io.github.gtkwave.GTKWave \
 	dev.zed.Zed \
 	io.github.ra3xdh.qucs_s \
-	org.kde.calligra \
 	org.inkscape.Inkscape \
 	org.gnucash.GnuCash \
 	org.freecad.FreeCAD \
