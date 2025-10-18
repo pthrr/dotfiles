@@ -57,6 +57,7 @@ in
             ngspice # xyce-parallel # temporarily disabled due to trilinos cmake build issue
             yamlfmt yamllint
             shfmt
+            stylua
             cmake-format
             lean4 tlafmt
             cue cuelsp cuetools
@@ -96,6 +97,7 @@ in
         file.".clang-tidy".source = ../../../lang/.clang-tidy;
         file.".clang-format".source = ../../../lang/.clang-format;
         file.".cmake-format.yaml".source = ../../../lang/.cmake-format.yaml;
+        file."stylua.toml".source = ../../../lang/stylua.toml;
         file.".bazelrc".source = ../../../lang/.bazelrc;
 
         file.".cargo" = {
