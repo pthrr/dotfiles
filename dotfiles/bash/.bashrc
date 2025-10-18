@@ -51,6 +51,13 @@ if command -v pyenv >/dev/null 2>&1; then
     export PATH="$PYENV_ROOT/bin:$PATH"
 fi
 
+# source custom env vars
+if [ -f ~/.env ]; then
+    set -a
+    source ~/.env
+    set +a
+fi
+
 # create standard dirs
 if [ ! -d "$HOME/.lv2" ]; then
     mkdir "$HOME/.lv2" 2>/dev/null

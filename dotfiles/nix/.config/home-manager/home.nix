@@ -67,7 +67,6 @@ in
             emscripten wasmtime wabt
             difftastic
             kind minikube helm k3s k3d envsubst
-            firefox
             nsxiv farbfeld
             zathura
             yosys verilator # symbiyosys # temporarily disabled due to boolector build issue
