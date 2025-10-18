@@ -19,119 +19,133 @@ let
       builtins.trace "gitUserEmailFile exists: ${content}" content
     else
       builtins.trace "gitUserEmailFile does not exist, using default" defaultUserEmail;
+
+  commonUser = {
+    name = gitUserName;
+    email = gitUserEmail;
+  };
+
+  commonCore = {
+    editor = "nvim";
+    pager = "less -+$LESS -FRX";
+  };
 in
 {
     home = {
-        # Home Manager needs a bit of information about you and the
-        # paths it should manage.
         username = builtins.getEnv "USER";
         homeDirectory = builtins.getEnv "HOME";
-
-        # This value determines the Home Manager release that your
-        # configuration is compatible with. This helps avoid breakage
-        # when a new Home Manager release introduces backwards
-        # incompatible changes.
-        #
-        # You can update Home Manager without changing this value. See
-        # the Home Manager release notes for a list of state version
-        # changes in each release.
         stateVersion = "22.05";
         enableNixpkgsReleaseCheck = false;
 
-        packages = with pkgs; [
-            claude-code
-            ty
-            wineWow64Packages.waylandFull
-            openssl
-            usbutils pciutils coreutils findutils
-            go-task
-            redis
-            zig zls
-            sqlite
-            deno bun nodejs_24 eslint nodePackages.typescript-language-server
-            mold valgrind sccache
-            mc tmux
-            tree htop
-            nixd nil
-            typst tinymist typstyle
-            ngspice # xyce-parallel # temporarily disabled due to trilinos cmake build issue
-            yamlfmt yamllint
-            shfmt
-            stylua
-            cmake-format
-            lean4 tlafmt
-            cue cuelsp cuetools
-            protobuf protobufc
-            rustup
-            scons meson ninja bazelisk bmake bear buck2 git-repo
-            pyright
-            emscripten wasmtime wabt
-            difftastic
-            kind minikube helm k3s k3d envsubst
-            nsxiv farbfeld
-            zathura
-            yosys verilator # symbiyosys # temporarily disabled due to boolector build issue
-            icestorm # nextpnrWithGui # temporarily disabled due to cmake build issue
-            jq fq
-            fzf ripgrep fd
-            sent
-            drumgizmo x42-avldrums x42-plugins wolf-shaper calf
-            unrar
-            bluespec yosys-bluespec
-            pcb2gcode candle
-            gdbgui rr hotspot
-            poppler_utils graphviz pandoc libwebp netpbm potrace
-            svdtools svd2rust
-            nuXmv alloy6
+        packages = with pkgs;
+          # Core utilities
+          [ coreutils findutils usbutils pciutils openssl sqlite ] ++
+
+          # Shell & terminal tools
+          [ mc tmux tree htop fzf ripgrep fd wl-clipboard wlr-randr ] ++
+
+          # Build systems
+          [ scons meson ninja bazelisk bmake bear buck2 git-repo cmake-format ] ++
+
+          # Compilers & toolchains
+          [ zig zls rustup ] ++
+
+          # JavaScript/TypeScript
+          [ deno bun nodejs_24 eslint nodePackages.typescript-language-server ] ++
+
+          # Python tooling
+          [ pyright ] ++
+
+          # Nix tooling
+          [ nixd nil ] ++
+
+          # Containers & Kubernetes
+          [ kind minikube helm k3s k3d crun envsubst ] ++
+
+          # Build caching & debugging
+          [ mold valgrind sccache redis gdbgui rr hotspot ] ++
+
+          # Hardware development
+          [ yosys verilator bluespec yosys-bluespec icestorm
+            svdtools svd2rust pcb2gcode candle ngspice
+            # symbiyosys # temporarily disabled due to boolector build issue
+            # nextpnrWithGui # temporarily disabled due to cmake build issue
+            # xyce-parallel # temporarily disabled due to trilinos cmake build issue
+          ] ++
+
+          # WebAssembly
+          [ emscripten wasmtime wabt ] ++
+
+          # Document tools
+          [ typst tinymist typstyle pandoc poppler_utils graphviz ] ++
+
+          # Formatters & linters
+          [ yamlfmt yamllint shfmt stylua ] ++
+
+          # Protocol buffers
+          [ protobuf protobufc ] ++
+
+          # Data tools
+          [ jq fq ] ++
+
+          # Formal verification
+          [ lean4 tlafmt cue cuelsp cuetools nuXmv alloy6 ] ++
+
+          # Image tools
+          [ nsxiv farbfeld libwebp netpbm potrace ] ++
+
+          # Media/Audio
+          [ drumgizmo x42-avldrums x42-plugins wolf-shaper calf ] ++
+
+          # Viewers
+          [ zathura sent ] ++
+
+          # Diff tools
+          [ difftastic ] ++
+
+          # Other
+          [ claude-code ty go-task unrar wineWow64Packages.waylandFull
             # ripes # temporarily disabled due to cmake build issue
-            crun
-            wl-clipboard wlr-randr
-        ];
+          ];
 
-        # files in ~/
-        file.".bashrc".source = ../../../bash/.bashrc;
-        file.".bash_profile".source = ../../../bash/.bash_profile;
-        file."z.sh".source = ../../../bash/z.sh;
-        file."git-prompt.sh".source = ../../../bash/git-prompt.sh;
+        file = {
+          ".bashrc".source = ../../../bash/.bashrc;
+          ".bash_profile".source = ../../../bash/.bash_profile;
+          "z.sh".source = ../../../bash/z.sh;
+          "git-prompt.sh".source = ../../../bash/git-prompt.sh;
 
-        file.".clang-tidy".source = ../../../lang/.clang-tidy;
-        file.".clang-format".source = ../../../lang/.clang-format;
-        file.".cmake-format.yaml".source = ../../../lang/.cmake-format.yaml;
-        file."stylua.toml".source = ../../../lang/stylua.toml;
-        file.".bazelrc".source = ../../../lang/.bazelrc;
+          ".clang-tidy".source = ../../../lang/.clang-tidy;
+          ".clang-format".source = ../../../lang/.clang-format;
+          ".cmake-format.yaml".source = ../../../lang/.cmake-format.yaml;
+          "stylua.toml".source = ../../../lang/stylua.toml;
+          ".bazelrc".source = ../../../lang/.bazelrc;
 
-        file.".cargo" = {
+          ".cargo" = {
             source = ../../../lang/.cargo;
             recursive = true;
-        };
-
-        file.".ssh" = {
+          };
+          ".ssh" = {
             source = ../../../ssh/.ssh;
             recursive = true;
-        };
-
-        file."bin" = {
+          };
+          "bin" = {
             source = ../../../misc/bin;
             recursive = true;
-        };
-
-        file."Vorlagen/snippets" = {
+          };
+          "Vorlagen/snippets" = {
             source = ../../../nvim/Vorlagen/snippets;
             recursive = true;
-        };
-        file."Vorlagen/slides" = {
+          };
+          "Vorlagen/slides" = {
             source = ../../../sent/Vorlagen/slides;
             recursive = true;
+          };
         };
     };
 
     systemd.user.services.sccache = {
-      Unit = {
-        Description = "sccache daemon";
-      };
-      Install = {
-        WantedBy = [ "default.target" ];
-      };
+      Unit.Description = "sccache daemon";
+      Install.WantedBy = [ "default.target" ];
       Service = {
         Type = "forking";
         Environment = [
@@ -144,21 +158,13 @@ in
       };
     };
 
-    # Let Home Manager install and manage itself.
     programs.home-manager.enable = true;
 
     programs.jujutsu = {
       enable = true;
       settings = {
-        user = {
-          name = gitUserName;
-          email = gitUserEmail;
-        };
-
-        core = {
-          editor = "nvim";
-          pager = "less -+$LESS -FRX";
-        };
+        user = commonUser;
+        core = commonCore;
 
         git = {
           auto-local-bookmark = true;
@@ -228,14 +234,12 @@ in
 
     programs.git = {
       enable = true;
-      userName = gitUserName;
-      userEmail = gitUserEmail;
+      userName = commonUser.name;
+      userEmail = commonUser.email;
       package = pkgs.gitAndTools.gitFull;
       extraConfig = {
-        core = {
-          editor = "nvim";
+        core = commonCore // {
           autocrlf = false;
-          pager = "less -+$LESS -FRX";
           excludesfile = "~/.config/git/.gitignore_global";
           attributesfile = "~/.config/git/.gitattributes_global";
         };
@@ -408,48 +412,20 @@ in
         ];
     };
 
-    xdg = {
-        # files in ~/.config/
-        configFile."plasma-workspace/env" = {
+    xdg.configFile =
+      let
+        mkConfigDir = name: {
+          source = ../../../${name}/.config/${name};
+          recursive = true;
+        };
+      in
+        lib.genAttrs [ "gdb" "foot" "zathura" "git" "tmux" "mc" "nvim" ] mkConfigDir
+        // {
+          "plasma-workspace/env" = {
             source = ../../../nix/.config/plasma-workspace/env;
             recursive = true;
+          };
         };
-
-        configFile."gdb" = {
-            source = ../../../gdb/.config/gdb;
-            recursive = true;
-        };
-
-        configFile."foot" = {
-            source = ../../../foot/.config/foot;
-            recursive = true;
-        };
-
-        configFile."zathura" = {
-            source = ../../../zathura/.config/zathura;
-            recursive = true;
-        };
-
-        configFile."git" = {
-            source = ../../../git/.config/git;
-            recursive = true;
-        };
-
-        configFile."tmux" = {
-            source = ../../../tmux/.config/tmux;
-            recursive = true;
-        };
-
-        configFile."mc" = {
-            source = ../../../mc/.config/mc;
-            recursive = true;
-        };
-
-        configFile."nvim" = {
-            source = ../../../nvim/.config/nvim;
-            recursive = true;
-        };
-    };
 
   home.activation.runMyScript = lib.hm.dag.entryAfter ["writeBoundary"] ''
     sudo -n $HOME/bin/patchnixapps $HOME/.nix-profile/share/applications
