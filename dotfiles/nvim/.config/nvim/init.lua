@@ -92,6 +92,7 @@ now(function()
     local on_attach = function(client, bufnr)
         local bufopts = { noremap=true, silent=true, buffer=bufnr }
         vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
+        vim.keymap.set('n', 'gr', vim.lsp.buf.references, bufopts)
         vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
         vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, bufopts)
         vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)
@@ -188,6 +189,52 @@ now(function()
             enable = true,
             additional_vim_regex_highlighting = false,
         },
+        indent = {
+            enable = true,
+        },
+        textobjects = {
+            select = {
+                enable = true,
+                lookahead = true,
+                keymaps = {
+                    ["af"] = "@function.outer",
+                    ["if"] = "@function.inner",
+                    ["ac"] = "@class.outer",
+                    ["ic"] = "@class.inner",
+                    ["aa"] = "@parameter.outer",
+                    ["ia"] = "@parameter.inner",
+                },
+            },
+            move = {
+                enable = true,
+                set_jumps = true,
+                goto_next_start = {
+                    ["]m"] = "@function.outer",
+                    ["]c"] = "@class.outer",
+                },
+                goto_next_end = {
+                    ["]M"] = "@function.outer",
+                    ["]C"] = "@class.outer",
+                },
+                goto_previous_start = {
+                    ["[m"] = "@function.outer",
+                    ["[c"] = "@class.outer",
+                },
+                goto_previous_end = {
+                    ["[M"] = "@function.outer",
+                    ["[C"] = "@class.outer",
+                },
+            },
+        },
+        incremental_selection = {
+            enable = true,
+            keymaps = {
+                init_selection = "gnn",
+                node_incremental = "grn",
+                scope_incremental = "grc",
+                node_decremental = "grm",
+            },
+        },
     }
 end)
 later(function()
@@ -267,7 +314,6 @@ vim.o.shell = "/usr/bin/env bash"
 -- autoread
 vim.o.updatetime = 300
 vim.o.autoread = true
-vim.o.lazyredraw = true
 -- search
 vim.o.hlsearch = true
 vim.o.path = vim.o.path .. ",**"
@@ -359,7 +405,7 @@ vim.api.nvim_create_autocmd("BufReadPost", {
     end
 })
 -- basic mappings
-vim.g.mapleader = "'"
+vim.g.mapleader = ","
 vim.g.maplocalleader = "\\"
 vim.keymap.set('i', 'jk', '<ESC>')
 vim.keymap.set('t', 'jk', '<C-\\><C-n>')
@@ -372,15 +418,12 @@ vim.keymap.set('n', 'sh', '<C-w>h', { silent = true })
 vim.keymap.set('n', 'sk', '<C-w>k', { silent = true })
 vim.keymap.set('n', 'sj', '<C-w>j', { silent = true })
 vim.keymap.set('n', 'sl', '<C-w>l', { silent = true })
--- Switch tabs (buffers)
-vim.keymap.set('n', '<Tab>', ':bnext<CR>', { silent = true })
-vim.keymap.set('n', '<S-Tab>', ':bprev<CR>', { silent = true })
--- Switch buffers (tabs)
-vim.keymap.set('n', '<C-Tab>', ':tabnext<CR>', { silent = true })
-vim.keymap.set('n', '<C-S-Tab>', ':tabprev<CR>', { silent = true })
--- Folding
-vim.keymap.set('v', '<space>', 'zf', { silent = true })
-vim.keymap.set('n', '<space>', 'za', { silent = true })
+-- Buffer navigation
+vim.keymap.set('n', ']b', ':bnext<CR>', { silent = true })
+vim.keymap.set('n', '[b', ':bprev<CR>', { silent = true })
+-- Tab navigation
+vim.keymap.set('n', ']t', ':tabnext<CR>', { silent = true })
+vim.keymap.set('n', '[t', ':tabprev<CR>', { silent = true })
 -- Paste from register 0 multiple times (normal mode only)
 vim.keymap.set('n', '<leader>p', '"0p', { silent = true })
 -- Delete without yanking
@@ -435,17 +478,4 @@ now(function()
 end)
 later(function()
     require('neogit').setup {}
-end)
--- code companion
-now(function()
-    add({
-        source = 'olimorris/codecompanion.nvim',
-    })
-end)
-later(function()
-    require("codecompanion").setup({
-      opts = {
-        log_level = "DEBUG",
-      }
-    })
 end)
