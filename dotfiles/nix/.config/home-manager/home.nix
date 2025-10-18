@@ -54,7 +54,7 @@ in
             tree htop
             nixd nil
             typst tinymist typstyle
-            ngspice xyce-parallel
+            ngspice # xyce-parallel # temporarily disabled due to trilinos cmake build issue
             yamlfmt yamllint
             shfmt
             cmake-format
@@ -70,19 +70,21 @@ in
             firefox
             nsxiv farbfeld
             zathura
-            yosys verilator symbiyosys icestorm nextpnrWithGui
+            yosys verilator # symbiyosys # temporarily disabled due to boolector build issue
+            icestorm # nextpnrWithGui # temporarily disabled due to cmake build issue
             jq fq
             fzf ripgrep fd
             sent
             drumgizmo x42-avldrums x42-plugins wolf-shaper calf
             unrar
             bluespec yosys-bluespec
-            # pcb2gcode candle
+            pcb2gcode candle
             gdbgui rr hotspot
             poppler_utils graphviz pandoc libwebp netpbm potrace
             svdtools svd2rust
             nuXmv alloy6
-            ripes crun
+            # ripes # temporarily disabled due to cmake build issue
+            crun
             wl-clipboard wlr-randr
         ];
 
@@ -402,7 +404,6 @@ in
             nvim-treesitter-textobjects
             plenary-nvim
             telescope-nvim
-            nvim-lspconfig
         ];
     };
 

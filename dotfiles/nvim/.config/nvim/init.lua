@@ -97,17 +97,28 @@ now(function()
         vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)
         vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, bufopts)
     end
-    local servers = { 'pyright', 'ty', 'bashls', 'clangd', 'rust_analyzer', 'ts_ls', 'leanls', 'zls', 'tinymist', 'eslint' }
-    local server_configs = {
+    local servers = {
+        pyright = {},
+        ty = {},
+        bashls = {},
+        clangd = {},
+        rust_analyzer = {},
+        ts_ls = {},
+        leanls = {},
+        zls = {},
+        tinymist = {},
         eslint = {
             settings = {
                 packageManager = "bun"
             }
         }
     }
-    for _, lsp in ipairs(servers) do
-        local config = vim.tbl_deep_extend("force", { on_attach = on_attach }, server_configs[lsp] or {})
-        require('lspconfig')[lsp].setup(config)
+    for name, server_config in pairs(servers) do
+        local config = vim.tbl_deep_extend("force", {
+            on_attach = on_attach,
+        }, server_config)
+        vim.lsp.config(name, config)
+        vim.lsp.enable(name)
     end
     local diagnostic_float_win = nil
     local function open_corner_float()
@@ -218,10 +229,8 @@ later(function()
 end)
 -- settings
 vim.cmd('syntax off')
-vim.cmd('filetype plugin indent on')
 -- ergonomics
 vim.o.visualbell = true
-vim.o.errorbells = false
 vim.o.number = true
 vim.o.relativenumber = true
 vim.o.timeoutlen = 600
@@ -232,11 +241,8 @@ vim.o.shiftwidth = 4
 vim.o.expandtab = true
 -- visuals
 vim.o.title = true
-vim.o.hidden = true
 vim.o.showmode = false
-vim.o.modelines = 5
 vim.o.scrolloff = 1
-vim.o.sidescrolloff = 5
 vim.o.wrap = false
 vim.o.list = true
 vim.o.listchars = table.concat({ "extends:…", "trail:-", "nbsp:␣", "precedes:…", "tab:> " }, ",")
@@ -246,7 +252,6 @@ vim.o.splitbelow = true
 vim.o.splitright = true
 -- encoding
 vim.o.bomb = false
-vim.o.encoding = "utf-8"
 vim.o.fileencodings = "ucs-bom,utf-8,latin1,cp1252,default"
 -- declutter
 vim.o.backup = false
@@ -263,19 +268,15 @@ vim.o.shell = "/usr/bin/env bash"
 vim.o.updatetime = 300
 vim.o.autoread = true
 vim.o.lazyredraw = true
-vim.o.ttyfast = true
 -- search
 vim.o.hlsearch = true
-vim.o.incsearch = true
 vim.o.path = vim.o.path .. ",**"
-vim.o.magic = true
 vim.o.wildmode = "list:longest,full"
 vim.o.wildignore = ".git,.hg,.svn,*.aux,*.out,*.toc,*.o,*.obj,*.exe,*.dll,*.ai,*.bmp,*.gif,*.ico,*.jpg,*.jpeg,*.png,*.psd,*.webp,*.avi,*.divx,*.mp4,*.webm,*.mov,*.mkv,*.vob,*.mpg,*.mpeg,*.mp3,*.oga,*.ogg,*.wav,*.flac,*.otf,*.ttf,*.doc,*.pdf,*.zip,*.tar.gz,*.tar.bz2,*.rar,*.tar.xz,*.swp,.lock,.DS_Store,._*"
 -- folding
 vim.o.foldmethod = "indent"
 vim.o.foldenable = false
 vim.o.foldnestmax = 2
-vim.o.foldlevelstart = 10
 -- statusline
 vim.o.showtabline = 0
 function _G.CustomTabline()
@@ -360,34 +361,33 @@ vim.api.nvim_create_autocmd("BufReadPost", {
 -- basic mappings
 vim.g.mapleader = "'"
 vim.g.maplocalleader = "\\"
-vim.api.nvim_set_keymap('i', 'jk', '<ESC>', { noremap = true })
-vim.api.nvim_set_keymap('t', 'jk', '<C-\\><C-n>', { noremap = true })
-vim.api.nvim_set_keymap('t', '<Esc>', '<C-\\><C-n>', { noremap = true })
+vim.keymap.set('i', 'jk', '<ESC>')
+vim.keymap.set('t', 'jk', '<C-\\><C-n>')
+vim.keymap.set('t', '<Esc>', '<C-\\><C-n>')
 -- Splitting windows
-vim.api.nvim_set_keymap('n', 'ss', ':split<CR><C-w>w', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', 'sv', ':vsplit<CR><C-w>w', { noremap = true, silent = true })
+vim.keymap.set('n', 'ss', ':split<CR><C-w>w', { silent = true })
+vim.keymap.set('n', 'sv', ':vsplit<CR><C-w>w', { silent = true })
 -- Move between windows
-vim.api.nvim_set_keymap('n', 'sh', '<C-w>h', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', 'sk', '<C-w>k', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', 'sj', '<C-w>j', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', 'sl', '<C-w>l', { noremap = true, silent = true })
+vim.keymap.set('n', 'sh', '<C-w>h', { silent = true })
+vim.keymap.set('n', 'sk', '<C-w>k', { silent = true })
+vim.keymap.set('n', 'sj', '<C-w>j', { silent = true })
+vim.keymap.set('n', 'sl', '<C-w>l', { silent = true })
 -- Switch tabs (buffers)
-vim.api.nvim_set_keymap('n', '<Tab>', ':bnext<CR>', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<S-Tab>', ':bprev<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<Tab>', ':bnext<CR>', { silent = true })
+vim.keymap.set('n', '<S-Tab>', ':bprev<CR>', { silent = true })
 -- Switch buffers (tabs)
-vim.api.nvim_set_keymap('n', '<C-Tab>', ':tabnext<CR>', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<C-S-Tab>', ':tabprev<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<C-Tab>', ':tabnext<CR>', { silent = true })
+vim.keymap.set('n', '<C-S-Tab>', ':tabprev<CR>', { silent = true })
 -- Folding
-vim.api.nvim_set_keymap('v', '<space>', 'zf', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<space>', 'za', { noremap = true, silent = true })
--- Paste from register 0 multiple times
-vim.api.nvim_set_keymap('x', '<leader>p', '"0p', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<leader>p', '"0p', { noremap = true, silent = true })
+vim.keymap.set('v', '<space>', 'zf', { silent = true })
+vim.keymap.set('n', '<space>', 'za', { silent = true })
+-- Paste from register 0 multiple times (normal mode only)
+vim.keymap.set('n', '<leader>p', '"0p', { silent = true })
 -- Delete without yanking
-vim.api.nvim_set_keymap('v', '<leader>d', '"_d', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<leader>d', '"_d', { noremap = true, silent = true })
+vim.keymap.set('v', '<leader>d', '"_d', { silent = true })
+vim.keymap.set('n', '<leader>d', '"_d', { silent = true })
 -- Replace currently selected text without yanking it
-vim.api.nvim_set_keymap('v', '<leader>p', '"_dP', { noremap = true, silent = true })
+vim.keymap.set('v', '<leader>p', '"_dP', { silent = true })
 -- Function to switch between .cpp/.hpp and .c/.h files
 later(function()
     function switch_source_header()
@@ -425,7 +425,7 @@ later(function()
             print("No corresponding file found for " .. base_name .. "." .. extension)
         end
     end
-    vim.api.nvim_set_keymap('n', '<A-o>', '<cmd>lua switch_source_header()<CR>', { noremap = true, silent = true })
+    vim.keymap.set('n', '<A-o>', '<cmd>lua switch_source_header()<CR>', { silent = true })
 end)
 -- neogit
 now(function()
@@ -435,4 +435,17 @@ now(function()
 end)
 later(function()
     require('neogit').setup {}
+end)
+-- code companion
+now(function()
+    add({
+        source = 'olimorris/codecompanion.nvim',
+    })
+end)
+later(function()
+    require("codecompanion").setup({
+      opts = {
+        log_level = "DEBUG",
+      }
+    })
 end)
