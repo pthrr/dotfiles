@@ -101,18 +101,81 @@ now(function()
 
     -- Language servers configuration
     local servers = {
-        pyright = {},
-        ty = {},
-        bashls = {},
-        clangd = {},
-        rust_analyzer = {},
-        ts_ls = {},
-        leanls = {},
-        zls = {},
-        tinymist = {},
+        pyright = {
+            cmd = { "pyright-langserver", "--stdio" },
+            filetypes = { "python" },
+            root_markers = { "pyproject.toml", "setup.py", ".git", ".jj" },
+        },
+        ty = {
+            cmd = { "ty" },
+            filetypes = { "python" },
+            root_markers = { "pyproject.toml", "setup.py", ".git", ".jj" },
+        },
+        bashls = {
+            cmd = { "bash-language-server", "start" },
+            filetypes = { "sh", "bash", "zsh" },
+            root_markers = { ".git", ".jj" },
+        },
+        clangd = {
+            cmd = { "clangd" },
+            filetypes = { "c", "cpp" },
+            root_markers = { "compile_commands.json", ".clangd", ".git", ".jj" },
+            init_options = {
+                fallbackFlags = { "--std=c++23" },
+            },
+        },
+        rust_analyzer = {
+            cmd = { "rust-analyzer" },
+            filetypes = { "rust" },
+            root_markers = { "Cargo.toml", ".git", ".jj" },
+        },
+        ts_ls = {
+            cmd = { "typescript-language-server", "--stdio" },
+            filetypes = { "typescript", "javascript", "typescriptreact", "javascriptreact" },
+            root_markers = { "package.json", "tsconfig.json", ".git", ".jj" },
+        },
+        leanls = {
+            cmd = { "lean", "--server" },
+            filetypes = { "lean" },
+            root_markers = { "lean-toolchain", "lakefile.lean", ".git", ".jj" },
+        },
+        zls = {
+            cmd = { "zls" },
+            filetypes = { "zig" },
+            root_markers = { "build.zig", ".git", ".jj" },
+        },
+        tinymist = {
+            cmd = { "tinymist" },
+            filetypes = { "typst" },
+            root_markers = { ".git", ".jj" },
+        },
         eslint = {
+            cmd = { "vscode-eslint-language-server", "--stdio" },
+            filetypes = { "typescript", "javascript", "typescriptreact", "javascriptreact" },
+            root_markers = { "package.json", ".git", ".jj" },
             settings = {
                 packageManager = "bun",
+            },
+        },
+        lua_ls = {
+            cmd = { "lua-language-server" },
+            filetypes = { "lua" },
+            root_markers = { { ".luarc.json", ".luarc.jsonc", ".stylua.toml", "stylua.toml", ".git", ".jj" } },
+            settings = {
+                Lua = {
+                    runtime = {
+                        version = 'LuaJIT',
+                    },
+                    diagnostics = {
+                        globals = { 'vim' },
+                    },
+                    workspace = {
+                        checkThirdParty = false,
+                    },
+                    telemetry = {
+                        enable = false,
+                    },
+                },
             },
         },
     }

@@ -80,7 +80,7 @@ in
           [ typst tinymist typstyle pandoc poppler_utils graphviz ] ++
 
           # Formatters & linters
-          [ yamlfmt yamllint shfmt stylua ] ++
+          [ yamlfmt yamllint shfmt stylua lua-language-server ] ++
 
           # Protocol buffers
           [ protobuf protobufc ] ++
