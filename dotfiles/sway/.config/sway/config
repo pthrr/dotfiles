@@ -1,0 +1,280 @@
+# ==============================================================================
+# SWAY CONFIGURATION
+# ==============================================================================
+# Read `man 5 sway` for complete reference
+
+# Enable XWayland for X11 app compatibility
+xwayland enable
+
+# ==============================================================================
+# 1. VARIABLES
+# ==============================================================================
+
+set $mod Mod4
+set $left h
+set $down j
+set $up k
+set $right l
+
+# Terminal
+set $term foot
+
+# Application menu
+set $menu rofi -show combi -combi-modes drun#run -modes combi
+
+# ==============================================================================
+# 2. OUTPUT CONFIGURATION
+# ==============================================================================
+
+# Black background
+output * bg #000000 solid_color
+
+# ==============================================================================
+# 3. INPUT CONFIGURATION
+# ==============================================================================
+
+# Keyboard
+input type:keyboard {
+    xkb_layout "de"
+    xkb_model "pc105"
+    xkb_options "caps:escape,terminate:ctrl_alt_bksp"
+    repeat_delay 300
+    repeat_rate 50
+}
+
+# Pointer
+input type:pointer {
+    dwt true
+    accel_profile "adaptive"
+    pointer_accel 0.6
+}
+
+# Touchpad
+input type:touchpad {
+    dwt true
+    tap enabled
+    click_method clickfinger
+    accel_profile "adaptive"
+    pointer_accel 0.6
+}
+
+# ==============================================================================
+# 4. APPEARANCE
+# ==============================================================================
+
+# Font
+font pango:JetBrains Mono 12
+
+# Window borders
+default_border pixel 2
+default_floating_border pixel 2
+hide_edge_borders smart
+
+# Color scheme: <border> <background> <text> <indicator> <child_border>
+# Grayscale theme
+client.focused          #646464 #000000 #646464 #000000 #646464
+client.focused_inactive #000000 #000000 #646464 #000000 #000000
+client.unfocused        #000000 #000000 #646464 #000000 #000000
+client.urgent           #000000 #000000 #646464 #000000 #000000
+client.placeholder      #000000 #000000 #646464 #000000 #000000
+client.background       #000000
+
+# Window focus behavior
+focus_follows_mouse yes
+force_display_urgency_hint 0 ms
+focus_on_window_activation none
+
+# Workspace behavior
+workspace_auto_back_and_forth yes
+workspace_layout tabbed
+
+# ==============================================================================
+# 5. AUTOSTART
+# ==============================================================================
+
+# Desktop services
+exec /usr/libexec/polkit-gnome-authentication-agent-1
+exec nm-applet --indicator
+exec blueman-applet
+exec kdeconnect-indicator
+exec udiskie --tray
+exec mako
+exec kanshi
+
+# Swaylock command with grayscale theme
+set $lock swaylock -f -c 000000
+
+# Idle & lock (lock after 5min, screen off after 10min)
+exec swayidle -w \
+    timeout 300 '$lock' \
+    timeout 600 'swaymsg "output * power off"' \
+         resume 'swaymsg "output * power on"' \
+    before-sleep '$lock'
+
+# ==============================================================================
+# 6. KEY BINDINGS
+# ==============================================================================
+
+# -----------------------------------------------------------------------------
+# System
+# -----------------------------------------------------------------------------
+
+bindsym $mod+Return exec $term
+bindsym $mod+Shift+Return exec $term --app-id foot_floating
+
+for_window [app_id="foot_floating"] floating enable, resize set 800 600, move position center
+
+bindsym $mod+Shift+q kill
+bindsym $mod+d exec $menu
+bindsym $mod+Shift+c reload
+bindsym $mod+Shift+e exec swaynag -t warning -m 'Exit sway?' -B 'Yes' 'swaymsg exit'
+bindsym $mod+Shift+s exec $lock
+bindsym Control+Mod1+BackSpace exec swaymsg exit
+
+floating_modifier $mod normal
+
+# -----------------------------------------------------------------------------
+# Window Focus
+# -----------------------------------------------------------------------------
+
+bindsym $mod+$left focus left
+bindsym $mod+$down focus down
+bindsym $mod+$up focus up
+bindsym $mod+$right focus right
+
+bindsym $mod+Left focus left
+bindsym $mod+Down focus down
+bindsym $mod+Up focus up
+bindsym $mod+Right focus right
+
+# -----------------------------------------------------------------------------
+# Window Movement
+# -----------------------------------------------------------------------------
+
+bindsym $mod+Shift+$left move left
+bindsym $mod+Shift+$down move down
+bindsym $mod+Shift+$up move up
+bindsym $mod+Shift+$right move right
+
+bindsym $mod+Shift+Left move left
+bindsym $mod+Shift+Down move down
+bindsym $mod+Shift+Up move up
+bindsym $mod+Shift+Right move right
+
+# -----------------------------------------------------------------------------
+# Workspaces
+# -----------------------------------------------------------------------------
+
+bindsym $mod+1 workspace number 1
+bindsym $mod+2 workspace number 2
+bindsym $mod+3 workspace number 3
+bindsym $mod+4 workspace number 4
+bindsym $mod+5 workspace number 5
+bindsym $mod+6 workspace number 6
+bindsym $mod+7 workspace number 7
+bindsym $mod+8 workspace number 8
+bindsym $mod+9 workspace number 9
+bindsym $mod+0 workspace number 10
+
+bindsym $mod+Shift+1 move container to workspace number 1
+bindsym $mod+Shift+2 move container to workspace number 2
+bindsym $mod+Shift+3 move container to workspace number 3
+bindsym $mod+Shift+4 move container to workspace number 4
+bindsym $mod+Shift+5 move container to workspace number 5
+bindsym $mod+Shift+6 move container to workspace number 6
+bindsym $mod+Shift+7 move container to workspace number 7
+bindsym $mod+Shift+8 move container to workspace number 8
+bindsym $mod+Shift+9 move container to workspace number 9
+bindsym $mod+Shift+0 move container to workspace number 10
+
+# -----------------------------------------------------------------------------
+# Layout
+# -----------------------------------------------------------------------------
+
+bindsym $mod+b splith
+bindsym $mod+v splitv
+
+bindsym $mod+s layout stacking
+bindsym $mod+w layout tabbed
+bindsym $mod+e layout toggle split
+
+bindsym $mod+f fullscreen
+
+bindsym $mod+Shift+space floating toggle
+bindsym $mod+space focus mode_toggle
+
+bindsym $mod+a focus parent
+
+# -----------------------------------------------------------------------------
+# Scratchpad
+# -----------------------------------------------------------------------------
+
+bindsym $mod+Shift+minus move scratchpad
+bindsym $mod+minus scratchpad show
+
+# -----------------------------------------------------------------------------
+# Resize Mode
+# -----------------------------------------------------------------------------
+
+mode "resize" {
+    bindsym $left resize shrink width 10px
+    bindsym $down resize grow height 10px
+    bindsym $up resize shrink height 10px
+    bindsym $right resize grow width 10px
+
+    bindsym Left resize shrink width 10px
+    bindsym Down resize grow height 10px
+    bindsym Up resize shrink height 10px
+    bindsym Right resize grow width 10px
+
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+bindsym $mod+r mode "resize"
+
+# ==============================================================================
+# 7. MEDIA KEYS
+# ==============================================================================
+
+bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5%
+bindsym XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5%
+bindsym XF86AudioMute exec pactl set-sink-mute @DEFAULT_SINK@ toggle
+bindsym XF86AudioMicMute exec pactl set-source-mute @DEFAULT_SOURCE@ toggle
+bindsym XF86AudioPlay exec playerctl play-pause
+bindsym XF86AudioNext exec playerctl next
+bindsym XF86AudioPrev exec playerctl previous
+bindsym XF86MonBrightnessDown exec brightnessctl set 5%-
+bindsym XF86MonBrightnessUp exec brightnessctl set 5%+
+
+# ==============================================================================
+# 8. BAR
+# ==============================================================================
+
+bar {
+    position bottom
+    status_command $HOME/bin/swaybar-status.sh
+
+    colors {
+        background #646464
+        statusline #000000
+        separator  #000000
+
+        focused_workspace  #000000 #000000 #646464
+        active_workspace   #646464 #646464 #000000
+        inactive_workspace #646464 #646464 #000000
+        urgent_workspace   #646464 #646464 #000000
+        binding_mode       #646464 #646464 #000000
+    }
+
+    font pango:JetBrains Mono 12
+    tray_output *
+}
+
+# ==============================================================================
+# 9. SYSTEM INCLUDES
+# ==============================================================================
+
+include /etc/sway/config-vars.d/*
+include /etc/sway/config.d/*
+
+exec /usr/libexec/sway-systemd/session.sh

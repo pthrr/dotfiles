@@ -419,7 +419,7 @@ in
           recursive = true;
         };
       in
-        lib.genAttrs [ "gdb" "foot" "zathura" "git" "tmux" "mc" "nvim" ] mkConfigDir
+        lib.genAttrs [ "sway" "gdb" "foot" "zathura" "git" "tmux" "mc" "nvim" ] mkConfigDir
         // {
           "plasma-workspace/env" = {
             source = ../../../nix/.config/plasma-workspace/env;

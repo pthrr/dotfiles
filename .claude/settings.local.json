@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(swaymsg:*)",
+      "Bash(pactl list:*)",
+      "Bash(pactl get-sink-volume:*)",
+      "Bash(pactl set-sink-volume:*)",
+      "Bash(systemctl:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

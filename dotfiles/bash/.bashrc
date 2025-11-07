@@ -326,5 +326,6 @@ alias mksomespace='nix-collect-garbage -d'
 alias dotfiles='git --git-dir="$HOME/.dotfiles/.git" --work-tree="$HOME/.dotfiles"'
 alias srv='ssh nwv-srv -p 2225'
 alias srvreb='ssh nwv-srv -p 2225 "cd ~/server && git pull && sudo task deploy"'
+alias plasma='dbus-run-session startplasma-wayland'
 source "$HOME/z.sh"
 source "$HOME/git-prompt.sh"
