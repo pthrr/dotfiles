@@ -5,7 +5,13 @@
       "Bash(pactl list:*)",
       "Bash(pactl get-sink-volume:*)",
       "Bash(pactl set-sink-volume:*)",
-      "Bash(systemctl:*)"
+      "Bash(systemctl:*)",
+      "Bash(waybar --version:*)",
+      "Bash(killall:*)",
+      "Bash(pgrep:*)",
+      "Bash(kanshi:*)",
+      "Read(//home/pthrr/.config/**)",
+      "Bash(readlink:*)"
     ],
     "deny": [],
     "ask": []

@@ -13,7 +13,8 @@ sudo dnf group install -y --skip-unavailable \
 	"Development Tools" \
 	"Office/Productivity" \
 	"Sound and Video" \
-	"System Tools"
+	"System Tools" \
+	swaywm-extended
 # TODO remove whats in groups already
 sudo dnf install -y \
 	@virtualization \

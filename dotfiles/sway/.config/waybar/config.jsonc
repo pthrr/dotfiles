@@ -1,0 +1,69 @@
+{
+    "layer": "bottom",
+    "position": "bottom",
+    "height": 28,
+    "spacing": 2,
+    "modules-left": ["sway/workspaces", "sway/mode"],
+    "modules-center": [],
+    "modules-right": ["tray", "cpu", "memory", "battery", "pulseaudio", "clock"],
+
+    "sway/workspaces": {
+        "disable-scroll": false,
+        "all-outputs": true,
+        "format": "{name}",
+        "persistent-workspaces": {
+            "1": [],
+            "2": [],
+            "3": [],
+            "4": [],
+            "5": []
+        }
+    },
+
+    "sway/mode": {
+        "format": "<span style=\"italic\">{}</span>"
+    },
+
+    "tray": {
+        "icon-size": 28,
+        "spacing": 10
+    },
+
+    "cpu": {
+        "format": "CPU: {usage}%",
+        "tooltip": true,
+        "interval": 3
+    },
+
+    "memory": {
+        "format": "MEM: {}%",
+        "tooltip": true,
+        "interval": 3
+    },
+
+    "battery": {
+        "states": {
+            "warning": 30,
+            "critical": 15
+        },
+        "format": "BAT: {capacity}%",
+        "format-charging": "BAT: {capacity}%",
+        "format-plugged": "BAT: {capacity}%",
+        "tooltip-format": "{time}",
+        "interval": 3
+    },
+
+    "pulseaudio": {
+        "format": "VOL: {volume}%",
+        "format-muted": "VOL: M",
+        "on-click": "pactl set-sink-mute @DEFAULT_SINK@ toggle",
+        "on-click-right": "pavucontrol",
+        "tooltip": true
+    },
+
+    "clock": {
+        "format": "KW {:%V, %a, %d.%m.%Y - %H:%M}",
+        "tooltip-format": "{:%a %d %b %Y}",
+        "interval": 60
+    }
+}

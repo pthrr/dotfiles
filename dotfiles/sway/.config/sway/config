@@ -29,6 +29,12 @@ set $menu rofi -show combi -combi-modes drun#run -modes combi
 # Black background
 output * bg #000000 solid_color
 
+# Direct output scaling as fallback
+output eDP-* scale 1.2
+
+# Let kanshi handle output configuration (scaling, position, etc.)
+exec_always killall kanshi || true; kanshi
+
 # ==============================================================================
 # 3. INPUT CONFIGURATION
 # ==============================================================================
@@ -63,7 +69,7 @@ input type:touchpad {
 # ==============================================================================
 
 # Font
-font pango:JetBrains Mono 12
+font pango:JetBrains Mono 11
 
 # Window borders
 default_border pixel 2
@@ -94,12 +100,11 @@ workspace_layout tabbed
 
 # Desktop services
 exec /usr/libexec/polkit-gnome-authentication-agent-1
-exec nm-applet --indicator
+exec nm-applet
 exec blueman-applet
 exec kdeconnect-indicator
 exec udiskie --tray
 exec mako
-exec kanshi
 
 # Swaylock command with grayscale theme
 set $lock swaylock -f -c 000000
@@ -238,8 +243,8 @@ bindsym $mod+r mode "resize"
 
 bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5%
 bindsym XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5%
-bindsym XF86AudioMute exec pactl set-sink-mute @DEFAULT_SINK@ toggle
-bindsym XF86AudioMicMute exec pactl set-source-mute @DEFAULT_SOURCE@ toggle
+bindsym XF86AudioMute exec pactl set-sink-mute @DEFAULT_SINK@ toggle && sh -c 'if [ "$(pactl get-sink-mute @DEFAULT_SINK@ | cut -d" " -f2)" = "yes" ]; then echo 1 > /sys/class/leds/platform::mute/brightness; else echo 0 > /sys/class/leds/platform::mute/brightness; fi'
+bindsym XF86AudioMicMute exec pactl set-source-mute @DEFAULT_SOURCE@ toggle && sh -c 'if [ "$(pactl get-source-mute @DEFAULT_SOURCE@ | cut -d" " -f2)" = "yes" ]; then echo 1 > /sys/class/leds/platform::micmute/brightness; else echo 0 > /sys/class/leds/platform::micmute/brightness; fi'
 bindsym XF86AudioPlay exec playerctl play-pause
 bindsym XF86AudioNext exec playerctl next
 bindsym XF86AudioPrev exec playerctl previous
@@ -251,23 +256,7 @@ bindsym XF86MonBrightnessUp exec brightnessctl set 5%+
 # ==============================================================================
 
 bar {
-    position bottom
-    status_command $HOME/bin/swaybar-status.sh
-
-    colors {
-        background #646464
-        statusline #000000
-        separator  #000000
-
-        focused_workspace  #000000 #000000 #646464
-        active_workspace   #646464 #646464 #000000
-        inactive_workspace #646464 #646464 #000000
-        urgent_workspace   #646464 #646464 #000000
-        binding_mode       #646464 #646464 #000000
-    }
-
-    font pango:JetBrains Mono 12
-    tray_output *
+    swaybar_command waybar
 }
 
 # ==============================================================================

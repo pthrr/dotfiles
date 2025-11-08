@@ -1,0 +1,124 @@
+/* ==============================================================================
+ * WAYBAR GRAYSCALE THEME
+ * ============================================================================== */
+
+* {
+    border: none;
+    border-radius: 0;
+    font-family: "JetBrains Mono";
+    font-size: 11pt;
+    min-height: 0;
+}
+
+window#waybar {
+    background-color: #646464;
+    color: #000000;
+}
+
+/* Workspaces */
+#workspaces {
+    margin: 0;
+    padding: 0;
+}
+
+#workspaces button {
+    padding: 0 6px;
+    background-color: #646464;
+    color: #000000;
+    border: none;
+}
+
+#workspaces button.focused {
+    background-color: #000000;
+    color: #646464;
+}
+
+#workspaces button.active {
+    background-color: #646464;
+    color: #000000;
+}
+
+#workspaces button.urgent {
+    background-color: #646464;
+    color: #000000;
+}
+
+#workspaces button:hover {
+    background-color: #000000;
+    color: #646464;
+}
+
+/* Mode (resize, etc) */
+#mode {
+    background-color: #646464;
+    color: #000000;
+    padding: 0 6px;
+}
+
+/* All modules on the right */
+#cpu,
+#memory,
+#battery {
+    background-color: #646464;
+    color: #000000;
+    padding: 0 6px;
+    min-width: 100px;
+}
+
+#pulseaudio {
+    background-color: #646464;
+    color: #000000;
+    padding: 0 6px;
+    min-width: 100px;
+}
+
+#clock {
+    background-color: #646464;
+    color: #000000;
+    padding: 0 10px;
+}
+
+/* Tray */
+#tray {
+    background-color: #646464;
+    color: #000000;
+    padding: 0 8px;
+}
+
+/* Module separators */
+#tray,
+#cpu,
+#memory,
+#battery,
+#pulseaudio {
+    border-right: 1px solid #000000;
+}
+
+/* Battery states */
+#battery.charging {
+    color: #000000;
+}
+
+#battery.warning:not(.charging) {
+    color: #000000;
+}
+
+#battery.critical:not(.charging) {
+    color: #000000;
+}
+
+/* Pulseaudio muted */
+#pulseaudio.muted {
+    color: #000000;
+}
+
+/* Tooltip */
+tooltip {
+    background-color: #646464;
+    color: #000000;
+    border: 1px solid #000000;
+}
+
+tooltip label {
+    color: #000000;
+}

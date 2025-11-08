@@ -425,6 +425,15 @@ in
             source = ../../../nix/.config/plasma-workspace/env;
             recursive = true;
           };
+          # waybar config is now part of sway package
+          "waybar" = {
+            source = ../../../sway/.config/waybar;
+            recursive = true;
+          };
+          "kanshi" = {
+            source = ../../../sway/.config/kanshi;
+            recursive = true;
+          };
         };
 
   home.activation.runMyScript = lib.hm.dag.entryAfter ["writeBoundary"] ''
