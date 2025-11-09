@@ -29,11 +29,8 @@ set $menu rofi -show combi -combi-modes drun#run -modes combi
 # Black background
 output * bg #000000 solid_color
 
-# Direct output scaling as fallback
-output eDP-* scale 1.2
-
 # Let kanshi handle output configuration (scaling, position, etc.)
-exec_always killall kanshi || true; kanshi
+exec kanshi
 
 # ==============================================================================
 # 3. INPUT CONFIGURATION

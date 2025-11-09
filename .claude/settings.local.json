@@ -11,7 +11,9 @@
       "Bash(pgrep:*)",
       "Bash(kanshi:*)",
       "Read(//home/pthrr/.config/**)",
-      "Bash(readlink:*)"
+      "Bash(readlink:*)",
+      "Read(//nix/store/bq8m71wc1gjggmywcb4ayzjhb0vjngl5-hm_kanshi/**)",
+      "Bash(journalctl:*)"
     ],
     "deny": [],
     "ask": []
