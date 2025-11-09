@@ -434,6 +434,10 @@ in
             source = ../../../sway/.config/kanshi;
             recursive = true;
           };
+          "swaylock" = {
+            source = ../../../sway/.config/swaylock;
+            recursive = true;
+          };
         };
 
   home.activation.runMyScript = lib.hm.dag.entryAfter ["writeBoundary"] ''

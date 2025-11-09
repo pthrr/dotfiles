@@ -22,6 +22,10 @@ set $term foot
 # Application menu
 set $menu rofi -show combi -combi-modes drun#run -modes combi
 
+# LED control helpers (hardware-specific, fails silently if not present)
+set $led_mute_toggle sh -c 'if [ "$(pactl get-sink-mute @DEFAULT_SINK@ | cut -d" " -f2)" = "yes" ]; then echo 1 > /sys/class/leds/platform::mute/brightness 2>/dev/null || true; else echo 0 > /sys/class/leds/platform::mute/brightness 2>/dev/null || true; fi'
+set $led_micmute_toggle sh -c 'if [ "$(pactl get-source-mute @DEFAULT_SOURCE@ | cut -d" " -f2)" = "yes" ]; then echo 1 > /sys/class/leds/platform::micmute/brightness 2>/dev/null || true; else echo 0 > /sys/class/leds/platform::micmute/brightness 2>/dev/null || true; fi'
+
 # ==============================================================================
 # 2. OUTPUT CONFIGURATION
 # ==============================================================================
@@ -91,6 +95,12 @@ focus_on_window_activation none
 workspace_auto_back_and_forth yes
 workspace_layout tabbed
 
+# Floating behavior
+floating_modifier $mod normal
+
+# Window rules
+for_window [app_id="foot_floating"] floating enable, resize set 800 600, move position center
+
 # ==============================================================================
 # 5. AUTOSTART
 # ==============================================================================
@@ -103,8 +113,8 @@ exec kdeconnect-indicator
 exec udiskie --tray
 exec mako
 
-# Swaylock command with grayscale theme
-set $lock swaylock -f -c 000000
+# Swaylock command (config in ~/.config/swaylock/config)
+set $lock swaylock -f
 
 # Idle & lock (lock after 5min, screen off after 10min)
 exec swayidle -w \
@@ -123,17 +133,12 @@ exec swayidle -w \
 
 bindsym $mod+Return exec $term
 bindsym $mod+Shift+Return exec $term --app-id foot_floating
-
-for_window [app_id="foot_floating"] floating enable, resize set 800 600, move position center
-
 bindsym $mod+Shift+q kill
 bindsym $mod+d exec $menu
-bindsym $mod+Shift+c reload
+bindsym $mod+Shift+c exec "swaymsg reload && pkill kanshi; kanshi &"
 bindsym $mod+Shift+e exec swaynag -t warning -m 'Exit sway?' -B 'Yes' 'swaymsg exit'
 bindsym $mod+Shift+s exec $lock
 bindsym Control+Mod1+BackSpace exec swaymsg exit
-
-floating_modifier $mod normal
 
 # -----------------------------------------------------------------------------
 # Window Focus
@@ -240,8 +245,8 @@ bindsym $mod+r mode "resize"
 
 bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5%
 bindsym XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5%
-bindsym XF86AudioMute exec pactl set-sink-mute @DEFAULT_SINK@ toggle && sh -c 'if [ "$(pactl get-sink-mute @DEFAULT_SINK@ | cut -d" " -f2)" = "yes" ]; then echo 1 > /sys/class/leds/platform::mute/brightness; else echo 0 > /sys/class/leds/platform::mute/brightness; fi'
-bindsym XF86AudioMicMute exec pactl set-source-mute @DEFAULT_SOURCE@ toggle && sh -c 'if [ "$(pactl get-source-mute @DEFAULT_SOURCE@ | cut -d" " -f2)" = "yes" ]; then echo 1 > /sys/class/leds/platform::micmute/brightness; else echo 0 > /sys/class/leds/platform::micmute/brightness; fi'
+bindsym XF86AudioMute exec pactl set-sink-mute @DEFAULT_SINK@ toggle && $led_mute_toggle
+bindsym XF86AudioMicMute exec pactl set-source-mute @DEFAULT_SOURCE@ toggle && $led_micmute_toggle
 bindsym XF86AudioPlay exec playerctl play-pause
 bindsym XF86AudioNext exec playerctl next
 bindsym XF86AudioPrev exec playerctl previous

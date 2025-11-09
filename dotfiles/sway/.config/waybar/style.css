@@ -62,14 +62,14 @@ window#waybar {
     background-color: #646464;
     color: #000000;
     padding: 0 6px;
-    min-width: 100px;
+    min-width: 70px;
 }
 
 #pulseaudio {
     background-color: #646464;
     color: #000000;
     padding: 0 6px;
-    min-width: 100px;
+    min-width: 70px;
 }
 
 #clock {
