@@ -220,6 +220,14 @@ bindsym $mod+Shift+minus move scratchpad
 bindsym $mod+minus scratchpad show
 
 # -----------------------------------------------------------------------------
+# Output Management
+# -----------------------------------------------------------------------------
+
+# Move workspace between outputs (cycles through all screens)
+bindsym $mod+o move workspace to output right
+bindsym $mod+Shift+o move workspace to output left
+
+# -----------------------------------------------------------------------------
 # Resize Mode
 # -----------------------------------------------------------------------------
 
