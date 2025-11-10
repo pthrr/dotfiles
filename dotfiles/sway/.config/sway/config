@@ -22,10 +22,6 @@ set $term foot
 # Application menu
 set $menu rofi -show combi -combi-modes drun#run -modes combi
 
-# LED control helpers (hardware-specific, fails silently if not present)
-set $led_mute_toggle sh -c 'if [ "$(pactl get-sink-mute @DEFAULT_SINK@ | cut -d" " -f2)" = "yes" ]; then echo 1 > /sys/class/leds/platform::mute/brightness 2>/dev/null || true; else echo 0 > /sys/class/leds/platform::mute/brightness 2>/dev/null || true; fi'
-set $led_micmute_toggle sh -c 'if [ "$(pactl get-source-mute @DEFAULT_SOURCE@ | cut -d" " -f2)" = "yes" ]; then echo 1 > /sys/class/leds/platform::micmute/brightness 2>/dev/null || true; else echo 0 > /sys/class/leds/platform::micmute/brightness 2>/dev/null || true; fi'
-
 # ==============================================================================
 # 2. OUTPUT CONFIGURATION
 # ==============================================================================
@@ -108,8 +104,7 @@ for_window [app_id="foot_floating"] floating enable, resize set 800 600, move po
 # 5. AUTOSTART
 # ==============================================================================
 
-# Desktop services
-exec /usr/libexec/polkit-gnome-authentication-agent-1
+# Desktop services (policykit-agent handled by system config)
 exec nm-applet
 exec blueman-applet
 exec kdeconnect-indicator
@@ -119,8 +114,9 @@ exec mako
 # Swaylock command (config in ~/.config/swaylock/config)
 set $lock swaylock -f
 
-# Lock on suspend/sleep only (no automatic idle timeout)
+# Lock before suspend, then suspend after 600s idle
 exec swayidle -w \
+    timeout 600 '$lock && systemctl suspend' \
     before-sleep '$lock'
 
 # ==============================================================================
@@ -251,15 +247,10 @@ bindsym $mod+r mode "resize"
 # 7. MEDIA KEYS
 # ==============================================================================
 
-bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5%
-bindsym XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5%
-bindsym XF86AudioMute exec pactl set-sink-mute @DEFAULT_SINK@ toggle && $led_mute_toggle
-bindsym XF86AudioMicMute exec pactl set-source-mute @DEFAULT_SOURCE@ toggle && $led_micmute_toggle
-bindsym XF86AudioPlay exec playerctl play-pause
-bindsym XF86AudioNext exec playerctl next
-bindsym XF86AudioPrev exec playerctl previous
-bindsym XF86MonBrightnessDown exec brightnessctl set 5%-
-bindsym XF86MonBrightnessUp exec brightnessctl set 5%+
+# All media keys handled by system configs (60-bindings-*.conf)
+# - Volume/brightness with notifications
+# - Media player controls
+# - All work when screen is locked (--locked flag)
 
 # ==============================================================================
 # 8. BAR
@@ -274,6 +265,13 @@ bar {
 # ==============================================================================
 
 include /etc/sway/config-vars.d/*
-include /etc/sway/config.d/*
+
+# Include system configs (except swayidle which we define above, and bar which we define above)
+include /etc/sway/config.d/10-*.conf
+include /usr/share/sway/config.d/50-*.conf
+include /usr/share/sway/config.d/60-*.conf
+include /usr/share/sway/config.d/65-*.conf
+# Skip 90-bar.conf (we define waybar above) and 90-swayidle.conf (we define swayidle above)
+include /usr/share/sway/config.d/95-*.conf
 
 exec /usr/libexec/sway-systemd/session.sh

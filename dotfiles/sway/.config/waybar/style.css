@@ -81,7 +81,7 @@ window#waybar {
     background-color: #909090;
     color: #000000;
     padding: 0 6px;
-    min-width: 165px;
+    min-width: 175px;
 }
 
 #pulseaudio {
@@ -95,7 +95,7 @@ window#waybar {
     background-color: #909090;
     color: #000000;
     padding: 0 10px;
-    min-width: 285px;
+    min-width: 275px;
 }
 
 /* Tray */
