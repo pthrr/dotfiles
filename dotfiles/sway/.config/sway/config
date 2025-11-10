@@ -65,6 +65,9 @@ input type:touchpad {
     pointer_accel 0.6
 }
 
+# Hide cursor after timeout
+seat * hide_cursor 5000
+
 # ==============================================================================
 # 4. APPEARANCE
 # ==============================================================================
@@ -116,11 +119,8 @@ exec mako
 # Swaylock command (config in ~/.config/swaylock/config)
 set $lock swaylock -f
 
-# Idle & lock (lock after 5min, screen off after 10min)
+# Lock on suspend/sleep only (no automatic idle timeout)
 exec swayidle -w \
-    timeout 300 '$lock' \
-    timeout 600 'swaymsg "output * power off"' \
-         resume 'swaymsg "output * power on"' \
     before-sleep '$lock'
 
 # ==============================================================================

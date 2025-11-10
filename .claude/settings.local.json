@@ -15,7 +15,8 @@
       "Read(//nix/store/bq8m71wc1gjggmywcb4ayzjhb0vjngl5-hm_kanshi/**)",
       "Bash(journalctl:*)",
       "Bash(swaylock:*)",
-      "Bash(tree:*)"
+      "Bash(tree:*)",
+      "Read(//nix/store/qlx2gj3arj0y93f8y40k6mng89lvrf2m-hm_kanshi/**)"
     ],
     "deny": [],
     "ask": []
