@@ -1,5 +1,5 @@
 /* ==============================================================================
- * WAYBAR GRAYSCALE THEME
+ * WAYBAR MEDIUM GRAYSCALE THEME
  * ============================================================================== */
 
 * {
@@ -11,7 +11,7 @@
 }
 
 window#waybar {
-    background-color: #646464;
+    background-color: #909090;
     color: #000000;
 }
 
@@ -23,64 +23,84 @@ window#waybar {
 
 #workspaces button {
     padding: 0 6px;
-    background-color: #646464;
+    background-color: #909090;
     color: #000000;
     border: none;
 }
 
 #workspaces button.focused {
     background-color: #000000;
-    color: #646464;
+    color: #909090;
 }
 
 #workspaces button.active {
-    background-color: #646464;
+    background-color: #909090;
     color: #000000;
 }
 
 #workspaces button.urgent {
-    background-color: #646464;
+    background-color: #909090;
     color: #000000;
 }
 
 #workspaces button:hover {
-    background-color: #000000;
-    color: #646464;
+    background-color: #707070;
+    color: #ffffff;
 }
 
 /* Mode (resize, etc) */
 #mode {
-    background-color: #646464;
+    background-color: #909090;
     color: #000000;
     padding: 0 6px;
 }
 
 /* All modules on the right */
-#cpu,
-#memory,
-#battery {
-    background-color: #646464;
+#cpu {
+    background-color: #909090;
     color: #000000;
     padding: 0 6px;
-    min-width: 70px;
+    min-width: 85px;
+}
+
+#memory {
+    background-color: #909090;
+    color: #000000;
+    padding: 0 6px;
+    min-width: 85px;
+}
+
+#disk {
+    background-color: #909090;
+    color: #000000;
+    padding: 0 6px;
+    min-width: 120px;
+}
+
+#battery {
+    background-color: #909090;
+    color: #000000;
+    padding: 0 6px;
+    min-width: 165px;
 }
 
 #pulseaudio {
-    background-color: #646464;
+    background-color: #909090;
     color: #000000;
     padding: 0 6px;
-    min-width: 70px;
+    min-width: 85px;
 }
 
 #clock {
-    background-color: #646464;
+    background-color: #909090;
     color: #000000;
     padding: 0 10px;
+    min-width: 285px;
 }
 
 /* Tray */
 #tray {
-    background-color: #646464;
+    background-color: #909090;
     color: #000000;
     padding: 0 8px;
 }
@@ -89,6 +109,7 @@ window#waybar {
 #tray,
 #cpu,
 #memory,
+#disk,
 #battery,
 #pulseaudio {
     border-right: 1px solid #000000;
@@ -114,7 +135,7 @@ window#waybar {
 
 /* Tooltip */
 tooltip {
-    background-color: #646464;
+    background-color: #909090;
     color: #000000;
     border: 1px solid #000000;
 }

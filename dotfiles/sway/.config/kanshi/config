@@ -9,7 +9,14 @@
 # Profiles are matched top-to-bottom. First matching profile is applied.
 # A profile matches if ALL specified outputs are connected.
 
-# Laptop screen
+# Docked with external monitor (24" Acer on the left)
+profile docked {
+    output "DP-2" mode 1920x1080@60Hz position 0,0
+    output "eDP-1" mode 1920x1080@60Hz position 1920,0 scale 1.2
+    exec ~/.config/sway/scripts/move-workspaces-to-external.sh
+}
+
+# Laptop screen only
 profile laptop {
     output "eDP-1" enable scale 1.2
 }

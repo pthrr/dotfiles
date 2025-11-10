@@ -5,19 +5,12 @@
     "spacing": 2,
     "modules-left": ["sway/workspaces", "sway/mode"],
     "modules-center": [],
-    "modules-right": ["tray", "cpu", "memory", "battery", "pulseaudio", "clock"],
+    "modules-right": ["tray", "cpu", "memory", "disk", "battery", "pulseaudio", "clock"],
 
     "sway/workspaces": {
         "disable-scroll": false,
         "all-outputs": true,
-        "format": "{name}",
-        "persistent-workspaces": {
-            "1": [],
-            "2": [],
-            "3": [],
-            "4": [],
-            "5": []
-        }
+        "format": "{name}"
     },
 
     "sway/mode": {
@@ -41,15 +34,23 @@
         "interval": 3
     },
 
+    "disk": {
+        "format": "DSK: {free}",
+        "path": "/",
+        "tooltip-format": "Used: {used} / Total: {total} ({percentage_used}%)",
+        "interval": 30
+    },
+
     "battery": {
         "states": {
             "warning": 30,
             "critical": 15
         },
-        "format": "BAT: {capacity}%",
-        "format-charging": "BAT: {capacity}%",
-        "format-plugged": "BAT: {capacity}%",
-        "tooltip-format": "{time}",
+        "format": "BAT: {time} (D)",
+        "format-charging": "BAT: {time} (C)",
+        "format-plugged": "BAT: FULL",
+        "format-full": "BAT: FULL",
+        "tooltip-format": "{capacity}% - {time}",
         "interval": 3
     },
 

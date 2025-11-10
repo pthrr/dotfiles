@@ -438,6 +438,10 @@ in
             source = ../../../sway/.config/swaylock;
             recursive = true;
           };
+          "rofi" = {
+            source = ../../../sway/.config/rofi;
+            recursive = true;
+          };
         };
 
   home.activation.runMyScript = lib.hm.dag.entryAfter ["writeBoundary"] ''

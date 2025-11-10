@@ -78,12 +78,12 @@ default_floating_border pixel 2
 hide_edge_borders smart
 
 # Color scheme: <border> <background> <text> <indicator> <child_border>
-# Grayscale theme
-client.focused          #646464 #000000 #646464 #000000 #646464
-client.focused_inactive #000000 #000000 #646464 #000000 #000000
-client.unfocused        #000000 #000000 #646464 #000000 #000000
-client.urgent           #000000 #000000 #646464 #000000 #000000
-client.placeholder      #000000 #000000 #646464 #000000 #000000
+# Medium grayscale theme
+client.focused          #909090 #000000 #909090 #000000 #909090
+client.focused_inactive #000000 #000000 #909090 #000000 #000000
+client.unfocused        #000000 #000000 #909090 #000000 #000000
+client.urgent           #000000 #000000 #909090 #000000 #000000
+client.placeholder      #000000 #000000 #909090 #000000 #000000
 client.background       #000000
 
 # Window focus behavior
