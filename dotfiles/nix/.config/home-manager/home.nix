@@ -42,7 +42,7 @@ in
           [ coreutils findutils usbutils pciutils openssl sqlite ] ++
 
           # Shell & terminal tools
-          [ mc tmux tree htop fzf ripgrep fd wl-clipboard wlr-randr ] ++
+          [ mc tmux tree htop fzf ripgrep fd wl-clipboard wlr-randr mako ] ++
 
           # Build systems
           [ scons meson ninja bazelisk bmake bear buck2 git-repo cmake-format ] ++
@@ -440,6 +440,10 @@ in
           };
           "rofi" = {
             source = ../../../sway/.config/rofi;
+            recursive = true;
+          };
+          "mako" = {
+            source = ../../../sway/.config/mako;
             recursive = true;
           };
         };
