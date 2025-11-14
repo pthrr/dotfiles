@@ -329,5 +329,6 @@ alias dotfiles='git --git-dir="$HOME/.dotfiles/.git" --work-tree="$HOME/.dotfile
 alias srv='ssh nwv-srv -p 2225'
 alias srvreb='ssh nwv-srv -p 2225 "cd ~/server && git pull && sudo task deploy"'
 alias plasma='dbus-run-session startplasma-wayland'
+alias mkrestart='systemctl --user restart sway-session.target'
 source "$HOME/z.sh"
 source "$HOME/git-prompt.sh"

@@ -42,7 +42,7 @@ in
           [ coreutils findutils usbutils pciutils openssl sqlite ] ++
 
           # Shell & terminal tools
-          [ mc tmux tree htop fzf ripgrep fd wl-clipboard wlr-randr mako ] ++
+          [ mc tmux tree htop fzf ripgrep fd wl-clipboard wlr-randr mako udiskie ] ++
 
           # Build systems
           [ scons meson ninja bazelisk bmake bear buck2 git-repo cmake-format ] ++

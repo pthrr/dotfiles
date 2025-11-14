@@ -104,11 +104,10 @@ for_window [app_id="foot_floating"] floating enable, resize set 800 600, move po
 # 5. AUTOSTART
 # ==============================================================================
 
-# Desktop services (policykit-agent handled by system config)
-exec nm-applet
-exec blueman-applet
-exec kdeconnect-indicator
-exec udiskie --tray
+# Desktop services
+# nm-applet, blueman-applet, kdeconnect-indicator auto-started via XDG autostart
+# policykit-agent handled by system config
+exec udiskie --tray --file-manager 'foot -e mc'
 exec mako
 
 # Swaylock command (config in ~/.config/swaylock/config)
