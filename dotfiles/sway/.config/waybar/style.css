@@ -91,6 +91,13 @@ window#waybar {
     min-width: 85px;
 }
 
+#custom-timer {
+    background-color: #909090;
+    color: #000000;
+    padding: 0 6px;
+    min-width: 100px;
+}
+
 #clock {
     background-color: #909090;
     color: #000000;
@@ -111,7 +118,8 @@ window#waybar {
 #memory,
 #disk,
 #battery,
-#pulseaudio {
+#pulseaudio,
+#custom-timer {
     border-right: 1px solid #000000;
 }
 

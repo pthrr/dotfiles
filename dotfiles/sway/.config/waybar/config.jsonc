@@ -5,7 +5,7 @@
     "spacing": 2,
     "modules-left": ["sway/workspaces", "sway/mode"],
     "modules-center": [],
-    "modules-right": ["tray", "cpu", "memory", "disk", "battery", "pulseaudio", "clock"],
+    "modules-right": ["tray", "cpu", "memory", "disk", "battery", "pulseaudio", "custom/timer", "clock"],
 
     "sway/workspaces": {
         "disable-scroll": false,
@@ -60,6 +60,13 @@
         "on-click": "pactl set-sink-mute @DEFAULT_SINK@ toggle",
         "on-click-right": "pavucontrol",
         "tooltip": true
+    },
+
+    "custom/timer": {
+        "format": "TMR: {}",
+        "exec": "timer status",
+        "interval": 1,
+        "tooltip": false
     },
 
     "clock": {
