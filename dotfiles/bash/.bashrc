@@ -171,7 +171,7 @@ export HISTSIZE=1000
 export HISTFILESIZE=2000
 export HISTFILE="$XDG_CACHE_HOME/.bash_history"
 export PROMPT_DIRTRIM=2
-export PROMPT_COMMAND='LAST_STATUS=$(if [[ $? == 0 ]]; then echo "✓"; else echo "✗"; fi);NIX_SHELL=$(if [ ! -z "$IN_NIX_SHELL" ]; then echo " (nix-shell)"; else echo ""; fi);GIT_BRANCH=$(__git_ps1)'
+export PROMPT_COMMAND='TITLE_DIR=$(pwd | sed "s|$HOME|~|" | awk -F/ "{if (NF<=2) print \$0; else print \$(NF-1)\"/\"\$NF}"); echo -ne "\033]0;${TITLE_DIR}\007";LAST_STATUS=$(if [[ $? == 0 ]]; then echo "✓"; else echo "✗"; fi);NIX_SHELL=$(if [ ! -z "$IN_NIX_SHELL" ]; then echo " (nix-shell)"; else echo ""; fi);GIT_BRANCH=$(__git_ps1)'
 export PS1='\[\e[33m\]\w\[\e[0m\] \u$(if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then echo " @ \h"; else echo ""; fi)${GIT_BRANCH}${NIX_SHELL} $LAST_STATUS '
 export PS4='$0.$LINENO: '
 function command_not_found_handle() {
@@ -329,6 +329,6 @@ alias dotfiles='git --git-dir="$HOME/.dotfiles/.git" --work-tree="$HOME/.dotfile
 alias srv='ssh nwv-srv -p 2225'
 alias srvreb='ssh nwv-srv -p 2225 "cd ~/server && git pull && sudo task deploy"'
 alias plasma='dbus-run-session startplasma-wayland'
-alias mkrestart='systemctl --user restart sway-session.target'
+alias mkrestart='killall kded6 2>/dev/null; systemctl --user restart sway-session.target'
 source "$HOME/z.sh"
 source "$HOME/git-prompt.sh"

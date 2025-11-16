@@ -77,13 +77,14 @@ default_floating_border pixel 2
 hide_edge_borders smart
 
 # Color scheme: <border> <background> <text> <indicator> <child_border>
-# Medium grayscale theme
-client.focused          #909090 #000000 #909090 #000000 #909090
-client.focused_inactive #000000 #000000 #909090 #000000 #000000
-client.unfocused        #000000 #000000 #909090 #000000 #000000
-client.urgent           #000000 #000000 #909090 #000000 #000000
-client.placeholder      #000000 #000000 #909090 #000000 #000000
-client.background       #000000
+# Medium grayscale theme (matches waybar)
+# Default tabs: gray bg with black text, selected tab: black bg with gray text
+client.focused          #000000 #000000 #909090 #000000 #909090
+client.focused_inactive #000000 #909090 #000000 #000000 #000000
+client.unfocused        #000000 #909090 #000000 #000000 #000000
+client.urgent           #000000 #909090 #000000 #000000 #000000
+client.placeholder      #000000 #909090 #000000 #000000 #000000
+client.background       #909090
 
 # Window focus behavior
 focus_follows_mouse yes

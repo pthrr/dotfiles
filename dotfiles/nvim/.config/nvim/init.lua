@@ -104,12 +104,12 @@ now(function()
         pyright = {
             cmd = { "pyright-langserver", "--stdio" },
             filetypes = { "python" },
-            root_markers = { "pyproject.toml", "setup.py", ".git", ".jj" },
+            root_markers = { "MODULE.bazel", "WORKSPACE", "WORKSPACE.bazel", "BUILD.bazel", "pyproject.toml", "setup.py", ".git", ".jj" },
         },
         ty = {
             cmd = { "ty" },
             filetypes = { "python" },
-            root_markers = { "pyproject.toml", "setup.py", ".git", ".jj" },
+            root_markers = { "MODULE.bazel", "WORKSPACE", "WORKSPACE.bazel", "BUILD.bazel", "pyproject.toml", "setup.py", ".git", ".jj" },
         },
         bashls = {
             cmd = { "bash-language-server", "start" },
@@ -119,7 +119,7 @@ now(function()
         clangd = {
             cmd = { "clangd" },
             filetypes = { "c", "cpp" },
-            root_markers = { "compile_commands.json", ".clangd", ".git", ".jj" },
+            root_markers = { "MODULE.bazel", "WORKSPACE", "WORKSPACE.bazel", "BUILD.bazel", "compile_commands.json", ".clangd", ".git", ".jj" },
             init_options = {
                 fallbackFlags = { "--std=c++23" },
             },
@@ -127,7 +127,22 @@ now(function()
         rust_analyzer = {
             cmd = { "rust-analyzer" },
             filetypes = { "rust" },
-            root_markers = { "Cargo.toml", ".git", ".jj" },
+            root_markers = { "MODULE.bazel", "WORKSPACE", "WORKSPACE.bazel", "BUILD.bazel", "Cargo.toml", ".git", ".jj" },
+            settings = {
+                ["rust-analyzer"] = {
+                    check = {
+                        command = "clippy",
+                        extraArgs = {
+                            "--",
+                            "-W", "clippy::missing_const_for_fn",
+                            "-W", "clippy::borrow_interior_mutable_const",
+                            "-W", "clippy::declare_interior_mutable_const",
+                            "-W", "clippy::cloned_instead_of_copied",
+                            "-W", "clippy::trivially_copy_pass_by_ref",
+                        },
+                    },
+                },
+            },
         },
         ts_ls = {
             cmd = { "typescript-language-server", "--stdio" },
@@ -160,7 +175,7 @@ now(function()
         lua_ls = {
             cmd = { "lua-language-server" },
             filetypes = { "lua" },
-            root_markers = { { ".luarc.json", ".luarc.jsonc", ".stylua.toml", "stylua.toml", ".git", ".jj" } },
+            root_markers = { ".luarc.json", ".luarc.jsonc", ".stylua.toml", "stylua.toml", ".git", ".jj" },
             settings = {
                 Lua = {
                     runtime = {
