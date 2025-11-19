@@ -94,8 +94,8 @@ window#waybar {
 #custom-timer {
     background-color: #909090;
     color: #000000;
-    padding: 0 8px;
-    min-width: 100px;
+    padding: 0 6px;
+    min-width: 130px;
 }
 
 #clock {
