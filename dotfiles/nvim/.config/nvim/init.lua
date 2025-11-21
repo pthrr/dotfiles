@@ -175,7 +175,7 @@ now(function()
         lua_ls = {
             cmd = { "lua-language-server" },
             filetypes = { "lua" },
-            root_markers = { ".luarc.json", ".luarc.jsonc", ".stylua.toml", "stylua.toml", ".git", ".jj" },
+            root_markers = { ".luarc.json", ".luarc.jsonc", ".git", ".jj" },
             settings = {
                 Lua = {
                     runtime = {
