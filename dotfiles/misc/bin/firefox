@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+# Firefox wrapper to launch Flatpak version
+exec flatpak run org.mozilla.firefox "$@"
