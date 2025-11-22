@@ -1,0 +1,61 @@
+# Global Clippy configuration
+# This file configures custom lints for all Rust projects
+# Based on: https://www.schneems.com/2025/11/19/find-accidental-code-usage-with-a-custom-clippytoml/
+
+# Disallow specific methods to enforce better practices
+disallowed-methods = [
+    # Unsafe concurrency primitives - prefer safer alternatives
+    { path = "std::env::set_current_dir", reason = "Unsafe in multi-threaded contexts. Use scoped directory changes or explicit paths" },
+    { path = "std::env::set_var", reason = "Unsafe in multi-threaded programs. Environment changes are global and not thread-safe" },
+    { path = "std::env::remove_var", reason = "Unsafe in multi-threaded programs. Environment changes are global and not thread-safe" },
+
+    # Dangerous operations that should be explicit
+    { path = "std::mem::forget", reason = "Leaks memory. Use ManuallyDrop or other explicit patterns instead" },
+    { path = "std::process::exit", reason = "Abrupt termination bypasses destructors. Return from main or use controlled shutdown" },
+    { path = "std::process::abort", reason = "Abrupt termination without cleanup. Use panic! or proper error handling" },
+
+    # Prefer explicit error handling
+    { path = "std::panic::catch_unwind", reason = "Catching panics is rarely the right solution. Use Result for error handling" },
+    { path = "std::panic::resume_unwind", reason = "Resuming panics is fragile. Use proper error propagation with Result" },
+
+    # Prefer modern alternatives
+    { path = "std::mem::uninitialized", reason = "Deprecated and unsound. Use MaybeUninit instead" },
+    { path = "std::mem::zeroed", reason = "Can be unsound for some types. Use MaybeUninit::zeroed() with proper initialization" },
+    { path = "std::ptr::read_volatile", reason = "Extremely unsafe. Ensure you understand volatile semantics or use safer abstractions" },
+    { path = "std::ptr::write_volatile", reason = "Extremely unsafe. Ensure you understand volatile semantics or use safer abstractions" },
+
+    # Common footguns
+    { path = "std::thread::sleep_ms", reason = "Deprecated. Use std::thread::sleep with Duration instead" },
+
+    # Arc/Rc pitfalls
+    { path = "std::sync::Arc::try_unwrap", reason = "Often fails unexpectedly. Consider if Arc is the right choice or use get_mut" },
+    { path = "std::rc::Rc::try_unwrap", reason = "Often fails unexpectedly. Consider if Rc is the right choice or use get_mut" },
+
+    # Time-related footguns
+    { path = "std::time::SystemTime::now", reason = "Can go backwards! Use Instant for monotonic time, or be explicit about wall-clock time needs" },
+
+    # Dangerous transmutes
+    { path = "std::mem::transmute", reason = "Extremely dangerous. Use safer alternatives like from_ne_bytes, or explicit casting" },
+    { path = "std::mem::transmute_copy", reason = "Extremely dangerous. Use safer alternatives or document why this is necessary" },
+
+    # String conversions that can panic
+    { path = "std::str::from_utf8_unchecked", reason = "Undefined behavior if not UTF-8. Use from_utf8 and handle the error" },
+    { path = "std::string::String::from_utf8_unchecked", reason = "Undefined behavior if not UTF-8. Use from_utf8 and handle the error" },
+
+    # Slice access that can panic
+    { path = "core::slice::<impl [T]>::get_unchecked", reason = "Undefined behavior if out of bounds. Use get() and handle None" },
+    { path = "core::slice::<impl [T]>::get_unchecked_mut", reason = "Undefined behavior if out of bounds. Use get_mut() and handle None" },
+
+    # Raw pointer dereferencing helpers that hide unsafety
+    { path = "std::ptr::read_unaligned", reason = "Unsafe operation. Ensure pointer validity and proper alignment handling" },
+    { path = "std::ptr::write_unaligned", reason = "Unsafe operation. Ensure pointer validity and proper alignment handling" },
+
+    # Regex compilation that should be cached
+    { path = "regex::Regex::new", reason = "Compiles regex at runtime. Use lazy_static!/once_cell for frequently used patterns" },
+
+    # println! in library code
+    { path = "std::println", reason = "Don't use println! in library code. Use proper logging (log, tracing) or return errors" },
+    { path = "std::eprintln", reason = "Don't use eprintln! in library code. Use proper logging (log, tracing) or return errors" },
+    { path = "std::print", reason = "Don't use print! in library code. Use proper logging (log, tracing) or return errors" },
+    { path = "std::eprint", reason = "Don't use eprint! in library code. Use proper logging (log, tracing) or return errors" },
+]

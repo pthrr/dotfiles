@@ -139,7 +139,23 @@ now(function()
                             "-W", "clippy::declare_interior_mutable_const",
                             "-W", "clippy::cloned_instead_of_copied",
                             "-W", "clippy::trivially_copy_pass_by_ref",
+                            "-W", "clippy::disallowed_methods",
                         },
+                    },
+                    cargo = {
+                        extraEnv = {
+                            CLIPPY_CONF_DIR = vim.fn.expand("~/.config/clippy"),
+                        },
+                    },
+                    clippy = {
+                        allTargets = true,
+                    },
+                    diagnostics = {
+                        disabled = {},
+                        enable = true,
+                    },
+                    procMacro = {
+                        enable = true,
                     },
                 },
             },
