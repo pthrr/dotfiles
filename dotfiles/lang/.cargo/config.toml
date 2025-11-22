@@ -1,2 +1,5 @@
 [build]
 rustc-wrapper = "sccache-wrapper"
+
+[env]
+CARGO_INCREMENTAL = "0"
