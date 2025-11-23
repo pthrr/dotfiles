@@ -104,6 +104,7 @@ floating_modifier $mod normal
 
 # Window rules
 for_window [app_id="foot_floating"] floating enable, resize set 800 600, move position center
+for_window [app_id="idle_inhibitor"] inhibit_idle open, floating enable, move scratchpad
 
 # ==============================================================================
 # 5. AUTOSTART
@@ -138,6 +139,7 @@ bindsym $mod+d exec $menu
 bindsym $mod+Shift+c exec "swaymsg reload && pkill kanshi; kanshi &"
 bindsym $mod+Shift+e exec swaynag -t warning -m 'Exit sway?' -B 'Yes' 'swaymsg exit'
 bindsym $mod+Shift+s exec $lock
+bindsym $mod+Shift+i exec $term --app-id=idle_inhibitor sh -c 'notify-send "Idle Inhibit" "Enabled - press Super+- then Shift+q to disable"; sleep infinity'
 bindsym Control+Mod1+BackSpace exec swaymsg exit
 
 # -----------------------------------------------------------------------------
