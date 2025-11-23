@@ -10,7 +10,8 @@ tasks:
 
   switch:
     cmds:
-      - cmd: home-manager switch --flake .
+      # - cmd: home-manager switch --flake .
+      - home-manager switch --show-trace
 
   install:
     cmds:
