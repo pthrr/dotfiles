@@ -60,24 +60,26 @@ in
           [ nixd nil ] ++
 
           # Containers & Kubernetes
-          [ kind minikube helm k3s k3d crun envsubst ] ++
+          # [ kind minikube helm k3s k3d crun envsubst ] ++
 
           # Build caching & debugging
           [ mold valgrind sccache redis gdbgui rr hotspot ] ++
 
           # Hardware development
-          [ yosys verilator bluespec yosys-bluespec icestorm
+          [ yosys verilator
+            # bluespec yosys-bluespec
+            icestorm
             svdtools svd2rust pcb2gcode candle ngspice
-            # symbiyosys # temporarily disabled due to boolector build issue
-            # nextpnrWithGui # temporarily disabled due to cmake build issue
-            # xyce-parallel # temporarily disabled due to trilinos cmake build issue
+            # sby
+            nextpnrWithGui
+            # xyce-parallel
           ] ++
 
           # WebAssembly
           [ emscripten wasmtime wabt ] ++
 
           # Document tools
-          [ typst tinymist typstyle pandoc poppler_utils graphviz ] ++
+          [ typst tinymist typstyle pandoc poppler-utils graphviz ] ++
 
           # Formatters & linters
           [ yamlfmt yamllint shfmt stylua lua-language-server ] ++
@@ -234,10 +236,12 @@ in
 
     programs.git = {
       enable = true;
-      userName = commonUser.name;
-      userEmail = commonUser.email;
-      package = pkgs.gitAndTools.gitFull;
-      extraConfig = {
+      package = pkgs.gitFull;
+      settings = {
+        user = {
+          name = commonUser.name;
+          email = commonUser.email;
+        };
         core = commonCore // {
           autocrlf = false;
           excludesfile = "~/.config/git/.gitignore_global";
