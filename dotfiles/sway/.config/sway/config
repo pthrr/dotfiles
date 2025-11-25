@@ -277,7 +277,8 @@ include /etc/sway/config.d/10-*.conf
 include /usr/share/sway/config.d/50-*.conf
 include /usr/share/sway/config.d/60-*.conf
 include /usr/share/sway/config.d/65-*.conf
-# Skip 90-bar.conf (we define waybar above), 90-swayidle.conf (we define swayidle above), and 95-xdg-desktop-autostart.conf
+# Skip 90-bar.conf (we define waybar above) and 90-swayidle.conf (we define swayidle above)
+include /usr/share/sway/config.d/95-xdg-desktop-autostart.conf
 include /usr/share/sway/config.d/95-xdg-user-dirs.conf
 
 exec /usr/libexec/sway-systemd/session.sh
