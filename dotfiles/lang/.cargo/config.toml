@@ -1,5 +1,6 @@
 [build]
 rustc-wrapper = "sccache-wrapper"
+rustflags = ["-A", "unused_macros"]
 
 [env]
 CARGO_INCREMENTAL = "0"

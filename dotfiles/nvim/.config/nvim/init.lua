@@ -142,6 +142,7 @@ now(function()
                             "-W", "clippy::disallowed_methods",
                             "-A", "clippy::redundant_closure_call",
                             "-A", "clippy::needless_return",
+                            "-A", "unused_macros",
                         },
                         extraEnv = {
                             CLIPPY_CONF_DIR = vim.fn.expand("~/.config/clippy"),
