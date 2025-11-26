@@ -42,7 +42,7 @@ in
           [ coreutils findutils usbutils pciutils openssl sqlite ] ++
 
           # Shell & terminal tools
-          [ mc tmux tree htop fzf ripgrep fd wl-clipboard wlr-randr mako udiskie ] ++
+          [ vifm tmux tree htop fzf ripgrep fd wl-clipboard wlr-randr mako udiskie ] ++
 
           # Build systems
           [ scons meson ninja bazelisk bmake bear buck2 git-repo cmake-format ] ++
@@ -428,7 +428,7 @@ in
           recursive = true;
         };
       in
-        lib.genAttrs [ "sway" "gdb" "foot" "zathura" "git" "tmux" "mc" "nvim" ] mkConfigDir
+        lib.genAttrs [ "sway" "gdb" "foot" "zathura" "git" "tmux" "vifm" "nvim" ] mkConfigDir
         // {
           "plasma-workspace/env" = {
             source = ../../../nix/.config/plasma-workspace/env;

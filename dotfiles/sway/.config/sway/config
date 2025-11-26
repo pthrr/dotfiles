@@ -113,7 +113,7 @@ for_window [app_id="idle_inhibitor"] inhibit_idle open, floating enable, move sc
 # Desktop services
 # nm-applet, blueman-applet, kdeconnect-indicator auto-started via XDG autostart
 # policykit-agent handled by system config
-exec udiskie --tray --file-manager 'foot -e mc'
+exec udiskie --tray --file-manager 'foot -e vifm'
 exec mako
 
 # Swaylock command (config in ~/.config/swaylock/config)

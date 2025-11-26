@@ -1,0 +1,55 @@
+" vifm configuration
+
+set vicmd=nvim
+
+set trash
+set history=100
+set followlinks
+set sortnumbers
+set undolevels=100
+
+set wildmenu
+set wildstyle=popup
+
+set ignorecase
+set smartcase
+set nohlsearch
+set incsearch
+
+set scrolloff=4
+
+set number
+set relativenumber
+
+set syscalls
+
+colorscheme solarized-dark
+
+" Marks
+mark h ~/
+
+" Keybindings
+nnoremap s :shell<cr>
+nnoremap . za
+nnoremap I cw<c-a>
+nnoremap A cw
+nnoremap cc cw<c-u>
+nnoremap w :view<cr>
+vnoremap w :view<cr>gv
+nnoremap o :!nvim %f<cr>
+nnoremap q ZZ
+nnoremap ; :
+nnoremap <space> tj
+nnoremap - gh
+
+" File operations
+nnoremap yy :copy<cr>
+vnoremap yy :copy<cr>
+
+" File types
+fileviewer */ tree -L 1 %c 2> /dev/null
+fileviewer * file -b %c
+
+" Icons
+set classify=' :dir:/, :exe:, :reg:, :link:'
+set classify+=' ::..::, ::/^\..*/::'

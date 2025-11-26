@@ -150,7 +150,7 @@ export TERMINAL='foot'
 export PDFVIEWER='zathura'
 export IMAGEVIEWER='nsxiv'
 export MEDIAPLAYER='vlc'
-export FILEMANAGER='mc'
+export FILEMANAGER='vifm'
 export FZF_DEFAULT_COMMAND='rg --files'
 export FZF_DEFAULT_OPTS='-m --height 50% --border'
 export LESS='-R'
@@ -158,8 +158,6 @@ export NO_AT_BRIDGE=1
 export DO_NOT_TRACK=1
 export NINJA_STATUS="%p [%f:%s/%t] %o/s, %es "
 export _JAVA_AWT_WM_NONREPARENTING=1
-export MC_XDG_OPEN="$HOME/bin/xdg"
-export MC_SKIN="$HOME/.config/mc/solarized.ini"
 export QT_LOGGING_RULES="kwin_*.debug=true"
 export CPM_SOURCE_CACHE="$XDG_CACHE_HOME/CPM"
 export TMPDIR="$HOME/tmp"
@@ -281,7 +279,7 @@ set -o vi
 set -o noclobber
 alias vi='nvim'
 alias vim='nvim'
-alias fm='mc . .'
+alias fm='vifm . .'
 alias top='top -o %MEM'
 alias diff='diff --strip-trailing-cr --ignore-trailing-space'
 alias grep='LC_ALL=C grep -Hn --color=auto --binary-files=without-match --exclude-dir={.git,.jj,.venv,__pycache__,*cache,build,target}'
