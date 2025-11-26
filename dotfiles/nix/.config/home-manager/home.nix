@@ -102,6 +102,9 @@ in
           # Viewers
           [ zathura sent ] ++
 
+          # File managers
+          [ pcmanfm gvfs ] ++
+
           # Diff tools
           [ difftastic ] ++
 
