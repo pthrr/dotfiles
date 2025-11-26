@@ -140,6 +140,11 @@ now(function()
                             "-W", "clippy::cloned_instead_of_copied",
                             "-W", "clippy::trivially_copy_pass_by_ref",
                             "-W", "clippy::disallowed_methods",
+                            "-A", "clippy::redundant_closure_call",
+                            "-A", "clippy::needless_return",
+                        },
+                        extraEnv = {
+                            CLIPPY_CONF_DIR = vim.fn.expand("~/.config/clippy"),
                         },
                     },
                     cargo = {

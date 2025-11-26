@@ -12,7 +12,7 @@ This is a personal dotfiles repository using Nix and Home Manager for declarativ
 - `./install.sh` - Full system installation (runs system setup, Nix installation, and dotfiles linking)
 - `task install` - Alternative installation using go-task
 - `task switch` - Apply Home Manager configuration changes
-- `home-manager switch --flake .` - Direct Home Manager switch
+- `home-manager switch` - Direct Home Manager switch (NOTE: do NOT use --flake flag, it does not work)
 
 ### System Management
 - `./system/install_system.sh` - Install system packages via DNF and Flatpak
