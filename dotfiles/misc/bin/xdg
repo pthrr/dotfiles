@@ -2,24 +2,23 @@
 set -euo pipefail
 
 case "${@: -1}" in
-    *://* | *.html)
-        exec $BROWSER "$@"
-        ;;
-    *.pdf | *.djvu | *.ps)
-        exec $PDFVIEWER "$@"
-        ;;
-    *.jpg | *.jpeg | *.png | *.gif | *.bmp | *.webp | *.svg)
-        exec $IMAGEVIEWER "$@"
-        ;;
-    *.mp3 | *.mp4 | *.mkv | *.avi | *.mov | *.webm | *.flv | *.wmv | *.m4v | *.mpg | *.mpeg | *.wav | *.flac | *.ogg | *.m4a | *.aac)
-        exec $MEDIAPLAYER "$@"
-        ;;
-    /* | ~/*)
-        if [ -d "${@: -1}" ]; then
-            exec $FILEMANAGER "$@"
-        fi
-        ;;
-    *)
-        xdg-open "$@"
-        ;;
+*://* | *.html)
+	exec $BROWSER "$@"
+	;;
+*.pdf | *.djvu | *.ps)
+	exec $PDFVIEWER "$@"
+	;;
+*.jpg | *.jpeg | *.png | *.gif | *.bmp | *.webp | *.svg)
+	exec $IMAGEVIEWER "$@"
+	;;
+*.mp3 | *.mp4 | *.mkv | *.avi | *.mov | *.webm | *.flv | *.wmv | *.m4v | *.mpg | *.mpeg | *.wav | *.flac | *.ogg | *.m4a | *.aac)
+	exec $MEDIAPLAYER "$@"
+	;;
+*)
+	if [ -d "${@: -1}" ]; then
+		exec $FILEMANAGER "$@"
+	else
+		xdg-open "$@"
+	fi
+	;;
 esac
