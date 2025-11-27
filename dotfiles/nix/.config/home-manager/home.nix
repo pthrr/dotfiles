@@ -48,7 +48,7 @@ in
           [ scons meson ninja bazelisk bmake bear buck2 git-repo cmake-format ] ++
 
           # Compilers & toolchains
-          [ zig zls rustup ] ++
+          [ clang-tools rustup zig zls ] ++
 
           # JavaScript/TypeScript
           [ deno bun nodejs_24 eslint nodePackages.typescript-language-server ] ++
@@ -99,14 +99,8 @@ in
           # Media/Audio
           [ drumgizmo x42-avldrums x42-plugins wolf-shaper calf ] ++
 
-          # Viewers
-          [ zathura sent ] ++
-
-          # File managers
-          [ pcmanfm gvfs ] ++
-
-          # Diff tools
-          [ difftastic ] ++
+          # Viewers & diff tools
+          [ difftastic sent zathura ] ++
 
           # Other
           [ claude-code ty go-task unrar wineWow64Packages.waylandFull
