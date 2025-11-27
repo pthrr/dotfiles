@@ -1,6 +1,8 @@
 " vifm configuration
 
 set vicmd=nvim
+set shell=/bin/bash
+set shellcmdflag=-c
 
 set trash
 set history=100
@@ -21,7 +23,8 @@ set scrolloff=4
 set number
 set relativenumber
 
-set syscalls
+set sort=-mtime
+set dotfiles
 
 colorscheme solarized-dark
 
@@ -36,7 +39,7 @@ nnoremap A cw
 nnoremap cc cw<c-u>
 nnoremap w :view<cr>
 vnoremap w :view<cr>gv
-nnoremap o :!nvim %f<cr>
+nnoremap o :!xdg %f &%i<cr>
 nnoremap q ZZ
 nnoremap ; :
 nnoremap <space> tj

@@ -18,7 +18,9 @@
       "Bash(tree:*)",
       "Read(//nix/store/qlx2gj3arj0y93f8y40k6mng89lvrf2m-hm_kanshi/**)",
       "Read(//usr/share/sway/config.d/**)",
-      "Read(//usr/**)"
+      "Read(//usr/**)",
+      "Bash(echo:*)",
+      "Bash(ps:*)"
     ],
     "deny": [],
     "ask": []
