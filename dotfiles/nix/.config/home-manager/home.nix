@@ -56,6 +56,9 @@ in
           # Python tooling
           [ pyright ] ++
 
+          # Java tooling
+          [ jdk maven gradle jdt-language-server google-java-format ] ++
+
           # Nix tooling
           [ nixd nil ] ++
 
