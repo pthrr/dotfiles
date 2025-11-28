@@ -39,7 +39,7 @@ in
 
         packages = with pkgs;
           # Core utilities
-          [ coreutils findutils usbutils pciutils openssl sqlite ] ++
+          [ coreutils findutils usbutils pciutils openssl sqlite unzip p7zip ] ++
 
           # Shell & terminal tools
           [ vifm tmux tree htop fzf ripgrep fd wl-clipboard wlr-randr mako udiskie ] ++
