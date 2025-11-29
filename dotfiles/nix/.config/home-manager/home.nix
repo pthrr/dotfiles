@@ -237,6 +237,7 @@ in
     programs.git = {
       enable = true;
       package = pkgs.gitFull;
+      lfs.enable = true;
       settings = {
         user = {
           name = commonUser.name;
@@ -371,15 +372,6 @@ in
 
         pager = {
           difftool = false;
-        };
-
-        filter = {
-          "lfs" = {
-            required = true;
-            clean = "git-lfs clean -- %f";
-            smudge = "git-lfs smudge -- %f";
-            process = "git-lfs filter-process";
-          };
         };
 
         alias = {
