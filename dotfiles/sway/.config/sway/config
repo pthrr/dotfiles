@@ -142,6 +142,9 @@ bindsym $mod+Shift+s exec $lock
 bindsym $mod+Shift+i exec $term --app-id=idle_inhibitor sh -c 'notify-send "Idle Inhibit" "Enabled - press Super+- then Shift+q to disable"; sleep infinity'
 bindsym Control+Mod1+BackSpace exec swaymsg exit
 
+# Snipping tool - select area and copy to clipboard
+bindsym $mod+p exec grimshot copy area
+
 # -----------------------------------------------------------------------------
 # Window Focus
 # -----------------------------------------------------------------------------
