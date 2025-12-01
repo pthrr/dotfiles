@@ -19,7 +19,8 @@
 
     "tray": {
         "icon-size": 25,
-        "spacing": 10
+        "spacing": 10,
+        "show-passive-items": true
     },
 
     "cpu": {

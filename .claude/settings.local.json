@@ -10,17 +10,16 @@
       "Bash(killall:*)",
       "Bash(pgrep:*)",
       "Bash(kanshi:*)",
-      "Read(//home/pthrr/.config/**)",
       "Bash(readlink:*)",
-      "Read(//nix/store/bq8m71wc1gjggmywcb4ayzjhb0vjngl5-hm_kanshi/**)",
       "Bash(journalctl:*)",
       "Bash(swaylock:*)",
       "Bash(tree:*)",
-      "Read(//nix/store/qlx2gj3arj0y93f8y40k6mng89lvrf2m-hm_kanshi/**)",
       "Read(//usr/share/sway/config.d/**)",
       "Read(//usr/**)",
       "Bash(echo:*)",
-      "Bash(ps:*)"
+      "Bash(ps:*)",
+      "Bash(busctl:*)",
+      "Bash(waybar --help:*)"
     ],
     "deny": [],
     "ask": []
