@@ -134,6 +134,10 @@ now(function()
                         command = "clippy",
                         extraArgs = {
                             "--",
+                            "-D", "clippy::implicit_return",
+                            "-D", "clippy::semicolon_if_nothing_returned",
+                            "-D", "clippy::unwrap_used",
+                            "-D", "clippy::indexing_slicing",
                             "-W", "clippy::missing_const_for_fn",
                             "-W", "clippy::borrow_interior_mutable_const",
                             "-W", "clippy::declare_interior_mutable_const",
