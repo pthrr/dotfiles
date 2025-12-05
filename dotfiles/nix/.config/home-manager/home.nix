@@ -48,7 +48,7 @@ in
           [ scons meson ninja bazelisk bmake bear buck2 git-repo cmake-format ] ++
 
           # Compilers & toolchains
-          [ clang-tools rustup zig zls ] ++
+          [ clang-tools rustup zig zls ocaml opam ] ++
 
           # JavaScript/TypeScript
           [ deno bun nodejs_24 eslint nodePackages.typescript-language-server ] ++
@@ -94,7 +94,7 @@ in
           [ jq fq ] ++
 
           # Formal verification
-          [ lean4 tlafmt cue cuelsp cuetools nuXmv alloy6 ] ++
+          [ lean4 tlafmt cue cuelsp cuetools nuXmv alloy6 compcert fstar ] ++
 
           # Image tools
           [ nsxiv farbfeld libwebp netpbm potrace ] ++
