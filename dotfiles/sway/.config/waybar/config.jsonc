@@ -47,6 +47,7 @@
             "warning": 30,
             "critical": 15
         },
+        "weighted-average": true,
         "format": "BAT: {time} (D)",
         "format-charging": "BAT: {time} (C)",
         "format-plugged": "BAT: FULL",
