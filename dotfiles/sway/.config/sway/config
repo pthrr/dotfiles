@@ -203,6 +203,12 @@ bindsym $mod+Shift+0 move container to workspace ten
 bindsym $mod+Tab workspace next
 bindsym $mod+Shift+Tab workspace prev
 
+# Vim-style workspace switching
+bindsym $mod+Control+$left workspace prev
+bindsym $mod+Control+$right workspace next
+bindsym $mod+Control+Left workspace prev
+bindsym $mod+Control+Right workspace next
+
 # -----------------------------------------------------------------------------
 # Layout
 # -----------------------------------------------------------------------------

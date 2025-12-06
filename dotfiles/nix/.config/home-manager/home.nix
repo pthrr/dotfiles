@@ -105,6 +105,9 @@ in
           # Viewers & diff tools
           [ difftastic sent zathura ] ++
 
+          # Web browsers
+          [ ladybird ] ++
+
           # Other
           [ claude-code ty go-task unrar wineWow64Packages.waylandFull
             # ripes # temporarily disabled due to cmake build issue
