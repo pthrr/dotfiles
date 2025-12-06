@@ -381,6 +381,7 @@ in
           p = "push";
           pf = "push --force-with-lease";
           c = "commit";
+          ca = "commit --amend";
           co = "checkout";
           s = "status";
           d = "diff";
