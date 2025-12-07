@@ -136,7 +136,7 @@ bindsym $mod+Return exec $term
 bindsym $mod+Shift+Return exec $term --app-id foot_floating
 bindsym $mod+Shift+q kill
 bindsym $mod+d exec $menu
-bindsym $mod+Shift+c exec "swaymsg reload && pkill kanshi; kanshi &"
+bindsym $mod+Shift+c exec "swaymsg reload && kanshictl reload"
 bindsym $mod+Shift+e exec swaynag -t warning -m 'Exit sway?' -B 'Yes' 'swaymsg exit'
 bindsym $mod+Shift+s exec $lock
 bindsym $mod+Shift+i exec $term --app-id=idle_inhibitor sh -c 'notify-send "Idle Inhibit" "Enabled - press Super+- then Shift+q to disable"; sleep infinity'
