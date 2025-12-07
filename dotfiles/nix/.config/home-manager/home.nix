@@ -69,7 +69,7 @@ in
           [ mold valgrind sccache redis gdbgui rr hotspot ] ++
 
           # Hardware development
-          [ yosys verilator
+          [ yosys verilator gtkwave
             # bluespec yosys-bluespec
             icestorm
             svdtools svd2rust pcb2gcode candle ngspice
