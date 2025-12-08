@@ -39,13 +39,16 @@ in
 
         packages = with pkgs;
           # Core utilities
-          [ coreutils findutils usbutils pciutils openssl sqlite unzip p7zip ] ++
+          [ coreutils findutils usbutils pciutils openssl unrar unzip p7zip ] ++
 
           # Shell & terminal tools
-          [ vifm tmux tree htop fzf ripgrep fd wl-clipboard wlr-randr mako udiskie ] ++
+          [ vifm tmux tree htop fzf ripgrep fd ] ++
+
+          # WM
+          [ wl-clipboard wlr-randr mako udiskie ] ++
 
           # Build systems
-          [ scons meson ninja bazelisk bmake bear buck2 git-repo cmake-format ] ++
+          [ scons meson ninja bazelisk bmake bear buck2 git-repo ] ++
 
           # Compilers & toolchains
           [ clang-tools rustup zig zls ocaml opam ] ++
@@ -85,7 +88,7 @@ in
           [ typst tinymist typstyle pandoc poppler-utils graphviz ] ++
 
           # Formatters & linters
-          [ yamlfmt yamllint shfmt stylua lua-language-server ] ++
+          [ tlafmt yamlfmt yamllint shfmt stylua lua-language-server cmake-format ] ++
 
           # Protocol buffers
           [ protobuf protobufc ] ++
@@ -94,7 +97,7 @@ in
           [ jq fq ] ++
 
           # Formal verification
-          [ lean4 tlafmt cue cuelsp cuetools nuXmv alloy6 compcert fstar ] ++
+          [ cue cuelsp cuetools nuXmv z3 ] ++
 
           # Image tools
           [ nsxiv farbfeld libwebp netpbm potrace ] ++
@@ -109,7 +112,7 @@ in
           [ ladybird ] ++
 
           # Other
-          [ claude-code ty go-task unrar wineWow64Packages.waylandFull
+          [ claude-code ty go-task wineWow64Packages.waylandFull
             # ripes # temporarily disabled due to cmake build issue
           ];
 
