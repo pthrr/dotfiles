@@ -328,5 +328,10 @@ alias srv='ssh nwv-srv -p 2225'
 alias srvreb='ssh nwv-srv -p 2225 "cd ~/server && git pull && sudo task deploy"'
 alias plasma='dbus-run-session startplasma-wayland'
 alias mkrestart='killall kded6 2>/dev/null; systemctl --user restart sway-session.target'
+alias print='lp'
+alias print2='lp -o sides=two-sided-long-edge'
+alias printers='lpstat -p -d'
+alias printman='xdg http://localhost:631'
+alias pomo='pomodoro'
 source "$HOME/z.sh"
 source "$HOME/git-prompt.sh"

@@ -5,7 +5,7 @@
     "spacing": 2,
     "modules-left": ["sway/workspaces", "sway/mode"],
     "modules-center": [],
-    "modules-right": ["tray", "cpu", "memory", "disk", "battery", "pulseaudio", "custom/timer", "clock"],
+    "modules-right": ["tray", "cpu", "memory", "disk", "battery", "pulseaudio", "custom/pomodoro", "clock"],
 
     "sway/workspaces": {
         "disable-scroll": false,
@@ -43,11 +43,12 @@
     },
 
     "battery": {
+        "bat": "BAT0",
+        "bat1": "BAT1",
         "states": {
             "warning": 30,
             "critical": 15
         },
-        "weighted-average": true,
         "format": "BAT: {time} (D)",
         "format-charging": "BAT: {time} (C)",
         "format-plugged": "BAT: FULL",
@@ -64,11 +65,11 @@
         "tooltip": true
     },
 
-    "custom/timer": {
-        "format": "TMR: {}",
-        "exec": "timer status",
+    "custom/pomodoro": {
+        "exec": "pomo-status",
         "interval": 1,
-        "tooltip": false
+        "format": "POM: {}",
+        "min-length": 16
     },
 
     "clock": {

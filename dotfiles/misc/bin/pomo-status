@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+status=$(pomodoro status -f '%r %c🍅' 2>/dev/null || true)
+
+if [ -z "$status" ]; then
+    echo "00:00 -🍅"
+else
+    echo "$status"
+fi

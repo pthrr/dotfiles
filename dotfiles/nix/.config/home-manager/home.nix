@@ -112,7 +112,7 @@ in
           [ ladybird ] ++
 
           # Other
-          [ claude-code ty go-task wineWow64Packages.waylandFull
+          [ claude-code ty go-task wineWow64Packages.waylandFull openpomodoro-cli
             # ripes # temporarily disabled due to cmake build issue
           ];
 
