@@ -19,7 +19,8 @@
       "Bash(echo:*)",
       "Bash(ps:*)",
       "Bash(busctl:*)",
-      "Bash(waybar --help:*)"
+      "Bash(waybar --help:*)",
+      "Bash(mkdir:*)"
     ],
     "deny": [],
     "ask": []

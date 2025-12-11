@@ -148,6 +148,11 @@ in
             source = ../../../sent/Vorlagen/slides;
             recursive = true;
           };
+          ".claude/statusline.sh" = {
+            source = ../../../claude/.config/claude/statusline.sh;
+            executable = true;
+          };
+          ".claude/settings.json".source = ../../../claude/.config/claude/settings.json;
         };
     };
 
