@@ -5,7 +5,7 @@
     "spacing": 2,
     "modules-left": ["sway/workspaces", "sway/mode"],
     "modules-center": [],
-    "modules-right": ["tray", "cpu", "memory", "disk", "battery", "pulseaudio", "custom/pomodoro", "clock"],
+    "modules-right": ["tray", "cpu", "memory", "disk", "pulseaudio", "custom/battery", "custom/pomodoro", "clock"],
 
     "sway/workspaces": {
         "disable-scroll": false,
@@ -42,19 +42,12 @@
         "interval": 30
     },
 
-    "battery": {
-        "bat": "BAT0",
-        "bat1": "BAT1",
-        "states": {
-            "warning": 30,
-            "critical": 15
-        },
-        "format": "BAT: {time} (D)",
-        "format-charging": "BAT: {time} (C)",
-        "format-plugged": "BAT: FULL",
-        "format-full": "BAT: FULL",
-        "tooltip-format": "{capacity}% - {time}",
-        "interval": 3
+    "custom/battery": {
+        "exec": "~/.config/waybar/battery-combined.sh",
+        "interval": 3,
+        "format": "{}",
+        "tooltip": false,
+        "min-length": 16
     },
 
     "pulseaudio": {
