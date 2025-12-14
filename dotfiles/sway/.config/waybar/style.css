@@ -117,9 +117,9 @@ window#waybar {
 #cpu,
 #memory,
 #disk,
-#battery,
+#custom-battery,
 #pulseaudio,
-#custom-timer {
+#custom-pomodoro {
     border-right: 1px solid #000000;
 }
 

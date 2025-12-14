@@ -47,7 +47,8 @@
         "interval": 3,
         "format": "{}",
         "tooltip": false,
-        "min-length": 16
+        "min-length": 16,
+        "separator": true
     },
 
     "pulseaudio": {
@@ -62,7 +63,8 @@
         "exec": "pomo-status",
         "interval": 1,
         "format": "POM: {}",
-        "min-length": 16
+        "min-length": 16,
+        "separator": true
     },
 
     "clock": {
