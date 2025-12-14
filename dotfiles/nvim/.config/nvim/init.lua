@@ -104,12 +104,30 @@ now(function()
         pyright = {
             cmd = { "pyright-langserver", "--stdio" },
             filetypes = { "python" },
-            root_markers = { "MODULE.bazel", "WORKSPACE", "WORKSPACE.bazel", "BUILD.bazel", "pyproject.toml", "setup.py", ".git", ".jj" },
+            root_markers = {
+                "MODULE.bazel",
+                "WORKSPACE",
+                "WORKSPACE.bazel",
+                "BUILD.bazel",
+                "pyproject.toml",
+                "setup.py",
+                ".git",
+                ".jj",
+            },
         },
         ty = {
             cmd = { "ty" },
             filetypes = { "python" },
-            root_markers = { "MODULE.bazel", "WORKSPACE", "WORKSPACE.bazel", "BUILD.bazel", "pyproject.toml", "setup.py", ".git", ".jj" },
+            root_markers = {
+                "MODULE.bazel",
+                "WORKSPACE",
+                "WORKSPACE.bazel",
+                "BUILD.bazel",
+                "pyproject.toml",
+                "setup.py",
+                ".git",
+                ".jj",
+            },
         },
         bashls = {
             cmd = { "bash-language-server", "start" },
@@ -119,7 +137,16 @@ now(function()
         clangd = {
             cmd = { "clangd" },
             filetypes = { "c", "cpp" },
-            root_markers = { "MODULE.bazel", "WORKSPACE", "WORKSPACE.bazel", "BUILD.bazel", "compile_commands.json", ".clangd", ".git", ".jj" },
+            root_markers = {
+                "MODULE.bazel",
+                "WORKSPACE",
+                "WORKSPACE.bazel",
+                "BUILD.bazel",
+                "compile_commands.json",
+                ".clangd",
+                ".git",
+                ".jj",
+            },
             init_options = {
                 fallbackFlags = { "--std=c++23" },
             },
@@ -127,37 +154,69 @@ now(function()
         rust_analyzer = {
             cmd = { "rust-analyzer" },
             filetypes = { "rust" },
-            root_markers = { "MODULE.bazel", "WORKSPACE", "WORKSPACE.bazel", "BUILD.bazel", "Cargo.toml", ".git", ".jj" },
+            root_markers = {
+                "MODULE.bazel",
+                "WORKSPACE",
+                "WORKSPACE.bazel",
+                "BUILD.bazel",
+                "Cargo.toml",
+                ".git",
+                ".jj",
+            },
             settings = {
                 ["rust-analyzer"] = {
                     check = {
                         command = "clippy",
                         extraArgs = {
                             "--",
-                            "-D", "clippy::implicit_return",
-                            "-D", "clippy::semicolon_if_nothing_returned",
-                            "-D", "clippy::unwrap_used",
-                            "-D", "clippy::indexing_slicing",
-                            "-D", "clippy::unused_must_use",
-                            "-D", "clippy::unused_results",
-                            "-D", "clippy::unwrap_in_result",
-                            "-D", "clippy::fallible_impl_from",
-                            "-D", "clippy::shadow_reuse",
-                            "-D", "clippy::shadow_unrelated",
-                            "-D", "clippy::shadow_same",
-                            "-W", "clippy::missing_const_for_fn",
-                            "-W", "clippy::borrow_interior_mutable_const",
-                            "-W", "clippy::declare_interior_mutable_const",
-                            "-W", "clippy::cloned_instead_of_copied",
-                            "-W", "clippy::trivially_copy_pass_by_ref",
-                            "-W", "clippy::disallowed_methods",
-                            "-W", "clippy::cast_lossless",
-                            "-W", "clippy::cast_possible_truncation",
-                            "-W", "clippy::match_wildcard_for_single_variants",
-                            "-A", "clippy::redundant_closure_call",
-                            "-A", "clippy::needless_return",
-                            "-A", "clippy::single_match",
-                            "-A", "unused_macros",
+                            "-D",
+                            "clippy::implicit_return",
+                            "-D",
+                            "clippy::semicolon_if_nothing_returned",
+                            "-D",
+                            "clippy::unwrap_used",
+                            "-D",
+                            "clippy::indexing_slicing",
+                            "-D",
+                            "clippy::unused_must_use",
+                            "-D",
+                            "clippy::unused_results",
+                            "-D",
+                            "clippy::unwrap_in_result",
+                            "-D",
+                            "clippy::fallible_impl_from",
+                            "-D",
+                            "clippy::shadow_reuse",
+                            "-D",
+                            "clippy::shadow_unrelated",
+                            "-D",
+                            "clippy::shadow_same",
+                            "-W",
+                            "clippy::missing_const_for_fn",
+                            "-W",
+                            "clippy::borrow_interior_mutable_const",
+                            "-W",
+                            "clippy::declare_interior_mutable_const",
+                            "-W",
+                            "clippy::cloned_instead_of_copied",
+                            "-W",
+                            "clippy::trivially_copy_pass_by_ref",
+                            "-W",
+                            "clippy::disallowed_methods",
+                            "-W",
+                            "clippy::cast_lossless",
+                            "-W",
+                            "clippy::cast_possible_truncation",
+                            "-W",
+                            "clippy::match_wildcard_for_single_variants",
+                            "-A",
+                            "clippy::redundant_closure_call",
+                            "-A",
+                            "clippy::needless_return",
+                            "-A",
+                            "clippy::single_match",
+                            "-A",
+                            "unused_macros",
                         },
                         extraEnv = {
                             CLIPPY_CONF_DIR = vim.fn.expand("~/.config/clippy"),
@@ -216,10 +275,10 @@ now(function()
             settings = {
                 Lua = {
                     runtime = {
-                        version = 'LuaJIT',
+                        version = "LuaJIT",
                     },
                     diagnostics = {
-                        globals = { 'vim' },
+                        globals = { "vim" },
                     },
                     workspace = {
                         checkThirdParty = false,
@@ -347,7 +406,7 @@ vim.api.nvim_create_autocmd("BufWritePre", {
 
         -- Route to appropriate formatter based on file extension
         if file:match("%.rs$") then
-            run_external_formatter("rustfmt", { file })
+            run_external_formatter("verusfmt", { file })
         elseif file:match("%.typ$") then
             run_external_formatter("typstyle", { "-i", file })
         elseif file:match("%.tla$") then
