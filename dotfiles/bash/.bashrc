@@ -165,6 +165,7 @@ export SYSTEMC_HOME="/opt/systemc"
 export SYSTEMC_AMS_HOME="/opt/systemc-ams"
 export ICSC_HOME="$HOME/opt/sc_tools"
 export VERUS_ROOT="$HOME/opt/verus/source/target-verus/release"
+export VERUS_Z3_PATH="$HOME/opt/verus/source/target-verus/release/z3"
 export HISTCONTROL=ignorespace:erasedups
 export HISTSIZE=1000
 export HISTFILESIZE=2000
