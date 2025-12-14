@@ -27,13 +27,14 @@ else
     time_str="--:--"
 fi
 
-# Determine status
+# Determine status and display format
 if [ "$bat0_status" = "Charging" ] || [ "$bat1_status" = "Charging" ]; then
-    status="(C)"
+    # Charging: show percentage
+    echo "BAT: ${total_capacity}%"
 elif [ "$bat0_status" = "Full" ] && [ "$bat1_status" = "Full" ]; then
-    status="FULL"
+    # Full: show percentage
+    echo "BAT: ${total_capacity}%"
 else
-    status="(D)"
+    # Discharging: show time remaining
+    echo "BAT: $time_str"
 fi
-
-echo "BAT: $time_str $status"

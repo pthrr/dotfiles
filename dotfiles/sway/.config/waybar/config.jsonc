@@ -47,7 +47,7 @@
         "interval": 3,
         "format": "{}",
         "tooltip": false,
-        "min-length": 16,
+        "min-length": 14,
         "separator": true
     },
 
