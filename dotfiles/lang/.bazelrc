@@ -1,0 +1,13 @@
+# Use bazel-remote cache server with fallback to local disk cache
+build --remote_cache=grpc://nwv-srv:9092
+build --disk_cache=~/.cache/bazel-disk-cache
+
+# Don't fail the build if remote cache is unavailable
+build --remote_local_fallback
+build --remote_timeout=5s
+build --grpc_keepalive_timeout=2s
+build --experimental_circuit_breaker_strategy=failure
+build --remote_retries=0
+
+# Alternative HTTP endpoint (if gRPC doesn't work):
+# build --remote_cache=http://nwv-srv:8080
