@@ -28,11 +28,14 @@ else
 fi
 
 # Determine status and display format
-if [ "$bat0_status" = "Charging" ] || [ "$bat1_status" = "Charging" ]; then
+# Check if fully charged (either "Full" or "Not charging" with high capacity)
+if ([ "$bat0_status" = "Full" ] || [ "$bat0_status" = "Not charging" ]) && \
+   ([ "$bat1_status" = "Full" ] || [ "$bat1_status" = "Not charging" ]) && \
+   [ "$total_capacity" -ge 95 ]; then
+    # Full: show FULL
+    echo "BAT: FULL"
+elif [ "$bat0_status" = "Charging" ] || [ "$bat1_status" = "Charging" ]; then
     # Charging: show percentage
-    echo "BAT: ${total_capacity}%"
-elif [ "$bat0_status" = "Full" ] && [ "$bat1_status" = "Full" ]; then
-    # Full: show percentage
     echo "BAT: ${total_capacity}%"
 else
     # Discharging: show time remaining
