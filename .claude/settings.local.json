@@ -2,11 +2,7 @@
   "permissions": {
     "allow": [
       "Bash(swaymsg:*)",
-      "Bash(pactl list:*)",
-      "Bash(pactl get-sink-volume:*)",
-      "Bash(pactl set-sink-volume:*)",
       "Bash(systemctl:*)",
-      "Bash(waybar --version:*)",
       "Bash(killall:*)",
       "Bash(pgrep:*)",
       "Bash(kanshi:*)",
@@ -14,13 +10,11 @@
       "Bash(journalctl:*)",
       "Bash(swaylock:*)",
       "Bash(tree:*)",
-      "Read(//usr/share/sway/config.d/**)",
-      "Read(//usr/**)",
       "Bash(echo:*)",
       "Bash(ps:*)",
       "Bash(busctl:*)",
-      "Bash(waybar --help:*)",
-      "Bash(mkdir:*)"
+      "Bash(mkdir:*)",
+      "Bash(nix-env:*)"
     ],
     "deny": [],
     "ask": []

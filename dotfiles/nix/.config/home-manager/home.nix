@@ -97,7 +97,7 @@ in
           [ jq fq ] ++
 
           # Formal verification
-          [ cue cuelsp cuetools nuXmv z3 ] ++
+          [ cue cuelsp cuetools nuXmv z3 tlaplus opam ] ++
 
           # Image tools
           [ nsxiv farbfeld libwebp netpbm potrace ] ++
