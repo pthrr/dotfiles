@@ -153,6 +153,7 @@ in
             executable = true;
           };
           ".claude/settings.json".source = ../../../claude/.config/claude/settings.json;
+          ".local/share/applications/coqide.desktop".source = ../../../misc/.local/share/applications/coqide.desktop;
         };
     };
 

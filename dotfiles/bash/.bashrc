@@ -27,6 +27,11 @@ if [ -d "$HOME/.cabal/bin" ]; then
     export PATH="$HOME/.cabal/bin:$PATH"
 fi
 
+# include OCaml/opam environment
+if [ -d "$HOME/.opam" ]; then
+    eval $(opam env)
+fi
+
 # include LV2 plugins
 if [ -d "$HOME/.lv2" ]; then
     export LV2_PATH="$HOME/.lv2:$LV2_PATH"

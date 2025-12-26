@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=RocqIDE
+Comment=Integrated Development Environment for Rocq
+Exec=/usr/bin/env bash -c 'eval $(opam env) && rocqide'
+Icon=coq
+Terminal=false
+Type=Application
+Categories=Development;IDE;
+Keywords=coq;rocq;proof;theorem;formal;verification;
