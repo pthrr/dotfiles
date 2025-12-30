@@ -85,7 +85,7 @@ in
           [ emscripten wasmtime wabt ] ++
 
           # Document tools
-          [ typst tinymist typstyle pandoc poppler-utils graphviz ] ++
+          [ typst tinymist typstyle pandoc poppler-utils graphviz tectonic ] ++
 
           # Formatters & linters
           [ tlafmt yamlfmt yamllint shfmt stylua lua-language-server cmake-format ] ++
