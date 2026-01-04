@@ -121,6 +121,7 @@ in
           ".bash_profile".source = ../../../bash/.bash_profile;
           "z.sh".source = ../../../bash/z.sh;
           "git-prompt.sh".source = ../../../bash/git-prompt.sh;
+          "jj-prompt.sh".source = ../../../bash/jj-prompt.sh;
 
           ".clang-tidy".source = ../../../lang/.clang-tidy;
           ".clang-format".source = ../../../lang/.clang-format;
@@ -196,26 +197,51 @@ in
           };
         };
 
+        # Revset aliases for powerful commit filtering
+        revset-aliases = {
+          "mine()" = ''author(email_substring("pthrr")) | committer(email_substring("pthrr"))'';
+          "trunk()" = "main@origin | master@origin";
+          "stack()" = "ancestors(@, mutable())";
+        };
+
         aliases = {
           # Git-equivalent aliases
-          co = "checkout";
-          br = "branch list";
-          cm = "new";
-          df = "diff";
-          lg = "log --graph";
-          rb = "rebase";
-          mt = "resolve";
+          co = ["checkout"];
+          br = ["branch" "list"];
+          cm = ["new"];
+          df = ["diff"];
+          lg = ["log" "--graph"];
+          rb = ["rebase"];
+          mt = ["resolve"];
+
+          # Workflow shortcuts
+          st = ["status"];
+          l = ["log" "-r" "trunk()..@" "--limit" "20"];
+          ll = ["log" "--limit" "50"];
+          s = ["show"];
+          n = ["new"];
+          e = ["edit"];
+
+          # Advanced workflows
+          amend = ["squash"];
+          fixup = ["squash"];
+          uncommit = ["edit" "@-"];
+
+          # Git integration
+          fetch = ["git" "fetch"];
+          pull = ["git" "fetch"];
+          push = ["git" "push"];
 
           # Git command aliases
-          git-fetch = "git fetch --prune";
-          git-push = "git push --follow-tags";
-          git-status = "git status";
-          git-log = "git log --oneline --graph --decorate";
-          git-diff = "git diff";
-          git-commit = "git commit -v";
-          git-branch = "git branch";
-          git-rebase = "git rebase";
-          git-merge = "git merge";
+          git-fetch = ["git" "fetch" "--prune"];
+          git-push = ["git" "push" "--follow-tags"];
+          git-status = ["git" "status"];
+          git-log = ["git" "log" "--oneline" "--graph" "--decorate"];
+          git-diff = ["git" "diff"];
+          git-commit = ["git" "commit" "-v"];
+          git-branch = ["git" "branch"];
+          git-rebase = ["git" "rebase"];
+          git-merge = ["git" "merge"];
         };
 
         diff = {
@@ -242,6 +268,16 @@ in
           default-command = "status";
           color = "auto";
           diff-context = 8;
+          diff-editor = ":builtin";
+          merge-editor = "meld";
+          paginate = "auto";
+          log-synthetic-elided-nodes = true;
+        };
+
+        # Template customizations
+        template-aliases = {
+          "format_short_change_id(id)" = "id.shortest(8)";
+          "format_short_commit_id(id)" = "id.shortest(8)";
         };
       };
     };
