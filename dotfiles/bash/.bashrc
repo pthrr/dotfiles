@@ -174,7 +174,7 @@ export VERUS_Z3_PATH="$HOME/opt/verus/source/z3"
 export HISTCONTROL=ignorespace:erasedups
 export HISTSIZE=1000
 export HISTFILESIZE=2000
-export HISTFILE="$XDG_CACHE_HOME/.bash_history"
+export HISTFILE="$HOME/.bash_history"
 export PROMPT_DIRTRIM=2
 export PROMPT_COMMAND='TITLE_DIR=$(pwd | sed "s|$HOME|~|" | awk -F/ "{if (NF<=2) print \$0; else print \$(NF-1)\"/\"\$NF}"); echo -ne "\033]0;${TITLE_DIR}\007";LAST_STATUS=$(if [[ $? == 0 ]]; then echo "✓"; else echo "✗"; fi);NIX_SHELL=$(if [ ! -z "$IN_NIX_SHELL" ]; then echo " (nix-shell)"; else echo ""; fi);JJ_BRANCH=$(__jj_ps1);if [ -n "$JJ_BRANCH" ]; then GIT_BRANCH=""; else GIT_BRANCH=$(__git_ps1); fi'
 export PS1='\[\e[33m\]\w\[\e[0m\] \u$(if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then echo " @ \h"; else echo ""; fi)${GIT_BRANCH}${JJ_BRANCH}${NIX_SHELL} $LAST_STATUS '
