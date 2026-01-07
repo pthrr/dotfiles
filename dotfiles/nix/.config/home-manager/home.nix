@@ -75,7 +75,8 @@ in
           [ yosys verilator gtkwave verible
             # bluespec yosys-bluespec
             icestorm
-            svdtools svd2rust pcb2gcode candle ngspice
+            svdtools svd2rust candle ngspice
+            # pcb2gcode
             # sby
             nextpnrWithGui
             # xyce-parallel
@@ -453,7 +454,6 @@ in
         enable = true;
         plugins = with pkgs.vimPlugins; [
             nvim-treesitter.withAllGrammars
-            nvim-treesitter-textobjects
             plenary-nvim
             telescope-nvim
         ];

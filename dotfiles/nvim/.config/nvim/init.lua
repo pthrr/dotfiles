@@ -455,57 +455,14 @@ end)
 -- -----------------------------------------------------------------------------
 
 now(function()
-    require("nvim-treesitter.configs").setup({
-        highlight = {
-            enable = true,
-            additional_vim_regex_highlighting = false,
-        },
-        indent = {
-            enable = false,
-        },
-        textobjects = {
-            select = {
-                enable = true,
-                lookahead = true,
-                keymaps = {
-                    ["af"] = "@function.outer",
-                    ["if"] = "@function.inner",
-                    ["ac"] = "@class.outer",
-                    ["ic"] = "@class.inner",
-                    ["aa"] = "@parameter.outer",
-                    ["ia"] = "@parameter.inner",
-                },
-            },
-            move = {
-                enable = true,
-                set_jumps = true,
-                goto_next_start = {
-                    ["]m"] = "@function.outer",
-                    ["]c"] = "@class.outer",
-                },
-                goto_next_end = {
-                    ["]M"] = "@function.outer",
-                    ["]C"] = "@class.outer",
-                },
-                goto_previous_start = {
-                    ["[m"] = "@function.outer",
-                    ["[c"] = "@class.outer",
-                },
-                goto_previous_end = {
-                    ["[M"] = "@function.outer",
-                    ["[C"] = "@class.outer",
-                },
-            },
-        },
-        incremental_selection = {
-            enable = true,
-            keymaps = {
-                init_selection = "gnn",
-                node_incremental = "grn",
-                scope_incremental = "grc",
-                node_decremental = "grm",
-            },
-        },
+    -- nvim-treesitter is provided by NixOS home-manager with all grammars
+
+    -- Enable treesitter highlighting for all filetypes
+    vim.api.nvim_create_autocmd("FileType", {
+        callback = function()
+            vim.bo.syntax = "off"  -- Disable default syntax highlighting
+            pcall(vim.treesitter.start)
+        end,
     })
 end)
 
