@@ -42,7 +42,7 @@ in
           [ coreutils findutils usbutils pciutils openssl unrar unzip p7zip ] ++
 
           # Shell & terminal tools
-          [ vifm tmux tmuxp tree htop fzf ripgrep fd ] ++
+          [ vifm tmux tmuxp tree htop fzf ripgrep fd btop ] ++
 
           # WM
           [ wl-clipboard wlr-randr mako udiskie ] ++
