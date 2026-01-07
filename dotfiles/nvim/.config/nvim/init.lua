@@ -43,15 +43,12 @@ local add, now, later = MiniDeps.add, MiniDeps.now, MiniDeps.later
 -- 3. HELPER FUNCTIONS
 -- ==============================================================================
 
---- Runs an external formatter command asynchronously
+--- Runs an external formatter command synchronously
 --- @param cmd string The command to execute
 --- @param args table Command arguments
 local function run_external_formatter(cmd, args)
-    vim.loop.spawn(cmd, { args = args }, function()
-        vim.schedule(function()
-            vim.cmd("checktime")
-        end)
-    end)
+    vim.fn.system(vim.list_extend({ cmd }, args))
+    vim.cmd("edit!")
 end
 
 -- ==============================================================================
@@ -331,13 +328,13 @@ now(function()
         end
 
         -- Calculate window dimensions
-        local editor_width = vim.api.nvim_get_option("columns")
+        local editor_width = vim.o.columns
         max_width = math.min(max_width, editor_width - 10)
 
         local buf = vim.api.nvim_create_buf(false, true)
         vim.api.nvim_buf_set_lines(buf, 0, -1, false, messages)
 
-        local height = vim.api.nvim_get_option("lines")
+        local height = vim.o.lines
         local max_height = math.min(#messages, 5)
         local row = height - max_height - 4
         local col = editor_width - max_width - 2
@@ -456,12 +453,9 @@ end)
 
 now(function()
     -- nvim-treesitter is provided by NixOS home-manager with all grammars
-
-    -- Enable treesitter highlighting for all filetypes
     vim.api.nvim_create_autocmd("FileType", {
         callback = function()
-            vim.bo.syntax = "off"  -- Disable default syntax highlighting
-            pcall(vim.treesitter.start)
+            vim.treesitter.start()
         end,
     })
 end)
