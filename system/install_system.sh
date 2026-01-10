@@ -25,7 +25,7 @@ sudo dnf install -y \
 	pipx flatpak \
 	bash foot \
 	wget curl \
-	sshpass sshfs openssh-askpass gnupg2 \
+	sshpass sshfs openssh-askpass gnupg2 rclone \
 	cloud-utils \
 	dejavu-fonts-all fira-code-fonts jetbrains-mono-fonts \
 	clang llvm llvm-devel clang-tools-extra clang-analyzer clang-devel \
