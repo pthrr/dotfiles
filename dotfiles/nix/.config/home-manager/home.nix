@@ -80,6 +80,7 @@ in
             # sby
             nextpnrWithGui
             # xyce-parallel
+            dfu-util
           ] ++
 
           # WebAssembly
