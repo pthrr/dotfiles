@@ -45,13 +45,13 @@ in
           [ vifm tmux tmuxp tree htop fzf ripgrep fd btop ] ++
 
           # WM
-          [ wl-clipboard wlr-randr mako udiskie ] ++
+          [ wl-clipboard wlr-randr udiskie ] ++
 
           # Build systems
           [ scons meson ninja bazelisk bmake bear buck2 git-repo conan cmake ] ++
 
           # Compilers & toolchains
-          [ clang-tools rustup zig zls ocaml opam ] ++
+          [ rustup zig zls ocaml opam ] ++
 
           # JavaScript/TypeScript
           [ deno bun nodejs_24 eslint nodePackages.typescript-language-server ] ++
@@ -72,7 +72,7 @@ in
           [ mold valgrind sccache redis gdbgui rr hotspot ] ++
 
           # Hardware development
-          [ yosys verilator gtkwave verible
+          [ yosys verilator verible
             # bluespec yosys-bluespec
             icestorm
             svdtools svd2rust candle ngspice
@@ -99,7 +99,7 @@ in
           [ jq fq ] ++
 
           # Formal verification
-          [ cue cuelsp cuetools nuXmv z3 tlaplus opam ] ++
+          [ cue cuelsp cuetools nuXmv z3 tlaplus ] ++
 
           # Image tools
           [ nsxiv farbfeld libwebp netpbm potrace ] ++
@@ -114,7 +114,7 @@ in
           [ ladybird ] ++
 
           # Other
-          [ claude-code ty go-task wineWow64Packages.waylandFull openpomodoro-cli
+          [ claude-code go-task wineWow64Packages.waylandFull openpomodoro-cli
             # ripes # temporarily disabled due to cmake build issue
           ];
 

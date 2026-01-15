@@ -20,7 +20,12 @@
       "Bash(dnf group info:*)",
       "Bash(dnf group list:*)",
       "Bash(rpm -Va:*)",
-      "Bash(rpm:*)"
+      "Bash(rpm:*)",
+      "Bash(getenforce:*)",
+      "Bash(swapon:*)",
+      "Bash(zramctl:*)",
+      "Bash(smartctl:*)",
+      "Bash(sysctl:*)"
     ],
     "deny": [],
     "ask": []

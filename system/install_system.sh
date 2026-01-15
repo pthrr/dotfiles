@@ -17,12 +17,13 @@ sudo dnf group install -y --skip-unavailable \
 # sudo dnf group install -y --skip-unavailable \
 # 	gnome-desktop \
 # 	kde-desktop \
-# 	swaywm \
-# 	swaywm-extended
+sudo dnf group install -y --skip-broken \
+	swaywm \
+	swaywm-extended
 # TODO remove whats in groups already
 sudo dnf install -y \
 	kde-connect krdc \
-	sway-systemd rofi sway-contrib \
+	sway-systemd rofi-wayland sway-contrib swaylock swayidle waybar kanshi blueman timeshift \
 	kdenlive \
 	qemu \
 	syslinux \
@@ -41,7 +42,7 @@ sudo dnf install -y \
 	gdb \
 	libxkbcommon libX11 \
 	stow inotify-tools \
-	nodejs npm \
+	npm \
 	strace xxd \
 	mock
 sudo dnf remove -y \
@@ -57,6 +58,26 @@ sudo systemctl mask \
 	dnf-system-upgrade.service
 # Boot to console login, start DE manually
 sudo systemctl set-default multi-user.target
+
+# System hardening (idempotent)
+sudo mkdir -p /etc/systemd/journald.conf.d
+sudo tee /etc/systemd/journald.conf.d/size.conf <<<$'[Journal]\nSystemMaxUse=500M'
+sudo tee /etc/sysctl.d/99-swappiness.conf <<<"vm.swappiness=10"
+sudo tee /etc/sysctl.d/99-panic.conf <<<"kernel.panic=10"
+sudo sysctl --system
+
+# Ensure rescue kernel exists for recovery
+sudo dnf install -y kernel-core
+
+# DNF safety settings (idempotent - updates or adds)
+sudo sed -i '/^installonly_limit=/d; /^clean_requirements_on_remove=/d; /^protect_running_kernel=/d; /^keepcache=/d' /etc/dnf/dnf.conf
+cat <<'EOF' | sudo tee -a /etc/dnf/dnf.conf
+installonly_limit=3
+clean_requirements_on_remove=True
+protect_running_kernel=True
+keepcache=False
+EOF
+
 sudo flatpak remote-add --if-not-exists \
 	flathub https://flathub.org/repo/flathub.flatpakrepo
 sudo flatpak install -y \
@@ -102,8 +123,6 @@ sudo npm i @informalsystems/quint -g
 sudo npm i @informalsystems/quint-language-server -g
 sudo npm i bash-language-server -g
 pipx install pre-commit
-pipx install black
-pipx install isort
 pipx install ty
 pipx install ruff
 pipx install uv

@@ -29,8 +29,7 @@ set $menu rofi -show combi -combi-modes drun#run -modes combi
 # Black background
 output * bg #000000 solid_color
 
-# Let kanshi handle output configuration (scaling, position, etc.)
-exec kanshi
+# Output configuration handled by kanshi (started in autostart section)
 
 # ==============================================================================
 # 3. INPUT CONFIGURATION
@@ -110,19 +109,40 @@ for_window [app_id="idle_inhibitor"] inhibit_idle open, floating enable, move sc
 # 5. AUTOSTART
 # ==============================================================================
 
-# Desktop services
-# nm-applet, blueman-applet, kdeconnect-indicator auto-started via XDG autostart
-# policykit-agent handled by system config
-exec udiskie --tray --file-manager 'foot -e vifm'
-exec mako
-
 # Swaylock command (config in ~/.config/swaylock/config)
 set $lock swaylock -f
 
-# Lock before suspend, then suspend after 600s idle
+# --- Core Services (restart on sway reload) ---
+
+# Output management
+exec_always "pkill -x kanshi || true; kanshi"
+
+# Notification daemon
+exec_always "pkill -x mako || true; mako"
+
+# --- Session Services (run once) ---
+
+# Idle management: lock before suspend, suspend after 10min idle
 exec swayidle -w \
     timeout 600 '$lock && systemctl suspend' \
-    before-sleep '$lock'
+    before-sleep '$lock' \
+    lock '$lock'
+
+# Automount removable media
+exec udiskie --tray --file-manager 'foot -e vifm'
+
+# Network manager tray
+exec nm-applet --indicator
+
+# Bluetooth tray
+exec blueman-applet
+
+# KDE Connect
+exec kdeconnect-indicator
+
+# --- Optional: Polkit agent (if not handled by DE) ---
+exec /usr/libexec/polkit-gnome-authentication-agent-1 2>/dev/null || \
+    /usr/libexec/polkit-kde-authentication-agent-1 2>/dev/null || true
 
 # ==============================================================================
 # 6. KEY BINDINGS
@@ -294,4 +314,5 @@ include /usr/share/sway/config.d/65-*.conf
 include /usr/share/sway/config.d/95-xdg-desktop-autostart.conf
 include /usr/share/sway/config.d/95-xdg-user-dirs.conf
 
-exec /usr/libexec/sway-systemd/session.sh
+# Initialize systemd user session (if available)
+exec test -x /usr/libexec/sway-systemd/session.sh && /usr/libexec/sway-systemd/session.sh
