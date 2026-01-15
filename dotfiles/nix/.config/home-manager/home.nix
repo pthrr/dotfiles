@@ -128,7 +128,7 @@ in
           ".clang-tidy".source = ../../../lang/.clang-tidy;
           ".clang-format".source = ../../../lang/.clang-format;
           ".cmake-format.yaml".source = ../../../lang/.cmake-format.yaml;
-          "stylua.toml".source = ../../../lang/stylua.toml;
+          ".config/stylua/stylua.toml".source = ../../../lang/stylua.toml;
           ".bazelrc".source = ../../../lang/.bazelrc;
 
           ".cargo" = {

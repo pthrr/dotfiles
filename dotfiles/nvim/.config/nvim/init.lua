@@ -20,7 +20,7 @@ end
 local path_package = vim.fn.stdpath("data") .. "/site"
 local mini_path = path_package .. "/pack/deps/start/mini.nvim"
 
-if not vim.loop.fs_stat(mini_path) then
+if not vim.uv.fs_stat(mini_path) then
     vim.cmd('echo "Installing `mini.nvim`" | redraw')
     local clone_cmd = {
         "git",
@@ -425,7 +425,7 @@ vim.api.nvim_create_autocmd("BufWritePre", {
         elseif file:match("%.ts$") or file:match("%.tsx$") or file:match("%.js$") or file:match("%.jsx$") then
             run_external_formatter("prettier", { "--write", file })
         elseif file:match("%.lua$") then
-            local config_path = vim.fn.expand("~") .. "/stylua.toml"
+            local config_path = vim.fn.expand("~") .. "/.config/stylua/stylua.toml"
             if vim.fn.filereadable(config_path) == 1 then
                 run_external_formatter("stylua", { "--config-path", config_path, file })
             else
@@ -601,7 +601,7 @@ vim.o.history = 1000
 -- Shell
 -- -----------------------------------------------------------------------------
 
-vim.o.shell = "/usr/bin/env bash"
+vim.o.shell = "/bin/bash"
 
 -- -----------------------------------------------------------------------------
 -- Autoread
@@ -816,7 +816,7 @@ vim.keymap.set("v", "<leader>p", '"_dP', { silent = true, desc = "Replace withou
 
 later(function()
     --- Switches between C/C++ source and header files
-    function switch_source_header()
+    local function switch_source_header()
         local extension = vim.fn.expand("%:e")
         local base_name = vim.fn.expand("%:r")
         local counterpart_file = nil
