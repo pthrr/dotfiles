@@ -3,22 +3,26 @@ set -euo pipefail
 
 sudo dnf update -y
 sudo dnf group remove -y \
-	"LibreOffice"
+	libreoffice
 sudo dnf group install -y --skip-unavailable \
-	"KDE Plasma Workspaces" \
-	"Administration Tools" \
-	"C Development Tools and Libraries" \
-	"Container Management" \
-	"Desktop accessibility" \
-	"Development Tools" \
-	"Office/Productivity" \
-	"Sound and Video" \
-	"System Tools" \
-	swaywm-extended
+	admin-tools \
+	c-development \
+	container-management \
+	desktop-accessibility \
+	development-tools \
+	office \
+	sound-and-video \
+	system-tools \
+	virtualization
+# sudo dnf group install -y --skip-unavailable \
+# 	gnome-desktop \
+# 	kde-desktop \
+# 	swaywm \
+# 	swaywm-extended
 # TODO remove whats in groups already
 sudo dnf install -y \
-	@virtualization \
-	@kde-desktop kde-connect krdc \
+	kde-connect krdc \
+	sway-systemd rofi sway-contrib \
 	kdenlive \
 	qemu \
 	syslinux \
@@ -34,17 +38,28 @@ sudo dnf install -y \
 	libxcrypt-compat ncurses-compat-libs \
 	stlink stlink-gui \
 	minicom picocom openocd \
-	gdb rust-gdb \
+	gdb \
 	libxkbcommon libX11 \
-	stow inotify-tools go-task \
+	stow inotify-tools \
 	nodejs npm \
 	strace xxd \
 	mock
 sudo dnf remove -y \
 	thunderbird firefox
+# Remove dunst after swaywm group installed (use mako instead)
+sudo dnf remove -y \
+	dunst
+# Disable offline updates - only allow manual online updates
+sudo systemctl mask \
+	packagekit-offline-update.service \
+	system-update.target \
+	dnf5-offline-transaction.service \
+	dnf-system-upgrade.service
+# Boot to console login, start DE manually
+sudo systemctl set-default multi-user.target
 sudo flatpak remote-add --if-not-exists \
 	flathub https://flathub.org/repo/flathub.flatpakrepo
-sudo flatpak install \
+sudo flatpak install -y \
 	org.libreoffice.LibreOffice \
 	it.fabiodistasio.AntaresSQL \
 	com.bitwig.BitwigStudio \
@@ -55,7 +70,6 @@ sudo flatpak install \
 	io.github.ra3xdh.qucs_s \
 	org.inkscape.Inkscape \
 	org.gnucash.GnuCash \
-	org.freecad.FreeCAD \
 	com.usebottles.bottles \
 	org.otfried.Ipe \
 	com.jgraph.drawio.desktop \
@@ -64,7 +78,7 @@ sudo flatpak install \
 	md.obsidian.Obsidian \
 	org.zotero.Zotero \
 	org.jdownloader.JDownloader \
-	org.kde.labplot2 \
+	org.kde.labplot \
 	fm.reaper.Reaper \
 	net.ankiweb.Anki \
 	engineer.atlas.Nyxt \
@@ -79,24 +93,20 @@ sudo flatpak install \
 	org.gnome.meld \
 	org.zealdocs.Zeal \
 	com.prusa3d.PrusaSlicer \
-	org.freecadweb.FreeCAD \
+	org.freecad.FreeCAD \
 	org.openscad.OpenSCAD \
 	org.kicad.KiCad \
 	org.gimp.GIMP \
-	org.sqlitebrowser.sqlitebrowser \
-	org.gnome.meld
+	org.sqlitebrowser.sqlitebrowser
 sudo npm i @informalsystems/quint -g
 sudo npm i @informalsystems/quint-language-server -g
 sudo npm i bash-language-server -g
-pipx uninstall-all
 pipx install pre-commit
 pipx install black
 pipx install isort
-pipx install mypy
+pipx install ty
 pipx install ruff
 pipx install uv
-pipx install conan
-pipx install cmake
 pipx install jupyterlab
 pipx install cppman
 pipx install grip

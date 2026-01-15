@@ -14,7 +14,13 @@
       "Bash(ps:*)",
       "Bash(busctl:*)",
       "Bash(mkdir:*)",
-      "Bash(nix-env:*)"
+      "Bash(nix-env:*)",
+      "Bash(systemd-analyze:*)",
+      "Bash(dmesg:*)",
+      "Bash(dnf group info:*)",
+      "Bash(dnf group list:*)",
+      "Bash(rpm -Va:*)",
+      "Bash(rpm:*)"
     ],
     "deny": [],
     "ask": []

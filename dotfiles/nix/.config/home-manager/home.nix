@@ -48,7 +48,7 @@ in
           [ wl-clipboard wlr-randr mako udiskie ] ++
 
           # Build systems
-          [ scons meson ninja bazelisk bmake bear buck2 git-repo ] ++
+          [ scons meson ninja bazelisk bmake bear buck2 git-repo conan cmake ] ++
 
           # Compilers & toolchains
           [ clang-tools rustup zig zls ocaml opam ] ++

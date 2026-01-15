@@ -47,8 +47,14 @@ local add, now, later = MiniDeps.add, MiniDeps.now, MiniDeps.later
 --- @param cmd string The command to execute
 --- @param args table Command arguments
 local function run_external_formatter(cmd, args)
+    -- Save cursor position and view
+    local view = vim.fn.winsaveview()
+    -- Save buffer first so formatter operates on current content
+    vim.cmd("write")
     vim.fn.system(vim.list_extend({ cmd }, args))
     vim.cmd("edit!")
+    -- Restore cursor position and view
+    vim.fn.winrestview(view)
 end
 
 -- ==============================================================================
