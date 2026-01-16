@@ -51,7 +51,7 @@ in
           [ scons meson ninja bazelisk bmake bear buck2 git-repo conan cmake ] ++
 
           # Compilers & toolchains
-          [ rustup zig zls ocaml opam ] ++
+          [ zig zls ocaml opam ] ++
 
           # JavaScript/TypeScript
           [ deno bun nodejs_24 eslint nodePackages.typescript-language-server ] ++

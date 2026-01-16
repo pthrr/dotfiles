@@ -33,6 +33,7 @@ sudo dnf install -y \
 	sshpass sshfs openssh-askpass gnupg2 rclone \
 	cloud-utils \
 	dejavu-fonts-all fira-code-fonts jetbrains-mono-fonts \
+	rustup \
 	clang llvm llvm-devel clang-tools-extra clang-analyzer clang-devel \
 	gcc-c++ libstdc++-static glibc-static libasan libubsan libtsan \
 	arm-none-eabi-binutils-cs arm-none-eabi-gcc-cs-c++ arm-none-eabi-gcc-cs arm-none-eabi-newlib \
