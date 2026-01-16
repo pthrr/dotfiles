@@ -159,27 +159,7 @@ in
         };
     };
 
-    systemd.user.services.sccache = {
-      Unit = {
-        Description = "sccache daemon";
-        After = [ "network-online.target" ];
-      };
-      Install.WantedBy = [ "default.target" ];
-      Service = {
-        Type = "forking";
-        Environment = [
-          "SCCACHE_BUCKET=sccache"
-          "SCCACHE_ENDPOINT=http://nwv-srv:8333"
-          "SCCACHE_REGION=us-east-1"
-          "AWS_ACCESS_KEY_ID=sccache"
-          "AWS_SECRET_ACCESS_KEY=sccache"
-        ];
-        ExecStart = "${pkgs.sccache}/bin/sccache --start-server";
-        ExecStop = "${pkgs.sccache}/bin/sccache --stop-server";
-        Restart = "on-failure";
-        RestartSec = 30;
-      };
-    };
+    # sccache service removed - using sccache-wrapper for dynamic local/S3 switching
 
     programs.home-manager.enable = true;
 
