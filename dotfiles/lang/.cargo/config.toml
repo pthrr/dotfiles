@@ -1,6 +1,45 @@
 [build]
 rustc-wrapper = "sccache-wrapper"
-rustflags = ["-A", "unused_macros"]
+rustflags = [
+    # Rust compiler warnings (-Wall equivalent)
+    "-W", "rust_2018_idioms",
+    "-W", "trivial_casts",
+    "-W", "trivial_numeric_casts",
+    "-W", "unused_lifetimes",
+    "-W", "unused_qualifications",
+    # Clippy pedantic (-Wextra equivalent)
+    "-W", "clippy::pedantic",
+    # Deny - strict errors
+    "-D", "clippy::implicit_return",
+    "-D", "clippy::semicolon_if_nothing_returned",
+    "-D", "clippy::unwrap_used",
+    "-D", "clippy::indexing_slicing",
+    "-D", "unused_must_use",
+    "-D", "unused_results",
+    "-D", "clippy::unwrap_in_result",
+    "-D", "clippy::fallible_impl_from",
+    "-D", "clippy::shadow_reuse",
+    "-D", "clippy::shadow_unrelated",
+    "-D", "clippy::shadow_same",
+    # Warn - additional checks
+    "-W", "clippy::missing_const_for_fn",
+    "-W", "clippy::borrow_interior_mutable_const",
+    "-W", "clippy::declare_interior_mutable_const",
+    "-W", "clippy::cloned_instead_of_copied",
+    "-W", "clippy::trivially_copy_pass_by_ref",
+    "-W", "clippy::disallowed_methods",
+    "-W", "clippy::cast_lossless",
+    "-W", "clippy::cast_possible_truncation",
+    "-W", "clippy::match_wildcard_for_single_variants",
+    # Allow - suppress noisy lints
+    "-A", "unused_macros",
+    "-A", "clippy::redundant_closure_call",
+    "-A", "clippy::needless_return",
+    "-A", "clippy::single_match",
+    "-A", "clippy::must_use_candidate",
+    "-A", "clippy::missing_errors_doc",
+    "-A", "clippy::missing_panics_doc",
+]
 
 [env]
 CARGO_INCREMENTAL = "0"

@@ -480,10 +480,6 @@ in
             source = ../../../sway/.config/mako;
             recursive = true;
           };
-          "clippy" = {
-            source = ../../../rust/.config/clippy;
-            recursive = true;
-          };
         };
 
   home.activation.runMyScript = lib.hm.dag.entryAfter ["writeBoundary"] ''
