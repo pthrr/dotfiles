@@ -1,12 +1,15 @@
+[alias]
+docs = "doc --no-deps"
+ex = "run --example"
+
 [build]
-rustc-wrapper = "sccache-wrapper"
 rustflags = [
-    # Rust compiler warnings (-Wall equivalent)
-    "-W", "rust_2018_idioms",
-    "-W", "trivial_casts",
-    "-W", "trivial_numeric_casts",
-    "-W", "unused_lifetimes",
-    "-W", "unused_qualifications",
+    # Rust compiler warnings - deny all
+    "-D", "rust_2018_idioms",
+    "-D", "trivial_casts",
+    "-D", "trivial_numeric_casts",
+    "-D", "unused_lifetimes",
+    "-D", "unused_qualifications",
     # Clippy pedantic (-Wextra equivalent)
     "-W", "clippy::pedantic",
     # Deny - strict errors
@@ -21,18 +24,18 @@ rustflags = [
     "-D", "clippy::shadow_reuse",
     "-D", "clippy::shadow_unrelated",
     "-D", "clippy::shadow_same",
-    # Warn - additional checks
-    "-W", "clippy::missing_const_for_fn",
-    "-W", "clippy::borrow_interior_mutable_const",
-    "-W", "clippy::declare_interior_mutable_const",
-    "-W", "clippy::cloned_instead_of_copied",
-    "-W", "clippy::trivially_copy_pass_by_ref",
-    "-W", "clippy::disallowed_methods",
-    "-W", "clippy::cast_lossless",
+    "-D", "clippy::missing_const_for_fn",
+    "-D", "clippy::borrow_interior_mutable_const",
+    "-D", "clippy::declare_interior_mutable_const",
+    "-D", "clippy::cloned_instead_of_copied",
+    "-D", "clippy::trivially_copy_pass_by_ref",
+    "-D", "clippy::disallowed_methods",
+    "-D", "clippy::cast_lossless",
+    "-D", "clippy::match_wildcard_for_single_variants",
+    # Warn - visible but not blocking
     "-W", "clippy::cast_possible_truncation",
-    "-W", "clippy::match_wildcard_for_single_variants",
+    "-W", "unused_macros",
     # Allow - suppress noisy lints
-    "-A", "unused_macros",
     "-A", "clippy::redundant_closure_call",
     "-A", "clippy::needless_return",
     "-A", "clippy::single_match",
@@ -40,6 +43,3 @@ rustflags = [
     "-A", "clippy::missing_errors_doc",
     "-A", "clippy::missing_panics_doc",
 ]
-
-[env]
-CARGO_INCREMENTAL = "0"
