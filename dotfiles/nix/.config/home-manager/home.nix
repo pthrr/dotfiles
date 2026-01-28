@@ -161,6 +161,32 @@ in
 
     # sccache service removed - using sccache-wrapper for dynamic local/S3 switching
 
+    # Unmount SSHFS mounts before sleep to prevent freeze
+    systemd.user.services.sshfs-sleep-handler = {
+      Unit = {
+        Description = "Unmount SSHFS before sleep";
+      };
+      Service = {
+        Type = "simple";
+        ExecStart = pkgs.writeShellScript "sshfs-sleep-handler" ''
+          /usr/bin/dbus-monitor --system "type='signal',interface='org.freedesktop.login1.Manager',member='PrepareForSleep'" |
+          while read -r line; do
+            if echo "$line" | grep -q "boolean true"; then
+              # Going to sleep - unmount if mounted
+              if /usr/bin/mount | grep -q " $HOME/Drive "; then
+                /usr/bin/fusermount -uz "$HOME/Drive" 2>/dev/null || true
+              fi
+            fi
+          done
+        '';
+        Restart = "always";
+        RestartSec = 5;
+      };
+      Install = {
+        WantedBy = [ "default.target" ];
+      };
+    };
+
     programs.home-manager.enable = true;
 
     programs.jujutsu = {

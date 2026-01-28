@@ -23,7 +23,7 @@ sudo dnf group install -y --skip-broken \
 # TODO remove whats in groups already
 sudo dnf install -y \
 	kde-connect krdc \
-	sway-systemd rofi-wayland sway-contrib swaylock swayidle waybar kanshi blueman timeshift \
+	sway-systemd rofi-wayland sway-contrib swaylock swayidle waybar kanshi blueman timeshift mako \
 	kdenlive \
 	qemu \
 	syslinux \
