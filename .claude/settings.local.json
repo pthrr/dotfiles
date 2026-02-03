@@ -25,7 +25,9 @@
       "Bash(swapon:*)",
       "Bash(zramctl:*)",
       "Bash(smartctl:*)",
-      "Bash(sysctl:*)"
+      "Bash(sysctl:*)",
+      "Bash(ss:*)",
+      "Bash(nethogs:*)"
     ],
     "deny": [],
     "ask": []

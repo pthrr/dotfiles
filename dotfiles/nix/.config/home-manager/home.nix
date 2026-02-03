@@ -90,7 +90,7 @@ in
           [ typst tinymist typstyle pandoc poppler-utils graphviz tectonic ] ++
 
           # Formatters & linters
-          [ tlafmt yamlfmt yamllint shfmt stylua lua-language-server cmake-format ] ++
+          [ tlafmt yamlfmt yamllint shfmt stylua lua-language-server cmake-format nodePackages.prettier ] ++
 
           # Protocol buffers
           [ protobuf protobufc ] ++
