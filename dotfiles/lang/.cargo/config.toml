@@ -4,6 +4,8 @@ ex = "run --example"
 
 [build]
 rustflags = [
+    # Treat all warnings as errors
+    "-D", "warnings",
     # Rust compiler warnings - deny all
     "-D", "rust_2018_idioms",
     "-D", "trivial_casts",
@@ -13,6 +15,7 @@ rustflags = [
     # Clippy pedantic (-Wextra equivalent)
     "-W", "clippy::pedantic",
     # Deny - strict errors
+    "-D", "clippy::similar_names",
     "-D", "clippy::implicit_return",
     "-D", "clippy::semicolon_if_nothing_returned",
     "-D", "clippy::unwrap_used",
@@ -34,7 +37,7 @@ rustflags = [
     "-D", "clippy::match_wildcard_for_single_variants",
     # Warn - visible but not blocking
     "-W", "clippy::cast_possible_truncation",
-    "-W", "unused_macros",
+    "-A", "unused_macros",
     # Allow - suppress noisy lints
     "-A", "clippy::redundant_closure_call",
     "-A", "clippy::needless_return",

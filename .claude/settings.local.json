@@ -27,7 +27,15 @@
       "Bash(smartctl:*)",
       "Bash(sysctl:*)",
       "Bash(ss:*)",
-      "Bash(nethogs:*)"
+      "Bash(nethogs:*)",
+      "Bash(pactl info:*)",
+      "Bash(libinput debug-events:*)",
+      "Bash(wev:*)",
+      "Bash(pkill:*)",
+      "Bash(pactl set-sink-volume:*)",
+      "Bash(pactl get-sink-volume:*)",
+      "Bash(brightnessctl get:*)",
+      "Bash(brightnessctl max:*)"
     ],
     "deny": [],
     "ask": []
