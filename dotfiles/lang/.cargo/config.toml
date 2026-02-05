@@ -16,7 +16,6 @@ rustflags = [
     "-W", "clippy::pedantic",
     # Deny - strict errors
     "-D", "clippy::similar_names",
-    "-D", "clippy::implicit_return",
     "-D", "clippy::semicolon_if_nothing_returned",
     "-D", "clippy::unwrap_used",
     "-D", "clippy::indexing_slicing",

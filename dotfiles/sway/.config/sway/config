@@ -122,9 +122,10 @@ exec_always "pkill -x mako || true; mako"
 
 # --- Session Services (run once) ---
 
-# Idle management: lock before suspend, suspend after 10min idle
+# Idle management: lock after 10min, suspend 1min later
 exec swayidle -w \
-    timeout 600 '$lock && systemctl suspend' \
+    timeout 600 '$lock' \
+    timeout 660 'systemctl suspend' \
     before-sleep '$lock' \
     lock '$lock'
 

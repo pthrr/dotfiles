@@ -120,9 +120,9 @@ sudo flatpak install -y \
 	org.kicad.KiCad \
 	org.gimp.GIMP \
 	org.sqlitebrowser.sqlitebrowser
-sudo npm i @informalsystems/quint -g
-sudo npm i @informalsystems/quint-language-server -g
-sudo npm i bash-language-server -g
+npm install -g @informalsystems/quint
+npm install -g @informalsystems/quint-language-server
+npm install -g bash-language-server
 pipx install pre-commit
 pipx install ty
 pipx install ruff

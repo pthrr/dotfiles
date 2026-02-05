@@ -61,7 +61,7 @@
 
     "custom/pomodoro": {
         "exec": "pomo-status",
-        "interval": 1,
+        "interval": 5,
         "format": "POM: {}",
         "min-length": 16,
         "separator": true

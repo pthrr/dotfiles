@@ -5,7 +5,7 @@ set shell=/bin/bash
 set shellcmdflag=-c
 
 set trash
-set history=100
+set history=1000
 set followlinks
 set sortnumbers
 set undolevels=100

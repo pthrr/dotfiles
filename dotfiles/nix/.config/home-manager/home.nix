@@ -60,10 +60,10 @@ in
           [ pyright ] ++
 
           # Java tooling
-          [ jdk maven gradle jdt-language-server google-java-format ] ++
+          [ jdk maven gradle ] ++
 
           # Nix tooling
-          [ nixd nil ] ++
+          [ nixd nixfmt-rfc-style ] ++
 
           # Containers & Kubernetes
           # [ kind minikube helm k3s k3d crun envsubst ] ++

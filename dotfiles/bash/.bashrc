@@ -18,10 +18,6 @@ if [ -f "$HOME/.cargo/env" ]; then
     . "$HOME/.cargo/env"
 fi
 
-if [ -d "$HOME/.cargo/bin" ]; then
-    export PATH="$HOME/.cargo/bin:$PATH"
-fi
-
 # include Haskell environment
 if [ -d "$HOME/.cabal/bin" ]; then
     export PATH="$HOME/.cabal/bin:$PATH"
@@ -29,11 +25,11 @@ fi
 
 # include LV2 plugins
 if [ -d "$HOME/.lv2" ]; then
-    export LV2_PATH="$HOME/.lv2:$LV2_PATH"
+    export LV2_PATH="$HOME/.lv2${LV2_PATH:+:$LV2_PATH}"
 fi
 
 if [ -d "$HOME/.nix-profile/lib/lv2" ]; then
-    export LV2_PATH="$HOME/.nix-profile/lib/lv2:$LV2_PATH"
+    export LV2_PATH="$HOME/.nix-profile/lib/lv2${LV2_PATH:+:$LV2_PATH}"
 fi
 
 # include Nix environment
@@ -51,9 +47,10 @@ if [ -d "$HOME/.opam" ]; then
 fi
 
 # include pyenv
-if command -v pyenv >/dev/null 2>&1; then
+if [ -d "$HOME/.pyenv" ]; then
     export PYENV_ROOT="$HOME/.pyenv"
     export PATH="$PYENV_ROOT/bin:$PATH"
+    eval "$(pyenv init -)"
 fi
 
 # source custom env vars
@@ -133,7 +130,7 @@ if [ ! -d "$HOME/Audio" ]; then
 fi
 
 export LANG=de_DE.UTF-8
-export LC_ALL=C.UTF-8
+export LC_COLLATE=C.UTF-8
 export XDG_CONFIG_HOME="$HOME/.config"
 export XDG_CACHE_HOME="$HOME/.cache"
 export XDG_DATA_HOME="$HOME/.local/share"
@@ -163,7 +160,6 @@ export NO_AT_BRIDGE=1
 export DO_NOT_TRACK=1
 export NINJA_STATUS="%p [%f:%s/%t] %o/s, %es "
 export _JAVA_AWT_WM_NONREPARENTING=1
-export QT_LOGGING_RULES="kwin_*.debug=true"
 export CPM_SOURCE_CACHE="$XDG_CACHE_HOME/CPM"
 export TMPDIR="$HOME/tmp"
 export SYSTEMC_HOME="/opt/systemc"
@@ -172,16 +168,46 @@ export ICSC_HOME="$HOME/opt/sc_tools"
 export VERUS_ROOT="$HOME/opt/verus/source/target-verus/release"
 export VERUS_Z3_PATH="$HOME/opt/verus/source/z3"
 export HISTCONTROL=ignorespace:erasedups
-export HISTSIZE=1000
-export HISTFILESIZE=2000
+export HISTSIZE=50000
+export HISTFILESIZE=100000
 export HISTFILE="$HOME/.bash_history"
 export PROMPT_DIRTRIM=2
-export PROMPT_COMMAND='TITLE_DIR=$(pwd | sed "s|$HOME|~|" | awk -F/ "{if (NF<=2) print \$0; else print \$(NF-1)\"/\"\$NF}"); echo -ne "\033]0;${TITLE_DIR}\007";LAST_STATUS=$(if [[ $? == 0 ]]; then echo "✓"; else echo "✗"; fi);NIX_SHELL=$(if [ ! -z "$IN_NIX_SHELL" ]; then echo " (nix-shell)"; else echo ""; fi);JJ_BRANCH=$(__jj_ps1);if [ -n "$JJ_BRANCH" ]; then GIT_BRANCH=""; else GIT_BRANCH=$(__git_ps1); fi'
+__prompt_command() {
+    local last_exit=$?
+
+    # Set terminal title to shortened cwd
+    local title_dir
+    title_dir=$(pwd | sed "s|$HOME|~|" | awk -F/ '{if (NF<=2) print $0; else print $(NF-1)"/"$NF}')
+    printf '\033]0;%s\007' "$title_dir"
+
+    # Status indicator
+    if (( last_exit == 0 )); then
+        LAST_STATUS="✓"
+    else
+        LAST_STATUS="✗"
+    fi
+
+    # Nix shell indicator
+    if [[ -n "$IN_NIX_SHELL" ]]; then
+        NIX_SHELL=" (nix-shell)"
+    else
+        NIX_SHELL=""
+    fi
+
+    # VCS branch: prefer jj, fall back to git
+    JJ_BRANCH=$(__jj_ps1)
+    if [[ -n "$JJ_BRANCH" ]]; then
+        GIT_BRANCH=""
+    else
+        GIT_BRANCH=$(__git_ps1)
+    fi
+}
+PROMPT_COMMAND=__prompt_command
 export PS1='\[\e[33m\]\w\[\e[0m\] \u$(if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then echo " @ \h"; else echo ""; fi)${GIT_BRANCH}${JJ_BRANCH}${NIX_SHELL} $LAST_STATUS '
 export PS4='$0.$LINENO: '
 function command_not_found_handle() {
-    regex_url='(https?|ftp|file)://[-[:alnum:]\+&@#/%?=~_|!:,.;]*[-[:alnum:]\+&@#/%=~_|]'
-    regex_git='.*.git'
+    local regex_url='(https?|ftp|file)://[-[:alnum:]\+&@#/%?=~_|!:,.;]*[-[:alnum:]\+&@#/%=~_|]'
+    local regex_git='(https?://|git@).*\.git'
 
     if [[ $1 =~ $regex_git ]]; then
         git clone "$1"
@@ -189,6 +215,7 @@ function command_not_found_handle() {
         wget "$1"
     else
         echo "Command was not found: ${1}"
+        return 127
     fi
 }
 # eval "$(_TMUXP_COMPLETE=source tmuxp)"
@@ -331,8 +358,8 @@ alias pwgen='pb keepassxc-cli generate --lower --upper --numeric --special --len
 alias mksomespace='nix-collect-garbage -d'
 alias mkupdates='sudo dnf update -y && sudo flatpak update -y'
 alias dotfiles='git --git-dir="$HOME/.dotfiles/.git" --work-tree="$HOME/.dotfiles"'
-alias srv='ssh nwv-srv -p 2225'
-alias srvreb='ssh nwv-srv -p 2225 "cd ~/server && git pull && sudo task deploy"'
+alias srv='ssh nwv-srv'
+alias srvreb='ssh nwv-srv "cd ~/server && git pull && sudo task deploy"'
 alias plasma='dbus-run-session startplasma-wayland'
 alias mkrestart='killall kded6 2>/dev/null; systemctl --user restart sway-session.target'
 alias print='lp'

@@ -47,10 +47,14 @@ local add, now, later = MiniDeps.add, MiniDeps.now, MiniDeps.later
 --- @param cmd string The command to execute
 --- @param args table Command arguments
 local function run_external_formatter(cmd, args)
+    if vim.fn.executable(cmd) ~= 1 then
+        vim.notify("Formatter not found: " .. cmd, vim.log.levels.WARN)
+        return
+    end
     -- Save cursor position and view
     local view = vim.fn.winsaveview()
     -- Save buffer first so formatter operates on current content
-    vim.cmd("write")
+    vim.cmd("noautocmd write")
     vim.fn.system(vim.list_extend({ cmd }, args))
     vim.cmd("edit!")
     -- Restore cursor position and view
@@ -206,7 +210,7 @@ now(function()
         eslint = {
             cmd = { "vscode-eslint-language-server", "--stdio" },
             filetypes = { "typescript", "javascript", "typescriptreact", "javascriptreact" },
-            root_markers = { "package.json", ".git", ".jj" },
+            root_markers = { "eslint.config.js", "eslint.config.mjs", "eslint.config.cjs", ".eslintrc.json", ".eslintrc.js", ".eslintrc.yaml", ".eslintrc.yml", "package.json", ".git", ".jj" },
             settings = {
                 packageManager = "bun",
             },
@@ -228,6 +232,18 @@ now(function()
                     },
                     telemetry = {
                         enable = false,
+                    },
+                },
+            },
+        },
+        nixd = {
+            cmd = { "nixd" },
+            filetypes = { "nix" },
+            root_markers = { "flake.nix", "default.nix", "shell.nix", ".git", ".jj" },
+            settings = {
+                nixd = {
+                    formatting = {
+                        command = { "nixfmt" },
                     },
                 },
             },
@@ -302,7 +318,11 @@ now(function()
             once = true,
             callback = function()
                 if diagnostic_float_win ~= nil and vim.api.nvim_win_is_valid(diagnostic_float_win) then
+                    local win_buf = vim.api.nvim_win_get_buf(diagnostic_float_win)
                     vim.api.nvim_win_close(diagnostic_float_win, true)
+                    if vim.api.nvim_buf_is_valid(win_buf) then
+                        vim.api.nvim_buf_delete(win_buf, { force = true })
+                    end
                     diagnostic_float_win = nil
                 end
             end,
@@ -338,6 +358,7 @@ vim.api.nvim_create_autocmd("BufWritePre", {
         "*.tla", -- TLA+
         "*.typ", -- Typst
         "*.lua", -- Lua
+        "*.nix", -- Nix
     },
     callback = function()
         -- Skip if buffer hasn't been modified
@@ -361,7 +382,7 @@ vim.api.nvim_create_autocmd("BufWritePre", {
         elseif file:match("%.sh$") or file:match("%.bash$") or file:match("%.zsh$") then
             run_external_formatter("shfmt", { "-w", file })
         elseif file:match("%.py$") then
-            run_external_formatter("black", { "--quiet", file })
+            run_external_formatter("ruff", { "format", "--quiet", file })
         elseif file:match("%.ts$") or file:match("%.tsx$") or file:match("%.js$") or file:match("%.jsx$") then
             run_external_formatter("prettier", { "--write", file })
         elseif file:match("%.lua$") then
@@ -371,6 +392,8 @@ vim.api.nvim_create_autocmd("BufWritePre", {
             else
                 run_external_formatter("stylua", { file })
             end
+        elseif file:match("%.nix$") then
+            run_external_formatter("nixfmt", { file })
         else
             -- Fallback to LSP formatting
             vim.lsp.buf.format({ async = false })
@@ -607,7 +630,7 @@ function _G.CustomTabline()
             end
         end
     else
-        str = str .. vim.fn.expand("%f")
+        str = str .. vim.fn.expand("%:t")
     end
 
     return str
@@ -796,7 +819,7 @@ later(function()
         end
     end
 
-    vim.keymap.set("n", "<A-o>", "<cmd>lua switch_source_header()<CR>", {
+    vim.keymap.set("n", "<A-o>", switch_source_header, {
         silent = true,
         desc = "Toggle between source and header",
     })
