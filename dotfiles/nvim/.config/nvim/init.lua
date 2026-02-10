@@ -824,3 +824,205 @@ later(function()
         desc = "Toggle between source and header",
     })
 end)
+
+-- -----------------------------------------------------------------------------
+-- Comment Concealing (Rust)
+-- -----------------------------------------------------------------------------
+
+do
+    local categories = {
+        line = { ns = vim.api.nvim_create_namespace("hide_comments_line"), key = "comments_hide_line" },
+        doc = { ns = vim.api.nvim_create_namespace("hide_comments_doc"), key = "comments_hide_doc" },
+        block = { ns = vim.api.nvim_create_namespace("hide_comments_block"), key = "comments_hide_block" },
+    }
+    local ws_ns = vim.api.nvim_create_namespace("hide_comments_ws")
+    local fold_lines_by_buf = {}
+
+    local function classify_comment(node, bufnr)
+        local node_type = node:type()
+        local sr, sc = node:range()
+        local line = vim.api.nvim_buf_get_lines(bufnr, sr, sr + 1, false)[1] or ""
+        local text = line:sub(sc + 1)
+        if node_type == "line_comment" then
+            if text:match("^///") or text:match("^//!") then
+                return "doc"
+            end
+            return "line"
+        elseif node_type == "block_comment" then
+            if text:match("^/%*%*") or text:match("^/%*!") then
+                return "doc"
+            end
+            return "block"
+        end
+    end
+
+    local function refresh(bufnr)
+        bufnr = bufnr or vim.api.nvim_get_current_buf()
+        for _, cat in pairs(categories) do
+            vim.api.nvim_buf_clear_namespace(bufnr, cat.ns, 0, -1)
+        end
+        vim.api.nvim_buf_clear_namespace(bufnr, ws_ns, 0, -1)
+
+        local fold_lines = {}
+        fold_lines_by_buf[bufnr] = fold_lines
+
+        local any_hidden = false
+        for _, cat in pairs(categories) do
+            if vim.b[bufnr][cat.key] then
+                any_hidden = true
+                break
+            end
+        end
+        if not any_hidden then
+            return
+        end
+
+        local ok, parser = pcall(vim.treesitter.get_parser, bufnr, "rust")
+        if not ok or not parser then
+            return
+        end
+        local tree = parser:parse()[1]
+        if not tree then
+            return
+        end
+        local root = tree:root()
+        local query = vim.treesitter.query.parse("rust", "[(line_comment) (block_comment)] @comment")
+
+        for _, node in query:iter_captures(root, bufnr, 0, -1) do
+            local kind = classify_comment(node, bufnr)
+            if kind and vim.b[bufnr][categories[kind].key] then
+                local sr, sc, er, ec = node:range()
+                -- Node ranges may include trailing newline (er=next row, ec=0); skip that row
+                if ec == 0 and er > sr then
+                    er = er - 1
+                    ec = #(vim.api.nvim_buf_get_lines(bufnr, er, er + 1, false)[1] or "")
+                end
+                for row = sr, er do
+                    local s_col = row == sr and sc or 0
+                    local line = vim.api.nvim_buf_get_lines(bufnr, row, row + 1, false)[1] or ""
+                    local e_col = row == er and ec or #line
+                    local before = line:sub(1, s_col)
+                    if before:match("^%s*$") then
+                        -- Comment-only line: conceal entire line, mark for folding
+                        vim.api.nvim_buf_set_extmark(bufnr, ws_ns, row, 0, {
+                            end_col = e_col,
+                            conceal = "…",
+                        })
+                        fold_lines[row + 1] = true
+                    else
+                        -- Inline comment: conceal just the comment part
+                        vim.api.nvim_buf_set_extmark(bufnr, categories[kind].ns, row, s_col, {
+                            end_col = e_col,
+                            conceal = "…",
+                        })
+                    end
+                end
+            end
+        end
+    end
+
+    function _G.RustCommentFoldExpr(lnum)
+        local lines = fold_lines_by_buf[vim.api.nvim_get_current_buf()]
+        if lines and lines[lnum] then
+            return "1"
+        end
+        return "0"
+    end
+
+    function _G.RustCommentFoldText()
+        local count = vim.v.foldend - vim.v.foldstart + 1
+        local line = vim.fn.getline(vim.v.foldstart)
+        local indent = line:match("^(%s*)") or ""
+        return {
+            { indent .. "… " .. count .. " comments", "Comment" },
+        }
+    end
+
+    local function apply(bufnr)
+        refresh(bufnr)
+        local any_hidden = false
+        for _, cat in pairs(categories) do
+            if vim.b[bufnr][cat.key] then
+                any_hidden = true
+                break
+            end
+        end
+        if any_hidden then
+            vim.wo.conceallevel = 2
+            vim.wo.concealcursor = "nvic"
+            vim.wo.foldenable = true
+            vim.wo.foldminlines = 0
+            vim.wo.foldmethod = "expr"
+            vim.wo.foldexpr = "v:lua.RustCommentFoldExpr(v:lnum)"
+            vim.wo.foldtext = "v:lua.RustCommentFoldText()"
+            vim.wo.foldlevel = 0
+            vim.opt_local.fillchars:append("fold: ")
+        else
+            vim.wo.conceallevel = 0
+            vim.wo.foldenable = false
+            vim.wo.foldmethod = "indent"
+        end
+    end
+
+    local function make_toggle(kind, desc)
+        vim.keymap.set("n", "<leader>c" .. kind:sub(1, 1), function()
+            local bufnr = vim.api.nvim_get_current_buf()
+            if vim.bo[bufnr].filetype ~= "rust" then
+                return
+            end
+            vim.b[bufnr][categories[kind].key] = not vim.b[bufnr][categories[kind].key]
+            apply(bufnr)
+        end, { desc = desc })
+    end
+
+    make_toggle("line", "Toggle line comment visibility")
+    make_toggle("doc", "Toggle doc comment visibility")
+    make_toggle("block", "Toggle block comment visibility")
+
+    vim.keymap.set("n", "<leader>cc", function()
+        local bufnr = vim.api.nvim_get_current_buf()
+        if vim.bo[bufnr].filetype ~= "rust" then
+            return
+        end
+        local any_hidden = false
+        for _, cat in pairs(categories) do
+            if vim.b[bufnr][cat.key] then
+                any_hidden = true
+                break
+            end
+        end
+        for _, cat in pairs(categories) do
+            vim.b[bufnr][cat.key] = not any_hidden
+        end
+        apply(bufnr)
+    end, { desc = "Toggle all comment visibility" })
+
+    vim.api.nvim_create_autocmd("FileType", {
+        pattern = "rust",
+        callback = function(args)
+            for _, cat in pairs(categories) do
+                vim.b[args.buf][cat.key] = true
+            end
+            vim.schedule(function()
+                if vim.api.nvim_buf_is_valid(args.buf) then
+                    apply(args.buf)
+                end
+            end)
+            vim.api.nvim_create_autocmd({ "TextChanged", "InsertLeave" }, {
+                buffer = args.buf,
+                callback = function()
+                    refresh(args.buf)
+                    if vim.wo.foldmethod == "expr" then
+                        vim.wo.foldmethod = "expr"
+                    end
+                end,
+            })
+        end,
+    })
+
+    vim.api.nvim_create_autocmd("BufDelete", {
+        callback = function(args)
+            fold_lines_by_buf[args.buf] = nil
+        end,
+    })
+end

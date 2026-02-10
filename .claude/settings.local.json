@@ -35,7 +35,9 @@
       "Bash(pactl set-sink-volume:*)",
       "Bash(pactl get-sink-volume:*)",
       "Bash(brightnessctl get:*)",
-      "Bash(brightnessctl max:*)"
+      "Bash(brightnessctl max:*)",
+      "Bash(xargs:*)",
+      "Bash(find:*)"
     ],
     "deny": [],
     "ask": []
