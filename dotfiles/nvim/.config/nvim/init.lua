@@ -949,7 +949,7 @@ do
         end
         if any_hidden then
             vim.wo.conceallevel = 2
-            vim.wo.concealcursor = "nvic"
+            vim.wo.concealcursor = "vic"
             vim.wo.foldenable = true
             vim.wo.foldminlines = 0
             vim.wo.foldmethod = "expr"
@@ -1017,6 +1017,38 @@ do
                     end
                 end,
             })
+
+            -- Arrow keys / h,l open and close comment folds
+            local function open_fold_or_right()
+                if vim.fn.foldclosed(".") ~= -1 then
+                    local fs = vim.fn.foldclosed(".")
+                    local fe = vim.fn.foldclosedend(".")
+                    vim.cmd("normal! zo")
+                    -- Clear conceal extmarks so the revealed lines show actual text
+                    local bufnr = vim.api.nvim_get_current_buf()
+                    for _, ns in ipairs({ ws_ns, categories.line.ns, categories.doc.ns, categories.block.ns }) do
+                        local marks = vim.api.nvim_buf_get_extmarks(bufnr, ns, { fs - 1, 0 }, { fe - 1, -1 }, {})
+                        for _, mark in ipairs(marks) do
+                            vim.api.nvim_buf_del_extmark(bufnr, ns, mark[1])
+                        end
+                    end
+                else
+                    vim.cmd("normal! l")
+                end
+            end
+            local function close_fold_or_left()
+                if vim.fn.col(".") == 1 and vim.fn.foldlevel(".") > 0 and vim.fn.foldclosed(".") == -1 then
+                    -- Re-apply conceal extmarks before closing
+                    refresh(vim.api.nvim_get_current_buf())
+                    vim.cmd("normal! zc")
+                else
+                    vim.cmd("normal! h")
+                end
+            end
+            vim.keymap.set("n", "l", open_fold_or_right, { buffer = args.buf, desc = "Open fold or move right" })
+            vim.keymap.set("n", "<Right>", open_fold_or_right, { buffer = args.buf, desc = "Open fold or move right" })
+            vim.keymap.set("n", "h", close_fold_or_left, { buffer = args.buf, desc = "Close fold or move left" })
+            vim.keymap.set("n", "<Left>", close_fold_or_left, { buffer = args.buf, desc = "Close fold or move left" })
         end,
     })
 
