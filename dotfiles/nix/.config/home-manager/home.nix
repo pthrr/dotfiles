@@ -79,7 +79,7 @@ in
             # pcb2gcode
             # sby
             nextpnrWithGui
-            # xyce-parallel
+            xyce-parallel
             dfu-util
           ] ++
 
