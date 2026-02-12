@@ -158,6 +158,7 @@ export FZF_DEFAULT_OPTS='-m --height 50% --border'
 export LESS='-R'
 export NO_AT_BRIDGE=1
 export DO_NOT_TRACK=1
+export CLAUDE_CODE_MAX_OUTPUT_TOKENS=64000
 export NINJA_STATUS="%p [%f:%s/%t] %o/s, %es "
 export _JAVA_AWT_WM_NONREPARENTING=1
 export CPM_SOURCE_CACHE="$XDG_CACHE_HOME/CPM"
