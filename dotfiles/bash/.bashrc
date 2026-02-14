@@ -162,7 +162,6 @@ export CLAUDE_CODE_MAX_OUTPUT_TOKENS=64000
 export NINJA_STATUS="%p [%f:%s/%t] %o/s, %es "
 export _JAVA_AWT_WM_NONREPARENTING=1
 export CPM_SOURCE_CACHE="$XDG_CACHE_HOME/CPM"
-export TMPDIR="$HOME/tmp"
 export SYSTEMC_HOME="/opt/systemc"
 export SYSTEMC_AMS_HOME="/opt/systemc-ams"
 export ICSC_HOME="$HOME/opt/sc_tools"

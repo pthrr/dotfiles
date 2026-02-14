@@ -63,7 +63,7 @@ in
           [ jdk maven gradle ] ++
 
           # Nix tooling
-          [ nixd nixfmt-rfc-style ] ++
+          [ nixd nixfmt ] ++
 
           # Containers & Kubernetes
           # [ kind minikube helm k3s k3d crun envsubst ] ++
