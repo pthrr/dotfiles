@@ -1,9 +1,13 @@
 [build]
+rustc-wrapper = "sccache-wrapper"
 rustflags = [
     # Treat all warnings as errors
     "-D", "warnings",
     # Rust compiler warnings - deny all
     "-D", "rust_2018_idioms",
+    # Allow elided_lifetimes_in_paths — conflicts with async_trait on nightly
+    # (trait defines late-bound lifetime, but <'_> makes it early-bound)
+    "-A", "elided_lifetimes_in_paths",
     "-D", "trivial_casts",
     "-D", "trivial_numeric_casts",
     "-D", "unused_lifetimes",
