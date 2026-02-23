@@ -582,6 +582,7 @@ in
       };
 
       pull = {
+        ff = "only";
         rebase = true;
       };
 
