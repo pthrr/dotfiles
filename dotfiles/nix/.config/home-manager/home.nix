@@ -1,21 +1,35 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
+  mcrl2-patched = pkgs.mcrl2.overrideAttrs (old: {
+    postPatch = (old.postPatch or "") + ''
+      substituteInPlace libraries/atermpp/include/mcrl2/atermpp/detail/aterm_list_iterator.h \
+        --replace-fail 'other.position' 'other.m_position'
+    '';
+  });
+
   defaultUserName = "pthrr";
   defaultUserEmail = "pthrr@posteo.de";
   gitUserNameFile = "${config.home.homeDirectory}/.config/git/name.txt";
   gitUserEmailFile = "${config.home.homeDirectory}/.config/git/email.txt";
-  gitUserName = if builtins.pathExists gitUserNameFile then
-    let
-      content = builtins.readFile gitUserNameFile;
-    in
+  gitUserName =
+    if builtins.pathExists gitUserNameFile then
+      let
+        content = builtins.readFile gitUserNameFile;
+      in
       builtins.trace "gitUserNameFile exists: ${content}" content
     else
       builtins.trace "gitUserNameFile does not exist, using default" defaultUserName;
-  gitUserEmail = if builtins.pathExists gitUserEmailFile then
-    let
-      content = builtins.readFile gitUserEmailFile;
-    in
+  gitUserEmail =
+    if builtins.pathExists gitUserEmailFile then
+      let
+        content = builtins.readFile gitUserEmailFile;
+      in
       builtins.trace "gitUserEmailFile exists: ${content}" content
     else
       builtins.trace "gitUserEmailFile does not exist, using default" defaultUserEmail;
@@ -31,487 +45,702 @@ let
   };
 in
 {
-    home = {
-        username = builtins.getEnv "USER";
-        homeDirectory = builtins.getEnv "HOME";
-        stateVersion = "22.05";
-        enableNixpkgsReleaseCheck = false;
+  home = {
+    username = builtins.getEnv "USER";
+    homeDirectory = builtins.getEnv "HOME";
+    stateVersion = "22.05";
+    enableNixpkgsReleaseCheck = false;
 
-        packages = with pkgs;
-          # Core utilities
-          [ coreutils findutils usbutils pciutils openssl unrar unzip p7zip ] ++
+    packages =
+      with pkgs;
+      # Core utilities
+      [
+        coreutils
+        findutils
+        usbutils
+        pciutils
+        openssl
+        unrar
+        unzip
+        p7zip
+      ]
+      ++
 
-          # Shell & terminal tools
-          [ vifm tmux tmuxp tree htop fzf ripgrep fd btop ] ++
+        # Shell & terminal tools
+        [
+          vifm
+          tmux
+          tmuxp
+          tree
+          htop
+          fzf
+          ripgrep
+          fd
+          htop
+        ]
+      ++
 
-          # WM
-          [ wl-clipboard wlr-randr udiskie ] ++
+        # WM
+        [
+          wl-clipboard
+          wlr-randr
+          udiskie
+        ]
+      ++
 
-          # Build systems
-          [ scons meson ninja bazelisk bmake bear buck2 git-repo conan cmake ] ++
+        # Build systems
+        [
+          scons
+          meson
+          ninja
+          bazelisk
+          bmake
+          bear
+          buck2
+          git-repo
+          conan
+          cmake
+        ]
+      ++
 
-          # Compilers & toolchains
-          [ zig zls ocaml opam ] ++
+        # Compilers & toolchains
+        [
+          zig
+          zls
+          ocaml
+          opam
+        ]
+      ++
 
-          # JavaScript/TypeScript
-          [ deno bun nodejs_24 eslint nodePackages.typescript-language-server ] ++
+        # JavaScript/TypeScript
+        [
+          deno
+          bun
+          nodejs_24
+          eslint
+          nodePackages.typescript-language-server
+        ]
+      ++
 
-          # Python tooling
-          [ pyright ] ++
+        # Python tooling
+        [ pyright ]
+      ++
 
-          # Java tooling
-          [ jdk maven gradle ] ++
+        # Java tooling
+        [
+          jdk
+          maven
+          gradle
+        ]
+      ++
 
-          # Nix tooling
-          [ nixd nixfmt ] ++
+        # Nix tooling
+        [
+          nixd
+          nixfmt
+        ]
+      ++
 
-          # Containers & Kubernetes
-          # [ kind minikube helm k3s k3d crun envsubst ] ++
+        # Containers & Kubernetes
+        # [ kind minikube helm k3s k3d crun envsubst ] ++
 
-          # Build caching & debugging
-          [ mold valgrind sccache redis gdbgui rr hotspot ] ++
+        # Build caching & debugging
+        [
+          mold
+          valgrind
+          sccache
+          redis
+          gdbgui
+          rr
+          hotspot
+        ]
+      ++
 
-          # Hardware development
-          [ yosys verilator verible
-            # bluespec yosys-bluespec
-            icestorm
-            svdtools svd2rust candle ngspice
-            # pcb2gcode
-            # sby
-            nextpnrWithGui
-            xyce-parallel
-            dfu-util
-          ] ++
+        # Hardware development
+        [
+          yosys
+          verilator
+          verible
+          # bluespec yosys-bluespec
+          icestorm
+          svdtools
+          svd2rust
+          candle
+          ngspice
+          # pcb2gcode
+          # sby
+          nextpnrWithGui
+          xyce-parallel
+          dfu-util
+        ]
+      ++
 
-          # WebAssembly
-          [ emscripten wasmtime wabt ] ++
+        # WebAssembly
+        [
+          emscripten
+          wasmtime
+          wabt
+        ]
+      ++
 
-          # Document tools
-          [ typst tinymist typstyle pandoc poppler-utils graphviz tectonic ] ++
+        # Document tools
+        [
+          typst
+          tinymist
+          typstyle
+          pandoc
+          poppler-utils
+          graphviz
+          tectonic
+        ]
+      ++
 
-          # Formatters & linters
-          [ tlafmt yamlfmt yamllint shfmt stylua lua-language-server cmake-format nodePackages.prettier ] ++
+        # Formatters & linters
+        [
+          tlafmt
+          yamlfmt
+          yamllint
+          shfmt
+          stylua
+          lua-language-server
+          cmake-format
+          nodePackages.prettier
+        ]
+      ++
 
-          # Protocol buffers
-          [ protobuf protobufc ] ++
+        # Protocol buffers
+        [
+          protobuf
+          protobufc
+        ]
+      ++
 
-          # Data tools
-          [ jq fq ] ++
+        # Data tools
+        [
+          jq
+          fq
+        ]
+      ++
 
-          # Formal verification
-          [ cue cuelsp cuetools nuXmv z3 tlaplus ] ++
+        # Formal verification
+        [
+          cue
+          cuelsp
+          cuetools
+          mcrl2-patched
+          nuXmv
+          z3
+          tlaplus
+        ]
+      ++
 
-          # Image tools
-          [ nsxiv farbfeld libwebp netpbm potrace ] ++
+        # Image tools
+        [
+          nsxiv
+          farbfeld
+          libwebp
+          netpbm
+          potrace
+        ]
+      ++
 
-          # Media/Audio
-          [ drumgizmo x42-avldrums x42-plugins wolf-shaper calf ] ++
+        # Media/Audio
+        [
+          drumgizmo
+          x42-avldrums
+          x42-plugins
+          wolf-shaper
+          calf
+        ]
+      ++
 
-          # Viewers & diff tools
-          [ difftastic sent zathura ] ++
+        # Viewers & diff tools
+        [
+          difftastic
+          sent
+          zathura
+        ]
+      ++
 
-          # Web browsers
-          [ ladybird ] ++
+        # Web browsers
+        [ ladybird ]
+      ++
 
-          # Editors
-          [ vscode ] ++
+        # Editors
+        [ vscode ]
+      ++
 
-          # Other
-          [ claude-code go-task wineWow64Packages.waylandFull openpomodoro-cli
-            # ripes # temporarily disabled due to cmake build issue
-          ];
+        # Other
+        [
+          claude-code
+          go-task
+          wineWow64Packages.waylandFull
+          openpomodoro-cli
+          # ripes # temporarily disabled due to cmake build issue
+        ];
 
-        file = {
-          ".bashrc".source = ../../../bash/.bashrc;
-          ".bash_profile".source = ../../../bash/.bash_profile;
-          "z.sh".source = ../../../bash/z.sh;
-          "git-prompt.sh".source = ../../../bash/git-prompt.sh;
-          "jj-prompt.sh".source = ../../../bash/jj-prompt.sh;
+    file = {
+      ".bashrc".source = ../../../bash/.bashrc;
+      ".bash_profile".source = ../../../bash/.bash_profile;
+      "z.sh".source = ../../../bash/z.sh;
+      "git-prompt.sh".source = ../../../bash/git-prompt.sh;
+      "jj-prompt.sh".source = ../../../bash/jj-prompt.sh;
 
-          ".clang-tidy".source = ../../../lang/.clang-tidy;
-          ".clang-format".source = ../../../lang/.clang-format;
-          ".cmake-format.yaml".source = ../../../lang/.cmake-format.yaml;
-          ".config/stylua/stylua.toml".source = ../../../lang/stylua.toml;
-          ".bazelrc".source = ../../../lang/.bazelrc;
+      ".clang-tidy".source = ../../../lang/.clang-tidy;
+      ".clang-format".source = ../../../lang/.clang-format;
+      ".cmake-format.yaml".source = ../../../lang/.cmake-format.yaml;
+      ".config/stylua/stylua.toml".source = ../../../lang/stylua.toml;
+      ".bazelrc".source = ../../../lang/.bazelrc;
 
-          ".cargo" = {
-            source = ../../../lang/.cargo;
-            recursive = true;
-          };
-          ".ssh" = {
-            source = ../../../ssh/.ssh;
-            recursive = true;
-          };
-          "bin" = {
-            source = ../../../misc/bin;
-            recursive = true;
-          };
-          "Vorlagen/snippets" = {
-            source = ../../../nvim/Vorlagen/snippets;
-            recursive = true;
-          };
-          "Vorlagen/slides" = {
-            source = ../../../sent/Vorlagen/slides;
-            recursive = true;
-          };
-          ".claude" = {
-            source = ../../../claude/.config/claude;
-            recursive = true;
-          };
-          ".local/share/applications/coqide.desktop".source = ../../../misc/.local/share/applications/coqide.desktop;
-        };
-    };
-
-    # sccache service removed - using sccache-wrapper for dynamic local/S3 switching
-
-    # Unmount SSHFS mounts before sleep to prevent freeze
-    systemd.user.services.sshfs-sleep-handler = {
-      Unit = {
-        Description = "Unmount SSHFS before sleep";
+      ".cargo" = {
+        source = ../../../lang/.cargo;
+        recursive = true;
       };
-      Service = {
-        Type = "simple";
-        ExecStart = pkgs.writeShellScript "sshfs-sleep-handler" ''
-          /usr/bin/dbus-monitor --system "type='signal',interface='org.freedesktop.login1.Manager',member='PrepareForSleep'" |
-          while read -r line; do
-            if echo "$line" | grep -q "boolean true"; then
-              # Going to sleep - unmount if mounted
-              if /usr/bin/mount | grep -q " $HOME/Drive "; then
-                /usr/bin/fusermount -uz "$HOME/Drive" 2>/dev/null || true
-              fi
+      ".ssh" = {
+        source = ../../../ssh/.ssh;
+        recursive = true;
+      };
+      "bin" = {
+        source = ../../../misc/bin;
+        recursive = true;
+      };
+      "Vorlagen/snippets" = {
+        source = ../../../nvim/Vorlagen/snippets;
+        recursive = true;
+      };
+      "Vorlagen/slides" = {
+        source = ../../../sent/Vorlagen/slides;
+        recursive = true;
+      };
+      ".claude" = {
+        source = ../../../claude/.config/claude;
+        recursive = true;
+      };
+      ".local/share/applications/coqide.desktop".source =
+        ../../../misc/.local/share/applications/coqide.desktop;
+    };
+  };
+
+  # sccache service removed - using sccache-wrapper for dynamic local/S3 switching
+
+  # Unmount SSHFS mounts before sleep to prevent freeze
+  systemd.user.services.sshfs-sleep-handler = {
+    Unit = {
+      Description = "Unmount SSHFS before sleep";
+    };
+    Service = {
+      Type = "simple";
+      ExecStart = pkgs.writeShellScript "sshfs-sleep-handler" ''
+        /usr/bin/dbus-monitor --system "type='signal',interface='org.freedesktop.login1.Manager',member='PrepareForSleep'" |
+        while read -r line; do
+          if echo "$line" | grep -q "boolean true"; then
+            # Going to sleep - unmount if mounted
+            if /usr/bin/mount | grep -q " $HOME/Drive "; then
+              /usr/bin/fusermount -uz "$HOME/Drive" 2>/dev/null || true
             fi
-          done
-        '';
-        Restart = "always";
-        RestartSec = 5;
-      };
-      Install = {
-        WantedBy = [ "default.target" ];
-      };
+          fi
+        done
+      '';
+      Restart = "always";
+      RestartSec = 5;
     };
-
-    programs.home-manager.enable = true;
-
-    programs.jujutsu = {
-      enable = true;
-      settings = {
-        user = commonUser;
-        core = commonCore;
-
-        git = {
-          auto-local-bookmark = true;
-          push-branch-prefix = "";
-          fetch-tags = true;
-          track-branches = true;
-        };
-
-        operation = {
-          allow-empty = true;
-
-          rebase = {
-            auto-squash = true;
-            update-refs = true;
-          };
-        };
-
-        # Revset aliases for powerful commit filtering
-        revset-aliases = {
-          "mine()" = ''author(email_substring("pthrr")) | committer(email_substring("pthrr"))'';
-          "trunk()" = "main@origin | master@origin";
-          "stack()" = "ancestors(@, mutable())";
-        };
-
-        aliases = {
-          # Git-equivalent aliases
-          co = ["checkout"];
-          br = ["branch" "list"];
-          cm = ["new"];
-          df = ["diff"];
-          lg = ["log" "--graph"];
-          rb = ["rebase"];
-          mt = ["resolve"];
-
-          # Workflow shortcuts
-          st = ["status"];
-          l = ["log" "-r" "trunk()..@" "--limit" "20"];
-          ll = ["log" "--limit" "50"];
-          s = ["show"];
-          n = ["new"];
-          e = ["edit"];
-
-          # Advanced workflows
-          amend = ["squash"];
-          fixup = ["squash"];
-          uncommit = ["edit" "@-"];
-
-          # Git integration
-          fetch = ["git" "fetch"];
-          pull = ["git" "fetch"];
-          push = ["git" "push"];
-
-          # Git command aliases
-          git-fetch = ["git" "fetch" "--prune"];
-          git-push = ["git" "push" "--follow-tags"];
-          git-status = ["git" "status"];
-          git-log = ["git" "log" "--oneline" "--graph" "--decorate"];
-          git-diff = ["git" "diff"];
-          git-commit = ["git" "commit" "-v"];
-          git-branch = ["git" "branch"];
-          git-rebase = ["git" "rebase"];
-          git-merge = ["git" "merge"];
-        };
-
-        diff = {
-          tool = "difftastic";
-        };
-
-        merge = {
-          tool = "meld";
-        };
-
-        fetch = {
-          all = true;
-        };
-
-        push = {
-          auto-setup-remote = true;
-        };
-
-        pager = {
-          enabled = true;
-        };
-
-        ui = {
-          default-command = "status";
-          color = "auto";
-          diff-context = 8;
-          diff-editor = ":builtin";
-          merge-editor = "meld";
-          paginate = "auto";
-          log-synthetic-elided-nodes = true;
-        };
-
-        # Template customizations
-        template-aliases = {
-          "format_short_change_id(id)" = "id.shortest(8)";
-          "format_short_commit_id(id)" = "id.shortest(8)";
-        };
-      };
+    Install = {
+      WantedBy = [ "default.target" ];
     };
+  };
 
-    programs.git = {
-      enable = true;
-      package = pkgs.gitFull;
-      lfs.enable = true;
-      settings = {
-        user = {
-          name = commonUser.name;
-          email = commonUser.email;
-        };
-        core = commonCore // {
-          autocrlf = false;
-          excludesfile = "~/.config/git/.gitignore_global";
-          attributesfile = "~/.config/git/.gitattributes_global";
-        };
+  programs.home-manager.enable = true;
 
-        branch = {
-          sort = "-committerdate";
-        };
+  programs.jujutsu = {
+    enable = true;
+    settings = {
+      user = commonUser;
+      core = commonCore;
 
-        tag = {
-          sort = "version:refname";
-        };
+      git = {
+        auto-local-bookmark = true;
+        push-branch-prefix = "";
+        fetch-tags = true;
+        track-branches = true;
+      };
 
-        init = {
-          defaultBranch = "main";
-        };
-
-        merge = {
-          conflictstyle = "zdiff3";
-          tool = "meld";
-        };
-
-        diff = {
-          algorithm = "histogram";
-          colorMoved = "plain";
-          mnemonicPrefix = true;
-          renames = true;
-          tool = "meld";
-        };
-
-        credential = {
-          helper = "cache --timeout=3600";
-        };
-
-        safe = {
-          directory = "*";
-        };
-
-        gpg = {
-          program = "gpg2";
-        };
-
-        submodule = {
-          recurse = true;
-        };
-
-        fetch = {
-          prune = true;
-          pruneTags = true;
-          all = true;
-        };
-
-        pull = {
-          rebase = true;
-        };
-
-        push = {
-          recurseSubmodules = "on-demand";
-          default = "simple";
-          autoSetupRemote = true;
-          followTags = true;
-        };
-
-        commit = {
-          verbose = true;
-          template = "~/.config/git/git-commit-template.txt";
-        };
-
-        rerere = {
-          enabled = true;
-          autoupdate = true;
-        };
+      operation = {
+        allow-empty = true;
 
         rebase = {
-          autoSquash = true;
-          autoStash = true;
-          updateRefs = true;
+          auto-squash = true;
+          update-refs = true;
+        };
+      };
+
+      # Revset aliases for powerful commit filtering
+      revset-aliases = {
+        "mine()" = ''author(email_substring("pthrr")) | committer(email_substring("pthrr"))'';
+        "trunk()" = "main@origin | master@origin";
+        "stack()" = "ancestors(@, mutable())";
+      };
+
+      aliases = {
+        # Git-equivalent aliases
+        co = [ "checkout" ];
+        br = [
+          "branch"
+          "list"
+        ];
+        cm = [ "new" ];
+        df = [ "diff" ];
+        lg = [
+          "log"
+          "--graph"
+        ];
+        rb = [ "rebase" ];
+        mt = [ "resolve" ];
+
+        # Workflow shortcuts
+        st = [ "status" ];
+        l = [
+          "log"
+          "-r"
+          "trunk()..@"
+          "--limit"
+          "20"
+        ];
+        ll = [
+          "log"
+          "--limit"
+          "50"
+        ];
+        s = [ "show" ];
+        n = [ "new" ];
+        e = [ "edit" ];
+
+        # Advanced workflows
+        amend = [ "squash" ];
+        fixup = [ "squash" ];
+        uncommit = [
+          "edit"
+          "@-"
+        ];
+
+        # Git integration
+        fetch = [
+          "git"
+          "fetch"
+        ];
+        pull = [
+          "git"
+          "fetch"
+        ];
+        push = [
+          "git"
+          "push"
+        ];
+
+        # Git command aliases
+        git-fetch = [
+          "git"
+          "fetch"
+          "--prune"
+        ];
+        git-push = [
+          "git"
+          "push"
+          "--follow-tags"
+        ];
+        git-status = [
+          "git"
+          "status"
+        ];
+        git-log = [
+          "git"
+          "log"
+          "--oneline"
+          "--graph"
+          "--decorate"
+        ];
+        git-diff = [
+          "git"
+          "diff"
+        ];
+        git-commit = [
+          "git"
+          "commit"
+          "-v"
+        ];
+        git-branch = [
+          "git"
+          "branch"
+        ];
+        git-rebase = [
+          "git"
+          "rebase"
+        ];
+        git-merge = [
+          "git"
+          "merge"
+        ];
+      };
+
+      diff = {
+        tool = "difftastic";
+      };
+
+      merge = {
+        tool = "meld";
+      };
+
+      fetch = {
+        all = true;
+      };
+
+      push = {
+        auto-setup-remote = true;
+      };
+
+      pager = {
+        enabled = true;
+      };
+
+      ui = {
+        default-command = "status";
+        color = "auto";
+        diff-context = 8;
+        diff-editor = ":builtin";
+        merge-editor = "meld";
+        paginate = "auto";
+        log-synthetic-elided-nodes = true;
+      };
+
+      # Template customizations
+      template-aliases = {
+        "format_short_change_id(id)" = "id.shortest(8)";
+        "format_short_commit_id(id)" = "id.shortest(8)";
+      };
+    };
+  };
+
+  programs.git = {
+    enable = true;
+    package = pkgs.gitFull;
+    lfs.enable = true;
+    settings = {
+      user = {
+        name = commonUser.name;
+        email = commonUser.email;
+      };
+      core = commonCore // {
+        autocrlf = false;
+        excludesfile = "~/.config/git/.gitignore_global";
+        attributesfile = "~/.config/git/.gitattributes_global";
+      };
+
+      branch = {
+        sort = "-committerdate";
+      };
+
+      tag = {
+        sort = "version:refname";
+      };
+
+      init = {
+        defaultBranch = "main";
+      };
+
+      merge = {
+        conflictstyle = "zdiff3";
+        tool = "meld";
+      };
+
+      diff = {
+        algorithm = "histogram";
+        colorMoved = "plain";
+        mnemonicPrefix = true;
+        renames = true;
+        tool = "meld";
+      };
+
+      credential = {
+        helper = "cache --timeout=3600";
+      };
+
+      safe = {
+        directory = "*";
+      };
+
+      gpg = {
+        program = "gpg2";
+      };
+
+      submodule = {
+        recurse = true;
+      };
+
+      fetch = {
+        prune = true;
+        pruneTags = true;
+        all = true;
+      };
+
+      pull = {
+        rebase = true;
+      };
+
+      push = {
+        recurseSubmodules = "on-demand";
+        default = "simple";
+        autoSetupRemote = true;
+        followTags = true;
+      };
+
+      commit = {
+        verbose = true;
+        template = "~/.config/git/git-commit-template.txt";
+      };
+
+      rerere = {
+        enabled = true;
+        autoupdate = true;
+      };
+
+      rebase = {
+        autoSquash = true;
+        autoStash = true;
+        updateRefs = true;
+      };
+
+      status = {
+        submoduleSummary = true;
+      };
+
+      difftool = {
+        prompt = true;
+
+        "difftastic" = {
+          cmd = "difft \"$LOCAL\" \"$REMOTE\"";
+          trustExitCode = true;
         };
 
-        status = {
-          submoduleSummary = true;
+        "meld" = {
+          cmd = "meld \"$LOCAL\" \"$REMOTE\"";
+          trustExitCode = false;
         };
 
-        difftool = {
-          prompt = true;
-
-          "difftastic" = {
-            cmd = "difft \"$LOCAL\" \"$REMOTE\"";
-            trustExitCode = true;
-          };
-
-          "meld" = {
-            cmd = "meld \"$LOCAL\" \"$REMOTE\"";
-            trustExitCode = false;
-          };
-
-          "kdiff3" = {
-            cmd = "kdiff3 \"$LOCAL\" \"$REMOTE\"";
-            trustExitCode = false;
-          };
-
-          "bcomp4" = {
-            cmd = "\"/mnt/c/Program Files/Beyond Compare 4/BComp.exe\" \"$(wslpath -w $LOCAL)\" \"$(wslpath -w $REMOTE)\"";
-            trustExitCode = true;
-          };
+        "kdiff3" = {
+          cmd = "kdiff3 \"$LOCAL\" \"$REMOTE\"";
+          trustExitCode = false;
         };
 
-        mergetool = {
-          keepBackup = false;
+        "bcomp4" = {
+          cmd = "\"/mnt/c/Program Files/Beyond Compare 4/BComp.exe\" \"$(wslpath -w $LOCAL)\" \"$(wslpath -w $REMOTE)\"";
+          trustExitCode = true;
+        };
+      };
 
-          "meld" = {
-            cmd = "meld --auto-merge \"$LOCAL\" \"$BASE\" \"$REMOTE\" --output \"$MERGED\" --label=Local --label=Base --label=Remote --diff \"$BASE\" \"$LOCAL\" --diff \"$BASE\" \"$REMOTE\"";
-            trustExitCode = false;
-          };
+      mergetool = {
+        keepBackup = false;
 
-          "kdiff3" = {
-            cmd = "kdiff3 \"$LOCAL\" \"$BASE\" \"$REMOTE\" \"$MERGED\"";
-            trustExitCode = false;
-          };
-
-          "bcomp4" = {
-            cmd = "\"/mnt/c/Program Files/Beyond Compare 4/BComp.exe\" \"$(wslpath -w $LOCAL)\" \"$(wslpath -w $REMOTE)\" \"$(wslpath -w $BASE)\" \"$(wslpath -w $MERGED)\"";
-            trustExitCode = true;
-          };
+        "meld" = {
+          cmd = "meld --auto-merge \"$LOCAL\" \"$BASE\" \"$REMOTE\" --output \"$MERGED\" --label=Local --label=Base --label=Remote --diff \"$BASE\" \"$LOCAL\" --diff \"$BASE\" \"$REMOTE\"";
+          trustExitCode = false;
         };
 
-        pager = {
-          difftool = false;
+        "kdiff3" = {
+          cmd = "kdiff3 \"$LOCAL\" \"$BASE\" \"$REMOTE\" \"$MERGED\"";
+          trustExitCode = false;
         };
 
-        alias = {
-          a = "add";
-          aa = "add --all";
-          b = "branch";
-          p = "push";
-          pf = "push --force-with-lease";
-          c = "commit";
-          ca = "commit --amend";
-          co = "checkout";
-          s = "status";
-          d = "diff";
-          dt = "difftool";
-          m = "merge";
-          mt = "mergetool";
-          l = "log";
-          lg = "log --graph";
-          lo = "log --oneline";
-          lp = "log --patch";
-          lfp = "log --first-parent";
-          lt = "log --topo-order";
-          ll = "log --graph --topo-order --date=short --abbrev-commit --decorate --all --boundary --pretty=format:'%Cgreen%ad %Cred%h%Creset -%C(yellow)%d%Creset %s %Cblue[%cn]%Creset %Cblue%G?%Creset'";
-          lll = "log --graph --topo-order --date=iso8601-strict --no-abbrev-commit --abbrev=40 --decorate --all --boundary --pretty=format:'%Cgreen%ad %Cred%h%Creset -%C(yellow)%d%Creset %s %Cblue[%cn <%ce>]%Creset %Cblue%G?%Creset'";
-          subm-reinit = "!git submodule deinit --all --force && git submodule update --init --recursive";
+        "bcomp4" = {
+          cmd = "\"/mnt/c/Program Files/Beyond Compare 4/BComp.exe\" \"$(wslpath -w $LOCAL)\" \"$(wslpath -w $REMOTE)\" \"$(wslpath -w $BASE)\" \"$(wslpath -w $MERGED)\"";
+          trustExitCode = true;
         };
+      };
+
+      pager = {
+        difftool = false;
+      };
+
+      alias = {
+        a = "add";
+        aa = "add --all";
+        b = "branch";
+        p = "push";
+        pf = "push --force-with-lease";
+        c = "commit";
+        ca = "commit --amend";
+        co = "checkout";
+        s = "status";
+        d = "diff";
+        dt = "difftool";
+        m = "merge";
+        mt = "mergetool";
+        l = "log";
+        lg = "log --graph";
+        lo = "log --oneline";
+        lp = "log --patch";
+        lfp = "log --first-parent";
+        lt = "log --topo-order";
+        ll = "log --graph --topo-order --date=short --abbrev-commit --decorate --all --boundary --pretty=format:'%Cgreen%ad %Cred%h%Creset -%C(yellow)%d%Creset %s %Cblue[%cn]%Creset %Cblue%G?%Creset'";
+        lll = "log --graph --topo-order --date=iso8601-strict --no-abbrev-commit --abbrev=40 --decorate --all --boundary --pretty=format:'%Cgreen%ad %Cred%h%Creset -%C(yellow)%d%Creset %s %Cblue[%cn <%ce>]%Creset %Cblue%G?%Creset'";
+        subm-reinit = "!git submodule deinit --all --force && git submodule update --init --recursive";
+      };
+    };
+  };
+
+  programs.neovim = {
+    enable = true;
+    plugins = with pkgs.vimPlugins; [
+      nvim-treesitter.withAllGrammars
+      plenary-nvim
+      telescope-nvim
+    ];
+  };
+
+  xdg.configFile =
+    let
+      mkConfigDir = name: {
+        source = ../../../${name}/.config/${name};
+        recursive = true;
+      };
+    in
+    lib.genAttrs [
+      "sway"
+      "gdb"
+      "foot"
+      "zathura"
+      "git"
+      "tmux"
+      "vifm"
+      "nvim"
+    ] mkConfigDir
+    // {
+      "plasma-workspace/env" = {
+        source = ../../../nix/.config/plasma-workspace/env;
+        recursive = true;
+      };
+      # waybar config is now part of sway package
+      "waybar" = {
+        source = ../../../sway/.config/waybar;
+        recursive = true;
+      };
+      "kanshi" = {
+        source = ../../../sway/.config/kanshi;
+        recursive = true;
+      };
+      "swaylock" = {
+        source = ../../../sway/.config/swaylock;
+        recursive = true;
+      };
+      "rofi" = {
+        source = ../../../sway/.config/rofi;
+        recursive = true;
+      };
+      "mako" = {
+        source = ../../../sway/.config/mako;
+        recursive = true;
       };
     };
 
-    programs.neovim = {
-        enable = true;
-        plugins = with pkgs.vimPlugins; [
-            nvim-treesitter.withAllGrammars
-            plenary-nvim
-            telescope-nvim
-        ];
-    };
-
-    xdg.configFile =
-      let
-        mkConfigDir = name: {
-          source = ../../../${name}/.config/${name};
-          recursive = true;
-        };
-      in
-        lib.genAttrs [ "sway" "gdb" "foot" "zathura" "git" "tmux" "vifm" "nvim" ] mkConfigDir
-        // {
-          "plasma-workspace/env" = {
-            source = ../../../nix/.config/plasma-workspace/env;
-            recursive = true;
-          };
-          # waybar config is now part of sway package
-          "waybar" = {
-            source = ../../../sway/.config/waybar;
-            recursive = true;
-          };
-          "kanshi" = {
-            source = ../../../sway/.config/kanshi;
-            recursive = true;
-          };
-          "swaylock" = {
-            source = ../../../sway/.config/swaylock;
-            recursive = true;
-          };
-          "rofi" = {
-            source = ../../../sway/.config/rofi;
-            recursive = true;
-          };
-          "mako" = {
-            source = ../../../sway/.config/mako;
-            recursive = true;
-          };
-        };
-
-  home.activation.runMyScript = lib.hm.dag.entryAfter ["writeBoundary"] ''
+  home.activation.runMyScript = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     sudo -n $HOME/bin/patchnixapps $HOME/.nix-profile/share/applications
   '';
 }
