@@ -109,6 +109,7 @@ in
           zls
           ocaml
           opam
+          lean4
         ]
       ++
 
