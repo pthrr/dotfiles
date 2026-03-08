@@ -1,6 +1,7 @@
 # Use bazel-remote cache server with fallback to local disk cache
 build --remote_cache=http://nwv-srv:8080
 build --disk_cache=~/.cache/bazel-disk-cache
+build --experimental_disk_cache_gc_max_size=5G
 
 # Don't fail the build if remote cache is unavailable
 build --remote_local_fallback

@@ -14,7 +14,7 @@ if timeout 2 bash -c "</dev/tcp/${S3_HOST}/${S3_PORT}" 2>/dev/null; then
 else
     echo "sccache: Using local (~/.cache/sccache)" >&2
     export SCCACHE_DIR="$HOME/.cache/sccache"
-    export SCCACHE_CACHE_SIZE="10G"
+    export SCCACHE_CACHE_SIZE="5G"
 fi
 
 sccache "$@"
