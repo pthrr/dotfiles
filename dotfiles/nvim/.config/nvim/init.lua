@@ -359,6 +359,7 @@ vim.api.nvim_create_autocmd("BufWritePre", {
         "*.typ", -- Typst
         "*.lua", -- Lua
         "*.nix", -- Nix
+        "*.lean", -- Lean
     },
     callback = function()
         -- Skip if buffer hasn't been modified
@@ -394,6 +395,8 @@ vim.api.nvim_create_autocmd("BufWritePre", {
             end
         elseif file:match("%.nix$") then
             run_external_formatter("nixfmt", { file })
+        elseif file:match("%.lean$") then
+            vim.lsp.buf.format({ async = false })
         else
             -- Fallback to LSP formatting
             vim.lsp.buf.format({ async = false })
