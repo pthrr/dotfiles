@@ -317,8 +317,6 @@ in
         source = ../../../claude/.config/claude;
         recursive = true;
       };
-      ".local/share/applications/coqide.desktop".source =
-        ../../../misc/.local/share/applications/coqide.desktop;
     };
   };
 
