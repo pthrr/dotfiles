@@ -312,6 +312,7 @@ in
       ".cmake-format.yaml".source = ../../../lang/.cmake-format.yaml;
       ".config/stylua/stylua.toml".source = ../../../lang/stylua.toml;
       ".bazelrc".source = ../../../lang/.bazelrc;
+      ".prettierrc".source = ../../../lang/.prettierrc;
 
       ".cargo" = {
         source = ../../../lang/.cargo;
