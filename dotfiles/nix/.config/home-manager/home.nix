@@ -6,6 +6,19 @@
 }:
 
 let
+  ghcup = pkgs.stdenv.mkDerivation {
+    pname = "ghcup";
+    version = "latest";
+    src = pkgs.fetchurl {
+      url = "https://downloads.haskell.org/~ghcup/x86_64-linux-ghcup";
+      hash = "sha256-/2KI35dYIRNy2CQv6DDY5r5qg2XZQG8cm94US350QUM=";
+    };
+    dontUnpack = true;
+    installPhase = ''
+      install -Dm755 $src $out/bin/ghcup
+    '';
+  };
+
   mcrl2-patched = pkgs.mcrl2.overrideAttrs (old: {
     postPatch = (old.postPatch or "") + ''
       substituteInPlace libraries/atermpp/include/mcrl2/atermpp/detail/aterm_list_iterator.h \
@@ -110,6 +123,12 @@ in
           ocaml
           opam
           lean4
+          (agda.withPackages (p: [
+            p.cubical
+            p.standard-library
+          ]))
+          # haskellPackages.agda-language-server  # unmaintained: needs lsp<1.7 and Agda<2.6.4
+          ghcup
         ]
       ++
 
@@ -198,6 +217,7 @@ in
 
         # Formatters & linters
         [
+          marksman
           tlafmt
           yamlfmt
           yamllint
@@ -742,5 +762,12 @@ in
 
   home.activation.runMyScript = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     sudo -n $HOME/bin/patchnixapps $HOME/.nix-profile/share/applications
+  '';
+
+  home.activation.ensureHaskellTools = lib.hm.dag.entryAfter [ "installPackages" ] ''
+    export PATH="$HOME/.ghcup/bin:$HOME/.cabal/bin:$HOME/.nix-profile/bin:/usr/local/bin:/usr/bin:$PATH"
+    ghcup install ghc 9.8.4 --set
+    ghcup install cabal 3.16.1.0 --set
+    cabal update
   '';
 }

@@ -248,6 +248,16 @@ now(function()
                 },
             },
         },
+        -- als = {  -- agda-language-server is unmaintained
+        --     cmd = { "als" },
+        --     filetypes = { "agda" },
+        --     root_markers = { "*.agda-lib", ".git", ".jj" },
+        -- },
+        marksman = {
+            cmd = { "marksman", "server" },
+            filetypes = { "markdown" },
+            root_markers = { ".marksman.toml", ".git", ".jj" },
+        },
     }
 
     -- Enable all configured language servers
@@ -360,6 +370,7 @@ vim.api.nvim_create_autocmd("BufWritePre", {
         "*.lua", -- Lua
         "*.nix", -- Nix
         "*.lean", -- Lean
+        "*.md", -- Markdown
     },
     callback = function()
         -- Skip if buffer hasn't been modified
@@ -384,7 +395,7 @@ vim.api.nvim_create_autocmd("BufWritePre", {
             run_external_formatter("shfmt", { "-w", file })
         elseif file:match("%.py$") then
             run_external_formatter("ruff", { "format", "--quiet", file })
-        elseif file:match("%.ts$") or file:match("%.tsx$") or file:match("%.js$") or file:match("%.jsx$") then
+        elseif file:match("%.ts$") or file:match("%.tsx$") or file:match("%.js$") or file:match("%.jsx$") or file:match("%.md$") then
             run_external_formatter("prettier", { "--write", file })
         elseif file:match("%.lua$") then
             local config_path = vim.fn.expand("~") .. "/.config/stylua/stylua.toml"
