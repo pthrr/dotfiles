@@ -84,7 +84,6 @@ sudo flatpak remote-add --if-not-exists \
 sudo flatpak install -y \
 	org.libreoffice.LibreOffice \
 	it.fabiodistasio.AntaresSQL \
-	com.bitwig.BitwigStudio \
 	net.lutris.Lutris \
 	org.mozilla.firefox \
 	io.github.gtkwave.GTKWave \
@@ -113,7 +112,6 @@ sudo flatpak install -y \
 	im.riot.Riot \
 	org.keepassxc.KeePassXC \
 	org.gnome.meld \
-	org.zealdocs.Zeal \
 	com.prusa3d.PrusaSlicer \
 	org.freecad.FreeCAD \
 	org.openscad.OpenSCAD \

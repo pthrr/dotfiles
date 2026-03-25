@@ -17,12 +17,24 @@ get_mount_point() {
     echo "$mount"
 }
 
-TARGET_BOOT=$(get_mount_point "$TARGET_BOOT_UUID")
-TARGET_EFI=$(get_mount_point "$TARGET_EFI_UUID")
-TARGET_ROOT=$(get_mount_point "$TARGET_BTRFS_UUID")
+TARGET_BOOT=$(get_mount_point "$TARGET_BOOT_UUID") || exit 1
+TARGET_EFI=$(get_mount_point "$TARGET_EFI_UUID") || exit 1
+TARGET_ROOT=$(get_mount_point "$TARGET_BTRFS_UUID") || exit 1
 
 mountpoint -q /boot || { echo "/boot is not mounted." >&2; exit 1; }
 mountpoint -q /boot/efi || { echo "/boot/efi is not mounted." >&2; exit 1; }
+
+# Guard against syncing to the currently booted partitions
+SOURCE_ROOT_UUID=$(findmnt -rn -o UUID -T /)
+SOURCE_BOOT_UUID=$(findmnt -rn -o UUID -T /boot)
+SOURCE_EFI_UUID=$(findmnt -rn -o UUID -T /boot/efi)
+for pair in "$TARGET_BTRFS_UUID:$SOURCE_ROOT_UUID:/" "$TARGET_BOOT_UUID:$SOURCE_BOOT_UUID:/boot" "$TARGET_EFI_UUID:$SOURCE_EFI_UUID:/boot/efi"; do
+    IFS=: read -r target source label <<< "$pair"
+    if [[ "$target" == "$source" ]]; then
+        echo "Refusing to sync: target UUID $target matches currently mounted $label." >&2
+        exit 1
+    fi
+done
 
 # Ensure target btrfs is mounted with compression
 target_opts=$(findmnt -rn -o OPTIONS -S "UUID=$TARGET_BTRFS_UUID")
@@ -43,7 +55,7 @@ if [[ "$confirm" != "y" ]]; then
 fi
 
 run_rsync() {
-    rsync "$@" || { rc=$?; [[ $rc -eq 24 ]] && echo "Warning: some files vanished during transfer." >&2 || exit $rc; }
+    rsync "$@" || { rc=$?; if [[ $rc -eq 24 ]]; then echo "Warning: some files vanished during transfer." >&2; else exit $rc; fi; }
 }
 
 echo ""
