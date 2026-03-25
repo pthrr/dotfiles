@@ -38,7 +38,8 @@
       "Bash(brightnessctl max:*)",
       "Bash(xargs:*)",
       "Bash(find:*)",
-      "Bash(nix profile list:*)"
+      "Bash(nix profile list:*)",
+      "WebSearch"
     ],
     "deny": [],
     "ask": []
