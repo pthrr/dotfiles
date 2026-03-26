@@ -58,6 +58,10 @@ let
   };
 in
 {
+  imports = [
+    (builtins.fetchTarball "https://github.com/gmodena/nix-flatpak/archive/latest.tar.gz")
+  ];
+
   home = {
     username = builtins.getEnv "USER";
     homeDirectory = builtins.getEnv "HOME";
@@ -76,6 +80,11 @@ in
         unrar
         unzip
         p7zip
+        wget
+        curl
+        gnupg
+        unixtools.xxd
+        inotify-tools
       ]
       ++
 
@@ -89,7 +98,6 @@ in
           fzf
           ripgrep
           fd
-          htop
         ]
       ++
 
@@ -98,6 +106,21 @@ in
           wl-clipboard
           wlr-randr
           udiskie
+        ]
+      ++
+
+        # Network & remote
+        [
+          sshpass
+          rclone
+        ]
+      ++
+
+        # Fonts
+        [
+          dejavu_fonts
+          fira-code
+          jetbrains-mono
         ]
       ++
 
@@ -123,6 +146,7 @@ in
           ocaml
           opam
           lean4
+          rustup
           (agda.withPackages (p: [
             p.cubical
             p.standard-library
@@ -139,11 +163,21 @@ in
           nodejs_24
           eslint
           nodePackages.typescript-language-server
+          nodePackages.bash-language-server
         ]
       ++
 
         # Python tooling
-        [ pyright ]
+        [
+          pyright
+          pre-commit
+          ruff
+          uv
+          ty
+          jupyterlab
+          cppman
+          python3Packages.grip
+        ]
       ++
 
         # Java tooling
@@ -167,7 +201,6 @@ in
         # Build caching & debugging
         [
           mold
-          valgrind
           sccache
           redis
           gdbgui
@@ -191,7 +224,8 @@ in
           # sby
           nextpnrWithGui
           xyce-parallel
-          dfu-util
+          minicom
+          picocom
         ]
       ++
 
@@ -351,10 +385,11 @@ in
     Service = {
       Type = "simple";
       ExecStart = pkgs.writeShellScript "sshfs-sleep-handler" ''
-        /usr/bin/dbus-monitor --system "type='signal',interface='org.freedesktop.login1.Manager',member='PrepareForSleep'" |
+        /usr/bin/gdbus monitor --system \
+          --dest org.freedesktop.login1 \
+          --object-path /org/freedesktop/login1 |
         while read -r line; do
-          if echo "$line" | grep -q "boolean true"; then
-            # Going to sleep - unmount if mounted
+          if echo "$line" | grep -q "PrepareForSleep (true)"; then
             if /usr/bin/mount | grep -q " $HOME/Drive "; then
               /usr/bin/fusermount -uz "$HOME/Drive" 2>/dev/null || true
             fi
@@ -760,6 +795,54 @@ in
         recursive = true;
       };
     };
+
+  services.flatpak = {
+    remotes = [
+      {
+        name = "flathub";
+        location = "https://flathub.org/repo/flathub.flatpakrepo";
+      }
+    ];
+    packages = [
+      "org.libreoffice.LibreOffice"
+      "it.fabiodistasio.AntaresSQL"
+      "net.lutris.Lutris"
+      "org.mozilla.firefox"
+      "io.github.gtkwave.GTKWave"
+      "io.github.ra3xdh.qucs_s"
+      "org.inkscape.Inkscape"
+      "org.gnucash.GnuCash"
+      "com.usebottles.bottles"
+      "org.otfried.Ipe"
+      "com.jgraph.drawio.desktop"
+      "org.mozilla.Thunderbird"
+      "org.torproject.torbrowser-launcher"
+      "md.obsidian.Obsidian"
+      "org.zotero.Zotero"
+      "org.jdownloader.JDownloader"
+      "org.kde.labplot"
+      "fm.reaper.Reaper"
+      "net.ankiweb.Anki"
+      "engineer.atlas.Nyxt"
+      "org.videolan.VLC"
+      "net.cozic.joplin_desktop"
+      "com.valvesoftware.Steam"
+      "org.telegram.desktop"
+      "com.discordapp.Discord"
+      "com.spotify.Client"
+      "im.riot.Riot"
+      "org.signal.Signal"
+      "org.keepassxc.KeePassXC"
+      "org.gnome.meld"
+      "com.prusa3d.PrusaSlicer"
+      "org.freecad.FreeCAD"
+      "org.openscad.OpenSCAD"
+      "org.kicad.KiCad"
+      "org.gimp.GIMP"
+      "org.sqlitebrowser.sqlitebrowser"
+      "org.kde.kdenlive"
+    ];
+  };
 
   home.activation.runMyScript = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     sudo -n $HOME/bin/patchnixapps $HOME/.nix-profile/share/applications
