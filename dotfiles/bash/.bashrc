@@ -46,12 +46,6 @@ if [ -d "$HOME/.opam" ]; then
     eval $(opam env)
 fi
 
-# include pyenv
-if [ -d "$HOME/.pyenv" ]; then
-    export PYENV_ROOT="$HOME/.pyenv"
-    export PATH="$PYENV_ROOT/bin:$PATH"
-    eval "$(pyenv init -)"
-fi
 
 # source custom env vars
 if [ -f ~/.env ]; then
@@ -367,6 +361,19 @@ alias print2='lp -o sides=two-sided-long-edge'
 alias printers='lpstat -p -d'
 alias printman='xdg http://localhost:631'
 alias pomo='pomodoro'
+# Deduplicate colon-separated path variables
+_dedup_pathvar() {
+    local val="${!1}"
+    val="$(printf '%s' "$val" | awk -v RS=: -v ORS=: '!seen[$0]++')"
+    export "$1"="${val%:}"
+}
+_dedup_pathvar PATH
+_dedup_pathvar LV2_PATH
+_dedup_pathvar XDG_DATA_DIRS
+_dedup_pathvar MANPATH
+unset -f _dedup_pathvar
+
 source "$HOME/z.sh"
+GIT_PS1_SHOWUPSTREAM=""
 source "$HOME/git-prompt.sh"
 source "$HOME/jj-prompt.sh"
