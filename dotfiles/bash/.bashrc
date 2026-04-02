@@ -46,7 +46,6 @@ if [ -d "$HOME/.opam" ]; then
     eval $(opam env)
 fi
 
-
 # source custom env vars
 if [ -f ~/.env ]; then
     set -a
@@ -168,27 +167,19 @@ export HISTFILE="$HOME/.bash_history"
 export PROMPT_DIRTRIM=2
 __prompt_command() {
     local last_exit=$?
-
-    # Set terminal title to shortened cwd
     local title_dir
     title_dir=$(pwd | sed "s|$HOME|~|" | awk -F/ '{if (NF<=2) print $0; else print $(NF-1)"/"$NF}')
     printf '\033]0;%s\007' "$title_dir"
-
-    # Status indicator
     if (( last_exit == 0 )); then
         LAST_STATUS="✓"
     else
         LAST_STATUS="✗"
     fi
-
-    # Nix shell indicator
     if [[ -n "$IN_NIX_SHELL" ]]; then
         NIX_SHELL=" (nix-shell)"
     else
         NIX_SHELL=""
     fi
-
-    # VCS branch: prefer jj, fall back to git
     JJ_BRANCH=$(__jj_ps1)
     if [[ -n "$JJ_BRANCH" ]]; then
         GIT_BRANCH=""
@@ -281,14 +272,11 @@ function lsd() {
 function lsf() {
     tree -a -C -L 6 -I '.git|.jj|.venv|__pycache__|*cache|build|target' "${@:-.}" | less -R
 }
-function pb() {
-    "$@" | pbcopy
-}
 function kppw() {
     keepassxc-cli clip "$(kpdb)" "$@"
 }
 function kpusr() {
-    pb keepassxc-cli search "$(kpdb)" "$@"
+    keepassxc-cli search "$(kpdb)" "$@" | wl-copy
 }
 function jupnote() {
     killall "jupyter-lab"
@@ -339,8 +327,6 @@ alias ..='cd ../'
 alias ...='cd ../../'
 alias ....='cd ../../../'
 alias .....='cd ../../../../'
-alias pbclear='echo "" | pbcopy'
-alias pbclean='pbpaste | pbcopy'
 alias yt='yt-dlp --recode-video mp4'
 alias com='picocom -b 115200 --echo --omap=crcrlf'
 alias procs='pstree -Ap'
@@ -348,7 +334,7 @@ alias ports='netstat -pln'
 alias weather='curl wttr.in/munich'
 alias wifi='nmcli dev wifi show-password'
 alias wificonnect='nmcli --ask dev wifi connect'
-alias pwgen='pb keepassxc-cli generate --lower --upper --numeric --special --length 32'
+alias pwgen='keepassxc-cli generate --lower --upper --numeric --special --length 32 | wl-copy'
 alias mksomespace='nix-collect-garbage -d; sudo dnf clean all; flatpak uninstall --unused -y; sudo journalctl --vacuum-size=100M; pip cache purge; sudo btrfs balance start -musage=50 -dusage=50 /'
 alias mkupdates='sudo dnf update -y && sudo flatpak update -y'
 alias dotfiles='git --git-dir="$HOME/.dotfiles/.git" --work-tree="$HOME/.dotfiles"'
@@ -361,7 +347,6 @@ alias print2='lp -o sides=two-sided-long-edge'
 alias printers='lpstat -p -d'
 alias printman='xdg http://localhost:631'
 alias pomo='pomodoro'
-# Deduplicate colon-separated path variables
 _dedup_pathvar() {
     local val="${!1}"
     val="$(printf '%s' "$val" | awk -v RS=: -v ORS=: '!seen[$0]++')"
@@ -372,7 +357,6 @@ _dedup_pathvar LV2_PATH
 _dedup_pathvar XDG_DATA_DIRS
 _dedup_pathvar MANPATH
 unset -f _dedup_pathvar
-
 source "$HOME/z.sh"
 GIT_PS1_SHOWUPSTREAM=""
 source "$HOME/git-prompt.sh"

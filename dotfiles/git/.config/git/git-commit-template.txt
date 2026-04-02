@@ -1,7 +1,6 @@
 # ================================================
 # TITLE: <type>[optional scope]: <description> (max 50 chars)
 # ================================================
-Add your title here
 
 # REQUIRED TYPES:
 # - feat: A new feature (MINOR)
