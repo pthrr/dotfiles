@@ -59,7 +59,7 @@ let
 in
 {
   imports = [
-    (builtins.fetchTarball "https://github.com/gmodena/nix-flatpak/archive/latest.tar.gz")
+    (fetchTarball "https://github.com/gmodena/nix-flatpak/archive/latest.tar.gz")
   ];
 
   home = {
@@ -374,8 +374,6 @@ in
       };
     };
   };
-
-  # sccache service removed - using sccache-wrapper for dynamic local/S3 switching
 
   # Unmount SSHFS mounts before sleep to prevent freeze
   systemd.user.services.sshfs-sleep-handler = {
