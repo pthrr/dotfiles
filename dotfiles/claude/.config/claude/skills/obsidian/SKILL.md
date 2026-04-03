@@ -10,14 +10,23 @@ allowed-tools:
 
 Use the `obsidian` CLI to interact with the user's vault.
 
-## Available commands
+## Reading (direct)
 
 - `obsidian search query="..."` — search notes in the vault
 - `obsidian read path="..."` — read a note's contents
-- `obsidian create name="..." content="..."` — create a new note
-- `obsidian create name="..." template=...` — create from template
-- `obsidian daily` — open/read today's daily note
+- `obsidian daily` — read today's daily note
 - `obsidian tasks` — list tasks across the vault
+
+## Writing (staged for review)
+
+Never write directly to the vault. All changes go to a `claude/` folder inside the vault for manual review.
+
+- New note `Foo.md` → write to `claude/Foo.md`
+- Changes to existing `Bar.md` → write the full updated version to `claude/Bar.md`
+
+The user will review and manually migrate files from `claude/` into the vault.
+
+Use `obsidian create name="claude/<name>" content="..."` to stage changes.
 
 ## Workflows
 
@@ -29,11 +38,11 @@ Use the `obsidian` CLI to interact with the user's vault.
 ### Embellish a note
 1. `obsidian read path="<note>"` to get current contents
 2. Improve the note: add detail, fix structure, add links, fill gaps
-3. Write back with `obsidian create name="<note>" content="<improved>"`
+3. Stage the improved version: `obsidian create name="claude/<note>" content="<improved>"`
 
 ### Create a note
 1. Gather context from the conversation or vault
-2. `obsidian create name="<title>" content="<body>"`
+2. `obsidian create name="claude/<title>" content="<body>"`
 3. Use wikilinks `[[...]]` for internal links
 
 ## Guidelines
@@ -42,6 +51,5 @@ Use the `obsidian` CLI to interact with the user's vault.
 - Preserve existing frontmatter when embellishing notes
 - When embellishing, keep the author's voice — add substance, don't rewrite style
 - Search the vault first before creating duplicates
-- Use the daily note for quick captures and task logging
 - Keep notes terse and concise: brief definitions, named theorems, bulleted options
 - No prose, no filler, no elaboration — dense reference material over explanations
