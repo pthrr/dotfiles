@@ -48,6 +48,11 @@ echo "Target EFI:  $TARGET_EFI"
 echo "Target root: $TARGET_ROOT"
 echo ""
 
+USER_HOME=$(getent passwd "$SUDO_USER" | cut -d: -f6)
+if mountpoint -q "$USER_HOME/Drive" 2>/dev/null; then
+    fusermount -uz "$USER_HOME/Drive" && echo "Unmounted $USER_HOME/Drive"
+fi
+
 read -rp "Start backup? (y/n): " confirm
 if [[ "$confirm" != "y" ]]; then
     echo "Aborted."
@@ -77,3 +82,7 @@ run_rsync -aAXx --info=progress2 --delete /home/ "$TARGET_ROOT/home/"
 
 echo ""
 echo "Backup complete. Target is up-to-date."
+
+umount "$TARGET_EFI" 2>/dev/null && echo "Unmounted $TARGET_EFI" || echo "Warning: failed to unmount $TARGET_EFI" >&2
+umount "$TARGET_BOOT" 2>/dev/null && echo "Unmounted $TARGET_BOOT" || echo "Warning: failed to unmount $TARGET_BOOT" >&2
+umount "$TARGET_ROOT" 2>/dev/null && echo "Unmounted $TARGET_ROOT" || echo "Warning: failed to unmount $TARGET_ROOT" >&2
