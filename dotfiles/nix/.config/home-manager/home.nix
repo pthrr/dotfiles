@@ -59,7 +59,7 @@ let
 in
 {
   imports = [
-    (fetchTarball "https://github.com/gmodena/nix-flatpak/archive/latest.tar.gz")
+    "${fetchTarball "https://github.com/gmodena/nix-flatpak/archive/latest.tar.gz"}/modules/home-manager.nix"
   ];
 
   home = {
@@ -174,7 +174,7 @@ in
           ruff
           uv
           ty
-          jupyterlab
+          python3Packages.jupyterlab
           cppman
           python3Packages.grip
         ]
