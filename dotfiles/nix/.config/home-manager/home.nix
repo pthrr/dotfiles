@@ -19,6 +19,8 @@ let
     '';
   };
 
+  horseshoe = (builtins.getFlake "github:pthrr/horseshoe").packages.${builtins.currentSystem}.default;
+
   mcrl2-patched = pkgs.mcrl2.overrideAttrs (old: {
     postPatch = (old.postPatch or "") + ''
       substituteInPlace libraries/atermpp/include/mcrl2/atermpp/detail/aterm_list_iterator.h \
@@ -329,6 +331,7 @@ in
         [
           claude-code
           go-task
+          horseshoe
           wineWow64Packages.waylandFull
           openpomodoro-cli
           # ripes # temporarily disabled due to cmake build issue
@@ -845,6 +848,11 @@ in
 
   home.activation.runMyScript = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     sudo -n $HOME/bin/patchnixapps $HOME/.nix-profile/share/applications
+  '';
+
+  home.activation.obsidianCliSocket = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    RUNTIME_DIR="''${XDG_RUNTIME_DIR:-/run/user/$(id -u)}"
+    ln -sf "$RUNTIME_DIR/.flatpak/md.obsidian.Obsidian/xdg-run/.obsidian-cli.sock" "$RUNTIME_DIR/.obsidian-cli.sock"
   '';
 
   home.activation.ensureHaskellTools = lib.hm.dag.entryAfter [ "installPackages" ] ''
