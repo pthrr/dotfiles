@@ -40,7 +40,8 @@
       "Bash(find:*)",
       "Bash(nix profile list:*)",
       "WebSearch",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "Bash(last:*)"
     ],
     "deny": [],
     "ask": []

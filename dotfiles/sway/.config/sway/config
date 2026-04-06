@@ -17,7 +17,7 @@ set $up k
 set $right l
 
 # Terminal
-set $term hs
+set $term foot
 
 # Application menu
 set $menu rofi -show combi -combi-modes drun#run -modes combi

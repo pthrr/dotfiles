@@ -51,13 +51,32 @@ local function run_external_formatter(cmd, args)
         vim.notify("Formatter not found: " .. cmd, vim.log.levels.WARN)
         return
     end
-    -- Save cursor position and view
     local view = vim.fn.winsaveview()
-    -- Save buffer first so formatter operates on current content
     vim.cmd("noautocmd write")
     vim.fn.system(vim.list_extend({ cmd }, args))
-    vim.cmd("edit!")
-    -- Restore cursor position and view
+    -- Apply only changed lines to preserve buffer state (folds, marks, etc.)
+    local new_lines = vim.fn.readfile(vim.fn.expand("%:p"))
+    local cur_lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+    local first = 1
+    local max_common = math.min(#new_lines, #cur_lines)
+    while first <= max_common and new_lines[first] == cur_lines[first] do
+        first = first + 1
+    end
+    if first <= max_common or #new_lines ~= #cur_lines then
+        local last_new = #new_lines
+        local last_cur = #cur_lines
+        while last_new >= first and last_cur >= first and new_lines[last_new] == cur_lines[last_cur] do
+            last_new = last_new - 1
+            last_cur = last_cur - 1
+        end
+        local replacement = {}
+        for i = first, last_new do
+            replacement[#replacement + 1] = new_lines[i]
+        end
+        vim.api.nvim_buf_set_lines(0, first - 1, last_cur, false, replacement)
+        vim.api.nvim_exec_autocmds("TextChanged", { buffer = 0 })
+    end
+    vim.bo.modified = false
     vim.fn.winrestview(view)
 end
 
@@ -849,7 +868,6 @@ do
         doc = { ns = vim.api.nvim_create_namespace("hide_comments_doc"), key = "comments_hide_doc" },
         block = { ns = vim.api.nvim_create_namespace("hide_comments_block"), key = "comments_hide_block" },
     }
-    local ws_ns = vim.api.nvim_create_namespace("hide_comments_ws")
     local fold_lines_by_buf = {}
 
     local function classify_comment(node, bufnr)
@@ -875,7 +893,6 @@ do
         for _, cat in pairs(categories) do
             vim.api.nvim_buf_clear_namespace(bufnr, cat.ns, 0, -1)
         end
-        vim.api.nvim_buf_clear_namespace(bufnr, ws_ns, 0, -1)
 
         local fold_lines = {}
         fold_lines_by_buf[bufnr] = fold_lines
@@ -917,11 +934,7 @@ do
                     local e_col = row == er and ec or #line
                     local before = line:sub(1, s_col)
                     if before:match("^%s*$") then
-                        -- Comment-only line: conceal entire line, mark for folding
-                        vim.api.nvim_buf_set_extmark(bufnr, ws_ns, row, 0, {
-                            end_col = e_col,
-                            conceal = "…",
-                        })
+                        -- Comment-only line: fold hides it, no conceal needed
                         fold_lines[row + 1] = true
                     else
                         -- Inline comment: conceal just the comment part
@@ -1026,34 +1039,19 @@ do
                 buffer = args.buf,
                 callback = function()
                     refresh(args.buf)
-                    if vim.wo.foldmethod == "expr" then
-                        vim.wo.foldmethod = "expr"
-                    end
                 end,
             })
 
             -- Arrow keys / h,l open and close comment folds
             local function open_fold_or_right()
                 if vim.fn.foldclosed(".") ~= -1 then
-                    local fs = vim.fn.foldclosed(".")
-                    local fe = vim.fn.foldclosedend(".")
                     vim.cmd("normal! zo")
-                    -- Clear conceal extmarks so the revealed lines show actual text
-                    local bufnr = vim.api.nvim_get_current_buf()
-                    for _, ns in ipairs({ ws_ns, categories.line.ns, categories.doc.ns, categories.block.ns }) do
-                        local marks = vim.api.nvim_buf_get_extmarks(bufnr, ns, { fs - 1, 0 }, { fe - 1, -1 }, {})
-                        for _, mark in ipairs(marks) do
-                            vim.api.nvim_buf_del_extmark(bufnr, ns, mark[1])
-                        end
-                    end
                 else
                     vim.cmd("normal! l")
                 end
             end
             local function close_fold_or_left()
                 if vim.fn.col(".") == 1 and vim.fn.foldlevel(".") > 0 and vim.fn.foldclosed(".") == -1 then
-                    -- Re-apply conceal extmarks before closing
-                    refresh(vim.api.nvim_get_current_buf())
                     vim.cmd("normal! zc")
                 else
                     vim.cmd("normal! h")
