@@ -140,8 +140,9 @@ export XDG_VIDEOS_DIR="$HOME/Video"
 export SHELL='/bin/bash'
 export EDITOR='nvim'
 export BROWSER='firefox'
-export MAILCLIENT='thunderbird'
-export TERMINAL='hs'
+export MAILCLIENT='meli'
+export CALENDAR='calcurse'
+export TERMINAL='foot'
 export PDFVIEWER='zathura'
 export IMAGEVIEWER='nsxiv'
 export MEDIAPLAYER='vlc'
@@ -348,6 +349,8 @@ alias print2='lp -o sides=two-sided-long-edge'
 alias printers='lpstat -p -d'
 alias printman='xdg http://localhost:631'
 alias pomo='pomodoro'
+alias cal='calcurse'
+alias mail='meli'
 _dedup_pathvar() {
     local val="${!1}"
     val="$(printf '%s' "$val" | awk -v RS=: -v ORS=: '!seen[$0]++')"

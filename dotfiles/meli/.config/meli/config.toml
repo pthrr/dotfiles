@@ -1,0 +1,14 @@
+include("accounts.toml")
+
+[pager]
+pager_context = 0
+sticky_headers = true
+
+[notifications]
+script = "notify-send"
+
+[composing]
+editor_command = '$EDITOR +/^$'
+
+[terminal]
+theme = "dark"

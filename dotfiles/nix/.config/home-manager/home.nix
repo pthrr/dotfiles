@@ -101,6 +101,7 @@ in
           ripgrep
           fd
           calcurse
+          meli
         ]
       ++
 
@@ -771,6 +772,7 @@ in
       "vifm"
       "nvim"
       "calcurse"
+      "meli"
     ] mkConfigDir
     // {
       "plasma-workspace/env" = {
