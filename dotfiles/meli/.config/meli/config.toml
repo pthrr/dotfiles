@@ -10,22 +10,44 @@ script = "notify-send"
 [composing]
 editor_command = '$EDITOR +/^$'
 
+[shortcuts.general]
+scroll_up = 'k'
+scroll_down = 'j'
+scroll_left = 'h'
+scroll_right = 'l'
+next_tab = 'T'
+enter_command_mode = ':'
+quit = 'q'
+
 [shortcuts.listing]
-prev_page = "PageUp"
-next_page = "PageDown"
-prev_mailbox = 'K'
+scroll_up = 'k'
+scroll_down = 'j'
+next_page = 'C-f'
+prev_page = 'C-b'
 next_mailbox = 'J'
-prev_account = 'h'
+prev_mailbox = 'K'
 next_account = 'l'
+prev_account = 'h'
+open_entry = "Enter"
+exit_entry = 'q'
 new_mail = 'm'
 set_seen = 'n'
-exit_entry = 'i'
+search = '/'
+select_entry = 'V'
+focus_left = "Left"
+focus_right = "Right"
 
 [shortcuts.pager]
 scroll_up = 'k'
 scroll_down = 'j'
-page_up = 'C-u'
-page_down = 'C-d'
+page_up = 'C-b'
+page_down = 'C-f'
+
+[shortcuts.composing]
+edit = 'e'
+send_mail = 's'
+scroll_up = 'k'
+scroll_down = 'j'
 
 [terminal]
 use_color = true
