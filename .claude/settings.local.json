@@ -41,7 +41,8 @@
       "Bash(nix profile list:*)",
       "WebSearch",
       "Bash(ls:*)",
-      "Bash(last:*)"
+      "Bash(last:*)",
+      "WebFetch(domain:raw.githubusercontent.com)"
     ],
     "deny": [],
     "ask": []

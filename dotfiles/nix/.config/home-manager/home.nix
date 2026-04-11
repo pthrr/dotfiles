@@ -100,6 +100,7 @@ in
           fzf
           ripgrep
           fd
+          calcurse
         ]
       ++
 
@@ -769,6 +770,7 @@ in
       "tmux"
       "vifm"
       "nvim"
+      "calcurse"
     ] mkConfigDir
     // {
       "plasma-workspace/env" = {
