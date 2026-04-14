@@ -528,6 +528,24 @@ later(function()
     require("neogit").setup({})
 end)
 
+-- -----------------------------------------------------------------------------
+-- Copilot
+-- -----------------------------------------------------------------------------
+
+now(function()
+    add({ source = "github/copilot.vim" })
+end)
+
+later(function()
+    vim.g.copilot_no_tab_map = true
+    vim.keymap.set("i", "<M-l>", 'copilot#Accept("")', { expr = true, replace_keycodes = false })
+    vim.keymap.set("i", "<M-w>", "<Plug>(copilot-accept-word)")
+    vim.keymap.set("i", "<M-j>", "<Plug>(copilot-accept-line)")
+    vim.keymap.set("i", "<M-]>", "<Plug>(copilot-next)")
+    vim.keymap.set("i", "<M-[>", "<Plug>(copilot-previous)")
+    vim.keymap.set("i", "<M-e>", "<Plug>(copilot-dismiss)")
+end)
+
 -- ==============================================================================
 -- 6. EDITOR SETTINGS
 -- ==============================================================================
