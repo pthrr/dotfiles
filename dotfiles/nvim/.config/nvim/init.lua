@@ -533,25 +533,17 @@ end)
 -- -----------------------------------------------------------------------------
 
 now(function()
-    add({ source = "zbirenbaum/copilot.lua" })
+    add({ source = "github/copilot.vim" })
 end)
 
 later(function()
-    require("copilot").setup({
-        suggestion = {
-            enabled = true,
-            auto_trigger = false,
-            keymap = {
-                accept = "<M-l>",
-                accept_word = "<M-w>",
-                accept_line = "<M-j>",
-                next = "<M-]>",
-                prev = "<M-[>",
-                dismiss = "<M-e>",
-            },
-        },
-        panel = { enabled = false },
-    })
+    vim.g.copilot_no_tab_map = true
+    vim.keymap.set("i", "<M-l>", 'copilot#Accept("")', { expr = true, replace_keycodes = false })
+    vim.keymap.set("i", "<M-w>", "<Plug>(copilot-accept-word)")
+    vim.keymap.set("i", "<M-j>", "<Plug>(copilot-accept-line)")
+    vim.keymap.set("i", "<M-]>", "<Plug>(copilot-next)")
+    vim.keymap.set("i", "<M-[>", "<Plug>(copilot-previous)")
+    vim.keymap.set("i", "<M-e>", "<Plug>(copilot-dismiss)")
 end)
 
 -- ==============================================================================
