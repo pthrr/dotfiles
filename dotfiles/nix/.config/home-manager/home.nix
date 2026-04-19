@@ -21,12 +21,11 @@ let
 
   horseshoe = (builtins.getFlake "github:pthrr/horseshoe").packages.${builtins.currentSystem}.default;
 
-  mcrl2-patched = pkgs.mcrl2.overrideAttrs (old: {
-    postPatch = (old.postPatch or "") + ''
-      substituteInPlace libraries/atermpp/include/mcrl2/atermpp/detail/aterm_list_iterator.h \
-        --replace-fail 'other.position' 'other.m_position'
-    '';
-  });
+  xyceParallelNoCheck = pkgs.xyce-parallel.override {
+    enableDocs = false;
+    enableTests = false;
+  };
+
 
   defaultUserName = "pthrr";
   defaultUserEmail = "pthrr@posteo.de";
@@ -166,8 +165,8 @@ in
           bun
           nodejs_24
           eslint
-          nodePackages.typescript-language-server
-          nodePackages.bash-language-server
+          typescript-language-server
+          bash-language-server
         ]
       ++
 
@@ -199,6 +198,12 @@ in
         ]
       ++
 
+        # AI tooling
+        [
+          github-copilot-cli
+        ]
+      ++
+
         # Containers & Kubernetes
         # [ kind minikube helm k3s k3d crun envsubst ] ++
 
@@ -227,7 +232,7 @@ in
           # pcb2gcode
           # sby
           nextpnrWithGui
-          xyce-parallel
+          xyceParallelNoCheck
           minicom
           picocom
         ]
@@ -263,7 +268,7 @@ in
           stylua
           lua-language-server
           cmake-format
-          nodePackages.prettier
+          prettier
         ]
       ++
 
@@ -286,8 +291,8 @@ in
           cue
           cuelsp
           cuetools
-          mcrl2-patched
-          nuXmv
+          mcrl2
+          nuxmv
           z3
           tlaplus
         ]
@@ -581,6 +586,7 @@ in
     enable = true;
     package = pkgs.gitFull;
     lfs.enable = true;
+    signing.format = "openpgp";
     settings = {
       user = {
         name = commonUser.name;
@@ -748,6 +754,8 @@ in
 
   programs.neovim = {
     enable = true;
+    withRuby = true;
+    withPython3 = true;
     plugins = with pkgs.vimPlugins; [
       nvim-treesitter.withAllGrammars
       plenary-nvim

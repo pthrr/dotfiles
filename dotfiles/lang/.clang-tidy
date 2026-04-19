@@ -1,5 +1,5 @@
 Checks: >
-  -,
+  -*,
   readability-*,
   portability-*,
   modernize-*,
@@ -18,6 +18,11 @@ CheckOptions:
   - key: readability-identifier-naming.ConstantPrefix
     value: ""
 
+  - key: readability-identifier-naming.ConstexprVariableCase
+    value: camelBack
+
+  - key: readability-identifier-naming.GlobalConstantCase
+    value: UPPER_CASE
   - key: readability-identifier-naming.GlobalConstantPrefix
     value: ""
   - key: readability-identifier-naming.GlobalVariablePrefix
@@ -26,8 +31,10 @@ CheckOptions:
     value: "s_"
   - key: readability-identifier-naming.StaticVariableCase
     value: lower_case
-  - key: readability-identifier-naming.LocalStaticVariablePrefix
-    value: "c_"
+  - key: readability-identifier-naming.StaticConstantCase
+    value: UPPER_CASE
+  - key: readability-identifier-naming.StaticConstantPrefix
+    value: "s_"
 
   - key: readability-identifier-naming.ClassCase
     value: CamelCase

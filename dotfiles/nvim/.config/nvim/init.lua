@@ -43,19 +43,40 @@ local add, now, later = MiniDeps.add, MiniDeps.now, MiniDeps.later
 -- 3. HELPER FUNCTIONS
 -- ==============================================================================
 
---- Runs an external formatter command synchronously
+--- Runs an external formatter command synchronously.
+--- Formats via a temp file so the original is never touched — Neovim's own
+--- :w writes the formatted buffer, avoiding mtime mismatch warnings.
 --- @param cmd string The command to execute
---- @param args table Command arguments
+--- @param args table Command arguments (must include the file path to format)
 local function run_external_formatter(cmd, args)
     if vim.fn.executable(cmd) ~= 1 then
         vim.notify("Formatter not found: " .. cmd, vim.log.levels.WARN)
         return
     end
     local view = vim.fn.winsaveview()
-    vim.cmd("noautocmd write")
-    vim.fn.system(vim.list_extend({ cmd }, args))
+    local file = vim.fn.expand("%:p")
+    local dir = vim.fn.fnamemodify(file, ":h")
+    local ext = vim.fn.fnamemodify(file, ":e")
+    local tmpfile = dir .. "/.nvim_fmt_" .. vim.fn.getpid() .. "." .. ext
+
+    vim.fn.writefile(vim.api.nvim_buf_get_lines(0, 0, -1, false), tmpfile)
+
+    -- Swap the real file path for the temp file in the formatter args
+    local tmp_args = {}
+    for _, arg in ipairs(args) do
+        if vim.fn.fnamemodify(arg, ":p") == file then
+            tmp_args[#tmp_args + 1] = tmpfile
+        else
+            tmp_args[#tmp_args + 1] = arg
+        end
+    end
+
+    vim.fn.system(vim.list_extend({ cmd }, tmp_args))
+
+    local new_lines = vim.fn.readfile(tmpfile)
+    vim.fn.delete(tmpfile)
+
     -- Apply only changed lines to preserve buffer state (folds, marks, etc.)
-    local new_lines = vim.fn.readfile(vim.fn.expand("%:p"))
     local cur_lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
     local first = 1
     local max_common = math.min(#new_lines, #cur_lines)
@@ -76,7 +97,6 @@ local function run_external_formatter(cmd, args)
         vim.api.nvim_buf_set_lines(0, first - 1, last_cur, false, replacement)
         vim.api.nvim_exec_autocmds("TextChanged", { buffer = 0 })
     end
-    vim.bo.modified = false
     vim.fn.winrestview(view)
 end
 
@@ -180,15 +200,25 @@ now(function()
         rust_analyzer = {
             cmd = { "rust-analyzer" },
             filetypes = { "rust" },
-            root_markers = {
-                "MODULE.bazel",
-                "WORKSPACE",
-                "WORKSPACE.bazel",
-                "BUILD.bazel",
-                "Cargo.toml",
-                ".git",
-                ".jj",
-            },
+            root_dir = function(bufnr)
+                local root = vim.fs.root(bufnr, {
+                    "MODULE.bazel", "WORKSPACE", "WORKSPACE.bazel",
+                    "BUILD.bazel", "Cargo.toml", ".git", ".jj",
+                })
+                if root then
+                    return root
+                end
+                local bufname = vim.api.nvim_buf_get_name(bufnr)
+                if bufname == "" then
+                    return nil
+                end
+                local fallback = vim.fn.fnamemodify(bufname, ":p:h")
+                vim.notify(
+                    "rust-analyzer: no workspace root found, falling back to " .. fallback,
+                    vim.log.levels.WARN
+                )
+                return fallback
+            end,
             settings = {
                 ["rust-analyzer"] = {
                     check = {
@@ -964,6 +994,17 @@ do
                 end
             end
         end
+
+        -- Never fold isolated single-line comments; only fold consecutive runs
+        local to_remove = {}
+        for lnum in pairs(fold_lines) do
+            if not fold_lines[lnum - 1] and not fold_lines[lnum + 1] then
+                to_remove[#to_remove + 1] = lnum
+            end
+        end
+        for _, lnum in ipairs(to_remove) do
+            fold_lines[lnum] = nil
+        end
     end
 
     function _G.RustCommentFoldExpr(lnum)
@@ -994,7 +1035,7 @@ do
         end
         if any_hidden then
             vim.wo.conceallevel = 2
-            vim.wo.concealcursor = "vic"
+            vim.wo.concealcursor = "vc"
             vim.wo.foldenable = true
             vim.wo.foldminlines = 0
             vim.wo.foldmethod = "expr"

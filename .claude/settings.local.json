@@ -44,7 +44,8 @@
       "Bash(last:*)",
       "WebFetch(domain:raw.githubusercontent.com)",
       "WebFetch(domain:manpages.ubuntu.com)",
-      "Bash(meli:*)"
+      "Bash(git log:*)",
+      "Bash(nix search:*)"
     ],
     "deny": [],
     "ask": []
