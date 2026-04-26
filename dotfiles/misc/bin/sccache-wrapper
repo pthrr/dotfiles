@@ -8,6 +8,7 @@ if timeout 2 bash -c "</dev/tcp/${S3_HOST}/${S3_PORT}" 2>/dev/null; then
     echo "sccache: Using remote (${S3_HOST}:${S3_PORT})" >&2
     export SCCACHE_BUCKET=sccache
     export SCCACHE_ENDPOINT="http://${S3_HOST}:${S3_PORT}"
+    export SCCACHE_S3_USE_SSL=false
     export SCCACHE_REGION=us-east-1
     export AWS_ACCESS_KEY_ID=sccache
     export AWS_SECRET_ACCESS_KEY=sccache

@@ -19,8 +19,6 @@ let
     '';
   };
 
-  horseshoe = (builtins.getFlake "github:pthrr/horseshoe").packages.${builtins.currentSystem}.default;
-
   xyceParallelNoCheck = pkgs.xyce-parallel.override {
     enableDocs = false;
     enableTests = false;
@@ -338,7 +336,6 @@ in
         [
           claude-code
           go-task
-          horseshoe
           wineWow64Packages.waylandFull
           openpomodoro-cli
           # ripes # temporarily disabled due to cmake build issue
