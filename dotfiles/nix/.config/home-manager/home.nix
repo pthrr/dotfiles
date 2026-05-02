@@ -170,7 +170,6 @@ in
 
         # Python tooling
         [
-          pyright
           pre-commit
           ruff
           uv
@@ -365,10 +364,6 @@ in
       };
       "bin" = {
         source = ../../../misc/bin;
-        recursive = true;
-      };
-      "Vorlagen/snippets" = {
-        source = ../../../nvim/Vorlagen/snippets;
         recursive = true;
       };
       "Vorlagen/slides" = {

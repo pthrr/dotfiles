@@ -7,7 +7,11 @@ Checks: >
   concurrency-*,
   performance-*,
   misc-*,
-  clang-analyzer-*
+  clang-analyzer-*,
+  -readability-magic-numbers,
+  -readability-named-parameter,
+  -modernize-use-designated-initializers,
+  -misc-non-private-member-variables-in-classes,
 
 CheckOptions:
   - key: readability-identifier-naming.VariableCase
@@ -20,6 +24,8 @@ CheckOptions:
 
   - key: readability-identifier-naming.ConstexprVariableCase
     value: camelBack
+  - key: readability-identifier-naming.ConstexprVariableIgnoredRegexp
+    value: "^([ijkmnptuvxyzIJKMNPTUVXYZ]|it|id|fd|ok|db|io|rx|tx|IT|ID|FD|OK|DB|IO|RX|TX)$"
 
   - key: readability-identifier-naming.GlobalConstantCase
     value: UPPER_CASE
@@ -53,3 +59,16 @@ CheckOptions:
     value: lower_case
   - key: readability-identifier-naming.PrivateMemberPrefix
     value: "m_"
+  - key: readability-identifier-naming.VariableIgnoredRegexp
+    value: "^([ijkmnptuvxyzIJKMNPTUVXYZ]|it|id|fd|ok|db|io|rx|tx|IT|ID|FD|OK|DB|IO|RX|TX)$"
+  - key: readability-identifier-naming.StaticVariableIgnoredRegexp
+    value: "^([ijkmnptuvxyzIJKMNPTUVXYZ]|it|id|fd|ok|db|io|rx|tx|IT|ID|FD|OK|DB|IO|RX|TX)$"
+  - key: readability-identifier-naming.GlobalVariableIgnoredRegexp
+    value: "^([ijkmnptuvxyzIJKMNPTUVXYZ]|it|id|fd|ok|db|io|rx|tx|IT|ID|FD|OK|DB|IO|RX|TX)$"
+  - key: readability-identifier-naming.MemberIgnoredRegexp
+    value: "^([ijkmnptuvxyzIJKMNPTUVXYZ]|it|id|fd|ok|db|io|rx|tx|IT|ID|FD|OK|DB|IO|RX|TX)$"
+
+  - key: readability-identifier-length.IgnoredVariableNames
+    value: "^[ijkmnptuvxyzIJKMNPTUVXYZ]$|^(it|id|fd|ok|db|io|rx|tx|IT|ID|FD|OK|DB|IO|RX|TX)$"
+  - key: readability-identifier-length.IgnoredParameterNames
+    value: "^[ijkmnptuvxyzIJKMNPTUVXYZ]$|^(it|id|fd|ok|db|io|rx|tx|IT|ID|FD|OK|DB|IO|RX|TX)$"

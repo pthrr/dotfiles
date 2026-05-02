@@ -1,30 +1,6 @@
 # Global Clippy configuration
 # This file configures custom lints for all Rust projects
 # Based on: https://www.schneems.com/2025/11/19/find-accidental-code-usage-with-a-custom-clippytoml/
-#
-# Lint levels are set in .cargo/config.toml via rustflags
-
-# =============================================================================
-# Thresholds
-# =============================================================================
-
-# Cognitive complexity threshold (default: 25)
-cognitive-complexity-threshold = 25
-
-# Too many arguments threshold (default: 7)
-too-many-arguments-threshold = 7
-
-# Too many lines threshold (default: 100)
-too-many-lines-threshold = 100
-
-# Type complexity threshold (default: 250, raised for WDF nested types)
-type-complexity-threshold = 500
-
-# Minimum identifier length - ban single char names
-min-ident-chars-threshold = 2
-
-# MSRV - minimum supported Rust version
-msrv = "1.84.0"
 
 # =============================================================================
 # Disallowed methods

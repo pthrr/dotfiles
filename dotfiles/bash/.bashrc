@@ -114,10 +114,6 @@ if [ ! -d "$HOME/Vorlagen/slides" ]; then
     mkdir -p "$HOME/Vorlagen/slides" 2>/dev/null
 fi
 
-if [ ! -d "$HOME/Vorlagen/snippets" ]; then
-    mkdir -p "$HOME/Vorlagen/snippets" 2>/dev/null
-fi
-
 if [ ! -d "$HOME/Audio" ]; then
     mkdir -p "$HOME/Audio" 2>/dev/null
 fi

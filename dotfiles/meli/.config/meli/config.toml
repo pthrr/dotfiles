@@ -50,30 +50,4 @@ scroll_up = 'k'
 scroll_down = 'j'
 
 [terminal]
-use_color = true
-theme = "terminal"
-
-[terminal.themes.terminal]
-"theme_default" = { fg = "Default", bg = "Default" }
-"status.bar" = { fg = "Default", bg = "Default", attrs = "Bold" }
-"status.command_bar" = { fg = "Default", bg = "Default" }
-"status.notification" = { fg = "Default", bg = "Default", attrs = "Bold" }
-"tab.focused" = { fg = "Default", bg = "Default", attrs = "Bold" }
-"tab.unfocused" = { fg = "Default", bg = "Default" }
-"tab.bar" = { fg = "Default", bg = "Default" }
-"highlight" = { fg = "Default", bg = "Default", attrs = "Reverse" }
-"mail.sidebar" = { fg = "Default", bg = "Default" }
-"mail.sidebar_highlighted" = { fg = "Default", bg = "Default", attrs = "Reverse" }
-"mail.sidebar_unread_count" = { fg = "Default", bg = "Default", attrs = "Bold" }
-"mail.view.headers" = { fg = "Default", bg = "Default" }
-"mail.view.headers_names" = { fg = "Default", bg = "Default", attrs = "Bold" }
-"mail.view.headers_area" = { fg = "Default", bg = "Default" }
-"mail.view.body" = { fg = "Default", bg = "Default" }
-"mail.listing.compact.even" = { fg = "Default", bg = "Default" }
-"mail.listing.compact.odd" = { fg = "Default", bg = "Default" }
-"mail.listing.compact.even_unseen" = { fg = "Default", bg = "Default", attrs = "Bold" }
-"mail.listing.compact.odd_unseen" = { fg = "Default", bg = "Default", attrs = "Bold" }
-"mail.listing.compact.even_highlighted" = { fg = "Default", bg = "Default", attrs = "Reverse" }
-"mail.listing.compact.odd_highlighted" = { fg = "Default", bg = "Default", attrs = "Reverse" }
-"mail.listing.compact.even_selected" = { fg = "Default", bg = "Default", attrs = "Underline" }
-"mail.listing.compact.odd_selected" = { fg = "Default", bg = "Default", attrs = "Underline" }
+use_color = false

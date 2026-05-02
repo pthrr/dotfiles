@@ -147,22 +147,8 @@ now(function()
 
     -- Language servers configuration
     local servers = {
-        pyright = {
-            cmd = { "pyright-langserver", "--stdio" },
-            filetypes = { "python" },
-            root_markers = {
-                "MODULE.bazel",
-                "WORKSPACE",
-                "WORKSPACE.bazel",
-                "BUILD.bazel",
-                "pyproject.toml",
-                "setup.py",
-                ".git",
-                ".jj",
-            },
-        },
         ty = {
-            cmd = { "ty" },
+            cmd = { "ty", "server" },
             filetypes = { "python" },
             root_markers = {
                 "MODULE.bazel",
