@@ -24,6 +24,56 @@ let
     enableTests = false;
   };
 
+  sourcegraphAmp =
+    let
+      version = "0.0.1778402002-g32364f";
+    in
+    if pkgs.stdenv.hostPlatform.system == "x86_64-linux" then
+      pkgs.stdenvNoCC.mkDerivation {
+        pname = "sourcegraph-amp";
+        inherit version;
+        phases = [ "installPhase" ];
+        ampX64 = pkgs.fetchurl {
+          url = "https://static.ampcode.com/cli/${version}/amp-linux-x64";
+          hash = "sha256-EM4BW42aR8gxv+jPobxWtuMHL6dNFHhddGmGrUFVxew=";
+        };
+        ampX64Baseline = pkgs.fetchurl {
+          url = "https://static.ampcode.com/cli/${version}/amp-linux-x64-baseline";
+          hash = "sha256-5xh+f6jzCKJlv137AmJO/6XnQ/wJ39gCnh3NRbzj4tg=";
+        };
+        installPhase = ''
+          install -d "$out/bin" "$out/libexec"
+          install -Dm755 "$ampX64" "$out/libexec/amp-linux-x64"
+          install -Dm755 "$ampX64Baseline" "$out/libexec/amp-linux-x64-baseline"
+
+          cat > "$out/bin/amp" <<EOF
+          #!${pkgs.runtimeShell}
+          if grep -q avx2 /proc/cpuinfo 2>/dev/null; then
+            exec "$out/libexec/amp-linux-x64" "\$@"
+          else
+            exec "$out/libexec/amp-linux-x64-baseline" "\$@"
+          fi
+          EOF
+
+          chmod +x "$out/bin/amp"
+        '';
+      }
+    else if pkgs.stdenv.hostPlatform.system == "aarch64-linux" then
+      pkgs.stdenvNoCC.mkDerivation {
+        pname = "sourcegraph-amp";
+        inherit version;
+        phases = [ "installPhase" ];
+        src = pkgs.fetchurl {
+          url = "https://static.ampcode.com/cli/${version}/amp-linux-arm64";
+          hash = "sha256-R6f0QF4MNj8Apl7E1ugcg8rQaZCOfc0MhdMCQCV6Rwo=";
+        };
+        installPhase = ''
+          install -Dm755 "$src" "$out/bin/amp"
+        '';
+      }
+    else
+      throw "sourcegraphAmp is only packaged for Linux systems in this Home Manager config.";
+
 
   defaultUserName = "pthrr";
   defaultUserEmail = "pthrr@posteo.de";
@@ -197,7 +247,8 @@ in
 
         # AI tooling
         [
-          github-copilot-cli
+          sourcegraphAmp
+          claude-code
         ]
       ++
 
@@ -333,7 +384,6 @@ in
 
         # Other
         [
-          claude-code
           go-task
           wineWow64Packages.waylandFull
           openpomodoro-cli
@@ -803,6 +853,10 @@ in
     };
 
   services.flatpak = {
+    enable = false;
+    uninstallUnmanaged = false;
+    uninstallUnused = false;
+    update.onActivation = false;
     remotes = [
       {
         name = "flathub";
@@ -828,6 +882,7 @@ in
       "org.jdownloader.JDownloader"
       "org.kde.labplot"
       "fm.reaper.Reaper"
+      "ar.com.tuxguitar.TuxGuitar"
       "net.ankiweb.Anki"
       "engineer.atlas.Nyxt"
       "org.videolan.VLC"

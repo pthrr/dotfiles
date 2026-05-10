@@ -545,21 +545,61 @@ later(function()
 end)
 
 -- -----------------------------------------------------------------------------
--- Copilot
+-- Amp
 -- -----------------------------------------------------------------------------
 
 now(function()
-    add({ source = "github/copilot.vim" })
+    add({ source = "sourcegraph/amp.nvim" })
 end)
 
 later(function()
-    vim.g.copilot_no_tab_map = true
-    vim.keymap.set("i", "<M-l>", 'copilot#Accept("")', { expr = true, replace_keycodes = false })
-    vim.keymap.set("i", "<M-w>", "<Plug>(copilot-accept-word)")
-    vim.keymap.set("i", "<M-j>", "<Plug>(copilot-accept-line)")
-    vim.keymap.set("i", "<M-]>", "<Plug>(copilot-next)")
-    vim.keymap.set("i", "<M-[>", "<Plug>(copilot-previous)")
-    vim.keymap.set("i", "<M-e>", "<Plug>(copilot-dismiss)")
+    require("amp").setup({
+        auto_start = true,
+        log_level = "info",
+    })
+
+    local amp_message = require("amp.message")
+
+    vim.api.nvim_create_user_command("AmpSend", function(opts)
+        if opts.args == "" then
+            vim.notify("Please provide a message to send", vim.log.levels.WARN)
+            return
+        end
+        amp_message.send_message(opts.args)
+    end, { nargs = "*", desc = "Send a message to Amp" })
+
+    vim.api.nvim_create_user_command("AmpSendBuffer", function()
+        local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+        amp_message.send_message(table.concat(lines, "\n"))
+    end, { desc = "Send current buffer to Amp" })
+
+    vim.api.nvim_create_user_command("AmpPromptSelection", function(opts)
+        local lines = vim.api.nvim_buf_get_lines(0, opts.line1 - 1, opts.line2, false)
+        amp_message.send_to_prompt(table.concat(lines, "\n"))
+    end, { range = true, desc = "Add selected text to Amp prompt" })
+
+    vim.api.nvim_create_user_command("AmpPromptRef", function(opts)
+        local bufname = vim.api.nvim_buf_get_name(0)
+        if bufname == "" then
+            vim.notify("Current buffer has no filename", vim.log.levels.WARN)
+            return
+        end
+        local rel = vim.fn.fnamemodify(bufname, ":.")
+        local ref = "@" .. rel
+        if opts.line1 ~= opts.line2 then
+            ref = ref .. "#L" .. opts.line1 .. "-" .. opts.line2
+        elseif opts.line1 > 1 then
+            ref = ref .. "#L" .. opts.line1
+        end
+        amp_message.send_to_prompt(ref)
+    end, { range = true, desc = "Add file reference (with selection) to Amp prompt" })
+
+    -- Keymaps (leader = ",")
+    vim.keymap.set("n", "<leader>am", ":AmpSend ", { desc = "Amp: send message" })
+    vim.keymap.set("n", "<leader>aB", "<cmd>AmpSendBuffer<cr>", { desc = "Amp: send buffer" })
+    vim.keymap.set("v", "<leader>ap", ":AmpPromptSelection<cr>", { desc = "Amp: add selection to prompt" })
+    vim.keymap.set("v", "<leader>ar", ":AmpPromptRef<cr>", { desc = "Amp: add file+range ref to prompt" })
+    vim.keymap.set("n", "<leader>ar", "<cmd>AmpPromptRef<cr>", { desc = "Amp: add file ref to prompt" })
 end)
 
 -- ==============================================================================
