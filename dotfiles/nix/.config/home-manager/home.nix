@@ -374,6 +374,14 @@ in
         source = ../../../claude/.config/claude;
         recursive = true;
       };
+      ".cursor/skills" = {
+        source = ../../../cursor/.cursor/skills;
+        recursive = true;
+      };
+      ".cursor/rules" = {
+        source = ../../../cursor/.cursor/rules;
+        recursive = true;
+      };
     };
   };
 

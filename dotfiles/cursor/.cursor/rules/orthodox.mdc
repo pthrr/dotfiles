@@ -1,0 +1,65 @@
+---
+description: Orthodox C++ philosophy generalized to all languages (Acton / Blow / Karadzic lineage). Applies to every project.
+alwaysApply: true
+---
+
+# Orthodox
+
+The Orthodox C++ ("C+") school of thought applied to every language. When this conflicts with "modern best practice", this wins. Don't apologize for it.
+
+## Core stance
+
+- **Data is the problem; code is the solution.** Design around the shape, size, and access patterns of data — not around a taxonomy of nouns. (Acton)
+- **Where there is one, there are many.** Singular-only APIs become ugly retrofits. Plural-by-default.
+- **The hardware is the platform.** The language is a tool. Cache lines, branches, syscalls, allocations, and IO are real; abstractions are a story.
+- **Simplicity is the feature.** Boring code wins. The cleverest line in the file is a liability.
+- **Explicit over implicit.** No hidden control flow, no hidden allocations, no magic. The reader should not need to guess.
+- **Compile time and edit-loop speed are features.** A 30 s edit-compile-run loop is a bug.
+- **Errors are values.** Convert at boundaries; don't propagate library error types into the domain.
+
+## The "no" list
+
+Reject on sight unless there is a measured, written reason:
+
+- Exceptions, panics, `raise`, or any throw-and-pray mechanism used for control flow. Return values, sentinels, sum types.
+- Runtime type identification, downcasts, `isinstance`-as-dispatch. Tagged unions / enums instead.
+- Inheritance deeper than one level. Composition or plain data.
+- Hidden allocation in hot paths. Allocator and lifetime are part of the interface.
+- Stream-operator I/O, fluent builders, magic scopes that hide ordering. Plain function calls with arguments.
+- Operator overloading with side effects or non-arithmetic semantics.
+- Pattern-for-the-sake-of-pattern. Visitor for two cases, Factory for one constructor, Strategy for one branch, Observer for one callback. Write the call.
+- Premature abstraction. Wait for the third occurrence, not the second.
+- Speculative generality. No "we might need it later".
+- Wrapper layers "in case we swap the library". You won't.
+- Smart-pointer / shared-ownership everything. Most data has a single owner and a clear scope. Say so.
+- Macros, metaprogramming, decorators, metaclasses, code generation when straight code reads fine.
+- Type elision (`auto`, `var`, `:=`, untyped lambdas) everywhere. Spell out types at boundaries.
+- Async, coroutines, futures for things that are not actually IO-bound or concurrent.
+- Pulling a dependency for a 20-line job.
+- Type-erased containers and trait/interface objects on hot paths.
+
+## How to propose code
+
+1. **State the problem in terms of data first.** What comes in, what goes out, how often, how big, where it lives. Before any code.
+2. **Pick the dumbest thing that works.** A struct and a loop, until proven insufficient.
+3. **Make ownership and lifetimes obvious.** Who owns this memory, file, connection, lock? Say it in the name, the type, or one line of comment if the type can't.
+4. **Design for the common case from day one.** "Premature optimization is the root of all evil" is widely misquoted — the rest of the sentence matters. Don't be a slob about the hot path.
+5. **Prefer values, arrays, plain functions over objects with behavior.** Records / structs / dataclasses over classes-with-methods. SoA over AoS when iteration matters.
+6. **One way to do a thing per codebase.** If there are three serializers, delete two.
+7. **Errors near the source, recovery near the user.** No silent catches; no propagating opaque library errors through the whole stack.
+
+## UNIX side
+
+- Small composable tools beat one large framework.
+- Text streams and stable formats beat custom IPC.
+- A program that reads stdin, writes stdout, and exits nonzero on failure is almost always the right shape.
+
+## Writing about code
+
+- Don't narrate code in comments (`// increment i`). Comments earn their place by saying *why*, or what the type can't.
+- Don't justify simple code with paragraphs. If it needs justifying, it isn't simple.
+- Match the local vocabulary of the codebase. Don't introduce a new term unless renaming an old one consistently.
+
+## When in doubt
+
+Ship the dumb version. The smart version comes later, with measurements.
