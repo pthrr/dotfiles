@@ -1,0 +1,21 @@
+---
+description: >-
+  Physical code layout — directories, files, tests, generated code, dependency
+  direction. Enable when adding packages, trees, or large moves.
+alwaysApply: false
+globs: "**/*.{c,h,cc,cpp,cxx,hpp,hxx,rs,go,py,pyi,ts,tsx,js,jsx,mjs,cjs,java,kt,kts,cs,swift,zig,v,sv,vhd,hs,ml,fs,erl,ex,exs,lua,rb,php,asm,s,S}"
+---
+
+# Code organization
+
+- Prefer **feature-oriented** trees over **layer-only** trees unless the repo already commits the opposite.
+- A flat repo goes a long way.
+- **One primary exported concept per file** unless types are inseparable; keep private helpers near their only user when small.
+- **Colocate fast tests** with sources; reserve a **slow/integration** tree for heavy tests — name the split so others follow it.
+- **Generated code** lives in a dedicated place, never hand-edited; document **commit vs ignore** policy for that tree.
+- **Package / module cycles forbidden**; fix direction before adding files.
+- **Monorepo:** pin shared tool versions; document workspace boundaries and who may depend on whom.
+
+## Cross-rule
+
+- Logical boundaries: `software-architecture.mdc` — public API shape: `api-design.mdc` — taste: `orthodox.mdc`

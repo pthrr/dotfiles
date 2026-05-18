@@ -1,0 +1,19 @@
+---
+description: >-
+  How components talk — sync vs async, events, retries, backpressure. Enable for
+  IPC, services, queues, or distributed design.
+alwaysApply: false
+globs: "**/*.{c,h,cc,cpp,cxx,hpp,hxx,rs,go,py,pyi,ts,tsx,js,jsx,mjs,cjs,java,kt,kts,cs,swift,zig,v,sv,vhd,hs,ml,fs,erl,ex,exs,lua,rb,php,asm,s,S}"
+---
+
+# Communication
+
+- **Default synchronous** in-process calls when coupling and latency allow; add **async / message / event** seams only with a stated reason.
+- Match pattern to need: **request/response** when the caller needs an answer; **fire-and-forget** only when loss is acceptable by spec.
+- Every cross-boundary call: **timeout**, **bounded retries**, **idempotency** or dedup story where retries exist.
+- **Backpressure** explicit (block, drop policy, queue limits) — never unbounded silent buffers as design.
+- **One protocol / style per boundary** unless the doc names why hybrid is required.
+
+## Cross-rule
+
+- Surface shape: `api-design.mdc` — failures in production: `operations.mdc` — taste: `orthodox.mdc`

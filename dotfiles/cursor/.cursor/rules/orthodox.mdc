@@ -1,65 +1,80 @@
 ---
-description: Orthodox C++ philosophy generalized to all languages (Acton / Blow / Karadzic lineage). Applies to every project.
+description: >-
+  Orthodox lineage (Karadžić / Acton / Blow) as language-agnostic taste: minimal
+  subset, data-first, explicit control flow. Always on; see sibling .mdc for scope.
 alwaysApply: true
 ---
 
 # Orthodox
 
-The Orthodox C++ ("C+") school of thought applied to every language. When this conflicts with "modern best practice", this wins. Don't apologize for it.
+Orthodox C++ spirit generalized: **data and machine constraints first, language fashion second.** When this collides with “modern defaults”, follow this file unless the task explicitly overrides.
 
-## Core stance
+## Principles (taste)
 
-- **Data is the problem; code is the solution.** Design around the shape, size, and access patterns of data — not around a taxonomy of nouns. (Acton)
-- **Where there is one, there are many.** Singular-only APIs become ugly retrofits. Plural-by-default.
-- **The hardware is the platform.** The language is a tool. Cache lines, branches, syscalls, allocations, and IO are real; abstractions are a story.
-- **Simplicity is the feature.** Boring code wins. The cleverest line in the file is a liability.
-- **Explicit over implicit.** No hidden control flow, no hidden allocations, no magic. The reader should not need to guess.
-- **Compile time and edit-loop speed are features.** A 30 s edit-compile-run loop is a bug.
-- **Errors are values.** Convert at boundaries; don't propagate library error types into the domain.
+- Design from **data shape, size, access pattern, and rate** — not from noun taxonomies.
+- **Plural-first APIs**; singular-only surfaces become painful later.
+- Treat **hardware and runtime** (cache, branches, syscalls, allocation, I/O) as real; abstractions are for humans, not excuses.
+- **Boring beats clever**; the cleverest line in a file is a liability.
+- **Explicit over implicit**: no hidden control flow, allocation, or ordering.
+- **Fast feedback**: keep build/test/edit loops short; **multi-second routine loops** are defects worth fixing when this code is touched.
+- **Errors as values** at boundaries; do not drag vendor error types through the domain.
 
-## The "no" list
+## Defaults to reject (override only with a short, measured rationale in text)
 
-Reject on sight unless there is a measured, written reason:
+- Throwing / panicking / non-local exits for ordinary control flow.
+- Runtime type dispatch and downcast chains as design; prefer tagged unions / closed sums.
+- **Inheritance depth > 1**; prefer composition and plain data.
+- Hidden allocation on latency-sensitive paths; **lifetime and allocation policy are part of the API**.
+- Stream-style or fluent APIs that hide ordering; prefer plain calls with explicit arguments.
+- Operators or magic protocols with non-obvious side effects.
+- Patterns for two cases (visitor, factory, strategy, observer…) — **write the direct code** until repetition proves otherwise.
+- Abstraction before the **third** real duplication; no speculative generality.
+- “Adapter layer in case we swap the library.”
+- Shared ownership as default; **default single owner**, visible transfer.
+- Metaprogramming / macros / codegen / heavy reflection when straight code reads fine.
+- **Type elision at boundaries**; spell types where callers cross a surface.
+- Async stack for work that is not actually concurrent or I/O-bound.
+- New dependencies for trivial helpers.
+- Type-erased hot paths by default.
 
-- Exceptions, panics, `raise`, or any throw-and-pray mechanism used for control flow. Return values, sentinels, sum types.
-- Runtime type identification, downcasts, `isinstance`-as-dispatch. Tagged unions / enums instead.
-- Inheritance deeper than one level. Composition or plain data.
-- Hidden allocation in hot paths. Allocator and lifetime are part of the interface.
-- Stream-operator I/O, fluent builders, magic scopes that hide ordering. Plain function calls with arguments.
-- Operator overloading with side effects or non-arithmetic semantics.
-- Pattern-for-the-sake-of-pattern. Visitor for two cases, Factory for one constructor, Strategy for one branch, Observer for one callback. Write the call.
-- Premature abstraction. Wait for the third occurrence, not the second.
-- Speculative generality. No "we might need it later".
-- Wrapper layers "in case we swap the library". You won't.
-- Smart-pointer / shared-ownership everything. Most data has a single owner and a clear scope. Say so.
-- Macros, metaprogramming, decorators, metaclasses, code generation when straight code reads fine.
-- Type elision (`auto`, `var`, `:=`, untyped lambdas) everywhere. Spell out types at boundaries.
-- Async, coroutines, futures for things that are not actually IO-bound or concurrent.
-- Pulling a dependency for a 20-line job.
-- Type-erased containers and trait/interface objects on hot paths.
+## How to work a task
 
-## How to propose code
+- State **inputs/outputs, frequency, size, lifetime, and failure modes** before code.
+- Ship the **dumbest** structure that fits; upgrade only with evidence.
+- Make **ownership** obvious in names, types, or one `why` comment if the type cannot carry it.
+- Optimize the **common path** early enough not to be sloppy; confirm hot paths with measurement (see `performance.mdc`).
+- Prefer **values, arrays, tables, and plain functions** over behavior-heavy objects; **SoA over AoS** when iteration dominates.
+- **One idiomatic way** per concern (one serializer style, one error style, …).
+- **Handle errors at the source**; **recover at the boundary toward the user**; no silent swallow; no opaque error tunnels.
 
-1. **State the problem in terms of data first.** What comes in, what goes out, how often, how big, where it lives. Before any code.
-2. **Pick the dumbest thing that works.** A struct and a loop, until proven insufficient.
-3. **Make ownership and lifetimes obvious.** Who owns this memory, file, connection, lock? Say it in the name, the type, or one line of comment if the type can't.
-4. **Design for the common case from day one.** "Premature optimization is the root of all evil" is widely misquoted — the rest of the sentence matters. Don't be a slob about the hot path.
-5. **Prefer values, arrays, plain functions over objects with behavior.** Records / structs / dataclasses over classes-with-methods. SoA over AoS when iteration matters.
-6. **One way to do a thing per codebase.** If there are three serializers, delete two.
-7. **Errors near the source, recovery near the user.** No silent catches; no propagating opaque library errors through the whole stack.
+## CLI / composability
 
-## UNIX side
+- Prefer **small tools** and stable **text streams** over bespoke IPC when fit is good.
+- Prefer **stdin → stdout**, nonzero exit on failure, minimal flags.
 
-- Small composable tools beat one large framework.
-- Text streams and stable formats beat custom IPC.
-- A program that reads stdin, writes stdout, and exits nonzero on failure is almost always the right shape.
+## Comments and prose in code
 
-## Writing about code
+- Comments explain **why** or **constraints the type cannot express** — not what the next line does.
+- Do not pad simple code with justification essays.
+- **Match local vocabulary**; new terms only with consistent rename.
 
-- Don't narrate code in comments (`// increment i`). Comments earn their place by saying *why*, or what the type can't.
-- Don't justify simple code with paragraphs. If it needs justifying, it isn't simple.
-- Match the local vocabulary of the codebase. Don't introduce a new term unless renaming an old one consistently.
+## Change and review
+
+- Touch **only what the task needs**; match surrounding style; remove orphans **your edit** introduced.
+- Review the **diff**, not the whole file history.
+- Block on correctness and design; **suggest** style nits; avoid review-driven scope creep.
 
 ## When in doubt
 
-Ship the dumb version. The smart version comes later, with measurements.
+Ship the simple version; improve with **measurements**, not debates.
+
+## Where other rules apply
+
+- **Modules and lifecycles:** `software-architecture.mdc`
+- **Filesystem and packages:** `code-organization.mdc`
+- **Public surfaces:** `api-design.mdc`
+- **Runtime interaction:** `communication.mdc`
+- **Hot paths / numerics policy:** `performance.mdc`
+- **Firmware / hard RT:** `embedded.mdc`
+- **Verification:** `testing.mdc`
+- **Production behavior:** `operations.mdc`

@@ -1,0 +1,20 @@
+---
+description: >-
+  Running systems — logs, metrics, health, on-call. Enable for prod config,
+  observability, rollout, or incident-shaped work.
+alwaysApply: false
+globs: "**/*.{c,h,cc,cpp,cxx,hpp,hxx,rs,go,py,pyi,ts,tsx,js,jsx,mjs,cjs,java,kt,kts,cs,swift,zig,v,sv,vhd,hs,ml,fs,erl,ex,exs,lua,rb,php,asm,s,S,yml,yaml,json,toml}"
+---
+
+# Operations
+
+- Define **log level semantics** for operators (what wakes a human vs what is noise) and **stick to them** project-wide.
+- **Structured fields** over prose when machines must aggregate; **no secrets or PII** in logs and traces.
+- **Health checks:** distinguish **alive** vs **ready** vs **deep health**; do not conflate in one boolean without naming it.
+- **Alert on user-visible symptoms**; each alert has a **runbook or ticket template**.
+- **Feature flags / gradual rollout** for risky behavior changes; default off until vetted.
+- **Timeouts and budgets** on outbound dependencies; **circuit breaking** policy explicit where cascading failure matters.
+
+## Cross-rule
+
+- Trust and boundaries: `software-architecture.mdc` — API stability: `api-design.mdc` — tests: `testing.mdc`

@@ -1,0 +1,40 @@
+---
+description: >-
+  Software architecture — ownership, boundaries, dependency direction, caching,
+  trust boundaries. Enable when designing modules or refactors.
+alwaysApply: false
+globs: "**/*.{c,h,cc,cpp,cxx,hpp,hxx,rs,go,py,pyi,ts,tsx,js,jsx,mjs,cjs,java,kt,kts,cs,swift,zig,v,sv,vhd,hs,ml,fs,erl,ex,exs,lua,rb,php,asm,s,S}"
+---
+
+# Software architecture
+
+## Structure
+
+- **Acyclic dependency graph**; core must not import outer layers.
+- **One owner** per piece of mutable state; sharing is explicit and rare.
+- **Pure / deterministic core**; I/O, time, randomness, and mutation at **edges**.
+- Split **behavior change** from **refactors**; never mix in one undiffable step.
+
+## Human vs machine shape
+
+- **Objects** name ownership, invariants, and policy at **boundaries**.
+- **Bulk data** (arrays, SoA, indices) lives where **throughput** lives; cross in **batches**, not per-element virtual hops by default.
+
+## Decisions
+
+- Write an **ADR** when the call is stable, costly to reverse, and non-obvious.
+
+## Caching
+
+- **Invalidation strategy is part of the design**, not an afterthought.
+- Prefer **recompute** when cheaper than stale bugs.
+- Name what is key; prefer **content-addressed** keys when duplicates must not collide.
+
+## Trust
+
+- **Validate once** at trust boundaries; represent validated input as a **named type**.
+- **Least privilege** for code and data access; boundaries visible in module graph.
+
+## Cross-rule
+
+- Code layout: `code-organization.mdc` — API contracts: `api-design.mdc` — baseline taste: `orthodox.mdc`
