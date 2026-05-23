@@ -128,7 +128,7 @@ now(function()
         update_in_insert = true,
         severity_sort = true,
         float = {
-            source = "always",
+            source = true,
             border = "single",
             severity = { min = vim.diagnostic.severity.INFO },
         },
@@ -264,6 +264,7 @@ now(function()
                     },
                     workspace = {
                         checkThirdParty = false,
+                        library = vim.api.nvim_get_runtime_file("", true),
                     },
                     telemetry = {
                         enable = false,
@@ -387,6 +388,7 @@ end)
 vim.api.nvim_create_autocmd("BufWritePre", {
     pattern = {
         "*.c",
+        "*.cc",
         "*.cpp",
         "*.h",
         "*.hpp", -- C/C++
@@ -408,7 +410,7 @@ vim.api.nvim_create_autocmd("BufWritePre", {
         "*.md", -- Markdown
     },
     callback = function()
-        -- Skip if buffer hasn't been modified
+        -- Avoid spawning a formatter when nothing changed (e.g. plain :w on a clean buffer)
         if not vim.bo.modified then
             return
         end
@@ -424,7 +426,7 @@ vim.api.nvim_create_autocmd("BufWritePre", {
             run_external_formatter("tlafmt", { file })
         elseif file:match("%.zig$") then
             run_external_formatter("zig", { "fmt", file })
-        elseif file:match("%.[ch]pp?$") then
+        elseif file:match("%.cc$") or file:match("%.cpp$") or file:match("%.hpp$") or file:match("%.c$") or file:match("%.h$") then
             run_external_formatter("clang-format", { "-i", file })
         elseif file:match("%.sh$") or file:match("%.bash$") or file:match("%.zsh$") then
             run_external_formatter("shfmt", { "-w", file })
@@ -523,8 +525,7 @@ later(function()
     require("mini.trailspace").setup({})
 
     -- Auto-trim on save
-    vim.api.nvim_create_autocmd({ "BufWritePre" }, {
-        pattern = "*",
+    vim.api.nvim_create_autocmd("BufWritePre", {
         callback = function()
             MiniTrailspace.trim()
             MiniTrailspace.trim_last_lines()
@@ -622,6 +623,14 @@ vim.o.shell = "/bin/bash"
 vim.o.updatetime = 300
 vim.o.autoread = true
 
+vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "CursorHold", "CursorHoldI" }, {
+    callback = function()
+        if vim.fn.getcmdwintype() == "" then
+            vim.cmd.checktime()
+        end
+    end,
+})
+
 -- -----------------------------------------------------------------------------
 -- Search
 -- -----------------------------------------------------------------------------
@@ -630,7 +639,7 @@ vim.o.hlsearch = true
 vim.o.path = vim.o.path .. ",**"
 vim.o.wildmode = "list:longest,full"
 vim.o.wildignore =
-    ".git,.hg,.svn,*.aux,*.out,*.toc,*.o,*.obj,*.exe,*.dll,*.ai,*.bmp,*.gif,*.ico,*.jpg,*.jpeg,*.png,*.psd,*.webp,*.avi,*.divx,*.mp4,*.webm,*.mov,*.mkv,*.vob,*.mpg,*.mpeg,*.mp3,*.oga,*.ogg,*.wav,*.flac,*.otf,*.ttf,*.doc,*.pdf,*.zip,*.tar.gz,*.tar.bz2,*.rar,*.tar.xz,*.swp,.lock,.DS_Store,._*"
+    ".git,.hg,.svn,*.aux,*.out,*.toc,*.o,*.obj,*.exe,*.dll,*.ai,*.bmp,*.gif,*.ico,*.jpg,*.jpeg,*.png,*.psd,*.webp,*.avi,*.divx,*.mp4,*.webm,*.mov,*.mkv,*.vob,*.mpg,*.mpeg,*.mp3,*.oga,*.ogg,*.wav,*.flac,*.otf,*.ttf,*.doc,*.pdf,*.zip,*.tar.gz,*.tar.bz2,*.rar,*.tar.xz,*.swp,*.lock,.DS_Store,._*"
 
 -- -----------------------------------------------------------------------------
 -- Folding
@@ -716,51 +725,50 @@ end
 
 -- Show cursorline only in active buffer
 vim.api.nvim_create_autocmd("BufEnter", {
-    pattern = "*",
-    command = "setlocal cursorline",
+    callback = function()
+        vim.wo.cursorline = true
+    end,
 })
 
 vim.api.nvim_create_autocmd("BufLeave", {
-    pattern = "*",
-    command = "setlocal nocursorline",
+    callback = function()
+        vim.wo.cursorline = false
+    end,
 })
 
 -- Show relative numbers only in active buffer and normal mode
 vim.api.nvim_create_autocmd({ "BufEnter", "FocusGained", "InsertLeave" }, {
-    pattern = "*",
-    command = "setlocal relativenumber",
+    callback = function()
+        vim.wo.relativenumber = true
+    end,
 })
 
 vim.api.nvim_create_autocmd({ "BufLeave", "FocusLost", "InsertEnter" }, {
-    pattern = "*",
-    command = "setlocal norelativenumber",
+    callback = function()
+        vim.wo.relativenumber = false
+    end,
 })
 
--- Underline cursorline in insert mode
+-- Underline cursorline in insert mode (replace whole highlight to clear bg/fg)
 vim.api.nvim_create_autocmd("InsertEnter", {
-    pattern = "*",
-    command = "highlight cursorline guibg=none guifg=none gui=underline ctermbg=none ctermfg=none cterm=underline",
+    callback = function()
+        vim.api.nvim_set_hl(0, "CursorLine", { underline = true })
+    end,
 })
 
 vim.api.nvim_create_autocmd("InsertLeave", {
-    pattern = "*",
-    command = "highlight cursorline guibg=none guifg=none gui=none ctermbg=none ctermfg=none cterm=none",
+    callback = function()
+        vim.api.nvim_set_hl(0, "CursorLine", {})
+    end,
 })
 
 -- -----------------------------------------------------------------------------
 -- Restore Cursor Position
 -- -----------------------------------------------------------------------------
 
--- Jump to last known cursor position when opening files
-vim.api.nvim_create_autocmd("BufReadPost", {
-    pattern = "*",
-    callback = function()
-        local last_pos = vim.fn.line("'\"")
-        if last_pos > 0 and last_pos <= vim.fn.line("$") then
-            vim.cmd('normal! g`"')
-        end
-    end,
-})
+later(function()
+    require("mini.misc").setup_restore_cursor()
+end)
 
 -- ==============================================================================
 -- 8. KEYMAPS
@@ -944,16 +952,19 @@ do
                     er = er - 1
                     ec = #(vim.api.nvim_buf_get_lines(bufnr, er, er + 1, false)[1] or "")
                 end
+                local multiline = er > sr
                 for row = sr, er do
                     local s_col = row == sr and sc or 0
                     local line = vim.api.nvim_buf_get_lines(bufnr, row, row + 1, false)[1] or ""
                     local e_col = row == er and ec or #line
                     local before = line:sub(1, s_col)
                     if before:match("^%s*$") then
-                        -- Comment-only line: fold hides it, no conceal needed
-                        fold_lines[row + 1] = true
-                    else
-                        -- Inline comment: conceal just the comment part
+                        -- Comment-only line: fold only for multi-line blocks or consecutive line runs
+                        if node:type() == "line_comment" or multiline then
+                            fold_lines[row + 1] = true
+                        end
+                    elseif multiline then
+                        -- Inline comment: conceal only when the comment spans multiple lines
                         vim.api.nvim_buf_set_extmark(bufnr, categories[kind].ns, row, s_col, {
                             end_col = e_col,
                             conceal = "…",
@@ -963,7 +974,7 @@ do
             end
         end
 
-        -- Never fold isolated single-line comments; only fold consecutive runs
+        -- Drop isolated line comments; multi-line blocks are already >=2 lines
         local to_remove = {}
         for lnum in pairs(fold_lines) do
             if not fold_lines[lnum - 1] and not fold_lines[lnum + 1] then
@@ -992,64 +1003,75 @@ do
         }
     end
 
-    local function apply(bufnr)
-        refresh(bufnr)
-        local any_hidden = false
+    local function any_hidden(bufnr)
         for _, cat in pairs(categories) do
             if vim.b[bufnr][cat.key] then
-                any_hidden = true
-                break
+                return true
             end
         end
-        if any_hidden then
-            vim.wo.conceallevel = 2
-            vim.wo.concealcursor = "vc"
-            vim.wo.foldenable = true
-            vim.wo.foldminlines = 0
-            vim.wo.foldmethod = "expr"
-            vim.wo.foldexpr = "v:lua.RustCommentFoldExpr(v:lnum)"
-            vim.wo.foldtext = "v:lua.RustCommentFoldText()"
-            vim.wo.foldlevel = 0
-            vim.opt_local.fillchars:append("fold: ")
-        else
-            vim.wo.conceallevel = 0
-            vim.wo.foldenable = false
-            vim.wo.foldmethod = "indent"
-        end
+        return false
     end
 
-    local function make_toggle(kind, desc)
-        vim.keymap.set("n", "<leader>c" .. kind:sub(1, 1), function()
-            local bufnr = vim.api.nvim_get_current_buf()
-            if vim.bo[bufnr].filetype ~= "rust" then
-                return
-            end
-            vim.b[bufnr][categories[kind].key] = not vim.b[bufnr][categories[kind].key]
-            apply(bufnr)
-        end, { desc = desc })
-    end
-
-    make_toggle("line", "Toggle line comment visibility")
-    make_toggle("doc", "Toggle doc comment visibility")
-    make_toggle("block", "Toggle block comment visibility")
-
-    vim.keymap.set("n", "<leader>cc", function()
-        local bufnr = vim.api.nvim_get_current_buf()
-        if vim.bo[bufnr].filetype ~= "rust" then
+    -- Window-local options must target the window that shows `bufnr`. Capture
+    -- the winid at call time so a scheduled callback doesn't bleed into a
+    -- different window the user has since switched to.
+    local function apply(bufnr, winid)
+        winid = winid or vim.api.nvim_get_current_win()
+        if not vim.api.nvim_win_is_valid(winid) then
             return
         end
-        local any_hidden = false
-        for _, cat in pairs(categories) do
-            if vim.b[bufnr][cat.key] then
-                any_hidden = true
-                break
+        if vim.api.nvim_win_get_buf(winid) ~= bufnr then
+            return
+        end
+
+        refresh(bufnr)
+        local hidden = any_hidden(bufnr)
+
+        vim.api.nvim_win_call(winid, function()
+            if hidden then
+                vim.wo.conceallevel = 2
+                vim.wo.concealcursor = "vc"
+                vim.wo.foldenable = true
+                vim.wo.foldminlines = 0
+                vim.wo.foldmethod = "expr"
+                vim.wo.foldexpr = "v:lua.RustCommentFoldExpr(v:lnum)"
+                vim.wo.foldtext = "v:lua.RustCommentFoldText()"
+                vim.wo.foldlevel = 0
+                if not vim.wo.fillchars:match("fold:") then
+                    vim.opt_local.fillchars:append("fold: ")
+                end
+            else
+                vim.wo.conceallevel = 0
+                vim.wo.foldenable = false
+                vim.wo.foldmethod = "indent"
             end
+        end)
+
+        if hidden then
+            vim.schedule(function()
+                if vim.api.nvim_win_is_valid(winid) and vim.api.nvim_win_get_buf(winid) == bufnr then
+                    vim.api.nvim_win_call(winid, function()
+                        vim.cmd("normal! zX")
+                    end)
+                end
+            end)
         end
-        for _, cat in pairs(categories) do
-            vim.b[bufnr][cat.key] = not any_hidden
+    end
+
+    local function open_fold_or_right()
+        if vim.fn.foldclosed(".") ~= -1 then
+            vim.cmd("normal! zo")
+        else
+            vim.cmd("normal! l")
         end
-        apply(bufnr)
-    end, { desc = "Toggle all comment visibility" })
+    end
+    local function close_fold_or_left()
+        if vim.fn.col(".") == 1 and vim.fn.foldlevel(".") > 0 and vim.fn.foldclosed(".") == -1 then
+            vim.cmd("normal! zc")
+        else
+            vim.cmd("normal! h")
+        end
+    end
 
     vim.api.nvim_create_autocmd("FileType", {
         pattern = "rust",
@@ -1057,11 +1079,14 @@ do
             for _, cat in pairs(categories) do
                 vim.b[args.buf][cat.key] = true
             end
+
+            local winid = vim.api.nvim_get_current_win()
             vim.schedule(function()
                 if vim.api.nvim_buf_is_valid(args.buf) then
-                    apply(args.buf)
+                    apply(args.buf, winid)
                 end
             end)
+
             vim.api.nvim_create_autocmd({ "TextChanged", "InsertLeave" }, {
                 buffer = args.buf,
                 callback = function()
@@ -1069,25 +1094,28 @@ do
                 end,
             })
 
-            -- Arrow keys / h,l open and close comment folds
-            local function open_fold_or_right()
-                if vim.fn.foldclosed(".") ~= -1 then
-                    vim.cmd("normal! zo")
-                else
-                    vim.cmd("normal! l")
-                end
+            local function toggle(kind)
+                vim.b[args.buf][categories[kind].key] = not vim.b[args.buf][categories[kind].key]
+                apply(args.buf)
             end
-            local function close_fold_or_left()
-                if vim.fn.col(".") == 1 and vim.fn.foldlevel(".") > 0 and vim.fn.foldclosed(".") == -1 then
-                    vim.cmd("normal! zc")
-                else
-                    vim.cmd("normal! h")
+            local kopts = function(desc) return { buffer = args.buf, desc = desc } end
+
+            vim.keymap.set("n", "<leader>cl", function() toggle("line") end, kopts("Toggle line comment visibility"))
+            vim.keymap.set("n", "<leader>cd", function() toggle("doc") end, kopts("Toggle doc comment visibility"))
+            vim.keymap.set("n", "<leader>cb", function() toggle("block") end, kopts("Toggle block comment visibility"))
+
+            vim.keymap.set("n", "<leader>cc", function()
+                local target = not any_hidden(args.buf)
+                for _, cat in pairs(categories) do
+                    vim.b[args.buf][cat.key] = target
                 end
-            end
-            vim.keymap.set("n", "l", open_fold_or_right, { buffer = args.buf, desc = "Open fold or move right" })
-            vim.keymap.set("n", "<Right>", open_fold_or_right, { buffer = args.buf, desc = "Open fold or move right" })
-            vim.keymap.set("n", "h", close_fold_or_left, { buffer = args.buf, desc = "Close fold or move left" })
-            vim.keymap.set("n", "<Left>", close_fold_or_left, { buffer = args.buf, desc = "Close fold or move left" })
+                apply(args.buf)
+            end, kopts("Toggle all comment visibility"))
+
+            vim.keymap.set("n", "l", open_fold_or_right, kopts("Open fold or move right"))
+            vim.keymap.set("n", "<Right>", open_fold_or_right, kopts("Open fold or move right"))
+            vim.keymap.set("n", "h", close_fold_or_left, kopts("Close fold or move left"))
+            vim.keymap.set("n", "<Left>", close_fold_or_left, kopts("Close fold or move left"))
         end,
     })
 
