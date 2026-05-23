@@ -130,7 +130,7 @@ now(function()
         float = {
             source = true,
             border = "single",
-            severity = { min = vim.diagnostic.severity.INFO },
+            severity = { min = vim.diagnostic.severity.HINT },
         },
     })
 
@@ -258,9 +258,6 @@ now(function()
                 Lua = {
                     runtime = {
                         version = "LuaJIT",
-                    },
-                    diagnostics = {
-                        globals = { "vim" },
                     },
                     workspace = {
                         checkThirdParty = false,
@@ -481,13 +478,14 @@ now(function()
 end)
 
 later(function()
-    require("mini.hipatterns").setup({
+    local hipat = require("mini.hipatterns")
+    hipat.setup({
         highlighters = {
             fixme = { pattern = "%f[%w]()FIXME()%f[%W]", group = "MiniHipatternsFixme" },
             hack = { pattern = "%f[%w]()HACK()%f[%W]", group = "MiniHipatternsHack" },
             todo = { pattern = "%f[%w]()TODO()%f[%W]", group = "MiniHipatternsTodo" },
             note = { pattern = "%f[%w]()NOTE()%f[%W]", group = "MiniHipatternsNote" },
-            hex_color = require("mini.hipatterns").gen_highlighter.hex_color(),
+            hex_color = hipat.gen_highlighter.hex_color(),
         },
     })
 end)
@@ -498,14 +496,15 @@ end)
 
 later(function()
     require("mini.pick").setup()
-    require("mini.extra").setup()
+    local extra = require("mini.extra")
+    extra.setup()
 
     vim.keymap.set("n", "<leader>ss", function()
-        require("mini.extra").pickers.lsp({ scope = "document_symbol" })
+        extra.pickers.lsp({ scope = "document_symbol" })
     end, { desc = "List document symbols" })
 
     vim.keymap.set("n", "<leader>sS", function()
-        require("mini.extra").pickers.lsp({ scope = "workspace_symbol" })
+        extra.pickers.lsp({ scope = "workspace_symbol" })
     end, { desc = "List workspace symbols" })
 end)
 
@@ -1066,7 +1065,10 @@ do
         end
     end
     local function close_fold_or_left()
-        if vim.fn.col(".") == 1 and vim.fn.foldlevel(".") > 0 and vim.fn.foldclosed(".") == -1 then
+        local line = vim.api.nvim_get_current_line()
+        local first_nonblank_col = #(line:match("^%s*") or "") + 1
+        local at_or_before_content = vim.fn.col(".") <= first_nonblank_col
+        if at_or_before_content and vim.fn.foldlevel(".") > 0 and vim.fn.foldclosed(".") == -1 then
             vim.cmd("normal! zc")
         else
             vim.cmd("normal! h")
@@ -1087,7 +1089,9 @@ do
                 end
             end)
 
-            vim.api.nvim_create_autocmd({ "TextChanged", "InsertLeave" }, {
+            -- BufReadPost covers autoread reloads, where FileType does not refire
+            -- but buffer content changes underneath the cached fold table.
+            vim.api.nvim_create_autocmd({ "TextChanged", "InsertLeave", "BufReadPost" }, {
                 buffer = args.buf,
                 callback = function()
                     refresh(args.buf)
