@@ -385,30 +385,27 @@ in
     };
   };
 
-  # Unmount SSHFS mounts before sleep to prevent freeze
+  # Unmount SSHFS mounts before sleep to prevent freeze.
+  # Ordered Before=sleep.target so systemd waits for completion before suspending.
+  # fusermount -uz (lazy unmount) detaches immediately via MNT_DETACH even if the
+  # FUSE daemon is unresponsive (e.g. SSH tunnel dropped mid-transit).
+  # TimeoutStartSec caps the worst case so sleep is never blocked indefinitely.
   systemd.user.services.sshfs-sleep-handler = {
     Unit = {
       Description = "Unmount SSHFS before sleep";
+      Before = [ "sleep.target" ];
     };
     Service = {
-      Type = "simple";
+      Type = "oneshot";
       ExecStart = pkgs.writeShellScript "sshfs-sleep-handler" ''
-        /usr/bin/gdbus monitor --system \
-          --dest org.freedesktop.login1 \
-          --object-path /org/freedesktop/login1 |
-        while read -r line; do
-          if echo "$line" | grep -q "PrepareForSleep (true)"; then
-            if /usr/bin/mount | grep -q " $HOME/Drive "; then
-              /usr/bin/fusermount -uz "$HOME/Drive" 2>/dev/null || true
-            fi
-          fi
-        done
+        if /usr/bin/mount | grep -q " $HOME/Drive "; then
+          /usr/bin/fusermount -uz "$HOME/Drive" 2>/dev/null || true
+        fi
       '';
-      Restart = "always";
-      RestartSec = 5;
+      TimeoutStartSec = 10;
     };
     Install = {
-      WantedBy = [ "default.target" ];
+      WantedBy = [ "sleep.target" ];
     };
   };
 
