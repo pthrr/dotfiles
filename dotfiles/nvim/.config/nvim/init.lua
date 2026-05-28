@@ -1,3 +1,8 @@
+-- Providers: HM uses wrapRc=false; hosts are set via extraWrapperArgs in home.nix.
+-- Disable legacy providers we do not use (avoids checkhealth noise if wrapper changes).
+vim.g.loaded_perl_provider = 0
+vim.g.loaded_node_provider = 0
+
 -- ==============================================================================
 -- 1. ENVIRONMENT DETECTION
 -- ==============================================================================
@@ -247,7 +252,7 @@ now(function()
             filetypes = { "typescript", "javascript", "typescriptreact", "javascriptreact" },
             root_markers = { "eslint.config.js", "eslint.config.mjs", "eslint.config.cjs", ".eslintrc.json", ".eslintrc.js", ".eslintrc.yaml", ".eslintrc.yml", "package.json", ".git", ".jj" },
             settings = {
-                packageManager = "bun",
+                packageManager = "npm",
             },
         },
         lua_ls = {

@@ -11,7 +11,7 @@ let
     version = "latest";
     src = pkgs.fetchurl {
       url = "https://downloads.haskell.org/~ghcup/x86_64-linux-ghcup";
-      hash = "sha256-/2KI35dYIRNy2CQv6DDY5r5qg2XZQG8cm94US350QUM=";
+      hash = "sha256-SA4F5BTS76WrvaAAaYSjNDzUlz6te1xI1lpVpHtAzlk=";
     };
     dontUnpack = true;
     installPhase = ''
@@ -158,12 +158,15 @@ in
 
         # JavaScript/TypeScript
         [
-          deno
-          bun
+          # deno
+          # bun
           nodejs_24
+          tsx
           eslint
+          vscode-langservers-extracted
           typescript-language-server
           bash-language-server
+          tree-sitter
         ]
       ++
 
@@ -173,7 +176,7 @@ in
           ruff
           uv
           ty
-          python3Packages.jupyterlab
+          # python3Packages.jupyterlab
           cppman
           python3Packages.grip
         ]
@@ -209,7 +212,7 @@ in
         [
           mold
           sccache
-          redis
+          # redis
           gdbgui
           rr
           hotspot
@@ -238,7 +241,7 @@ in
 
         # WebAssembly
         [
-          emscripten
+          # emscripten
           wasmtime
           wabt
         ]
@@ -325,7 +328,9 @@ in
       ++
 
         # Web browsers
-        [ ladybird ]
+        [
+          # ladybird
+        ]
       ++
 
         # Editors
@@ -335,7 +340,7 @@ in
         # Other
         [
           go-task
-          wineWow64Packages.waylandFull
+          # wineWow64Packages.waylandFull
           openpomodoro-cli
           # ripes # temporarily disabled due to cmake build issue
         ];
@@ -372,10 +377,6 @@ in
       };
       ".claude" = {
         source = ../../../claude/.config/claude;
-        recursive = true;
-      };
-      ".cursor/skills" = {
-        source = ../../../cursor/.cursor/skills;
         recursive = true;
       };
       ".cursor/rules" = {
@@ -753,6 +754,22 @@ in
     enable = true;
     withRuby = true;
     withPython3 = true;
+    withPerl = false;
+    withNodeJs = false;
+    # wrapRc=false skips provider --cmd; inject ruby/python hosts explicitly.
+    extraWrapperArgs = let
+      providerWrap = pkgs.wrapNeovimUnstable pkgs.neovim-unwrapped {
+        withPython3 = true;
+        withRuby = true;
+        withPerl = false;
+        withNodeJs = false;
+        plugins = [ ];
+        wrapRc = false;
+      };
+    in [
+      "--add-flags"
+      ''--cmd "lua ${providerWrap.passthru.providerLuaRc}"''
+    ];
     plugins = with pkgs.vimPlugins; [
       nvim-treesitter.withAllGrammars
       plenary-nvim
