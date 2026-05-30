@@ -379,8 +379,8 @@ in
         source = ../../../claude/.config/claude;
         recursive = true;
       };
-      ".cursor/rules" = {
-        source = ../../../cursor/.cursor/rules;
+      ".cursor" = {
+        source = ../../../cursor/.cursor;
         recursive = true;
       };
     };
@@ -757,19 +757,21 @@ in
     withPerl = false;
     withNodeJs = false;
     # wrapRc=false skips provider --cmd; inject ruby/python hosts explicitly.
-    extraWrapperArgs = let
-      providerWrap = pkgs.wrapNeovimUnstable pkgs.neovim-unwrapped {
-        withPython3 = true;
-        withRuby = true;
-        withPerl = false;
-        withNodeJs = false;
-        plugins = [ ];
-        wrapRc = false;
-      };
-    in [
-      "--add-flags"
-      ''--cmd "lua ${providerWrap.passthru.providerLuaRc}"''
-    ];
+    extraWrapperArgs =
+      let
+        providerWrap = pkgs.wrapNeovimUnstable pkgs.neovim-unwrapped {
+          withPython3 = true;
+          withRuby = true;
+          withPerl = false;
+          withNodeJs = false;
+          plugins = [ ];
+          wrapRc = false;
+        };
+      in
+      [
+        "--add-flags"
+        ''--cmd "lua ${providerWrap.passthru.providerLuaRc}"''
+      ];
     plugins = with pkgs.vimPlugins; [
       nvim-treesitter.withAllGrammars
       plenary-nvim
