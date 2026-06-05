@@ -167,9 +167,7 @@ __prompt_command() {
     local title_dir
     title_dir=$(pwd | sed "s|$HOME|~|" | awk -F/ '{if (NF<=2) print $0; else print $(NF-1)"/"$NF}')
     printf '\033]0;%s\007' "$title_dir"
-    if [[ -v ZELLIJ ]]; then
-        command zellij action rename-tab "$title_dir" 2>/dev/null & disown
-    fi
+    [[ -n "$ZELLIJ" ]] && command zellij action rename-tab "$title_dir" 2>/dev/null
     if (( last_exit == 0 )); then
         LAST_STATUS="✓"
     else
