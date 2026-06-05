@@ -167,6 +167,9 @@ __prompt_command() {
     local title_dir
     title_dir=$(pwd | sed "s|$HOME|~|" | awk -F/ '{if (NF<=2) print $0; else print $(NF-1)"/"$NF}')
     printf '\033]0;%s\007' "$title_dir"
+    if [[ -v ZELLIJ ]]; then
+        command zellij action rename-tab "$title_dir" 2>/dev/null & disown
+    fi
     if (( last_exit == 0 )); then
         LAST_STATUS="✓"
     else
@@ -200,67 +203,29 @@ function command_not_found_handle() {
         return 127
     fi
 }
-# eval "$(_TMUXP_COMPLETE=source tmuxp)"
-# _tmuxp_project_completions() {
-#     local word
-#     local files=$(ls $HOME/.tmuxp/${COMP_WORDS[1]}*.yaml 2> /dev/null)
-#     for f in $files; do
-#         COMPREPLY+=($(basename "$f" .yaml))
-#     done
-#     if [ "$COMP_CWORD" -gt 1 ]; then
-#         local offset=0
-#         for (( i=1; i < COMP_CWORD; i++ )); do
-#             word="${COMP_WORDS[i]}"
-#             if [ "$word" != -* ]; then
-#                 offset=$(printf "$i + 1" | bc)
-#                 break
-#             fi
-#         done
-#         if [ $offset -ne 0 ]; then
-#             COMPREPLY=()
-#             _command_offset "$offset"
-#         fi
-#     fi
-# }
-# alias mux='tmuxp load'
-# complete -F _tmuxp_project_completions mux
-# export GDBSETUP=".gdbsetup"
-# setupgdb() {
-#     if [ -e "$GDBSETUP" -a ! -f "$GDBSETUP" ]; then
-#         printf '%s already exists and is not a file\n' "$GDBSETUP"
-#         exit 1
-#     fi
-
-#     local _setupgdb_tty=$(tty)
-#     printf 'dashboard -output %s\n' "$_setupgdb_tty" >"$GDBSETUP"
-# }
-# if $(command -v tmux >/dev/null); then
-#     [ -z "${TMUX+set}" ] || export SESSION=$(tmux display-message -p '#S')
-# fi
-# function quit() {
-#     if $(command -v tmux >/dev/null); then
-#         tmux kill-session -t $SESSION
-#     fi
-# }
-# function killdetached() {
-#     tmux list-sessions | grep -E -v '\(attached\)$' - | while IFS='\n' read line; do
-#         line="${line#*:}"
-#         tmux kill-session -t "${line%%:*}"
-#     done
-# }
-function tmux() {
-    [[ -n "$TMUX" ]] && { command tmux "$@"; return; }
-    [[ $# -gt 0 ]] && { command tmux "$@"; return; }
-    if command tmux list-sessions &>/dev/null; then
-        command tmux attach
+export GDBSETUP=".gdbsetup"
+setupgdb() {
+    if [[ -e "$GDBSETUP" && ! -f "$GDBSETUP" ]]; then
+        printf '%s already exists and is not a file\n' "$GDBSETUP" >&2
+        return 1
+    fi
+    printf 'dashboard -output %s\n' "$(tty)" >"$GDBSETUP"
+}
+gdb() {
+    if [[ -f "$GDBSETUP" ]]; then
+        command gdb -x "$GDBSETUP" "$@"
     else
-        if [[ -f ~/.cache/tmux/resurrect/last ]] && [[ -s ~/.cache/tmux/resurrect/last ]]; then
-            command tmux new-session -d
-            ~/.cache/tmux/plugins/tmux-resurrect/scripts/restore.sh
-            command tmux attach
-        else
-            command tmux new-session
-        fi
+        command gdb "$@"
+    fi
+}
+function zellij() {
+    local session=main
+    [[ -v ZELLIJ ]] && { command zellij "$@"; return; }
+    [[ $# -gt 0 ]] && { command zellij "$@"; return; }
+    if command zellij list-sessions --no-formatting --short 2>/dev/null | grep -qx "$session"; then
+        command zellij attach "$session"
+    else
+        command zellij
     fi
 }
 function lsd() {
@@ -317,6 +282,7 @@ alias bazel='bazelisk'
 alias gg='git'
 alias task='go-task'
 alias tt='go-task'
+alias zj='zellij'
 alias j='jobs'
 alias c='clear'
 alias h='history'

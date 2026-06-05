@@ -1,0 +1,38 @@
+copy_command "wl-copy"
+scroll_buffer_size 50000
+session_serialization true
+pane_viewport_serialization true
+serialization_interval 300
+on_force_close "detach"
+mouse_mode true
+show_startup_tips false
+show_release_notes false
+
+// compact = one bottom bar (tabs + key hints); no top tab-bar or 2-line status-bar
+default_layout "compact"
+pane_frames false
+mouse_hover_effects false
+
+session_name "main"
+attach_to_session true
+
+ui {
+    pane_frames {
+        hide_session_name true
+    }
+}
+
+keybinds {
+    shared_except "locked" {
+        bind "Ctrl p" { GoToPreviousTab; }
+        bind "Ctrl n" { GoToNextTab; }
+    }
+    pane {
+        bind "h" "Left" { MoveFocus "Left"; }
+        bind "l" "Right" { MoveFocus "Right"; }
+        bind "j" "Down" { MoveFocus "Down"; }
+        bind "k" "Up" { MoveFocus "Up"; }
+        bind "\"" { NewPane "Down"; SwitchToMode "Normal"; }
+        bind "%" { NewPane "Right"; SwitchToMode "Normal"; }
+    }
+}

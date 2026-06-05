@@ -89,8 +89,7 @@ in
         # Shell & terminal tools
         [
           vifm
-          tmux
-          tmuxp
+          zellij
           tree
           htop
           fzf
@@ -792,7 +791,7 @@ in
       "foot"
       "zathura"
       "git"
-      "tmux"
+      "zellij"
       "vifm"
       "nvim"
       "calcurse"
