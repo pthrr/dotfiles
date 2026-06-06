@@ -54,69 +54,11 @@ if [ -f ~/.env ]; then
 fi
 
 # create standard dirs
-if [ ! -d "$HOME/.lv2" ]; then
-    mkdir "$HOME/.lv2" 2>/dev/null
-fi
-
-if [ ! -d "$HOME/.clap" ]; then
-    mkdir "$HOME/.clap" 2>/dev/null
-fi
-
-if [ ! -d "$HOME/tmp" ]; then
-    mkdir "$HOME/tmp" 2>/dev/null
-fi
-
-if [ ! -d "$HOME/bin" ]; then
-    mkdir "$HOME/bin" 2>/dev/null
-fi
-
-if [ ! -d "$HOME/opt" ]; then
-    mkdir "$HOME/opt" 2>/dev/null
-fi
-
-if [ ! -d "$HOME/datasets" ]; then
-    mkdir "$HOME/datasets" 2>/dev/null
-fi
-
-if [ ! -d "$HOME/fun" ]; then
-    mkdir "$HOME/fun" 2>/dev/null
-fi
-
-if [ ! -d "$HOME/analysis" ]; then
-    mkdir "$HOME/analysis" 2>/dev/null
-fi
-
-if [ ! -d "$HOME/business" ]; then
-    mkdir "$HOME/business" 2>/dev/null
-fi
-
-if [ ! -d "$HOME/job" ]; then
-    mkdir "$HOME/job" 2>/dev/null
-fi
-
-if [ ! -d "$HOME/Drive" ]; then
-    mkdir "$HOME/Drive" 2>/dev/null
-fi
-
-if [ ! -d "$HOME/Dokumente/notes" ]; then
-    mkdir -p "$HOME/Dokumente/notes" 2>/dev/null
-fi
-
-if [ ! -d "$HOME/Dokumente/notebooks" ]; then
-    mkdir -p "$HOME/Dokumente/notebooks" 2>/dev/null
-fi
-
-if [ ! -d "$HOME/Dokumente/letters" ]; then
-    mkdir -p "$HOME/Dokumente/letters" 2>/dev/null
-fi
-
-if [ ! -d "$HOME/Vorlagen/slides" ]; then
-    mkdir -p "$HOME/Vorlagen/slides" 2>/dev/null
-fi
-
-if [ ! -d "$HOME/Audio" ]; then
-    mkdir -p "$HOME/Audio" 2>/dev/null
-fi
+for d in .lv2 .clap tmp bin opt datasets fun analysis business job Drive \
+         Dokumente/notes Dokumente/notebooks Dokumente/letters \
+         Vorlagen/slides Audio; do
+    mkdir -p "$HOME/$d" 2>/dev/null
+done
 
 export LANG=de_DE.UTF-8
 export LC_COLLATE=C.UTF-8
@@ -299,7 +241,6 @@ alias pwgen='keepassxc-cli generate --lower --upper --numeric --special --length
 alias mksomespace='nix-collect-garbage -d; sudo dnf clean all; flatpak uninstall --unused -y; sudo journalctl --vacuum-size=100M; pip cache purge; sudo btrfs balance start -musage=50 -dusage=50 /'
 alias mkupdates='sudo dnf update -y && sudo flatpak update -y'
 alias mkbackup='sudo "$HOME/.dotfiles/system/sync_ssd.bash"'
-alias dotfiles='git --git-dir="$HOME/.dotfiles/.git" --work-tree="$HOME/.dotfiles"'
 alias srv='ssh nwv-srv'
 alias srvreb='ssh nwv-srv "cd ~/server && git pull && sudo task deploy"'
 alias plasma='dbus-run-session startplasma-wayland'

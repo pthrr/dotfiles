@@ -1,21 +1,21 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -euo pipefail
 
 if [[ $# -eq 0 ]]; then
-    echo "Usage: $0 <directory>"
+    echo "Usage: $0 <directory>" >&2
     exit 1
 fi
 
 dir="$1"
 
-if [[ -d "$dir" ]]; then
-    find "$dir" -type d -name ".git" | while read -r git_dir; do
-        repo_dir=$(dirname "$git_dir")
-
-        if [[ -n $(git -C "$repo_dir" status --porcelain 2>/dev/null) ]]; then
-            echo "$repo_dir"
-        fi
-    done
-else
-    echo "Directory '$dir' does not exist"
+if [[ ! -d "$dir" ]]; then
+    echo "Directory '$dir' does not exist" >&2
     exit 1
 fi
+
+while IFS= read -r -d '' git_dir; do
+    repo_dir=$(dirname "$git_dir")
+    if [[ -n $(git -C "$repo_dir" status --porcelain 2>/dev/null) ]]; then
+        echo "$repo_dir"
+    fi
+done < <(find "$dir" -type d -name ".git" -print0)

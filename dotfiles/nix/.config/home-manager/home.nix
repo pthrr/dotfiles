@@ -199,6 +199,7 @@ in
         # AI tooling
         [
           claude-code
+          codex
         ]
       ++
 

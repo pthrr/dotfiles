@@ -16,14 +16,14 @@ Interact with the user's vault through the `obsidian` CLI.
 
 ## Writing (staged for review)
 
-Never write directly to the vault. All changes go to a `cursor/` folder inside the vault for manual review.
+Never write directly to the vault. All changes go to an `inbox/` folder inside the vault for manual review.
 
-- New note `Foo.md` → write to `cursor/Foo.md`
-- Changes to existing `Bar.md` → write the full updated version to `cursor/Bar.md`
+- New note `Foo.md` → write to `inbox/Foo.md`
+- Changes to existing `Bar.md` → write the full updated version to `inbox/Bar.md`
 
-The user will review and manually migrate files from `cursor/` into the vault.
+The user will review and manually migrate files from `inbox/` into the vault.
 
-Stage with: `obsidian create name="cursor/<name>" content="..."`
+Stage with: `obsidian create name="inbox/<name>" content="..."`
 
 ## Workflows
 
@@ -37,12 +37,12 @@ Stage with: `obsidian create name="cursor/<name>" content="..."`
 
 1. `obsidian read path="<note>"` to get current contents
 2. Improve the note: add detail, fix structure, add links, fill gaps
-3. Stage the improved version: `obsidian create name="cursor/<note>" content="<improved>"`
+3. Stage the improved version: `obsidian create name="inbox/<note>" content="<improved>"`
 
 ### Create a note
 
 1. Gather context from the conversation or vault
-2. `obsidian create name="cursor/<title>" content="<body>"`
+2. `obsidian create name="inbox/<title>" content="<body>"`
 3. Use wikilinks `[[...]]` for internal links
 
 ## Guidelines
