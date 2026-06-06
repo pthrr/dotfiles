@@ -1,1 +1,19 @@
-.session.vim
+# OS
+.DS_Store
+Thumbs.db
+.directory
+
+# Editors
+*.swp
+*~
+.idea/
+.vscode/
+
+# Nix
+result
+result-*
+
+# Secrets
+.env
+.env.*
+!.env.example

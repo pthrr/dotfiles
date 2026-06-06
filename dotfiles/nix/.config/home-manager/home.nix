@@ -199,8 +199,6 @@ in
         # AI tooling
         [
           claude-code
-          code-cursor
-          cursor-cli
         ]
       ++
 
@@ -378,10 +376,6 @@ in
         source = ../../../claude/.config/claude;
         recursive = true;
       };
-      ".cursor" = {
-        source = ../../../cursor/.cursor;
-        recursive = true;
-      };
     };
   };
 
@@ -408,6 +402,8 @@ in
       WantedBy = [ "sleep.target" ];
     };
   };
+
+  nixpkgs.config.allowUnfree = true;
 
   programs.home-manager.enable = true;
 
