@@ -118,8 +118,7 @@ window#waybar {
 #memory,
 #disk,
 #custom-battery,
-#pulseaudio,
-#custom-pomodoro {
+#pulseaudio {
     border-right: 1px solid #000000;
 }
 

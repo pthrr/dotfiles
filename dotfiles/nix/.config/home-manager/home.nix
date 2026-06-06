@@ -339,7 +339,6 @@ in
         [
           go-task
           # wineWow64Packages.waylandFull
-          openpomodoro-cli
           # ripes # temporarily disabled due to cmake build issue
         ];
 

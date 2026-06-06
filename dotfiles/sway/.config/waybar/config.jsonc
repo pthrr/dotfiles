@@ -5,7 +5,7 @@
     "spacing": 2,
     "modules-left": ["sway/workspaces", "sway/mode"],
     "modules-center": [],
-    "modules-right": ["tray", "cpu", "memory", "disk", "pulseaudio", "custom/battery", "custom/pomodoro", "clock"],
+    "modules-right": ["tray", "cpu", "memory", "disk", "pulseaudio", "custom/battery", "clock"],
 
     "sway/workspaces": {
         "disable-scroll": false,
@@ -57,14 +57,6 @@
         "on-click": "pactl set-sink-mute @DEFAULT_SINK@ toggle",
         "on-click-right": "pavucontrol",
         "tooltip": true
-    },
-
-    "custom/pomodoro": {
-        "exec": "pomo-status",
-        "interval": 5,
-        "format": "POM: {}",
-        "min-length": 16,
-        "separator": true
     },
 
     "clock": {

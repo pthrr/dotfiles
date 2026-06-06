@@ -249,7 +249,6 @@ alias print='lp'
 alias print2='lp -o sides=two-sided-long-edge'
 alias printers='lpstat -p -d'
 alias printman='xdg http://localhost:631'
-alias pomo='pomodoro'
 alias cal='calcurse'
 alias mail='meli'
 _dedup_pathvar() {
