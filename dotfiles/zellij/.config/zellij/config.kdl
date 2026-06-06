@@ -25,6 +25,7 @@ ui {
 
 keybinds {
     shared_except "locked" {
+        unbind "Ctrl q"
         bind "Ctrl p" { GoToPreviousTab; }
         bind "Ctrl n" { GoToNextTab; }
     }
