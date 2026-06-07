@@ -331,10 +331,6 @@ in
         ]
       ++
 
-        # Editors
-        [ vscode ]
-      ++
-
         # Other
         [
           go-task

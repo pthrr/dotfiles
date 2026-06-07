@@ -4,18 +4,33 @@ set -euo pipefail
 S3_HOST="${SCCACHE_S3_HOST:-nwv-srv}"
 S3_PORT="${SCCACHE_S3_PORT:-8333}"
 
-if timeout 2 bash -c "</dev/tcp/${S3_HOST}/${S3_PORT}" 2>/dev/null; then
+if timeout 2 bash -c 'exec 3<>"/dev/tcp/$1/$2"' _ "$S3_HOST" "$S3_PORT" 2>/dev/null; then
     echo "sccache: Using remote (${S3_HOST}:${S3_PORT})" >&2
-    export SCCACHE_BUCKET=sccache
-    export SCCACHE_ENDPOINT="http://${S3_HOST}:${S3_PORT}"
-    export SCCACHE_S3_USE_SSL=false
-    export SCCACHE_REGION=us-east-1
-    export AWS_ACCESS_KEY_ID=sccache
-    export AWS_SECRET_ACCESS_KEY=sccache
+    sccache_env=(
+        -u SCCACHE_DIR
+        -u SCCACHE_CACHE_SIZE
+        SCCACHE_BUCKET=sccache
+        "SCCACHE_ENDPOINT=http://${S3_HOST}:${S3_PORT}"
+        SCCACHE_S3_USE_SSL=false
+        SCCACHE_REGION=us-east-1
+        SCCACHE_NO_DAEMON=1
+        AWS_ACCESS_KEY_ID=sccache
+        AWS_SECRET_ACCESS_KEY=sccache
+    )
 else
     echo "sccache: Using local (~/.cache/sccache)" >&2
-    export SCCACHE_DIR="$HOME/.cache/sccache"
-    export SCCACHE_CACHE_SIZE="5G"
+    cache_dir="$HOME/.cache/sccache"
+    sccache_env=(
+        -u SCCACHE_BUCKET
+        -u SCCACHE_ENDPOINT
+        -u SCCACHE_REGION
+        -u SCCACHE_S3_USE_SSL
+        -u AWS_ACCESS_KEY_ID
+        -u AWS_SECRET_ACCESS_KEY
+        "SCCACHE_DIR=$cache_dir"
+        SCCACHE_CACHE_SIZE=5G
+        SCCACHE_NO_DAEMON=1
+    )
 fi
 
-sccache "$@"
+exec env "${sccache_env[@]}" sccache "$@"
