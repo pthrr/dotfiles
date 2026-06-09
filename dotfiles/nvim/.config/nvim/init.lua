@@ -649,8 +649,10 @@ vim.o.wildignore =
 -- Folding
 -- -----------------------------------------------------------------------------
 
-vim.o.foldmethod = "indent"
-vim.o.foldenable = false
+vim.o.foldmethod = "expr"
+vim.o.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+vim.o.foldenable = true
+vim.o.foldlevel = 99
 vim.o.foldnestmax = 2
 
 -- -----------------------------------------------------------------------------
@@ -995,7 +997,7 @@ do
         if lines and lines[lnum] then
             return "1"
         end
-        return "0"
+        return vim.treesitter.foldexpr(lnum)
     end
 
     function _G.RustCommentFoldText()
@@ -1046,8 +1048,10 @@ do
                 end
             else
                 vim.wo.conceallevel = 0
-                vim.wo.foldenable = false
-                vim.wo.foldmethod = "indent"
+                vim.wo.foldenable = true
+                vim.wo.foldmethod = "expr"
+                vim.wo.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+                vim.wo.foldlevel = 99
             end
         end)
 

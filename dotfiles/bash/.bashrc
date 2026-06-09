@@ -43,13 +43,13 @@ fi
 
 # include OCaml/opam environment
 if [ -d "$HOME/.opam" ]; then
-    eval $(opam env)
+    eval "$(opam env)"
 fi
 
 # source custom env vars
 if [ -f ~/.env ]; then
     set -a
-    source ~/.env
+    source "$HOME/.env"
     set +a
 fi
 
@@ -265,3 +265,7 @@ source "$HOME/z.sh"
 GIT_PS1_SHOWUPSTREAM=""
 source "$HOME/git-prompt.sh"
 source "$HOME/jj-prompt.sh"
+
+if command -v direnv &> /dev/null; then
+    eval "$(direnv hook bash)"
+fi

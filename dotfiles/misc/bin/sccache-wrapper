@@ -9,11 +9,11 @@ if timeout 2 bash -c 'exec 3<>"/dev/tcp/$1/$2"' _ "$S3_HOST" "$S3_PORT" 2>/dev/n
     sccache_env=(
         -u SCCACHE_DIR
         -u SCCACHE_CACHE_SIZE
+        -u SCCACHE_NO_DAEMON
         SCCACHE_BUCKET=sccache
         "SCCACHE_ENDPOINT=http://${S3_HOST}:${S3_PORT}"
         SCCACHE_S3_USE_SSL=false
         SCCACHE_REGION=us-east-1
-        SCCACHE_NO_DAEMON=1
         AWS_ACCESS_KEY_ID=sccache
         AWS_SECRET_ACCESS_KEY=sccache
     )
@@ -22,6 +22,7 @@ else
     cache_dir="$HOME/.cache/sccache"
     sccache_env=(
         -u SCCACHE_BUCKET
+        -u SCCACHE_NO_DAEMON
         -u SCCACHE_ENDPOINT
         -u SCCACHE_REGION
         -u SCCACHE_S3_USE_SSL
@@ -29,7 +30,6 @@ else
         -u AWS_SECRET_ACCESS_KEY
         "SCCACHE_DIR=$cache_dir"
         SCCACHE_CACHE_SIZE=5G
-        SCCACHE_NO_DAEMON=1
     )
 fi
 
