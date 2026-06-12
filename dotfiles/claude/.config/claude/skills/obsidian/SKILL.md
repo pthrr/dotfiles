@@ -5,7 +5,7 @@ description: The user's personal knowledge base lives in an Obsidian vault acces
 
 # Obsidian Vault
 
-Interact with the user's vault through the `obsidian` CLI.
+Interact with the user's vault through the `obsidian` CLI. Run `obsidian` with no args for the full command list.
 
 ## Reading (direct)
 
@@ -16,14 +16,27 @@ Interact with the user's vault through the `obsidian` CLI.
 
 ## Writing (staged for review)
 
-Never write directly to the vault. All changes go to an `inbox/` folder inside the vault for manual review.
+Never write directly to the vault. All changes go to an `inbox/` folder for the user to review and migrate manually.
 
-- New note `Foo.md` → write to `inbox/Foo.md`
-- Changes to existing `Bar.md` → write the full updated version to `inbox/Bar.md`
+**CLI gotcha:** use `path=` when the target has a folder component. `name=` accepts a filename only — slashes error out.
 
-The user will review and manually migrate files from `inbox/` into the vault.
+```
+obsidian create path="inbox/Foo.md" content="..."             # new
+obsidian create path="inbox/Foo.md" content="..." overwrite   # restage
+obsidian delete path="inbox/Foo.md"                           # moves to trash
+```
 
-Stage with: `obsidian create name="inbox/<name>" content="..."`
+Multiline content: build it in a temp file, then expand via shell.
+
+```
+obsidian create path="inbox/Foo.md" content="$(cat /tmp/draft.md)"
+```
+
+### What to stage
+
+- **New note** → full body to `inbox/<title>.md`.
+- **Small edit to existing note** → diff snippet with a few lines of surrounding context to `inbox/<title>_diff.md`. Don't restage the full file for a localized change — the user reviews by eye.
+- **Large rewrite** → full updated version to `inbox/<title>.md`.
 
 ## Workflows
 
@@ -37,12 +50,12 @@ Stage with: `obsidian create name="inbox/<name>" content="..."`
 
 1. `obsidian read path="<note>"` to get current contents
 2. Improve the note: add detail, fix structure, add links, fill gaps
-3. Stage the improved version: `obsidian create name="inbox/<note>" content="<improved>"`
+3. Stage per **What to stage** above
 
 ### Create a note
 
 1. Gather context from the conversation or vault
-2. `obsidian create name="inbox/<title>" content="<body>"`
+2. `obsidian create path="inbox/<title>.md" content="<body>"`
 3. Use wikilinks `[[...]]` for internal links
 
 ## Guidelines

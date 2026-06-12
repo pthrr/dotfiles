@@ -899,6 +899,7 @@ do
         block = { ns = vim.api.nvim_create_namespace("hide_comments_block"), key = "comments_hide_block" },
     }
     local fold_lines_by_buf = {}
+    local fold_state_by_buf = {}
 
     local function classify_comment(node, bufnr)
         local node_type = node:type()
@@ -994,13 +995,25 @@ do
 
     function _G.RustCommentFoldExpr(lnum)
         local lines = fold_lines_by_buf[vim.api.nvim_get_current_buf()]
-        if lines and lines[lnum] then
-            return "1"
+        local treesitter_expr = vim.treesitter.foldexpr(lnum)
+        if not lines or not lines[lnum] then
+            return treesitter_expr
         end
-        return vim.treesitter.foldexpr(lnum)
+
+        local treesitter_level = tonumber(tostring(treesitter_expr):match("%d+")) or 0
+        local comment_level = treesitter_level + 1
+        if not lines[lnum - 1] then
+            return ">" .. comment_level
+        end
+        return tostring(comment_level)
     end
 
     function _G.RustCommentFoldText()
+        local lines = fold_lines_by_buf[vim.api.nvim_get_current_buf()]
+        if not lines or not lines[vim.v.foldstart] then
+            return vim.fn.foldtext()
+        end
+
         local count = vim.v.foldend - vim.v.foldstart + 1
         local line = vim.fn.getline(vim.v.foldstart)
         local indent = line:match("^(%s*)") or ""
@@ -1016,6 +1029,64 @@ do
             end
         end
         return false
+    end
+
+    local function comment_fold_starts(bufnr)
+        local starts = {}
+        local lines = fold_lines_by_buf[bufnr] or {}
+        for lnum in pairs(lines) do
+            if not lines[lnum - 1] then
+                starts[#starts + 1] = lnum
+            end
+        end
+        table.sort(starts)
+        return starts
+    end
+
+    local function is_fold_start(lnum)
+        return tostring(_G.RustCommentFoldExpr(lnum)):match("^>") ~= nil
+    end
+
+    local function capture_fold_state(bufnr, winid)
+        if not vim.api.nvim_win_is_valid(winid) or vim.api.nvim_win_get_buf(winid) ~= bufnr then
+            return
+        end
+
+        local closed_folds = {}
+        vim.api.nvim_win_call(winid, function()
+            for lnum = 1, vim.api.nvim_buf_line_count(bufnr) do
+                if vim.fn.foldclosed(lnum) == lnum then
+                    closed_folds[lnum] = true
+                end
+            end
+        end)
+        fold_state_by_buf[bufnr] = {
+            level = vim.api.nvim_get_option_value("foldlevel", { win = winid }),
+            closed = closed_folds,
+        }
+    end
+
+    local function restore_fold_state(bufnr, winid)
+        local state = fold_state_by_buf[bufnr]
+        if state == nil then
+            state = { level = 99, closed = {} }
+            for _, lnum in ipairs(comment_fold_starts(bufnr)) do
+                state.closed[lnum] = true
+            end
+        end
+
+        vim.api.nvim_win_call(winid, function()
+            local view = vim.fn.winsaveview()
+            vim.wo.foldlevel = state.level
+            vim.cmd("normal! zX")
+            for lnum = 1, vim.api.nvim_buf_line_count(bufnr) do
+                if state.closed[lnum] and is_fold_start(lnum) and vim.fn.foldclosed(lnum) == -1 then
+                    vim.api.nvim_win_set_cursor(winid, { lnum, 0 })
+                    vim.cmd("normal! zc")
+                end
+            end
+            vim.fn.winrestview(view)
+        end)
     end
 
     -- Window-local options must target the window that shows `bufnr`. Capture
@@ -1042,7 +1113,7 @@ do
                 vim.wo.foldmethod = "expr"
                 vim.wo.foldexpr = "v:lua.RustCommentFoldExpr(v:lnum)"
                 vim.wo.foldtext = "v:lua.RustCommentFoldText()"
-                vim.wo.foldlevel = 0
+                vim.wo.foldlevel = 99
                 if not vim.wo.fillchars:match("fold:") then
                     vim.opt_local.fillchars:append("fold: ")
                 end
@@ -1050,20 +1121,12 @@ do
                 vim.wo.conceallevel = 0
                 vim.wo.foldenable = true
                 vim.wo.foldmethod = "expr"
-                vim.wo.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+                vim.wo.foldexpr = "v:lua.RustCommentFoldExpr(v:lnum)"
                 vim.wo.foldlevel = 99
             end
         end)
 
-        if hidden then
-            vim.schedule(function()
-                if vim.api.nvim_win_is_valid(winid) and vim.api.nvim_win_get_buf(winid) == bufnr then
-                    vim.api.nvim_win_call(winid, function()
-                        vim.cmd("normal! zX")
-                    end)
-                end
-            end)
-        end
+        restore_fold_state(bufnr, winid)
     end
 
     local function open_fold_or_right()
@@ -1108,6 +1171,7 @@ do
             })
 
             local function toggle(kind)
+                capture_fold_state(args.buf, vim.api.nvim_get_current_win())
                 vim.b[args.buf][categories[kind].key] = not vim.b[args.buf][categories[kind].key]
                 apply(args.buf)
             end
@@ -1118,6 +1182,7 @@ do
             vim.keymap.set("n", "<leader>cb", function() toggle("block") end, kopts("Toggle block comment visibility"))
 
             vim.keymap.set("n", "<leader>cc", function()
+                capture_fold_state(args.buf, vim.api.nvim_get_current_win())
                 local target = not any_hidden(args.buf)
                 for _, cat in pairs(categories) do
                     vim.b[args.buf][cat.key] = target
@@ -1129,12 +1194,32 @@ do
             vim.keymap.set("n", "<Right>", open_fold_or_right, kopts("Open fold or move right"))
             vim.keymap.set("n", "h", close_fold_or_left, kopts("Close fold or move left"))
             vim.keymap.set("n", "<Left>", close_fold_or_left, kopts("Close fold or move left"))
+
+            vim.api.nvim_create_autocmd({ "BufWinLeave", "WinLeave" }, {
+                buffer = args.buf,
+                callback = function(event)
+                    capture_fold_state(event.buf, vim.api.nvim_get_current_win())
+                end,
+            })
+
+            vim.api.nvim_create_autocmd({ "BufWinEnter", "WinEnter" }, {
+                buffer = args.buf,
+                callback = function(event)
+                    local entered_winid = vim.api.nvim_get_current_win()
+                    vim.schedule(function()
+                        if vim.api.nvim_buf_is_valid(event.buf) then
+                            apply(event.buf, entered_winid)
+                        end
+                    end)
+                end,
+            })
         end,
     })
 
     vim.api.nvim_create_autocmd("BufDelete", {
         callback = function(args)
             fold_lines_by_buf[args.buf] = nil
+            fold_state_by_buf[args.buf] = nil
         end,
     })
 end

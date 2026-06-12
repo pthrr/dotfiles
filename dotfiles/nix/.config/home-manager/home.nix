@@ -820,6 +820,12 @@ in
         source = ../../../sway/.config/mako;
         recursive = true;
       };
+      # Bridge the host-side obsidian CLI to the Flatpak-confined socket.
+      # %t expands to $XDG_RUNTIME_DIR; recreated each user session by
+      # systemd-tmpfiles-setup.service since /run/user/UID is tmpfs.
+      "user-tmpfiles.d/obsidian-cli-socket.conf".text = ''
+        L+ %t/.obsidian-cli.sock - - - - %t/.flatpak/md.obsidian.Obsidian/xdg-run/.obsidian-cli.sock
+      '';
     };
 
   services.flatpak = {
@@ -879,10 +885,6 @@ in
     sudo -n $HOME/bin/patchnixapps $HOME/.nix-profile/share/applications
   '';
 
-  home.activation.obsidianCliSocket = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    RUNTIME_DIR="''${XDG_RUNTIME_DIR:-/run/user/$(id -u)}"
-    ln -sf "$RUNTIME_DIR/.flatpak/md.obsidian.Obsidian/xdg-run/.obsidian-cli.sock" "$RUNTIME_DIR/.obsidian-cli.sock"
-  '';
 
   home.activation.ensureHaskellTools = lib.hm.dag.entryAfter [ "installPackages" ] ''
     export PATH="$HOME/.ghcup/bin:$HOME/.cabal/bin:$HOME/.nix-profile/bin:/usr/local/bin:/usr/bin:$PATH"
