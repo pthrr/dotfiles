@@ -1,0 +1,56 @@
+# ================================================
+# TITLE: <type>[optional scope]: <description> (max 50 chars)
+# ================================================
+
+# REQUIRED TYPES:
+# - feat: A new feature (MINOR)
+# - fix: A bug fix (PATCH)
+#
+# ADDITIONAL TYPES:
+# - build: Changes to build system or external dependencies
+# - chore: Other changes that don't modify src or test files
+# - ci: Changes to CI configuration files and scripts
+# - docs: Documentation only changes
+# - perf: Performance improvements
+# - refactor: Code changes that neither fix a bug nor add a feature
+# - revert: Reverts a previous commit
+# - style: Code style changes (formatting, whitespace, etc.)
+# - test: Adding missing tests or correcting existing tests
+#
+# BREAKING CHANGES:
+# - feat!: description (MAJOR)
+# - feat(scope)!: description (MAJOR)
+#
+# EXAMPLES:
+# feat: add user authentication
+# fix(parser): handle null values
+# feat(api)!: remove deprecated endpoints
+#
+# ================================================
+# BODY (Optional - wrap at 72 chars)
+# ================================================
+
+# Free-form text explaining what and why
+# Separate from title with blank line
+
+# ================================================
+# FOOTER (Optional - wrap at 72 chars)
+# ================================================
+
+# BREAKING CHANGES:
+# - BREAKING CHANGE: description (MUST be uppercase, MAJOR)
+#
+# ISSUE REFERENCES:
+# - Closes: #123
+# - Fixes: #123
+# - Refs: #123
+#
+# COLLABORATION:
+# - Reviewed-by: Name <email>
+# - Co-authored-by: Name <email>
+# - Signed-off-by: Name <email>
+#
+# EXAMPLES:
+# BREAKING CHANGE: environment variables now take precedence
+# Closes: #123, #456
+# Reviewed-by: John Doe <john@example.com>

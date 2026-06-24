@@ -1,0 +1,329 @@
+# ==============================================================================
+# SWAY CONFIGURATION
+# ==============================================================================
+# Read `man 5 sway` for complete reference
+
+# Enable XWayland for X11 app compatibility
+xwayland enable
+
+# ==============================================================================
+# 1. VARIABLES
+# ==============================================================================
+
+set $mod Mod4
+set $left h
+set $down j
+set $up k
+set $right l
+
+# Terminal
+set $term foot
+
+# Application menu
+set $menu rofi -show combi -combi-modes drun#run -modes combi
+
+# ==============================================================================
+# 2. OUTPUT CONFIGURATION
+# ==============================================================================
+
+# Black background
+output * bg #000000 solid_color
+
+# Output configuration handled by kanshi (started in autostart section)
+
+# ==============================================================================
+# 3. INPUT CONFIGURATION
+# ==============================================================================
+
+# Keyboard
+input type:keyboard {
+    xkb_layout "de"
+    xkb_model "pc105"
+    xkb_options "caps:escape,terminate:ctrl_alt_bksp"
+    repeat_delay 300
+    repeat_rate 50
+}
+
+# Pointer
+input type:pointer {
+    dwt true
+    accel_profile "adaptive"
+    pointer_accel 0.6
+}
+
+# Touchpad
+input type:touchpad {
+    dwt true
+    tap enabled
+    click_method clickfinger
+    accel_profile "adaptive"
+    pointer_accel 0.6
+}
+
+# Hide cursor after timeout
+seat * hide_cursor 5000
+
+# ==============================================================================
+# 4. APPEARANCE
+# ==============================================================================
+
+# Font
+font pango:JetBrains Mono 11
+
+# Title bar padding (horizontal, vertical)
+titlebar_padding 6 2
+titlebar_border_thickness 1
+
+# Window borders
+default_border pixel 2
+default_floating_border pixel 2
+hide_edge_borders smart
+
+# Color scheme: <border> <background> <text> <indicator> <child_border>
+# Medium grayscale theme (matches waybar)
+# Default tabs: gray bg with black text, selected tab: black bg with gray text
+client.focused          #000000 #000000 #909090 #000000 #909090
+client.focused_inactive #000000 #909090 #000000 #000000 #000000
+client.unfocused        #000000 #909090 #000000 #000000 #000000
+client.urgent           #000000 #909090 #000000 #000000 #000000
+client.placeholder      #000000 #909090 #000000 #000000 #000000
+client.background       #909090
+
+# Window focus behavior
+focus_follows_mouse yes
+force_display_urgency_hint 0 ms
+focus_on_window_activation none
+
+# Workspace behavior
+workspace_auto_back_and_forth yes
+workspace_layout tabbed
+
+# Floating behavior
+floating_modifier $mod normal
+
+# Window rules
+for_window [app_id="foot_floating"] floating enable, resize set 800 600, move position center
+for_window [app_id="idle_inhibitor"] inhibit_idle open, floating enable, move scratchpad
+
+# ==============================================================================
+# 5. AUTOSTART
+# ==============================================================================
+
+# Swaylock command (config in ~/.config/swaylock/config)
+set $lock swaylock -f
+
+# --- Core Services (restart on sway reload) ---
+
+# Output management
+exec_always "pkill -x kanshi || true; kanshi"
+
+# Notification daemon
+exec_always "pkill -x mako || true; mako"
+
+# --- Session Services (run once) ---
+
+# Idle management: lock after 10min, suspend 1min later
+exec swayidle -w \
+    timeout 600 '$lock' \
+    timeout 660 'systemctl suspend' \
+    before-sleep '$lock' \
+    lock '$lock'
+
+# Automount removable media
+exec udiskie --tray --file-manager 'foot -e vifm'
+
+# Network manager tray
+exec nm-applet --indicator
+
+# Bluetooth tray
+exec blueman-applet
+
+# KDE Connect
+exec kdeconnect-indicator
+
+# --- Optional: Polkit agent (if not handled by DE) ---
+exec /usr/libexec/polkit-gnome-authentication-agent-1 2>/dev/null || \
+    /usr/libexec/polkit-kde-authentication-agent-1 2>/dev/null || true
+
+# ==============================================================================
+# 6. KEY BINDINGS
+# ==============================================================================
+
+# -----------------------------------------------------------------------------
+# System
+# -----------------------------------------------------------------------------
+
+bindsym $mod+Return exec $term
+bindsym $mod+Shift+Return exec foot --app-id foot_floating
+bindsym $mod+Shift+q kill
+bindsym $mod+d exec $menu
+bindsym $mod+Shift+c exec "swaymsg reload && kanshictl reload"
+bindsym $mod+Shift+e exec swaynag -t warning -m 'Exit sway?' -B 'Yes' 'swaymsg exit'
+bindsym $mod+Shift+s exec $lock
+bindsym $mod+Shift+i exec $term --app-id=idle_inhibitor sh -c 'notify-send "Idle Inhibit" "Enabled - press Super+- then Shift+q to disable"; sleep infinity'
+bindsym Control+Mod1+BackSpace exec swaymsg exit
+
+# Snipping tool - select area and copy to clipboard
+bindsym $mod+p exec grimshot copy area
+
+# -----------------------------------------------------------------------------
+# Window Focus
+# -----------------------------------------------------------------------------
+
+bindsym $mod+$left focus left
+bindsym $mod+$down focus down
+bindsym $mod+$up focus up
+bindsym $mod+$right focus right
+
+bindsym $mod+Left focus left
+bindsym $mod+Down focus down
+bindsym $mod+Up focus up
+bindsym $mod+Right focus right
+
+# -----------------------------------------------------------------------------
+# Window Movement
+# -----------------------------------------------------------------------------
+
+bindsym $mod+Shift+$left move left
+bindsym $mod+Shift+$down move down
+bindsym $mod+Shift+$up move up
+bindsym $mod+Shift+$right move right
+
+bindsym $mod+Shift+Left move left
+bindsym $mod+Shift+Down move down
+bindsym $mod+Shift+Up move up
+bindsym $mod+Shift+Right move right
+
+# -----------------------------------------------------------------------------
+# Workspaces
+# -----------------------------------------------------------------------------
+
+bindsym $mod+1 workspace one
+bindsym $mod+2 workspace two
+bindsym $mod+3 workspace three
+bindsym $mod+4 workspace four
+bindsym $mod+5 workspace five
+bindsym $mod+6 workspace six
+bindsym $mod+7 workspace seven
+bindsym $mod+8 workspace eight
+bindsym $mod+9 workspace nine
+bindsym $mod+0 workspace ten
+
+bindsym $mod+Shift+1 move container to workspace one
+bindsym $mod+Shift+2 move container to workspace two
+bindsym $mod+Shift+3 move container to workspace three
+bindsym $mod+Shift+4 move container to workspace four
+bindsym $mod+Shift+5 move container to workspace five
+bindsym $mod+Shift+6 move container to workspace six
+bindsym $mod+Shift+7 move container to workspace seven
+bindsym $mod+Shift+8 move container to workspace eight
+bindsym $mod+Shift+9 move container to workspace nine
+bindsym $mod+Shift+0 move container to workspace ten
+
+# Cycle through workspaces
+bindsym $mod+Tab workspace next
+bindsym $mod+Shift+Tab workspace prev
+
+# Vim-style workspace switching
+bindsym $mod+Control+$left workspace prev
+bindsym $mod+Control+$right workspace next
+bindsym $mod+Control+Left workspace prev
+bindsym $mod+Control+Right workspace next
+
+# -----------------------------------------------------------------------------
+# Layout
+# -----------------------------------------------------------------------------
+
+bindsym $mod+b splith
+bindsym $mod+v splitv
+
+bindsym $mod+s layout stacking
+bindsym $mod+w layout tabbed
+bindsym $mod+e layout toggle split
+
+bindsym $mod+f fullscreen
+
+bindsym $mod+Shift+space floating toggle
+bindsym $mod+space focus mode_toggle
+
+bindsym $mod+a focus parent
+
+# -----------------------------------------------------------------------------
+# Scratchpad
+# -----------------------------------------------------------------------------
+
+bindsym $mod+Shift+minus move scratchpad
+bindsym $mod+minus scratchpad show
+
+# -----------------------------------------------------------------------------
+# Output Management
+# -----------------------------------------------------------------------------
+
+# Move workspace between outputs (cycles through all screens)
+bindsym $mod+o move workspace to output right
+bindsym $mod+Shift+o move workspace to output left
+
+# -----------------------------------------------------------------------------
+# Resize Mode
+# -----------------------------------------------------------------------------
+
+mode "resize" {
+    bindsym $left resize shrink width 10px
+    bindsym $down resize grow height 10px
+    bindsym $up resize shrink height 10px
+    bindsym $right resize grow width 10px
+
+    bindsym Left resize shrink width 10px
+    bindsym Down resize grow height 10px
+    bindsym Up resize shrink height 10px
+    bindsym Right resize grow width 10px
+
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+bindsym $mod+r mode "resize"
+
+# ==============================================================================
+# 7. MEDIA KEYS
+# ==============================================================================
+
+# Volume
+bindsym --locked XF86AudioMute exec pactl set-sink-mute @DEFAULT_SINK@ toggle
+bindsym --locked XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5%
+bindsym --locked XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5%
+bindsym --locked XF86AudioMicMute exec pactl set-source-mute @DEFAULT_SOURCE@ toggle
+
+# Brightness
+bindsym --locked XF86MonBrightnessUp exec brightnessctl set +5%
+bindsym --locked XF86MonBrightnessDown exec brightnessctl set 5%-
+
+# Media player
+bindsym --locked XF86AudioPlay exec playerctl play-pause
+bindsym --locked XF86AudioNext exec playerctl next
+bindsym --locked XF86AudioPrev exec playerctl previous
+
+# ==============================================================================
+# 8. BAR
+# ==============================================================================
+
+bar {
+    swaybar_command waybar
+}
+
+# ==============================================================================
+# 9. SYSTEM INCLUDES
+# ==============================================================================
+
+include /etc/sway/config-vars.d/*
+
+# Include system configs (except swayidle which we define above, and bar which we define above)
+include /etc/sway/config.d/10-*.conf
+include /usr/share/sway/config.d/50-*.conf
+include /usr/share/sway/config.d/60-*.conf
+include /usr/share/sway/config.d/65-*.conf
+# Skip 90-bar.conf (we define waybar above) and 90-swayidle.conf (we define swayidle above)
+include /usr/share/sway/config.d/95-xdg-desktop-autostart.conf
+include /usr/share/sway/config.d/95-xdg-user-dirs.conf
+
+# Initialize systemd user session (if available)
+exec test -x /usr/libexec/sway-systemd/session.sh && /usr/libexec/sway-systemd/session.sh

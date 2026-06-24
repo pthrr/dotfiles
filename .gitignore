@@ -1,0 +1,17 @@
+# Nix build output
+result
+result-*
+
+# Logs
+*.log
+
+# Python bytecode
+__pycache__/
+*.pyc
+
+# Secrets
+.env
+.env.*
+
+# KDE
+.directory

@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+DIR=$1
+echo "Working on ´$DIR´ .."
+
+inotifywait -q --event modify,create,delete,move -mr $DIR |
+    while read directory action file; do
+        sleep 1
+        echo "[[=== start ===]]"
+        echo "Trigger: directory=$directory file=$file action=$action"
+        ${@:2}
+        echo "[[=== done ===]]"
+    done

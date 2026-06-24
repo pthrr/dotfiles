@@ -1,0 +1,22 @@
+# Normalize line endings
+* text=auto
+
+# Common binaries
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.pdf binary
+*.zip binary
+*.gz binary
+*.tar binary
+*.so binary
+*.a binary
+*.o binary
+*.elf binary
+*.bin binary
+
+# Lock files — keep verbatim, skip diffs
+Cargo.lock text -diff
+package-lock.json text -diff
