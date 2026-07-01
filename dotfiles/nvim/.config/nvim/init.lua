@@ -193,8 +193,13 @@ now(function()
             filetypes = { "rust" },
             root_dir = function(bufnr)
                 local root = vim.fs.root(bufnr, {
-                    "MODULE.bazel", "WORKSPACE", "WORKSPACE.bazel",
-                    "BUILD.bazel", "Cargo.toml", ".git", ".jj",
+                    "MODULE.bazel",
+                    "WORKSPACE",
+                    "WORKSPACE.bazel",
+                    "BUILD.bazel",
+                    "Cargo.toml",
+                    ".git",
+                    ".jj",
                 })
                 if root then
                     return root
@@ -204,10 +209,7 @@ now(function()
                     return nil
                 end
                 local fallback = vim.fn.fnamemodify(bufname, ":p:h")
-                vim.notify(
-                    "rust-analyzer: no workspace root found, falling back to " .. fallback,
-                    vim.log.levels.WARN
-                )
+                vim.notify("rust-analyzer: no workspace root found, falling back to " .. fallback, vim.log.levels.WARN)
                 return fallback
             end,
             settings = {
@@ -250,7 +252,18 @@ now(function()
         eslint = {
             cmd = { "vscode-eslint-language-server", "--stdio" },
             filetypes = { "typescript", "javascript", "typescriptreact", "javascriptreact" },
-            root_markers = { "eslint.config.js", "eslint.config.mjs", "eslint.config.cjs", ".eslintrc.json", ".eslintrc.js", ".eslintrc.yaml", ".eslintrc.yml", "package.json", ".git", ".jj" },
+            root_markers = {
+                "eslint.config.js",
+                "eslint.config.mjs",
+                "eslint.config.cjs",
+                ".eslintrc.json",
+                ".eslintrc.js",
+                ".eslintrc.yaml",
+                ".eslintrc.yml",
+                "package.json",
+                ".git",
+                ".jj",
+            },
             settings = {
                 packageManager = "npm",
             },
@@ -428,13 +441,25 @@ vim.api.nvim_create_autocmd("BufWritePre", {
             run_external_formatter("tlafmt", { file })
         elseif file:match("%.zig$") then
             run_external_formatter("zig", { "fmt", file })
-        elseif file:match("%.cc$") or file:match("%.cpp$") or file:match("%.hpp$") or file:match("%.c$") or file:match("%.h$") then
+        elseif
+            file:match("%.cc$")
+            or file:match("%.cpp$")
+            or file:match("%.hpp$")
+            or file:match("%.c$")
+            or file:match("%.h$")
+        then
             run_external_formatter("clang-format", { "-i", file })
         elseif file:match("%.sh$") or file:match("%.bash$") or file:match("%.zsh$") then
             run_external_formatter("shfmt", { "-w", file })
         elseif file:match("%.py$") then
             run_external_formatter("ruff", { "format", "--quiet", file })
-        elseif file:match("%.ts$") or file:match("%.tsx$") or file:match("%.js$") or file:match("%.jsx$") or file:match("%.md$") then
+        elseif
+            file:match("%.ts$")
+            or file:match("%.tsx$")
+            or file:match("%.js$")
+            or file:match("%.jsx$")
+            or file:match("%.md$")
+        then
             run_external_formatter("prettier", { "--write", file })
         elseif file:match("%.lua$") then
             local config_path = vim.fn.expand("~") .. "/.config/stylua/stylua.toml"
@@ -1140,7 +1165,8 @@ do
         local line = vim.api.nvim_get_current_line()
         local first_nonblank_col = #(line:match("^%s*") or "") + 1
         local at_or_before_content = vim.fn.col(".") <= first_nonblank_col
-        if at_or_before_content and vim.fn.foldlevel(".") > 0 and vim.fn.foldclosed(".") == -1 then
+        local lnum = vim.fn.line(".")
+        if at_or_before_content and is_fold_start(lnum) and vim.fn.foldclosed(".") == -1 then
             vim.cmd("normal! zc")
         else
             vim.cmd("normal! h")
@@ -1175,11 +1201,19 @@ do
                 vim.b[args.buf][categories[kind].key] = not vim.b[args.buf][categories[kind].key]
                 apply(args.buf)
             end
-            local kopts = function(desc) return { buffer = args.buf, desc = desc } end
+            local kopts = function(desc)
+                return { buffer = args.buf, desc = desc }
+            end
 
-            vim.keymap.set("n", "<leader>cl", function() toggle("line") end, kopts("Toggle line comment visibility"))
-            vim.keymap.set("n", "<leader>cd", function() toggle("doc") end, kopts("Toggle doc comment visibility"))
-            vim.keymap.set("n", "<leader>cb", function() toggle("block") end, kopts("Toggle block comment visibility"))
+            vim.keymap.set("n", "<leader>cl", function()
+                toggle("line")
+            end, kopts("Toggle line comment visibility"))
+            vim.keymap.set("n", "<leader>cd", function()
+                toggle("doc")
+            end, kopts("Toggle doc comment visibility"))
+            vim.keymap.set("n", "<leader>cb", function()
+                toggle("block")
+            end, kopts("Toggle block comment visibility"))
 
             vim.keymap.set("n", "<leader>cc", function()
                 capture_fold_state(args.buf, vim.api.nvim_get_current_win())
@@ -1223,3 +1257,16 @@ do
         end,
     })
 end
+-- agda
+vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
+    pattern = { "*.agda", "*.lagda", "*.lagda.md", "*.lagda.tex" },
+    callback = function()
+        local opts = { buffer = true, silent = true }
+
+        vim.keymap.set("i", [[\lam]], "λ", opts)
+        vim.keymap.set("i", [[\to]], "→", opts)
+        vim.keymap.set("i", [[\Nat]], "ℕ", opts)
+        vim.keymap.set("i", [[\Pi]], "Π", opts)
+        vim.keymap.set("i", [[\Sigma]], "Σ", opts)
+    end,
+})

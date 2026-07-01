@@ -23,3 +23,13 @@ height=100
 
 # Layout
 padding=10
+
+# Critical urgency: never auto-dismiss, red border
+[urgency=critical]
+default-timeout=0
+border-color=#ff0000
+
+# Battery warnings: never auto-dismiss, red border
+[app-name=battery-alertd]
+default-timeout=0
+border-color=#ff0000

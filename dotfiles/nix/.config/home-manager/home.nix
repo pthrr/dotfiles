@@ -11,7 +11,7 @@ let
     version = "latest";
     src = pkgs.fetchurl {
       url = "https://downloads.haskell.org/~ghcup/x86_64-linux-ghcup";
-      hash = "sha256-SA4F5BTS76WrvaAAaYSjNDzUlz6te1xI1lpVpHtAzlk=";
+      hash = "sha256-ntXaVEm0gEOg0X52fAXS71heJaY5u5NDKUlsbS+tnPg=";
     };
     dontUnpack = true;
     installPhase = ''
@@ -53,95 +53,6 @@ let
   commonCore = {
     editor = "nvim";
     pager = "less -+$LESS -FRX";
-  };
-
-  codexNwv = pkgs.writeShellApplication {
-    name = "codex";
-    runtimeInputs = with pkgs; [
-      curl
-      jq
-    ];
-    text = ''
-      set -euo pipefail
-
-      if [ -z "''${LLM_NW_URL:-}" ] || [ -z "''${LLM_NW_TOKEN:-}" ] || [ -z "''${LLM_NW_MODEL:-}" ]; then
-        printf 'codex: LLM_NW_URL / LLM_NW_TOKEN / LLM_NW_MODEL not set (check ~/.env)\n' >&2
-        exit 1
-      fi
-
-      base_url="''${LLM_NW_URL%/}/v1"
-      default_model="$LLM_NW_MODEL"
-      # Models Bifrost does NOT advertise via /v1/models (serverless runpod has
-      # list_models off to avoid GPU cold-starts). Comma-separated, may be empty.
-      static_models="''${LLM_NW_STATIC_MODELS:-}"
-      catalog="$HOME/.codex/nwv-models.json"
-      mkdir -p "$HOME/.codex"
-
-      models_json="$(
-        curl -fsS "$base_url/models" \
-          -H "Authorization: Bearer $LLM_NW_TOKEN"
-      )"
-
-      if ! printf '%s' "$models_json" | jq -e --arg model "$default_model" '
-        [.data[]?.id] | index($model)
-      ' >/dev/null; then
-        printf 'codex: Bifrost does not advertise required default model %s\n' "$default_model" >&2
-        printf '%s\n' "$models_json" | jq -r '.data[]?.id // empty' >&2
-        exit 1
-      fi
-
-      printf '%s' "$models_json" | jq --arg default_model "$default_model" --arg static "$static_models" '
-        def catalog_model($slug; $priority): {
-          slug: $slug,
-          display_name: $slug,
-          description: "Bifrost gateway model",
-          default_reasoning_level: "medium",
-          supported_reasoning_levels: [
-            { effort: "low", description: "Light reasoning" },
-            { effort: "medium", description: "Default reasoning" },
-            { effort: "high", description: "Deeper reasoning" }
-          ],
-          shell_type: "shell_command",
-          visibility: "list",
-          supported_in_api: true,
-          priority: $priority,
-          upgrade: null,
-          base_instructions: "You are Codex, a coding agent. Work in the user workspace and follow the active Codex instructions.",
-          supports_reasoning_summaries: false,
-          default_reasoning_summary: "none",
-          support_verbosity: true,
-          default_verbosity: "medium",
-          apply_patch_tool_type: "freeform",
-          web_search_tool_type: "text_and_image",
-          truncation_policy: {
-            mode: "tokens",
-            limit: 10000
-          },
-          supports_parallel_tool_calls: true,
-          supports_image_detail_original: true,
-          context_window: (if ($slug | startswith("runpod/")) then 131072 else 65536 end),
-          max_context_window: (if ($slug | startswith("runpod/")) then 131072 else 65536 end),
-          effective_context_window_percent: 95,
-          experimental_supported_tools: [],
-          input_modalities: ["text"],
-          supports_search_tool: true
-        };
-
-        ($static | split(",") | map(select(. != ""))) as $static_models
-        | [ .data[]?.id | select(type == "string") ] as $discovered
-        | ([$default_model] + $discovered + $static_models
-           | reduce .[] as $m ([]; if index($m) then . else . + [$m] end)) as $ordered
-        | { models: ($ordered | to_entries | map(catalog_model(.value; .key))) }
-      ' > "$catalog"
-
-      chmod 0600 "$catalog"
-
-      exec ${pkgs.codex}/bin/codex --profile nwv \
-        -c "model=\"$default_model\"" \
-        -c "model_providers.nwv.base_url=\"$base_url\"" \
-        -c "model_catalog_json=\"$catalog\"" \
-        "$@"
-    '';
   };
 in
 {
@@ -288,7 +199,7 @@ in
         # AI tooling
         [
           claude-code
-          codexNwv
+          codex
         ]
       ++
 
@@ -457,8 +368,18 @@ in
         source = ../../../sent/Vorlagen/slides;
         recursive = true;
       };
-      ".claude" = {
-        source = ../../../claude/.config/claude;
+      ".agents" = {
+        source = ../../../agents/.agents;
+        recursive = true;
+      };
+      ".claude/settings.json".source = ../../../claude/.config/claude/settings.json;
+      ".claude/statusline.sh".source = ../../../claude/.config/claude/statusline.sh;
+
+      # Keep Claude Code pointed at the cross-client rules and skills until it
+      # discovers ~/.agents natively.
+      ".claude/CLAUDE.md".source = ../../../agents/.agents/AGENTS.md;
+      ".claude/skills" = {
+        source = ../../../agents/.agents/skills;
         recursive = true;
       };
     };
@@ -469,6 +390,88 @@ in
   # fusermount -uz (lazy unmount) detaches immediately via MNT_DETACH even if the
   # FUSE daemon is unresponsive (e.g. SSH tunnel dropped mid-transit).
   # TimeoutStartSec caps the worst case so sleep is never blocked indefinitely.
+  # UPower's DisplayDevice reports the combined charge of all batteries.  Unlike
+  # poweralertd, this intentionally ignores routine charging and AC events.
+  systemd.user.services.battery-alertd = {
+    Unit = {
+      Description = "Low combined-battery notifications via UPower";
+      PartOf = [ "graphical-session.target" ];
+      After = [ "graphical-session.target" ];
+    };
+    Service = {
+      Type = "simple";
+      ExecStart =
+        let
+          batteryAlertd = pkgs.writeShellApplication {
+            name = "battery-alertd";
+            runtimeInputs = [
+              pkgs.upower
+              pkgs.libnotify
+              pkgs.gnused
+            ];
+            text = ''
+              display_device=/org/freedesktop/UPower/devices/DisplayDevice
+              last_level=normal
+              initialized=false
+
+              while true; do
+                # LC_ALL=C: upower renders "percentage" with the locale's
+                # decimal separator (e.g. "12,96%" under de_DE), which the
+                # numeric regex below rejects.
+                status=$(LC_ALL=C upower -i "$display_device" 2>/dev/null || true)
+                state=$(sed -n 's/^[[:space:]]*state:[[:space:]]*//p' <<<"$status")
+                percentage=$(sed -n 's/^[[:space:]]*percentage:[[:space:]]*//p' <<<"$status")
+                percentage=''${percentage%\%}
+
+                # UPower may report a fractional percentage (for example,
+                # 22.1459%).  Bash arithmetic needs the whole-number part.
+                if [[ $percentage =~ ^([0-9]+)([.][0-9]+)?$ ]]; then
+                  percentage=''${BASH_REMATCH[1]}
+                else
+                  sleep 60
+                  continue
+                fi
+
+                level=normal
+                if [[ $state == discharging ]]; then
+                  if (( percentage <= 10 )); then
+                    level=critical
+                  elif (( percentage <= 20 )); then
+                    level=low
+                  fi
+                fi
+
+                # Match the previous -s behavior: do not show a stale warning
+                # merely because the graphical session has just started.
+                if $initialized && [[ $level != "$last_level" ]]; then
+                  case $level in
+                    low)
+                      notify-send --app-name=battery-alertd --urgency=normal \
+                        "Battery low" "Combined battery charge is $percentage%." || true
+                      ;;
+                    critical)
+                      notify-send --app-name=battery-alertd --urgency=critical \
+                        "Battery critical" "Combined battery charge is $percentage%. Connect power now." || true
+                      ;;
+                  esac
+                fi
+
+                last_level=$level
+                initialized=true
+                sleep 60
+              done
+            '';
+          };
+        in
+        "${batteryAlertd}/bin/battery-alertd";
+      Restart = "on-failure";
+      RestartSec = 10;
+    };
+    Install = {
+      WantedBy = [ "graphical-session.target" ];
+    };
+  };
+
   systemd.user.services.sshfs-sleep-handler = {
     Unit = {
       Description = "Unmount SSHFS before sleep";
@@ -838,6 +841,7 @@ in
 
   programs.neovim = {
     enable = true;
+    sideloadInitLua = true;
     withRuby = true;
     withPython3 = true;
     withPerl = false;
@@ -864,8 +868,6 @@ in
       telescope-nvim
     ];
   };
-
-  home.file.".codex/nwv.config.toml".source = ../../../codex/.codex/nwv.config.toml;
 
   xdg.configFile =
     let
@@ -976,7 +978,6 @@ in
   home.activation.runMyScript = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     sudo -n $HOME/bin/patchnixapps $HOME/.nix-profile/share/applications
   '';
-
 
   home.activation.ensureHaskellTools = lib.hm.dag.entryAfter [ "installPackages" ] ''
     export PATH="$HOME/.ghcup/bin:$HOME/.cabal/bin:$HOME/.nix-profile/bin:/usr/local/bin:/usr/bin:$PATH"

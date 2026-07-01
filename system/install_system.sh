@@ -43,12 +43,9 @@ sudo dnf remove -y \
 # Remove dunst after swaywm group installed (use mako instead)
 sudo dnf remove -y \
 	dunst
-# Disable offline updates - only allow manual online updates
+# Disable GNOME offline updates
 sudo systemctl mask \
-	packagekit-offline-update.service \
-	system-update.target \
-	dnf5-offline-transaction.service \
-	dnf-system-upgrade.service
+	packagekit-offline-update.service
 # Boot to console login, start DE manually
 sudo systemctl set-default multi-user.target
 
