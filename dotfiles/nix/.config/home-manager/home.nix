@@ -24,6 +24,10 @@ let
     enableTests = false;
   };
 
+  # Not in nixpkgs; consumed straight from upstream's own flake package output.
+  # Pinned by rev — bump manually when you want a newer monstar.
+  monstar = (builtins.getFlake "github:rockorager/monstar/c41132f5570f6b6347ec15c9de5e9417d79f2f50").packages.${pkgs.stdenv.hostPlatform.system}.default;
+
   defaultUserName = "pthrr";
   defaultUserEmail = "pthrr@posteo.de";
   gitUserNameFile = "${config.home.homeDirectory}/.config/git/name.txt";
@@ -66,6 +70,11 @@ in
     stateVersion = "22.05";
     enableNixpkgsReleaseCheck = false;
 
+    # ncurses on Fedora searches ~/.terminfo unconditionally, so symlinking
+    # the entry there works regardless of TERMINFO_DIRS or a stale
+    # __HM_SESS_VARS_SOURCED guard inherited from an older session.
+    file.".terminfo/x/xterm-ghostty".source = "${pkgs.ghostty.terminfo}/share/terminfo/x/xterm-ghostty";
+
     packages =
       with pkgs;
       # Core utilities
@@ -105,6 +114,12 @@ in
           wl-clipboard
           wlr-randr
           udiskie
+          monstar
+          # monstar (like ghostty itself) sets TERM=xterm-ghostty for its child;
+          # neither Fedora's ncurses-term nor nixpkgs' ncurses register that name
+          # (only the unrelated "ghostty" alias), so pull just the terminfo entry
+          # rather than the ~1GB full ghostty package.
+          ghostty.terminfo
         ]
       ++
 
@@ -880,6 +895,7 @@ in
       "sway"
       "gdb"
       "foot"
+      "monstar"
       "zathura"
       "git"
       "zellij"
