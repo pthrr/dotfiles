@@ -264,8 +264,59 @@ now(function()
                 ".git",
                 ".jj",
             },
+            -- vscode-eslint-language-server expects a VS Code-shaped settings
+            -- payload; without workspaceFolder + workingDirectory it throws
+            -- `TypeError [ERR_INVALID_ARG_TYPE]: path must be of type string`
+            -- on the first didOpen. workspaceFolder must be filled per-root.
             settings = {
+                validate = "on",
                 packageManager = "npm",
+                useESLintClass = false,
+                experimental = { useFlatConfig = false },
+                codeActionOnSave = { enable = false, mode = "all" },
+                format = false,
+                quiet = false,
+                onIgnoredFiles = "off",
+                rulesCustomizations = {},
+                run = "onType",
+                problems = { shortenToSingleLine = false },
+                nodePath = "",
+                workingDirectory = { mode = "location" },
+                codeAction = {
+                    disableRuleComment = { enable = true, location = "separateLine" },
+                    showDocumentation = { enable = true },
+                },
+            },
+            before_init = function(params, config)
+                local folder = params.workspaceFolders and params.workspaceFolders[1]
+                if folder then
+                    config.settings.workspaceFolder = {
+                        uri = folder.uri,
+                        name = vim.fn.fnamemodify(vim.uri_to_fname(folder.uri), ":t"),
+                    }
+                end
+            end,
+            -- vscode-eslint-language-server sends VS Code-only requests that
+            -- nvim has no default handlers for; without stubs each one logs
+            -- `MethodNotFound`. Reply with sensible defaults so the log stays
+            -- clean and the server proceeds.
+            handlers = {
+                ["eslint/noLibrary"] = function()
+                    return {}
+                end,
+                ["eslint/openDoc"] = function()
+                    return {}
+                end,
+                ["eslint/probeFailed"] = function()
+                    return {}
+                end,
+                ["eslint/showOutputChannel"] = function()
+                    return {}
+                end,
+                -- ConfirmExecutionResult.approved = 4
+                ["eslint/confirmESLintExecution"] = function()
+                    return 4
+                end,
             },
         },
         lua_ls = {

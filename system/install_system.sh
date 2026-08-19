@@ -25,7 +25,9 @@ sudo dnf install -y \
 	arm-none-eabi-binutils-cs arm-none-eabi-gcc-cs-c++ arm-none-eabi-gcc-cs arm-none-eabi-newlib \
 	sshfs openocd dfu-util \
 	libxcrypt-compat ncurses-compat-libs \
-	mock
+	mock \
+	cups cups-filters cups-ipptool \
+	sane-backends sane-airscan simple-scan
 # Remove dropped groups and packages from previous installs
 sudo dnf group remove -y \
 	admin-tools \

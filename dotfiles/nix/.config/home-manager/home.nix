@@ -400,11 +400,6 @@ in
     };
   };
 
-  # Unmount SSHFS mounts before sleep to prevent freeze.
-  # Ordered Before=sleep.target so systemd waits for completion before suspending.
-  # fusermount -uz (lazy unmount) detaches immediately via MNT_DETACH even if the
-  # FUSE daemon is unresponsive (e.g. SSH tunnel dropped mid-transit).
-  # TimeoutStartSec caps the worst case so sleep is never blocked indefinitely.
   # UPower's DisplayDevice reports the combined charge of all batteries.  Unlike
   # poweralertd, this intentionally ignores routine charging and AC events.
   systemd.user.services.battery-alertd = {
@@ -487,24 +482,44 @@ in
     };
   };
 
-  systemd.user.services.sshfs-sleep-handler = {
-    Unit = {
-      Description = "Unmount SSHFS before sleep";
-      Before = [ "sleep.target" ];
-    };
-    Service = {
-      Type = "oneshot";
-      ExecStart = pkgs.writeShellScript "sshfs-sleep-handler" ''
-        if /usr/bin/mount | grep -q " $HOME/Drive "; then
-          /usr/bin/fusermount -uz "$HOME/Drive" 2>/dev/null || true
-        fi
+  # Unmount ~/Drive (sshfs) across suspend so a dead SSH tunnel can't
+  # leave FUSE I/O stuck in D-state and block the kernel's freeze pass.
+  #
+  # This is a root-owned script in /etc/systemd/system-sleep/, invoked
+  # directly by systemd-suspend.service BEFORE the kernel freeze pass.
+  # A user-scope unit tied to sleep.target does not fire on
+  # `systemctl suspend` (that target only lives at system scope).
+  #
+  # Because home-manager runs as the user, we install the script via
+  # `sudo install`; this requires a one-shot sudoers rule:
+  #
+  #   sudo tee /etc/sudoers.d/home-manager-sleep-hook <<'EOF'
+  #   pthrr ALL=(root) NOPASSWD: /usr/bin/install -D -m0755 -o root -g root /nix/store/*-unmount-drive-sleep-hook /etc/systemd/system-sleep/unmount-drive
+  #   EOF
+  #   sudo chmod 0440 /etc/sudoers.d/home-manager-sleep-hook
+  #
+  # After that, every `home-manager switch` re-installs the script
+  # only when its contents change (cmp guard keeps it idempotent).
+  home.activation.installDriveSleepHook =
+    let
+      hook = pkgs.writeText "unmount-drive-sleep-hook" ''
+        #!/bin/sh
+        case "$1" in
+          pre)
+            /usr/bin/mountpoint -q /home/pthrr/Drive && \
+              /usr/bin/fusermount -uz /home/pthrr/Drive
+            ;;
+        esac
       '';
-      TimeoutStartSec = 10;
-    };
-    Install = {
-      WantedBy = [ "sleep.target" ];
-    };
-  };
+      dest = "/etc/systemd/system-sleep/unmount-drive";
+    in
+    lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      if ! /usr/bin/cmp -s ${hook} ${dest} 2>/dev/null; then
+        /usr/bin/sudo -n /usr/bin/install -D -m0755 -o root -g root \
+          ${hook} ${dest} \
+          || echo "warning: could not install ${dest} (missing sudoers rule?)" >&2
+      fi
+    '';
 
   nixpkgs.config.allowUnfree = true;
 

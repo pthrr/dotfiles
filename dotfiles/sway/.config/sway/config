@@ -17,7 +17,7 @@ set $up k
 set $right l
 
 # Terminal
-set $term foot
+set $term monstar
 
 # Application menu
 set $menu rofi -show combi -combi-modes drun#run -modes combi
@@ -102,7 +102,7 @@ workspace_layout tabbed
 floating_modifier $mod normal
 
 # Window rules
-for_window [app_id="foot_floating"] floating enable, resize set 800 600, move position center
+for_window [app_id="monstar_floating"] floating enable, resize set 800 600, move position center
 for_window [app_id="idle_inhibitor"] inhibit_idle open, floating enable, move scratchpad
 
 # ==============================================================================
@@ -130,7 +130,7 @@ exec swayidle -w \
     lock '$lock'
 
 # Automount removable media
-exec udiskie --tray --file-manager 'foot -e vifm'
+exec udiskie --tray --file-manager 'monstar -e vifm'
 
 # Network manager tray
 exec nm-applet --indicator
@@ -154,13 +154,13 @@ exec /usr/libexec/polkit-gnome-authentication-agent-1 2>/dev/null || \
 # -----------------------------------------------------------------------------
 
 bindsym $mod+Return exec $term
-bindsym $mod+Shift+Return exec foot --app-id foot_floating
+bindsym $mod+Shift+Return exec $term --app-id monstar_floating
 bindsym $mod+Shift+q kill
 bindsym $mod+d exec $menu
 bindsym $mod+Shift+c exec "swaymsg reload && kanshictl reload"
 bindsym $mod+Shift+e exec swaynag -t warning -m 'Exit sway?' -B 'Yes' 'swaymsg exit'
 bindsym $mod+Shift+s exec $lock
-bindsym $mod+Shift+i exec $term --app-id=idle_inhibitor sh -c 'notify-send "Idle Inhibit" "Enabled - press Super+- then Shift+q to disable"; sleep infinity'
+bindsym $mod+Shift+i exec $term --app-id=idle_inhibitor -e sh -c 'notify-send "Idle Inhibit" "Enabled - press Super+- then Shift+q to disable"; sleep infinity'
 bindsym Control+Mod1+BackSpace exec swaymsg exit
 
 # Snipping tool - select area and copy to clipboard

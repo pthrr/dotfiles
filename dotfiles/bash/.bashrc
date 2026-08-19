@@ -85,6 +85,8 @@ export PDFVIEWER='zathura'
 export IMAGEVIEWER='nsxiv'
 export MEDIAPLAYER='vlc'
 export FILEMANAGER='vifm'
+export PRINTER='TR4700_series'
+export SANE_DEFAULT_DEVICE='airscan:e0:Canon TR4700 series'
 export FZF_DEFAULT_COMMAND='rg --files'
 export FZF_DEFAULT_OPTS='-m --height 50% --border'
 export LESS='-R'
@@ -245,10 +247,15 @@ alias srv='ssh nwv-srv'
 alias srvreb='ssh nwv-srv "cd ~/server && git pull && sudo task deploy"'
 alias plasma='dbus-run-session startplasma-wayland'
 alias mkrestart='killall kded6 2>/dev/null; systemctl --user restart sway-session.target'
-alias print='lp'
-alias print2='lp -o sides=two-sided-long-edge'
+alias print='lp -o print-color-mode=monochrome'
+alias print2='lp -o print-color-mode=monochrome -o sides=two-sided-long-edge'
 alias printers='lpstat -p -d'
 alias printman='xdg http://localhost:631'
+alias scanners='scanimage -L'
+scan() {
+    local out="scan-$(date +%Y%m%d-%H%M%S).png"
+    scanimage --mode Color --resolution 300 --format=png --output-file "$out" && echo "$out"
+}
 alias cal='calcurse'
 alias mail='meli'
 _dedup_pathvar() {
