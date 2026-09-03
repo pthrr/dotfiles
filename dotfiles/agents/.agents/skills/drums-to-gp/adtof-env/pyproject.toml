@@ -1,0 +1,19 @@
+[project]
+name = "drums-to-gp-adtof"
+version = "0.1.0"
+requires-python = "==3.10.*"
+dependencies = [
+    "adtof",
+    "tensorflow==2.20.0",
+    "tf-keras==2.20.1",
+]
+
+[tool.uv]
+package = false
+override-dependencies = [
+    "madmom @ git+https://github.com/CPJKU/madmom@27f032e8947204902c675e5e341a3faf5dc86dae",
+    "tapcorrect @ git+https://github.com/MZehren/tapcorrect@4f2d21e73fb0137119a4136513c42936b322fc0b#subdirectory=python",
+]
+
+[tool.uv.sources]
+adtof = { git = "https://github.com/MZehren/ADTOF", rev = "b3968fb332f69b65ee07c089fc62f436503755db" }

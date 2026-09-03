@@ -383,20 +383,19 @@ in
         source = ../../../sent/Vorlagen/slides;
         recursive = true;
       };
-      ".agents" = {
-        source = ../../../agents/.agents;
-        recursive = true;
-      };
+      ".agents/AGENTS.md".source = ../../../agents/.agents/AGENTS.md;
+      # Skills contain uv environments and embedded Nix flakes that need their
+      # real writable source path. A store copy makes `uv run --project` fail
+      # when it updates console-script links inside .venv.
+      ".agents/skills".source = config.lib.file.mkOutOfStoreSymlink (
+        "${config.home.homeDirectory}/.dotfiles/dotfiles/agents/.agents/skills"
+      );
       ".claude/settings.json".source = ../../../claude/.config/claude/settings.json;
       ".claude/statusline.sh".source = ../../../claude/.config/claude/statusline.sh;
 
-      # Keep Claude Code pointed at the cross-client rules and skills until it
-      # discovers ~/.agents natively.
+      # Keep Claude Code pointed at the cross-client rules until it discovers
+      # ~/.agents natively. Skills are deployed only through ~/.agents/skills.
       ".claude/CLAUDE.md".source = ../../../agents/.agents/AGENTS.md;
-      ".claude/skills" = {
-        source = ../../../agents/.agents/skills;
-        recursive = true;
-      };
     };
   };
 
