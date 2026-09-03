@@ -28,6 +28,30 @@ let
   # Pinned by rev — bump manually when you want a newer monstar.
   monstar = (builtins.getFlake "github:rockorager/monstar/c41132f5570f6b6347ec15c9de5e9417d79f2f50").packages.${pkgs.stdenv.hostPlatform.system}.default;
 
+  # Upstream ships only an AppImage; wrap it so it lands in $PATH with a
+  # .desktop entry. Bump `version` + `hash` together when updating.
+  tasks-org =
+    let
+      pname = "tasks-org";
+      version = "15.10";
+      src = pkgs.fetchurl {
+        url = "https://update.tasks.org/tasks-org-linux-x86_64.AppImage";
+        hash = "sha256-7qVqQ0zSelV4VRFQSdoyYVJdGP2UaY59QJ9CiWkXN6w=";
+      };
+      appimageContents = pkgs.appimageTools.extractType2 { inherit pname version src; };
+    in
+    pkgs.appimageTools.wrapType2 {
+      inherit pname version src;
+      extraInstallCommands = ''
+        install -Dm444 ${appimageContents}/*.desktop -t $out/share/applications
+        substituteInPlace $out/share/applications/*.desktop \
+          --replace-quiet 'Exec=AppRun' 'Exec=${pname}'
+        if [ -d ${appimageContents}/usr/share/icons ]; then
+          cp -r ${appimageContents}/usr/share/icons $out/share/
+        fi
+      '';
+    };
+
   defaultUserName = "pthrr";
   defaultUserEmail = "pthrr@posteo.de";
   gitUserNameFile = "${config.home.homeDirectory}/.config/git/name.txt";
@@ -52,6 +76,22 @@ let
   commonUser = {
     name = gitUserName;
     email = gitUserEmail;
+  };
+
+  aiderKeyFile = "${config.home.homeDirectory}/.config/aider/key.txt";
+  aiderKey =
+    if builtins.pathExists aiderKeyFile then
+      lib.strings.removeSuffix "\n" (builtins.readFile aiderKeyFile)
+    else
+      throw "Missing ${aiderKeyFile}. Put the Bifrost master key there (0600).";
+  aiderModel = "openai/llamacpp/gpt-oss:20b";
+  aiderModelInfo = {
+    max_input_tokens = 65536;
+    max_output_tokens = 65536;
+    input_cost_per_token = 0;
+    output_cost_per_token = 0;
+    litellm_provider = "openai";
+    mode = "chat";
   };
 
   commonCore = {
@@ -172,10 +212,8 @@ in
 
         # JavaScript/TypeScript
         [
-          # deno
+          deno
           # bun
-          nodejs_24
-          tsx
           eslint
           vscode-langservers-extracted
           typescript-language-server
@@ -215,6 +253,7 @@ in
         [
           claude-code
           codex
+          aider-chat
         ]
       ++
 
@@ -349,6 +388,7 @@ in
         # Other
         [
           go-task
+          tasks-org
           # wineWow64Packages.waylandFull
           # ripes # temporarily disabled due to cmake build issue
         ];
@@ -392,6 +432,20 @@ in
       );
       ".claude/settings.json".source = ../../../claude/.config/claude/settings.json;
       ".claude/statusline.sh".source = ../../../claude/.config/claude/statusline.sh;
+
+      ".aider.conf.yml".text = ''
+        openai-api-base: https://llm.nullwave.de/v1
+        openai-api-key: ${aiderKey}
+        model: ${aiderModel}
+        model-metadata-file: ${config.home.homeDirectory}/.aider.model.metadata.json
+        show-model-warnings: false
+        chat-history-file: /dev/null
+        input-history-file: /dev/null
+      '';
+      ".aider.model.metadata.json".text = builtins.toJSON {
+        "${aiderModel}" = aiderModelInfo;
+        "llamacpp/gpt-oss:20b" = aiderModelInfo;
+      };
 
       # Keep Claude Code pointed at the cross-client rules until it discovers
       # ~/.agents natively. Skills are deployed only through ~/.agents/skills.
