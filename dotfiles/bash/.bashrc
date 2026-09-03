@@ -197,6 +197,7 @@ shopt -s checkwinsize
 shopt -s checkjobs
 set -o vi
 set -o noclobber
+[[ $- == *i* ]] && stty -ixon 2>/dev/null
 alias vi='nvim'
 alias vim='nvim'
 alias fm='vifm . .'
