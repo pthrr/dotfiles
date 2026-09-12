@@ -76,6 +76,8 @@ export XDG_PUBLICSHARE_DIR="$HOME/Öffentlich"
 export XDG_TEMPLATES_DIR="$HOME/Vorlagen"
 export XDG_VIDEOS_DIR="$HOME/Video"
 export SHELL='/bin/bash'
+# Kept out of the Nix store, which is world-readable.
+[ -r "$HOME/.config/aider/key.txt" ] && export AIDER_OPENAI_API_KEY="$(< "$HOME/.config/aider/key.txt")"
 export EDITOR='nvim'
 export BROWSER='firefox'
 export MAILCLIENT='meli'
@@ -241,7 +243,30 @@ alias weather='curl wttr.in/munich'
 alias wifi='nmcli dev wifi show-password'
 alias wificonnect='nmcli --ask dev wifi connect'
 alias pwgen='keepassxc-cli generate --lower --upper --numeric --special --length 32 | wl-copy'
-alias mksomespace='nix-collect-garbage -d; sudo dnf clean all; flatpak uninstall --unused -y; sudo journalctl --vacuum-size=100M; pip cache purge; sudo btrfs balance start -musage=50 -dusage=50 /'
+mksomespace() {
+    nix-collect-garbage -d
+    sudo dnf clean all
+    flatpak uninstall --unused -y
+    sudo journalctl --vacuum-size=100M
+    pip cache purge
+    uv cache prune
+    cargo cache --autoclean
+    find "$HOME/.cache" -xdev -type f -mtime +60 \
+        -not -path "$HOME/.cache/sccache/*" \
+        -not -path "$HOME/.cache/ccache/*" \
+        -not -path "$HOME/.cache/nix/*" \
+        -delete 2>/dev/null
+    find "$HOME/.cache" -xdev -mindepth 1 -type d -empty -delete 2>/dev/null
+    for r in "$HOME/fun" "$HOME/business" "$HOME/job"; do
+        [ -d "$r" ] || continue
+        if find "$r" -type f -name sweep.timestamp -print -quit 2>/dev/null | grep -q .; then
+            cargo-sweep sweep --file --recursive "$r"
+        else
+            cargo-sweep sweep --stamp --recursive "$r"
+        fi
+    done
+    sudo btrfs balance start -musage=50 -dusage=50 /
+}
 alias mkupdates='sudo dnf update -y && sudo flatpak update -y'
 alias mkbackup='sudo "$HOME/.dotfiles/system/sync_ssd.bash"'
 alias srv='ssh nwv-srv'

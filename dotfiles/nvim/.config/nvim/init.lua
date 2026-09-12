@@ -244,6 +244,23 @@ now(function()
             filetypes = { "zig" },
             root_markers = { "build.zig", ".git", ".jj" },
         },
+        gopls = {
+            cmd = { "gopls" },
+            filetypes = { "go", "gomod", "gowork", "gotmpl" },
+            root_markers = { "go.work", "go.mod", "go.sum", ".git", ".jj" },
+            -- gofumpt is deliberately left off: save-time formatting goes through
+            -- goimports (plain gofmt style + import fixing), and a stricter gopls
+            -- would make :lua vim.lsp.buf.format() disagree with :w.
+            settings = {
+                gopls = {
+                    staticcheck = true,
+                    usePlaceholders = true,
+                    analyses = {
+                        unusedparams = true,
+                    },
+                },
+            },
+        },
         tinymist = {
             cmd = { "tinymist" },
             filetypes = { "typst" },
@@ -345,7 +362,7 @@ now(function()
             settings = {
                 nixd = {
                     formatting = {
-                        command = { "nixfmt" },
+                        command = { "nixfmt", "-" },
                     },
                 },
             },
@@ -468,6 +485,7 @@ vim.api.nvim_create_autocmd("BufWritePre", {
         "*.zsh", -- Shell scripts
         "*.py", -- Python
         "*.zig", -- Zig
+        "*.go", -- Go
         "*.tla", -- TLA+
         "*.typ", -- Typst
         "*.lua", -- Lua
@@ -492,6 +510,8 @@ vim.api.nvim_create_autocmd("BufWritePre", {
             run_external_formatter("tlafmt", { file })
         elseif file:match("%.zig$") then
             run_external_formatter("zig", { "fmt", file })
+        elseif file:match("%.go$") then
+            run_external_formatter("goimports", { "-w", file })
         elseif
             file:match("%.cc$")
             or file:match("%.cpp$")

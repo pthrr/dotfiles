@@ -26,7 +26,9 @@ let
 
   # Not in nixpkgs; consumed straight from upstream's own flake package output.
   # Pinned by rev — bump manually when you want a newer monstar.
-  monstar = (builtins.getFlake "github:rockorager/monstar/c41132f5570f6b6347ec15c9de5e9417d79f2f50").packages.${pkgs.stdenv.hostPlatform.system}.default;
+  monstar =
+    (builtins.getFlake "github:rockorager/monstar/c41132f5570f6b6347ec15c9de5e9417d79f2f50")
+    .packages.${pkgs.stdenv.hostPlatform.system}.default;
 
   # Upstream ships only an AppImage; wrap it so it lands in $PATH with a
   # .desktop entry. Bump `version` + `hash` together when updating.
@@ -78,21 +80,24 @@ let
     email = gitUserEmail;
   };
 
-  aiderKeyFile = "${config.home.homeDirectory}/.config/aider/key.txt";
-  aiderKey =
-    if builtins.pathExists aiderKeyFile then
-      lib.strings.removeSuffix "\n" (builtins.readFile aiderKeyFile)
-    else
-      throw "Missing ${aiderKeyFile}. Put the Bifrost master key there (0600).";
-  aiderModel = "openai/llamacpp/gpt-oss:20b";
-  aiderModelInfo = {
-    max_input_tokens = 65536;
-    max_output_tokens = 65536;
-    input_cost_per_token = 0;
-    output_cost_per_token = 0;
-    litellm_provider = "openai";
-    mode = "chat";
-  };
+  # No secret here on purpose: everything written by Home Manager lands in the
+  # world-readable Nix store. The key reaches Aider through AIDER_OPENAI_API_KEY,
+  # exported from ~/.config/aider/key.txt by .bashrc.
+  aiderConfig = pkgs.writeText "aider-config.yml" (
+    lib.replaceStrings
+      [ "@AIDER_METADATA_FILE@" ]
+      [ (builtins.toJSON "${config.home.homeDirectory}/.agents/aider/model-metadata.json") ]
+      (builtins.readFile ../../../agents/.agents/aider/config.yml.in)
+  );
+
+  # OpenCode resolves a plugin entry as a module specifier and does not expand
+  # "~", so the shared bridge has to be named by absolute path.
+  opencodeConfig = pkgs.writeText "opencode.json" (
+    lib.replaceStrings
+      [ "@AGENTS_DIR@" ]
+      [ "${config.home.homeDirectory}/.agents" ]
+      (builtins.readFile ../../../agents/.agents/opencode/opencode.json.in)
+  );
 
   commonCore = {
     editor = "nvim";
@@ -109,6 +114,19 @@ in
     homeDirectory = builtins.getEnv "HOME";
     stateVersion = "22.05";
     enableNixpkgsReleaseCheck = false;
+
+    # ccache reads XDG config (see xdg.configFile below); the env var is a
+    # belt-and-braces fallback for tools that spawn ccache without inheriting
+    # the config file. sccache is deliberately absent here: ~/bin/sccache-wrapper
+    # owns SCCACHE_* setup (remote S3 on nwv-srv:8333 when reachable, else
+    # local ~/.cache/sccache capped at 5G), and it starts a clean env, so any
+    # SCCACHE_CACHE_SIZE set here would be discarded anyway.
+    sessionVariables = {
+      CCACHE_MAXSIZE = "5G";
+      # OpenCode enables its built-in LSP servers from opencode.json; this keeps
+      # it to the servers home-manager installs instead of downloading its own.
+      OPENCODE_DISABLE_LSP_DOWNLOAD = "true";
+    };
 
     # ncurses on Fedora searches ~/.terminfo unconditionally, so symlinking
     # the entry there works regardless of TERMINFO_DIRS or a stale
@@ -197,6 +215,9 @@ in
         [
           zig
           zls
+          # clangd for the C/C++ LSP, plus clang-format/clang-tidy matching
+          # the .clang-format and .clang-tidy wired up below.
+          clang-tools
           ocaml
           opam
           lean4
@@ -242,6 +263,18 @@ in
         ]
       ++
 
+        # Go tooling
+        # gotools carries goimports (the on-save formatter wired up in
+        # nvim/init.lua); `go` itself only ships gofmt, which leaves imports alone.
+        [
+          go
+          gopls
+          gotools
+          delve
+          golangci-lint
+        ]
+      ++
+
         # Nix tooling
         [
           nixd
@@ -254,6 +287,10 @@ in
           claude-code
           codex
           aider-chat
+          opencode
+          # Shared harness hooks run TypeScript directly and lock state.
+          nodejs
+          util-linux
         ]
       ++
 
@@ -264,6 +301,8 @@ in
         [
           mold
           sccache
+          cargo-sweep
+          cargo-cache
           # redis
           gdbgui
           rr
@@ -423,33 +462,40 @@ in
         source = ../../../sent/Vorlagen/slides;
         recursive = true;
       };
-      ".agents/AGENTS.md".source = ../../../agents/.agents/AGENTS.md;
-      # Skills contain uv environments and embedded Nix flakes that need their
-      # real writable source path. A store copy makes `uv run --project` fail
-      # when it updates console-script links inside .venv.
-      ".agents/skills".source = config.lib.file.mkOutOfStoreSymlink (
-        "${config.home.homeDirectory}/.dotfiles/dotfiles/agents/.agents/skills"
-      );
-      ".claude/settings.json".source = ../../../claude/.config/claude/settings.json;
-      ".claude/statusline.sh".source = ../../../claude/.config/claude/statusline.sh;
-
-      ".aider.conf.yml".text = ''
-        openai-api-base: https://llm.nullwave.de/v1
-        openai-api-key: ${aiderKey}
-        model: ${aiderModel}
-        model-metadata-file: ${config.home.homeDirectory}/.aider.model.metadata.json
-        show-model-warnings: false
-        chat-history-file: /dev/null
-        input-history-file: /dev/null
-      '';
-      ".aider.model.metadata.json".text = builtins.toJSON {
-        "${aiderModel}" = aiderModelInfo;
-        "llamacpp/gpt-oss:20b" = aiderModelInfo;
+      # One maintained tree; recurse so local skills can coexist.
+      ".agents" = {
+        source = ../../../agents/.agents;
+        recursive = true;
       };
-
-      # Keep Claude Code pointed at the cross-client rules until it discovers
-      # ~/.agents natively. Skills are deployed only through ~/.agents/skills.
-      ".claude/CLAUDE.md".source = ../../../agents/.agents/AGENTS.md;
+      # Client discovery paths share the same skills and hooks.
+      ".codex/hooks.json".source = ../../../agents/.agents/codex/hooks.json;
+      ".claude/skills" = {
+        source = ../../../agents/.agents/skills;
+        recursive = true;
+      };
+      # Claude Code loads any ~/.claude/skills/<name> carrying a plugin manifest
+      # as <name>@skills-dir, with no marketplace. Hooks live here instead of in
+      # settings.json so that file stays writable and /model can save a default.
+      ".claude/skills/agent-hooks" = {
+        source = ../../../agents/.agents/claude/plugin;
+        recursive = true;
+      };
+      # Same skills-dir plugin mechanism, but exposing language servers to
+      # Claude Code's built-in LSP tool.
+      ".claude/skills/lsp" = {
+        source = ../../../agents/.agents/claude/lsp;
+        recursive = true;
+      };
+      ".codex/skills" = {
+        source = ../../../agents/.agents/skills;
+        recursive = true;
+      };
+      # OpenCode finds ~/.agents/skills on its own; only the plugin needs naming.
+      ".config/opencode/opencode.json".source = opencodeConfig;
+      ".agents/opencode/opencode.json".source = opencodeConfig;
+      ".agents/aider/config.yml".source = aiderConfig;
+      ".aider.conf.yml".source = aiderConfig;
+      ".aider.model.metadata.json".source = ../../../agents/.agents/aider/model-metadata.json;
     };
   };
 
@@ -571,6 +617,25 @@ in
         /usr/bin/sudo -n /usr/bin/install -D -m0755 -o root -g root \
           ${hook} ${dest} \
           || echo "warning: could not install ${dest} (missing sudoers rule?)" >&2
+      fi
+    '';
+
+  # Claude Code owns ~/.claude/settings.json: /model and /effort write their
+  # defaults there, and a Nix store symlink would make those saves fail silently.
+  # Seed it once with the settings that have no plugin equivalent, then leave it
+  # alone — the hooks arrive through the agent-hooks plugin instead.
+  home.activation.seedClaudeSettings =
+    let
+      seed = ../../../agents/.agents/claude/settings.seed.json;
+      dest = "${config.home.homeDirectory}/.claude/settings.json";
+    in
+    # After linkGeneration, not writeBoundary: linkGeneration is what removes the
+    # previously managed symlink, and it anchors to writeBoundary too. As siblings
+    # the order is unspecified, and seeding first would find the old link, skip,
+    # and leave no settings.json once linkGeneration deleted it.
+    lib.hm.dag.entryAfter [ "linkGeneration" ] ''
+      if [ ! -e "${dest}" ] && [ ! -L "${dest}" ]; then
+        /usr/bin/install -D -m0644 ${seed} "${dest}"
       fi
     '';
 
@@ -1004,6 +1069,12 @@ in
       "user-tmpfiles.d/obsidian-cli-socket.conf".text = ''
         L+ %t/.obsidian-cli.sock - - - - %t/.flatpak/md.obsidian.Obsidian/xdg-run/.obsidian-cli.sock
       '';
+
+      # ccache reads $XDG_CONFIG_HOME/ccache/ccache.conf before ~/.ccache.
+      # Env var CCACHE_MAXSIZE (set above) is a belt-and-braces fallback.
+      "ccache/ccache.conf".text = ''
+        max_size = 5G
+      '';
     };
 
   services.flatpak = {
@@ -1059,7 +1130,15 @@ in
     ];
   };
 
-  home.activation.runMyScript = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+  # Nix-installed GUI apps ship .desktop files whose Exec= runs the binary
+  # directly, which has no working GL stack on a non-NixOS host. patchnixapps
+  # rewrites each Exec= to go through nixGLIntel/nixGLAMD, picked off lspci.
+  #
+  # entryAfter installPackages, not writeBoundary: the directory this patches is
+  # the nix profile that installPackages populates. Under writeBoundary the real
+  # dependency was undeclared and the entry's position fell out of the DAG's
+  # tie-break among same-dependency entries, which is sensitive to its own name.
+  home.activation.patchDesktopEntriesForNixGL = lib.hm.dag.entryAfter [ "installPackages" ] ''
     sudo -n $HOME/bin/patchnixapps $HOME/.nix-profile/share/applications
   '';
 
