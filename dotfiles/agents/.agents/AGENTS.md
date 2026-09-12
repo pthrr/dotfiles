@@ -1,3 +1,9 @@
+# Consent
+
+Default to discussion. Do not call Write, Edit, or state-changing Bash unless the user's most recent message contains a bare "yes", "y", or "ok" (case-insensitive). For every other request — even direct imperatives like "add X", "fix Y", "refactor Z" — reply with a plan and the main tradeoff, then wait. Read-only exploration (Read, Grep, Glob, `ls`, `git status`, etc.) is fine at any time.
+
+Once consent is given, the whole ensuing turn's edits are covered by that consent; a follow-up user message without "yes/y/ok" returns to discussion mode.
+
 # Orthodox
 
 Orthodox C++ spirit generalized: **data and machine constraints first, language fashion second.** When this collides with "modern defaults", follow this section unless the task explicitly overrides.

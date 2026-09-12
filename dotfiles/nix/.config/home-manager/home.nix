@@ -110,6 +110,16 @@ in
     stateVersion = "22.05";
     enableNixpkgsReleaseCheck = false;
 
+    # ccache reads XDG config (see xdg.configFile below); the env var is a
+    # belt-and-braces fallback for tools that spawn ccache without inheriting
+    # the config file. sccache is deliberately absent here: ~/bin/sccache-wrapper
+    # owns SCCACHE_* setup (remote S3 on nwv-srv:8333 when reachable, else
+    # local ~/.cache/sccache capped at 5G), and it starts a clean env, so any
+    # SCCACHE_CACHE_SIZE set here would be discarded anyway.
+    sessionVariables = {
+      CCACHE_MAXSIZE = "5G";
+    };
+
     # ncurses on Fedora searches ~/.terminfo unconditionally, so symlinking
     # the entry there works regardless of TERMINFO_DIRS or a stale
     # __HM_SESS_VARS_SOURCED guard inherited from an older session.
@@ -264,6 +274,8 @@ in
         [
           mold
           sccache
+          cargo-sweep
+          cargo-cache
           # redis
           gdbgui
           rr
@@ -424,14 +436,31 @@ in
         recursive = true;
       };
       ".agents/AGENTS.md".source = ../../../agents/.agents/AGENTS.md;
-      # Skills contain uv environments and embedded Nix flakes that need their
-      # real writable source path. A store copy makes `uv run --project` fail
-      # when it updates console-script links inside .venv.
-      ".agents/skills".source = config.lib.file.mkOutOfStoreSymlink (
-        "${config.home.homeDirectory}/.dotfiles/dotfiles/agents/.agents/skills"
-      );
+      ".agents/skills" = {
+        source = ../../../agents/.agents/skills;
+        recursive = true;
+      };
+      # Claude Code discovers skills from ~/.claude/skills only, so point that
+      # at the same source tree as ~/.agents/skills to keep one source of truth.
+      ".claude/skills" = {
+        source = ../../../agents/.agents/skills;
+        recursive = true;
+      };
       ".claude/settings.json".source = ../../../claude/.config/claude/settings.json;
       ".claude/statusline.sh".source = ../../../claude/.config/claude/statusline.sh;
+      # Enforcement for the software-design skill. PLAN.md is the switch: without
+      # one in cwd no code write is allowed, with one every turn must end in the
+      # fixed iteration render.
+      ".claude/design-loop.sh" = {
+        source = ../../../claude/.config/claude/design-loop.sh;
+        executable = true;
+      };
+      # Consent gate on Write|Edit: denies edits unless the last user message
+      # contains "yes", "y", or "ok" (case-insensitive, word-bounded).
+      ".claude/ask-first.sh" = {
+        source = ../../../claude/.config/claude/ask-first.sh;
+        executable = true;
+      };
 
       ".aider.conf.yml".text = ''
         openai-api-base: https://llm.nullwave.de/v1
@@ -532,6 +561,136 @@ in
     };
     Install = {
       WantedBy = [ "graphical-session.target" ];
+    };
+  };
+
+  # Prune ~/.cache by mtime. The XDG basedir spec makes ~/.cache disposable
+  # by contract; anything that breaks after this is an XDG-violating app.
+  # sccache/ccache manage their own eviction (sccache via the wrapper at
+  # ~/bin/sccache-wrapper, ccache via ccache.conf below); deleting individual
+  # files under them corrupts their index, so we hard-exclude those trees.
+  # nix's fetcher/tarball cache lives under ~/.cache/nix and self-prunes —
+  # also excluded.
+  systemd.user.services.cache-prune = {
+    Unit = {
+      Description = "Prune stale files from ~/.cache";
+    };
+    Service = {
+      Type = "oneshot";
+      Nice = 19;
+      IOSchedulingClass = "idle";
+      ExecStart =
+        let
+          cachePrune = pkgs.writeShellApplication {
+            name = "cache-prune";
+            runtimeInputs = [
+              pkgs.findutils
+              pkgs.uv
+              pkgs.cargo-cache
+            ];
+            text = ''
+              set -eu
+              cache="$HOME/.cache"
+              [ -d "$cache" ] || exit 0
+
+              # Age by mtime, not atime: noatime SSD mounts freeze atime, so
+              # atime-based pruning would silently over-delete. The tradeoff
+              # is that mtime doesn't move on cache *hits* — a wheel unused
+              # for 60d might still be live — so we widen the window and let
+              # the tool-native prunes below handle referenced files.
+              find "$cache" -xdev -type f -mtime +60 \
+                -not -path "$cache/sccache/*" \
+                -not -path "$cache/ccache/*" \
+                -not -path "$cache/nix/*" \
+                -delete
+
+              # Sweep the empty shells left behind.
+              find "$cache" -xdev -mindepth 1 -type d -empty -delete || true
+
+              # Tool-native prunes handle files the age-sweep must not touch
+              # (registry indices, wheel/lockfile bookkeeping).
+              uv cache prune 2>/dev/null || true
+              cargo cache --autoclean 2>/dev/null || true
+            '';
+          };
+        in
+        "${cachePrune}/bin/cache-prune";
+    };
+  };
+
+  systemd.user.timers.cache-prune = {
+    Unit = {
+      Description = "Weekly ~/.cache prune";
+    };
+    Timer = {
+      OnCalendar = "weekly";
+      Persistent = true;
+      RandomizedDelaySec = "1h";
+    };
+    Install = {
+      WantedBy = [ "timers.target" ];
+    };
+  };
+
+  # `cargo sweep` prunes stale target/ artifacts across a tree of Cargo
+  # projects. Roots cover every place Rust builds land. `--stamp` writes a
+  # marker on each invocation and `--file` deletes anything older than the
+  # last marker, which is noatime-safe (unlike --time, which reads atime).
+  systemd.user.services.cargo-sweep = {
+    Unit = {
+      Description = "Sweep stale Cargo target/ artifacts under ~/fun, ~/business, ~/job";
+    };
+    Service = {
+      Type = "oneshot";
+      Nice = 19;
+      IOSchedulingClass = "idle";
+      ExecStart =
+        let
+          cargoSweepJob = pkgs.writeShellApplication {
+            name = "cargo-sweep-job";
+            runtimeInputs = [
+              pkgs.cargo-sweep
+              pkgs.findutils
+            ];
+            text = ''
+              set -eu
+              # Every dir that plausibly holds Cargo projects. --recursive
+              # walks each root looking for Cargo.toml; missing roots are
+              # silently skipped so this works on machines where not every
+              # dir exists.
+              for root in "$HOME/fun" "$HOME/business" "$HOME/job"; do
+                [ -d "$root" ] || continue
+
+                # First run: drop a `sweep.timestamp` in every target/ so
+                # the next run has a baseline. Subsequent runs use --file,
+                # which deletes artifacts untouched since the stamp and
+                # then refreshes it. This is noatime-safe: the stamp
+                # file's own mtime is the comparator, not artifact atime.
+                if find "$root" -type f -name sweep.timestamp -print -quit \
+                     2>/dev/null | grep -q .; then
+                  cargo-sweep sweep --file --recursive "$root"
+                else
+                  cargo-sweep sweep --stamp --recursive "$root"
+                fi
+              done
+            '';
+          };
+        in
+        "${cargoSweepJob}/bin/cargo-sweep-job";
+    };
+  };
+
+  systemd.user.timers.cargo-sweep = {
+    Unit = {
+      Description = "Monthly cargo target/ sweep";
+    };
+    Timer = {
+      OnCalendar = "monthly";
+      Persistent = true;
+      RandomizedDelaySec = "2h";
+    };
+    Install = {
+      WantedBy = [ "timers.target" ];
     };
   };
 
@@ -1003,6 +1162,12 @@ in
       # systemd-tmpfiles-setup.service since /run/user/UID is tmpfs.
       "user-tmpfiles.d/obsidian-cli-socket.conf".text = ''
         L+ %t/.obsidian-cli.sock - - - - %t/.flatpak/md.obsidian.Obsidian/xdg-run/.obsidian-cli.sock
+      '';
+
+      # ccache reads $XDG_CONFIG_HOME/ccache/ccache.conf before ~/.ccache.
+      # Env var CCACHE_MAXSIZE (set above) is a belt-and-braces fallback.
+      "ccache/ccache.conf".text = ''
+        max_size = 5G
       '';
     };
 

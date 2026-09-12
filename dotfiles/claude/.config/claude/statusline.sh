@@ -130,8 +130,13 @@ else
  ctx="█░░░░░░░░░ 10% of 200k tokens used (/context)"
 fi
 
-# Build output: Model | Dir | Branch (uncommitted) | Context
-output="${model} | 📁${dir}"
+# Build output: [DESIGN] | Model | Dir | Branch (uncommitted) | Context
+# A non-empty PLAN.md means the design-loop hooks are armed here: writes are
+# unlocked, every turn must end in the ITERATION render. Show it, so the state
+# never has to be guessed.
+output=""
+[[ -n "$cwd" && -s "$cwd/PLAN.md" ]] && output=$'\033[38;5;108m[DESIGN]\033[0m | '
+output+="${model} | 📁${dir}"
 [[ -n "$branch" ]] && output+=" | 🔀${branch} ${git_status}"
 output+=" | ${ctx}"
 
