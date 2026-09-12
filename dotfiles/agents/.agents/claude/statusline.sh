@@ -130,8 +130,67 @@ else
  ctx="█░░░░░░░░░ 10% of 200k tokens used (/context)"
 fi
 
-# Build output: Model | Dir | Branch (uncommitted) | Context
-output="${model} | 📁${dir}"
+# Build output: [skills] [plan] | Model | Dir | Branch (uncommitted) | Context
+#
+# Two orthogonal badges. Badge 1 is what is running, badge 2 is what the hook
+# will do — they answer different questions and are kept separate so neither
+# can be read as the other.
+#
+# Badge 1: every distinct skill invoked this session, in first-invoked order.
+# All of them, not the last one: skills are sticky — software-design and
+# ponytail both declare themselves active every response — and nothing in the
+# transcript marks one as done, so the whole set is live. Showing only the most
+# recent hid ponytail behind software-design during implementation.
+skills=""
+if [[ -n "$transcript_path" && -f "$transcript_path" ]]; then
+ skills=$(jq -rs '
+ [ .[] | select(.type == "assistant")
+   | (.message.content // [])[]?
+   | select(.type == "tool_use" and .name == "Skill")
+   | .input.skill // empty ]
+ | unique_by(.) as $set
+ | reduce .[] as $s ([]; if index($s) then . else . + [$s] end)
+ | join(" ")
+ ' < "$transcript_path" 2>/dev/null)
+fi
+
+# Which loop is read off the plan that GOVERNS cwd — the nearest non-empty
+# PLAN.md at or above it, the same resolution design-loop.sh uses to gate
+# writes. A repo-wide "any plan in the repo" rule was wrong: it reported `design`
+# from a directory no plan covers, because an unrelated sibling subtree had one.
+#
+# There are two states because there are two loops. The old third state came from
+# a `## Closed` / `## Finished` marker in PLAN.md, and both markers are gone:
+# implementation is the user's, in a session that never loads the skill, and
+# nothing on disk marks it.
+plan_state="none"
+d="$cwd"
+while [[ -n "$d" && "$d" != "/" && "$d" != "." ]]; do
+ if [[ -s "$d/PLAN.md" ]]; then
+  plan_state="open"
+  break
+ fi
+ [[ -e "$d/.git" ]] && break
+ d=$(dirname "$d")
+done
+
+# Plans elsewhere in the repo are deliberately NOT shown. A `+elsewhere` tag
+# lived here briefly and its only effect was to be misread as the state itself:
+# `design:+stemsplitter/app` parses to the eye as "stemsplitter is in design".
+# The plan governing cwd is the whole job of badge 2; other subtrees have their
+# own sessions and their own badge.
+
+# Badge 2: which loop the hook will hold this directory to, named for what it
+# does rather than for what is on disk.
+case "$plan_state" in
+ none) plan_badge="problem"; plan_color="208" ;;  # writes DENIED but PLAN.md
+ open) plan_badge="design";  plan_color="108" ;;  # writes ok, render owed
+esac
+
+output=""
+[[ -n "$skills" ]] && output+=$(printf '\033[38;5;139m[%s]\033[0m ' "$skills")
+output+=$(printf '\033[38;5;%sm[%s]\033[0m | ' "$plan_color" "$plan_badge")
+output+="${model} | 📁${dir}"
 [[ -n "$branch" ]] && output+=" | 🔀${branch} ${git_status}"
 output+=" | ${ctx}"
 

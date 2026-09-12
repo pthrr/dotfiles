@@ -1,0 +1,6 @@
+{
+  "$schema": "https://anthropic.com/claude-code/plugin.schema.json",
+  "name": "agent-hooks",
+  "version": "1.0.0",
+  "description": "Consent gate and design-loop enforcement, shared with Codex and OpenCode through ~/.agents/hooks/adapter.ts."
+}

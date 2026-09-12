@@ -1,5 +1,4 @@
 {
-  "model": "claude-opus-4-7",
   "alwaysThinkingEnabled": true,
   "attribution": {
     "commit": "",
@@ -7,7 +6,7 @@
   },
   "statusLine": {
     "type": "command",
-    "command": "~/.claude/statusline.sh",
+    "command": "~/.agents/claude/statusline.sh",
     "padding": 0
   }
 }
