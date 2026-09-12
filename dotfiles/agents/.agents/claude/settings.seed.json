@@ -1,0 +1,12 @@
+{
+  "alwaysThinkingEnabled": true,
+  "attribution": {
+    "commit": "",
+    "pr": ""
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "~/.agents/claude/statusline.sh",
+    "padding": 0
+  }
+}

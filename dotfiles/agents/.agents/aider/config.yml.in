@@ -1,0 +1,6 @@
+openai-api-base: https://llm.nullwave.de/v1
+model: openai/llamacpp/gpt-oss:20b
+model-metadata-file: @AIDER_METADATA_FILE@
+show-model-warnings: false
+chat-history-file: /dev/null
+input-history-file: /dev/null

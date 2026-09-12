@@ -1,0 +1,7 @@
+{
+  "$schema": "https://anthropic.com/claude-code/plugin.schema.json",
+  "name": "lsp",
+  "version": "1.0.0",
+  "description": "TypeScript, Rust, Python, and C/C++ language servers from home-manager.",
+  "lspServers": "./.lsp.json"
+}

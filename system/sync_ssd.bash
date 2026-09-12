@@ -36,49 +36,75 @@ for pair in "$TARGET_BTRFS_UUID:$SOURCE_ROOT_UUID:/" "$TARGET_BOOT_UUID:$SOURCE_
     fi
 done
 
-# Ensure target btrfs is mounted with compression
-target_opts=$(findmnt -rn -o OPTIONS -S "UUID=$TARGET_BTRFS_UUID")
-if [[ "$target_opts" != *compress=zstd* ]]; then
-    echo "Target is not mounted with compress=zstd. Remounting..." >&2
-    mount -o remount,compress=zstd "$TARGET_ROOT"
-fi
-
 echo "Target boot: $TARGET_BOOT"
 echo "Target EFI:  $TARGET_EFI"
 echo "Target root: $TARGET_ROOT"
 echo ""
 
-USER_HOME=$(getent passwd "$SUDO_USER" | cut -d: -f6)
-if mountpoint -q "$USER_HOME/Drive" 2>/dev/null; then
-    fusermount -uz "$USER_HOME/Drive" && echo "Unmounted $USER_HOME/Drive"
-fi
-
-read -rp "Start backup? (y/n): " confirm
+read -rp "Unmount Drive if mounted and preview the backup? (y/n): " confirm
 if [[ "$confirm" != "y" ]]; then
     echo "Aborted."
     exit 0
+fi
+
+USER_HOME=$(getent passwd "${SUDO_USER:-root}" | cut -d: -f6)
+if mountpoint -q "$USER_HOME/Drive" 2>/dev/null; then
+    fusermount -uz "$USER_HOME/Drive" && echo "Unmounted $USER_HOME/Drive"
 fi
 
 run_rsync() {
     rsync "$@" || { rc=$?; if [[ $rc -eq 24 ]]; then echo "Warning: some files vanished during transfer." >&2; else exit $rc; fi; }
 }
 
-echo ""
-echo "=== boot ==="
-run_rsync -aAXx --info=progress2 --delete /boot/ "$TARGET_BOOT/"
+sync_all() {
+    local mode=$1
+    local options=()
+    if [[ "$mode" == preview ]]; then
+        options=(--dry-run --itemize-changes)
+    else
+        options=(--info=progress2)
+    fi
+
+    echo ""
+    echo "=== boot ==="
+    run_rsync "${options[@]}" -aAXx --delete /boot/ "$TARGET_BOOT/"
+
+    echo ""
+    echo "=== efi ==="
+    run_rsync "${options[@]}" -a --delete --no-perms --no-owner --no-group /boot/efi/ "$TARGET_EFI/"
+
+    echo ""
+    echo "=== root (/) ==="
+    run_rsync "${options[@]}" -aAXx --delete --exclude='/.snapshots' --exclude='/home' / "$TARGET_ROOT/"
+
+    echo ""
+    echo "=== home (/home) ==="
+    if [[ "$mode" == preview && ! -d "$TARGET_ROOT/home" ]]; then
+        echo "Target home does not exist yet; it has no files to delete."
+    else
+        [[ "$mode" == preview ]] || mkdir -p "$TARGET_ROOT/home"
+        run_rsync "${options[@]}" -aAXx --delete /home/ "$TARGET_ROOT/home/"
+    fi
+}
+
+echo "Previewing changes. Lines marked *deleting would be removed from the backup."
+sync_all preview
 
 echo ""
-echo "=== efi ==="
-run_rsync -a --info=progress2 --delete --no-perms --no-owner --no-group /boot/efi/ "$TARGET_EFI/"
+read -rp "Apply this backup, including the listed deletions? (y/n): " confirm
+if [[ "$confirm" != "y" ]]; then
+    echo "Aborted after preview. Backup files were not changed."
+    exit 0
+fi
 
-echo ""
-echo "=== root (/) ==="
-run_rsync -aAXx --info=progress2 --delete --exclude='/.snapshots' --exclude='/home' / "$TARGET_ROOT/"
+# Ensure target btrfs is mounted with compression before writing to it.
+target_opts=$(findmnt -rn -o OPTIONS -S "UUID=$TARGET_BTRFS_UUID")
+if [[ "$target_opts" != *compress=zstd* ]]; then
+    echo "Target is not mounted with compress=zstd. Remounting..." >&2
+    mount -o remount,compress=zstd "$TARGET_ROOT"
+fi
 
-echo ""
-echo "=== home (/home) ==="
-mkdir -p "$TARGET_ROOT/home"
-run_rsync -aAXx --info=progress2 --delete /home/ "$TARGET_ROOT/home/"
+sync_all apply
 
 echo ""
 echo "Backup complete. Target is up-to-date."
