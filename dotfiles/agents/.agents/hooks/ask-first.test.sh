@@ -126,7 +126,6 @@ for p in \
     "$HOME/.claude/projects/a-slug/memory/a-fact.md" \
     "$HOME/.claude/settings.json" \
     "$HOME/.codex/memories/x.md" \
-    "$HOME/.aider/analytics.json" \
     "$HOME/.agents/skills/local/SKILL.md" \
     "$HOME/.config/opencode/opencode.json" \
     "$HOME/.local/share/opencode/storage/x.json" \

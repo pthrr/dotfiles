@@ -464,7 +464,6 @@ for p in \
     "$HOME/.claude/settings.json" \
     "$HOME/.codex/config.toml" \
     "$HOME/.codex/memories/x.md" \
-    "$HOME/.aider/analytics.json" \
     "$HOME/.agents/skills/local/SKILL.md" \
     "$HOME/.config/opencode/opencode.json" \
     "$HOME/.local/share/opencode/storage/x.json" \
@@ -476,7 +475,7 @@ done
 # A list, not a prefix rule — the neighbours have to stay gated, or the whitelist
 # is really "anything starting with .claude".
 chk "a sibling dotdir is still gated" 2 "$(W "$HOME/.claudex/x.md")"
-chk "a HOME-level dotfile is still gated" 2 "$(W "$HOME/.aider.conf.yml")"
+chk "a HOME-level dotfile is still gated" 2 "$(W "$HOME/.example.conf.yml")"
 chk "a plain tmp dir is still gated" 2 "$(W "/tmp/scratchpad/a.sh")"
 chk "another harness tmp root is still gated" 2 "$(W "/tmp/codex-bwrap-synthetic-mount-targets-1000/x")"
 

@@ -216,9 +216,13 @@ now(function()
                 ["rust-analyzer"] = {
                     check = {
                         command = "clippy",
-                    },
-                    clippy = {
                         allTargets = true,
+                        extraArgs = {
+                            "--",
+                            "-W", "clippy::pedantic",
+                            "-A", "clippy::inline_always",
+                            "-W", "rust_2018_idioms",
+                        },
                     },
                     diagnostics = {
                         enable = true,

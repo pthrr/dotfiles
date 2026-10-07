@@ -6,6 +6,8 @@
 }:
 
 let
+  nixbitsLib = import ../../../../nixbits { inherit pkgs; };
+
   ghcup = pkgs.stdenv.mkDerivation {
     pname = "ghcup";
     version = "latest";
@@ -29,36 +31,6 @@ let
   monstar =
     (builtins.getFlake "github:rockorager/monstar/c41132f5570f6b6347ec15c9de5e9417d79f2f50")
     .packages.${pkgs.stdenv.hostPlatform.system}.default;
-
-  # Upstream ships only an AppImage; wrap it so it lands in $PATH with a
-  # .desktop entry. Bump `version` + `hash` together when updating.
-  #
-  # The URL interpolates `version` rather than using update.tasks.org, which
-  # redirects to /releases/latest/download: that URL's content changes under a
-  # fixed hash on every upstream release, so the pin broke the build every time
-  # they shipped (15.10 -> 15.12 did exactly that). Versioned, the hash only
-  # changes when the bump above is deliberate.
-  tasks-org =
-    let
-      pname = "tasks-org";
-      version = "15.12";
-      src = pkgs.fetchurl {
-        url = "https://github.com/tasks/tasks/releases/download/${version}/tasks-org-linux-x86_64.AppImage";
-        hash = "sha256-W8DEvrXo/kIEjvPJTGnCHHcJLt3o4rNEuPWYSv2oPDg=";
-      };
-      appimageContents = pkgs.appimageTools.extractType2 { inherit pname version src; };
-    in
-    pkgs.appimageTools.wrapType2 {
-      inherit pname version src;
-      extraInstallCommands = ''
-        install -Dm444 ${appimageContents}/*.desktop -t $out/share/applications
-        substituteInPlace $out/share/applications/*.desktop \
-          --replace-quiet 'Exec=AppRun' 'Exec=${pname}'
-        if [ -d ${appimageContents}/usr/share/icons ]; then
-          cp -R ${appimageContents}/usr/share/icons $out/share/
-        fi
-      '';
-    };
 
   defaultUserName = "pthrr";
   defaultUserEmail = "pthrr@posteo.de";
@@ -85,16 +57,6 @@ let
     name = gitUserName;
     email = gitUserEmail;
   };
-
-  # No secret here on purpose: everything written by Home Manager lands in the
-  # world-readable Nix store. The key reaches Aider through AIDER_OPENAI_API_KEY,
-  # exported from ~/.config/aider/key.txt by .bashrc.
-  aiderConfig = pkgs.writeText "aider-config.yml" (
-    lib.replaceStrings
-      [ "@AIDER_METADATA_FILE@" ]
-      [ (builtins.toJSON "${config.home.homeDirectory}/.agents/aider/model-metadata.json") ]
-      (builtins.readFile ../../../agents/.agents/aider/config.yml.in)
-  );
 
   # OpenCode resolves a plugin entry as a module specifier and does not expand
   # "~", so the shared bridge has to be named by absolute path.
@@ -209,6 +171,7 @@ in
           ninja
           bazelisk
           bmake
+          m4
           bear
           buck2
           git-repo
@@ -294,7 +257,6 @@ in
         [
           claude-code
           codex
-          aider-chat
           opencode
           # Shared harness hooks lock state with flock.
           util-linux
@@ -435,7 +397,6 @@ in
         # Other
         [
           go-task
-          tasks-org
           # wineWow64Packages.waylandFull
           # ripes # temporarily disabled due to cmake build issue
         ];
@@ -501,9 +462,6 @@ in
       # OpenCode finds ~/.agents/skills on its own; only the plugin needs naming.
       ".config/opencode/opencode.json".source = opencodeConfig;
       ".agents/opencode/opencode.json".source = opencodeConfig;
-      ".agents/aider/config.yml".source = aiderConfig;
-      ".aider.conf.yml".source = aiderConfig;
-      ".aider.model.metadata.json".source = ../../../agents/.agents/aider/model-metadata.json;
     };
   };
 
@@ -869,10 +827,6 @@ in
         helper = "cache --timeout=3600";
       };
 
-      safe = {
-        directory = "*";
-      };
-
       gpg = {
         program = "gpg2";
       };
@@ -1137,22 +1091,85 @@ in
     ];
   };
 
-  # Nix-installed GUI apps ship .desktop files whose Exec= runs the binary
-  # directly, which has no working GL stack on a non-NixOS host. patchnixapps
-  # rewrites each Exec= to go through nixGLIntel/nixGLAMD, picked off lspci.
-  #
-  # entryAfter installPackages, not writeBoundary: the directory this patches is
-  # the nix profile that installPackages populates. Under writeBoundary the real
-  # dependency was undeclared and the entry's position fell out of the DAG's
-  # tie-break among same-dependency entries, which is sensitive to its own name.
-  home.activation.patchDesktopEntriesForNixGL = lib.hm.dag.entryAfter [ "installPackages" ] ''
-    sudo -n $HOME/bin/patchnixapps $HOME/.nix-profile/share/applications
-  '';
+  # Create user desktop entries with nixGL wrappers for Nix-installed GUI apps.
+  # The profile entries stay untouched; user entries take precedence by filename.
+  home.activation.patchDesktopEntriesForNixGL = lib.hm.dag.entryAfter [ "installPackages" ] (nixbitsLib.ts ''
+      const fs = require("node:fs");
+      const path = require("node:path");
 
-  home.activation.ensureHaskellTools = lib.hm.dag.entryAfter [ "installPackages" ] ''
-    export PATH="$HOME/.ghcup/bin:$HOME/.cabal/bin:$HOME/.nix-profile/bin:/usr/local/bin:/usr/bin:$PATH"
-    ghcup install ghc 9.8.4 --set
-    ghcup install cabal 3.16.1.0 --set
-    cabal update
-  '';
+      const home = requireEnv("HOME");
+
+      const sourceDir = path.join(home, ".nix-profile/share/applications");
+      const targetDir = path.join(
+        process.env.XDG_DATA_HOME || path.join(home, ".local/share"),
+        "applications",
+      );
+      const marker = "# Generated by patchnixapps; edits will be replaced.\n";
+
+      let variant = process.env.NIXGL_VARIANT;
+      if (!variant) {
+        let gpuInfo = "";
+        try {
+          gpuInfo = execFileSync("lspci", { encoding: "utf8" });
+        } catch {
+          // Use the same Intel fallback when lspci is unavailable.
+        }
+        if (/vga.*intel/i.test(gpuInfo)) variant = "nixGLIntel";
+        else if (/vga.*(amd|radeon)/i.test(gpuInfo)) variant = "nixGLAMD";
+        else {
+          console.error("Could not detect Intel or AMD graphics, defaulting to nixGLIntel");
+          variant = "nixGLIntel";
+        }
+      }
+      if (variant !== "nixGLIntel" && variant !== "nixGLAMD") {
+        throw new Error("Invalid NIXGL_VARIANT: " + variant);
+      }
+
+      function sourceFile(name: string): boolean {
+        return fs.statSync(path.join(sourceDir, name), { throwIfNoEntry: false })?.isFile() ?? false;
+      }
+
+      function ownedOverride(file: string): boolean {
+        const info = fs.lstatSync(file, { throwIfNoEntry: false });
+        return info?.isFile() === true && fs.readFileSync(file, "utf8").startsWith(marker);
+      }
+
+      fs.mkdirSync(targetDir, { recursive: true });
+      for (const name of fs.readdirSync(sourceDir)) {
+        if (!name.endsWith(".desktop") || !sourceFile(name)) continue;
+        const source = path.join(sourceDir, name);
+        const target = path.join(targetDir, name);
+        if (fs.lstatSync(target, { throwIfNoEntry: false }) && !ownedOverride(target)) {
+          console.error("Skipping personal desktop entry: " + target);
+          continue;
+        }
+
+        const content = marker + fs.readFileSync(source, "utf8").replace(
+          /^Exec=(?:nixGLIntel |nixGLAMD )?/gm,
+          "Exec=" + variant + " ",
+        );
+        writeFileAtomic(target, content, { mode: 0o644 });
+      }
+
+      for (const name of fs.readdirSync(targetDir)) {
+        if (!name.endsWith(".desktop")) continue;
+        const target = path.join(targetDir, name);
+        if (ownedOverride(target) && !sourceFile(name)) fs.unlinkSync(target);
+      }
+  '');
+
+  home.activation.ensureHaskellTools = lib.hm.dag.entryAfter [ "installPackages" ] (nixbitsLib.ts ''
+    const home = requireEnv("HOME");
+    process.env.PATH = [
+      home + "/.ghcup/bin",
+      home + "/.cabal/bin",
+      home + "/.nix-profile/bin",
+      "/usr/local/bin",
+      "/usr/bin",
+      process.env.PATH,
+    ].join(":");
+    run("ghcup", "install", "ghc", "9.8.4", "--set");
+    run("ghcup", "install", "cabal", "3.16.1.0", "--set");
+    run("cabal", "update");
+  '');
 }
