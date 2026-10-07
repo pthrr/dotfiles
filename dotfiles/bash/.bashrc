@@ -76,8 +76,6 @@ export XDG_PUBLICSHARE_DIR="$HOME/Öffentlich"
 export XDG_TEMPLATES_DIR="$HOME/Vorlagen"
 export XDG_VIDEOS_DIR="$HOME/Video"
 export SHELL='/bin/bash'
-# Kept out of the Nix store, which is world-readable.
-[ -r "$HOME/.config/aider/key.txt" ] && export AIDER_OPENAI_API_KEY="$(< "$HOME/.config/aider/key.txt")"
 export EDITOR='nvim'
 export BROWSER='firefox'
 export MAILCLIENT='meli'

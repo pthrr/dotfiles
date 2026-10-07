@@ -55,7 +55,6 @@ tmp=${TMPDIR:-/tmp}
 case $(dirname "$(printf '%s' "$input" | jq -r '.tool_input.file_path // empty')") in
     "$home"/.claude | "$home"/.claude/* | \
     "$home"/.codex | "$home"/.codex/* | \
-    "$home"/.aider | "$home"/.aider/* | \
     "$home"/.agents | "$home"/.agents/* | \
     "$home"/.config/opencode | "$home"/.config/opencode/* | \
     "$home"/.local/share/opencode | "$home"/.local/share/opencode/* | \

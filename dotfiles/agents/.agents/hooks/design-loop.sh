@@ -121,16 +121,15 @@ pre-write)
     # Whole directories, not the state paths inside them. `*` spans slashes in a
     # case pattern, so one entry per tree covers everything beneath it.
     #
-    # A dotfile directly in $HOME — ~/.aider.conf.yml and friends — is not covered
+    # A dotfile directly in $HOME is not covered
     # and cannot be: the gate keys on the containing directory, so reaching those
     # means whitelisting $HOME, which would ungate every non-repo tree under it.
-    # They are read-only store symlinks; edit them in the dotfiles repo.
+    # Home Manager's links are read-only; edit their sources in the dotfiles repo.
     home=${HOME:-/nonexistent}
     tmp=${TMPDIR:-/tmp}
     case $target_dir in
         "$home"/.claude | "$home"/.claude/* | \
         "$home"/.codex | "$home"/.codex/* | \
-        "$home"/.aider | "$home"/.aider/* | \
         "$home"/.agents | "$home"/.agents/* | \
         "$home"/.config/opencode | "$home"/.config/opencode/* | \
         "$home"/.local/share/opencode | "$home"/.local/share/opencode/* | \

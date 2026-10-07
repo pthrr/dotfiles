@@ -1,0 +1,9 @@
+repos:
+  - repo: local
+    hooks:
+      - id: dotfiles-ci
+        name: dotfiles checks
+        entry: env -u GIT_INDEX_FILE -u GIT_DIR -u GIT_WORK_TREE task precommit
+        language: system
+        pass_filenames: false
+        always_run: true

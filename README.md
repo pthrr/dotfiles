@@ -5,6 +5,8 @@
 This checkout configures a Fedora machine with DNF, single-user Nix, and Home
 Manager. The top-level `./install.sh` updates system packages, changes system
 settings, installs Nix and Home Manager, then activates the home configuration.
+After cloning, run `git submodule update --init --recursive` so the `nixbits`
+helpers used by Home Manager are present.
 Read the scripts in `system/` before running it on another machine. In
 particular, `install.sh` removes the existing `~/.bashrc` and `~/.profile`;
 back up any personal contents first.
@@ -18,6 +20,10 @@ home-manager switch
 ```
 
 After editing files managed by Home Manager, run `home-manager switch` again.
+For development, enter the pinned tool environment with `nix develop` and run
+`task ci` to check this repository and `nixbits`. Run `pre-commit install` once
+to enable fast syntax and `nixbits` checks before commits. You can run only the
+helper checks with `task nixbits:ci`.
 Restart agent clients after changing their hooks so they load the new definitions.
 If a switch fails, correct or revert the source change and run it again. If an
 initial install stopped after removing shell files, restore `~/.bashrc` and
@@ -41,8 +47,7 @@ Agent configuration has one source of truth in `dotfiles/agents/.agents/`:
 ├── hooks/          # Shared checks, TypeScript event adapter, and tests
 ├── claude/         # Claude hook plugin, settings seed, and status line
 ├── codex/          # Codex hook event configuration
-├── opencode/       # OpenCode settings template and TypeScript hook bridge
-└── aider/          # Aider settings template and model metadata
+└── opencode/       # OpenCode settings template and TypeScript hook bridge
 ```
 
 Home Manager installs this tree into `~/.agents`. The
@@ -54,26 +59,16 @@ the entry points clients need, all backed by the same source files:
 | Codex | `~/.codex/hooks.json` links to `.agents/codex/hooks.json` | `~/.codex/skills` mirrors `.agents/skills` |
 | Claude Code | `~/.claude/skills/agent-hooks` links to `.agents/claude/plugin` | `~/.claude/skills` mirrors `.agents/skills` |
 | OpenCode | `~/.config/opencode/opencode.json` is generated from `.agents/opencode/opencode.json.in` and names the plugin | Discovers `~/.agents/skills` |
-| Aider | `~/.aider.conf.yml` links to the generated `.agents/aider/config.yml` | `/read ~/.agents/skills/<name>/SKILL.md` |
 
 Discovery paths follow the official documentation for
 [Codex skills](https://learn.chatgpt.com/docs/build-skills),
 [Claude skills](https://code.claude.com/docs/en/skills),
-[OpenCode skills](https://opencode.ai/docs/skills/), and
-[Aider conventions](https://aider.chat/docs/usage/conventions.html).
+[OpenCode skills](https://opencode.ai/docs/skills/).
 
 OpenCode reads `~/.agents/skills` on its own. Codex does not: it loads skills
 only from `$CODEX_HOME/skills`, which is why that mirror exists.
 
-Aider's settings are maintained in `.agents/aider/config.yml.in`. Home Manager
-fills in the metadata path and installs the result under `.agents/aider`. The
-endpoint stays in that template; the key does not. Everything Home Manager
-writes lands in the world-readable Nix store, so the key reaches Aider through
-`AIDER_OPENAI_API_KEY`, exported by `.bashrc` from `~/.config/aider/key.txt`
-(0600, never in git or the store). Aider keeps a model in the template because
-it has no way to remember one itself.
-
-OpenCode's settings are maintained the same way, in
+OpenCode's settings are maintained in
 `.agents/opencode/opencode.json.in`: its `plugin` entry is a module specifier
 with no `~` expansion, so Home Manager writes the absolute path in.
 
@@ -122,9 +117,7 @@ fresh consent; compaction preserves consent within the current turn.
 OpenCode has no blocking `Stop` hook. On `session.idle`, its bridge applies the
 same final-response check and requests at most one correction with the session's
 selected model. This happens after the initial response is visible. Generated
-feedback cannot grant consent. Aider has no equivalent prompt/tool hook API;
-it shares the configuration folder and skill files, but does not enforce these
-checks. Loading a skill in Aider requires the `/read` command above.
+feedback cannot grant consent.
 
 Session state lives under `${XDG_STATE_HOME:-~/.local/state}/agent-hooks/`,
 separated by client and session and locked against concurrent hook calls.
@@ -147,8 +140,7 @@ directories. Maintain the shared settings and hook code under `.agents`.
 Edit the source files here, then run `home-manager switch` to apply them. This
 replaces the former `dotfiles/claude` source package; Home Manager removes its
 old managed `~/.claude/*.sh` links during activation. The standalone Stow `agents`
-package installs the shared tree only; Home Manager supplies the client bridges
-and Aider configuration.
+package installs the shared tree only; Home Manager supplies the client bridges.
 
 After activation, open `/hooks` in Codex and review/trust the new hook definitions.
 Codex skips untrusted hooks; changing a definition requires review again.

@@ -1,0 +1,3 @@
+[submodule "nixbits"]
+	path = nixbits
+	url = ssh://git@github.com/pthrr/nixbits.git

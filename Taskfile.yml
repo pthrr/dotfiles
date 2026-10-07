@@ -1,0 +1,46 @@
+version: '3'
+
+includes:
+  nixbits:
+    taskfile: ./nixbits/Taskfile.yml
+    dir: ./nixbits
+
+tasks:
+  default:
+    desc: Run all checks
+    cmds:
+      - task: ci
+
+  fmt:
+    desc: Format the root Nix flake
+    cmds:
+      - nixfmt flake.nix
+
+  lint:
+    desc: Check Nix and shell syntax
+    cmds:
+      - nixfmt --check flake.nix
+      - nix flake check --no-build
+      - bash -n install.sh dotfiles/install.sh system/*.sh system/*.bash
+      - nix-instantiate --parse dotfiles/nix/.config/home-manager/home.nix >/dev/null
+
+  test:
+    desc: Run shared agent hook tests
+    cmds:
+      - bash dotfiles/agents/.agents/hooks/ask-first.test.sh
+      - bash dotfiles/agents/.agents/hooks/design-loop.test.sh
+      - node --experimental-strip-types --test dotfiles/agents/.agents/hooks/adapter.test.ts
+      - node --experimental-strip-types --test dotfiles/agents/.agents/opencode/plugin.test.ts
+
+  precommit:
+    desc: Run fast checks before a commit
+    cmds:
+      - task: lint
+      - task: nixbits:ci
+
+  ci:
+    desc: Run root and nixbits checks
+    cmds:
+      - task: lint
+      - task: test
+      - task: nixbits:ci
