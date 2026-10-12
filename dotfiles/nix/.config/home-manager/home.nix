@@ -61,10 +61,9 @@ let
   # OpenCode resolves a plugin entry as a module specifier and does not expand
   # "~", so the shared bridge has to be named by absolute path.
   opencodeConfig = pkgs.writeText "opencode.json" (
-    lib.replaceStrings
-      [ "@AGENTS_DIR@" ]
-      [ "${config.home.homeDirectory}/.agents" ]
-      (builtins.readFile ../../../agents/.agents/opencode/opencode.json.in)
+    lib.replaceStrings [ "@AGENTS_DIR@" ] [ "${config.home.homeDirectory}/.agents" ] (
+      builtins.readFile ../../../agents/.agents/opencode/opencode.json.in
+    )
   );
 
   commonCore = {
@@ -195,7 +194,7 @@ in
             p.cubical
             p.standard-library
           ]))
-          # haskellPackages.agda-language-server  # unmaintained: needs lsp<1.7 and Agda<2.6.4
+          cornelis
           ghcup
         ]
       ++
@@ -1093,7 +1092,8 @@ in
 
   # Create user desktop entries with nixGL wrappers for Nix-installed GUI apps.
   # The profile entries stay untouched; user entries take precedence by filename.
-  home.activation.patchDesktopEntriesForNixGL = lib.hm.dag.entryAfter [ "installPackages" ] (nixbitsLib.ts ''
+  home.activation.patchDesktopEntriesForNixGL = lib.hm.dag.entryAfter [ "installPackages" ] (
+    nixbitsLib.ts ''
       const fs = require("node:fs");
       const path = require("node:path");
 
@@ -1156,20 +1156,23 @@ in
         const target = path.join(targetDir, name);
         if (ownedOverride(target) && !sourceFile(name)) fs.unlinkSync(target);
       }
-  '');
+    ''
+  );
 
-  home.activation.ensureHaskellTools = lib.hm.dag.entryAfter [ "installPackages" ] (nixbitsLib.ts ''
-    const home = requireEnv("HOME");
-    process.env.PATH = [
-      home + "/.ghcup/bin",
-      home + "/.cabal/bin",
-      home + "/.nix-profile/bin",
-      "/usr/local/bin",
-      "/usr/bin",
-      process.env.PATH,
-    ].join(":");
-    run("ghcup", "install", "ghc", "9.8.4", "--set");
-    run("ghcup", "install", "cabal", "3.16.1.0", "--set");
-    run("cabal", "update");
-  '');
+  home.activation.ensureHaskellTools = lib.hm.dag.entryAfter [ "installPackages" ] (
+    nixbitsLib.ts ''
+      const home = requireEnv("HOME");
+      process.env.PATH = [
+        home + "/.ghcup/bin",
+        home + "/.cabal/bin",
+        home + "/.nix-profile/bin",
+        "/usr/local/bin",
+        "/usr/bin",
+        process.env.PATH,
+      ].join(":");
+      run("ghcup", "install", "ghc", "9.8.4", "--set");
+      run("ghcup", "install", "cabal", "3.16.1.0", "--set");
+      run("cabal", "update");
+    ''
+  );
 }

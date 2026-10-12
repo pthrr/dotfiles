@@ -371,11 +371,6 @@ now(function()
                 },
             },
         },
-        -- als = {  -- agda-language-server is unmaintained
-        --     cmd = { "als" },
-        --     filetypes = { "agda" },
-        --     root_markers = { "*.agda-lib", ".git", ".jj" },
-        -- },
         marksman = {
             cmd = { "marksman", "server" },
             filetypes = { "markdown" },
@@ -647,6 +642,23 @@ end)
 
 later(function()
     require("neogit").setup({})
+end)
+
+-- -----------------------------------------------------------------------------
+-- Agda (cornelis)
+-- -----------------------------------------------------------------------------
+
+now(function()
+    add({
+        source = "agda/cornelis",
+        checkout = "nvim-0.12-compat",
+        depends = {
+            { source = "neovimhaskell/nvim-hs.vim" },
+            { source = "kana/vim-textobj-user" },
+        },
+    })
+    -- cornelis is installed globally via nix; don't stack-build it
+    vim.g.cornelis_use_global_binary = 1
 end)
 
 -- ==============================================================================
@@ -1332,6 +1344,16 @@ do
         end,
     })
 end
+vim.api.nvim_create_autocmd("FileType", {
+    pattern = "*",
+    callback = function(args)
+        local name = args.file or vim.api.nvim_buf_get_name(args.buf)
+        if (vim.endswith(name, ".lagda.md") or vim.endswith(name, ".lagda.tex"))
+            and vim.bo[args.buf].filetype ~= "agda" then
+            vim.bo[args.buf].filetype = "agda"
+        end
+    end,
+})
 -- agda
 vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
     pattern = { "*.agda", "*.lagda", "*.lagda.md", "*.lagda.tex" },
@@ -1343,5 +1365,31 @@ vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
         vim.keymap.set("i", [[\Nat]], "ℕ", opts)
         vim.keymap.set("i", [[\Pi]], "Π", opts)
         vim.keymap.set("i", [[\Sigma]], "Σ", opts)
+
+        local cornelis_cmds = {
+            ["<leader>l"] = "CornelisLoad",
+            ["<leader>,"] = "CornelisTypeContext",
+            ["<leader>."] = "CornelisTypeContextInfer",
+            ["<leader>r"] = "CornelisRefine",
+            ["<leader>d"] = "CornelisMakeCase",
+            ["<leader>a"] = "CornelisAuto",
+            ["<leader>n"] = "CornelisSolve",
+            ["gd"] = "CornelisGoToDefinition",
+            ["[/"] = "CornelisPrevGoal",
+            ["]/"] = "CornelisNextGoal",
+        }
+        for lhs, cmd in pairs(cornelis_cmds) do
+            vim.keymap.set("n", lhs, "<cmd>" .. cmd .. "<cr>", opts)
+        end
     end,
+})
+
+vim.api.nvim_create_autocmd("BufWritePost", {
+    pattern = { "*.agda", "*.lagda", "*.lagda.md", "*.lagda.tex" },
+    command = "CornelisLoad",
+})
+
+vim.api.nvim_create_autocmd("QuitPre", {
+    pattern = { "*.agda", "*.lagda", "*.lagda.md", "*.lagda.tex" },
+    command = "CornelisCloseInfoWindows",
 })
