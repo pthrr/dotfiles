@@ -8,4 +8,4 @@ cd "$(dirname "$0")"
 ./dotfiles/install.sh nix/
 
 rm -f ~/.bashrc ~/.profile
-home-manager switch
+nix develop -c home-manager switch --impure --flake .#pthrr@x86_64-linux

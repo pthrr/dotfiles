@@ -225,8 +225,9 @@ alias bazel='bazelisk'
 alias npm='pnpm'
 alias npx='pnpx'
 alias gg='git'
-alias task='go-task'
-alias tt='go-task'
+  alias task='go-task'
+  alias tt='go-task'
+  alias nd='nix develop -c'
 alias zj='zellij'
 alias j='jobs'
 alias c='clear'
@@ -251,12 +252,8 @@ mksomespace() {
     pip cache purge
     uv cache prune
     cargo cache --autoclean
-    find "$HOME/.cache" -xdev -type f -mtime +60 \
-        -not -path "$HOME/.cache/sccache/*" \
-        -not -path "$HOME/.cache/ccache/*" \
-        -not -path "$HOME/.cache/nix/*" \
-        -delete 2>/dev/null
-    find "$HOME/.cache" -xdev -mindepth 1 -type d -empty -delete 2>/dev/null
+    pre-commit gc
+    pnpm store prune
     for r in "$HOME/fun" "$HOME/business" "$HOME/job"; do
         [ -d "$r" ] || continue
         if find "$r" -type f -name sweep.timestamp -print -quit 2>/dev/null | grep -q .; then
@@ -267,8 +264,9 @@ mksomespace() {
     done
     sudo btrfs balance start -musage=50 -dusage=50 /
 }
-alias mkupdates='sudo dnf update -y && sudo flatpak update -y'
-alias mkbackup='sudo "$HOME/.dotfiles/system/sync_ssd.bash"'
+  alias mkupdates='sudo dnf update -y && sudo flatpak update -y'
+  alias mkhome='nix develop "$HOME/.dotfiles" -c task --dir "$HOME/.dotfiles" home'
+  alias mkbackup='sudo "$HOME/.dotfiles/system/sync_ssd.bash"'
 alias srv='ssh nwv-srv'
 alias srvreb='ssh nwv-srv "cd ~/server && git pull && sudo task deploy"'
 alias plasma='dbus-run-session startplasma-wayland'

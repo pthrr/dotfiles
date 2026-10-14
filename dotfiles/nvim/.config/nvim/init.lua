@@ -1,5 +1,7 @@
--- Providers: HM uses wrapRc=false; hosts are set via extraWrapperArgs in home.nix.
--- Disable legacy providers we do not use (avoids checkhealth noise if wrapper changes).
+-- Providers: home-manager ships neovim with all of them disabled; mark the
+-- legacy providers as unloaded here so checkhealth stays quiet.
+vim.g.loaded_python3_provider = 0
+vim.g.loaded_ruby_provider = 0
 vim.g.loaded_perl_provider = 0
 vim.g.loaded_node_provider = 0
 

@@ -12,17 +12,22 @@ tasks:
       - task: ci
 
   fmt:
-    desc: Format the root Nix flake
+    desc: Format the root Nix flake and home modules
     cmds:
-      - nixfmt flake.nix
+      - nixfmt flake.nix modules/home/*.nix
 
   lint:
     desc: Check Nix and shell syntax
     cmds:
-      - nixfmt --check flake.nix
+      - nixfmt --check flake.nix modules/home/*.nix
       - nix flake check --no-build
       - bash -n install.sh dotfiles/install.sh system/*.sh system/*.bash
-      - nix-instantiate --parse dotfiles/nix/.config/home-manager/home.nix >/dev/null
+      - nix-instantiate --parse modules/home/*.nix >/dev/null
+
+  home:
+    desc: Apply the home-manager configuration (--impure reads git identity files at eval)
+    cmds:
+      - home-manager switch --impure --flake .#pthrr@x86_64-linux
 
   test:
     desc: Run shared agent hook tests
