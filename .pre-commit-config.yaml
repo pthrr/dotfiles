@@ -7,3 +7,8 @@ repos:
         language: system
         pass_filenames: false
         always_run: true
+      - id: nixfmt
+        name: check nix formatting
+        entry: nix fmt -- --check
+        language: system
+        pass_filenames: false

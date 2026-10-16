@@ -283,6 +283,7 @@ in
         nuxmv
         z3
         tlaplus
+        quint
       ]
     ++
 

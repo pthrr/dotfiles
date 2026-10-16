@@ -21,13 +21,13 @@ tasks:
     cmds:
       - nixfmt --check flake.nix modules/home/*.nix
       - nix flake check --no-build
-      - bash -n install.sh dotfiles/install.sh system/*.sh system/*.bash
+      - bash -n install.sh dotfiles/install.sh system/*.sh system/*.bash dotfiles/agents/.agents/hooks/*.sh dotfiles/agents/.agents/claude/statusline.sh
       - nix-instantiate --parse modules/home/*.nix >/dev/null
 
   home:
-    desc: Apply the home-manager configuration (--impure reads git identity files at eval)
+    desc: Apply the home-manager configuration
     cmds:
-      - home-manager switch --impure --flake .#pthrr@x86_64-linux
+      - home-manager switch --flake .#pthrr@x86_64-linux
 
   test:
     desc: Run shared agent hook tests
