@@ -61,9 +61,30 @@
         }
       );
 
-      # Managed home configuration. Applying it reads the git identity
-      # override files (~/.config/git/name.txt / email.txt) at eval time, so
-      # the switch must pass `--impure` (see task home).
+      # `nix fmt` entry point. nixfmt reads stdin when given no files, so
+      # default to every .nix file under the flake root (PRJ_ROOT is set by
+      # nix fmt).
+      formatter = eachSystem (
+        pkgs: _:
+        pkgs.writeShellScriptBin "format-nix" ''
+          flags=()
+          files=()
+          for arg in "$@"; do
+            case "$arg" in
+              -*) flags+=("$arg") ;;
+              *) files+=("$arg") ;;
+            esac
+          done
+          if [ "''${#files[@]}" -eq 0 ]; then
+            mapfile -t files < <(find "''${PRJ_ROOT:-.}" -type f -name '*.nix')
+          fi
+          exec ${pkgs.nixfmt}/bin/nixfmt "''${flags[@]}" "''${files[@]}"
+        ''
+      );
+
+      # Managed home configuration. The git identity is pinned in
+      # modules/home/default.nix, so evaluation is pure and no `--impure` is
+      # required.
       homeConfigurations."pthrr@x86_64-linux" = home-manager.lib.homeManagerConfiguration {
         pkgs = nixpkgs.legacyPackages.x86_64-linux;
         extraSpecialArgs = { inherit inputs; };

@@ -262,7 +262,9 @@ mksomespace() {
             cargo-sweep sweep --stamp --recursive "$r"
         fi
     done
-    sudo btrfs balance start -musage=50 -dusage=50 /
+    for u in 0 5 10 20 35 50; do
+        sudo btrfs balance start -dusage=$u / || break
+    done
 }
   alias mkupdates='sudo dnf update -y && sudo flatpak update -y'
   alias mkhome='nix develop "$HOME/.dotfiles" -c task --dir "$HOME/.dotfiles" home'
