@@ -35,10 +35,13 @@ let
 
   # The daemon owns the remote-vs-local storage decision: its env is fixed at
   # start, so the mode must be chosen (and re-chosen) outside the daemon.
-  # ExecStartPre probes nwv-srv and writes a systemd EnvironmentFile plus a
-  # mode marker that the recheck timer compares against. Clients never pass
-  # storage env themselves (~/bin/sccache-wrapper only points at the socket),
-  # which is what lets sandboxed builds ride this daemon.
+  # sccache-pick.service probes nwv-srv and writes a systemd EnvironmentFile
+  # plus a mode marker that the recheck timer compares against. It must run
+  # as its own unit ordered Before the daemon: EnvironmentFile is read at
+  # daemon start, before any ExecStartPre of that unit could write it.
+  # Clients never pass storage env themselves (~/bin/sccache-wrapper only
+  # points at the socket), which is what lets sandboxed builds ride this
+  # daemon.
   pickMode = nixbitsLib.ts (
     probe
     + ''
@@ -86,28 +89,40 @@ let
   );
 in
 {
+  systemd.user.services.sccache-pick = {
+    Unit.Description = "Probe sccache backend reachability and write its env file";
+    Service = {
+      Type = "oneshot";
+      # Shared with sccache-daemon, which also declares it: the dir stays
+      # alive as long as either unit references it.
+      RuntimeDirectory = "sccache";
+      ExecStart = "${pickMode}";
+    };
+  };
+
   systemd.user.services.sccache-daemon = {
     Unit = {
       Description = "sccache daemon (remote S3 when reachable, else local)";
       # On login, start even though the daemon also self-starts on first use:
       # sandboxed clients cannot spawn a remote-configured daemon themselves.
       Wants = [ "sccache-recheck.timer" ];
+      Requires = [ "sccache-pick.service" ];
+      After = [ "sccache-pick.service" ];
     };
     Service = {
       Type = "forking";
       RuntimeDirectory = "sccache";
       Environment = "SCCACHE_SERVER_UDS=${socketPath}";
+      # Read at start, i.e. after sccache-pick has written it (After above).
+      EnvironmentFile = "-%t/sccache/env";
       # A crashed daemon leaves the socket file behind and the next bind
       # would fail with EADDRINUSE.
-      ExecStartPre = [
-        "${pkgs.coreutils}/bin/rm -f ${socketPath}"
-        "${pickMode}"
-      ];
-      EnvironmentFile = "-%t/sccache/env";
+      ExecStartPre = "${pkgs.coreutils}/bin/rm -f ${socketPath}";
       ExecStart = "${pkgs.sccache}/bin/sccache --start-server";
-      # The daemon creates the socket with the service umask (0755); nixbld
-      # build users must be able to connect to it.
-      ExecStartPost = "${pkgs.coreutils}/bin/chmod 0777 ${socketPath}";
+      # This is a single-user nix setup (no nixbld build users, see
+      # nix.conf): every client, including sandboxed builds, runs as this
+      # user, so owner-only perms on the socket suffice.
+      ExecStartPost = "${pkgs.coreutils}/bin/chmod 0755 ${socketPath}";
       Restart = "always";
       RestartSec = "5";
     };

@@ -7,9 +7,9 @@ includes:
 
 tasks:
   default:
-    desc: Run all checks
+    desc: List available tasks
     cmds:
-      - task: ci
+      - task --list
 
   fmt:
     desc: Format the root Nix flake and home modules

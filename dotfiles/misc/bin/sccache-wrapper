@@ -40,7 +40,8 @@ sccache_bin="$(find_sccache)" || {
 # have no network at all and claude/opencode sandboxes only pass unix
 # sockets, but the daemon runs outside and does all remote traffic. The last
 # candidate covers nix build sandboxes, where the host runtime dir is
-# bind-mounted but the build user's uid differs.
+# bind-mounted (see nix.conf extra-sandbox-paths). This is single-user nix,
+# so builds run as this same user and the owner-only socket is connectable.
 uds=""
 for uds_candidate in \
     "${SCCACHE_SERVER_UDS:-}" \

@@ -5,6 +5,9 @@ vim.g.loaded_ruby_provider = 0
 vim.g.loaded_perl_provider = 0
 vim.g.loaded_node_provider = 0
 
+-- Neovim has no built-in filetype mapping for Quint specifications.
+vim.filetype.add({ extension = { qnt = "quint" } })
+
 -- ==============================================================================
 -- 1. ENVIRONMENT DETECTION
 -- ==============================================================================
@@ -378,6 +381,11 @@ now(function()
             filetypes = { "markdown" },
             root_markers = { ".marksman.toml", ".git", ".jj" },
         },
+        quint = {
+            cmd = { "quint-language-server", "--stdio" },
+            filetypes = { "quint" },
+            root_markers = { ".git", ".jj" },
+        },
     }
 
     -- Enable all configured language servers
@@ -578,6 +586,17 @@ now(function()
         end,
     })
 end)
+
+-- Quint ships no Treesitter parser, so fall back to the vendored Vim syntax
+-- file (syntax/quint.vim). Sourcing it works even with `syntax off` above:
+-- Neovim still applies the loaded rules to the buffer.
+vim.api.nvim_create_autocmd("FileType", {
+    pattern = "quint",
+    callback = function()
+        vim.bo.syntax = "quint"
+        vim.cmd("runtime! syntax/quint.vim")
+    end,
+})
 
 later(function()
     local hipat = require("mini.hipatterns")
@@ -1350,7 +1369,9 @@ vim.api.nvim_create_autocmd("FileType", {
     pattern = "*",
     callback = function(args)
         local name = args.file or vim.api.nvim_buf_get_name(args.buf)
-        if (vim.endswith(name, ".lagda.md") or vim.endswith(name, ".lagda.tex"))
+        if (vim.endswith(name, ".lagda")
+                or vim.endswith(name, ".lagda.md")
+                or vim.endswith(name, ".lagda.tex"))
             and vim.bo[args.buf].filetype ~= "agda" then
             vim.bo[args.buf].filetype = "agda"
         end
