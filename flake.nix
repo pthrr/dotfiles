@@ -52,6 +52,7 @@
                 pre-commit
                 nixfmt
                 nodejs
+                shellcheck
               ]
               # The home-manager flake does not publish x86_64-darwin packages.
               ++ (nixpkgs.lib.optional (system != "x86_64-darwin") (

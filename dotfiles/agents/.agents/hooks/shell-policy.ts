@@ -78,6 +78,10 @@ export function shellCommands(command: string): string[][] | null {
 }
 
 function readonlyCommand([name, ...args]: string[]): boolean {
+    if (name === "printf" && args[0] === "-v") {
+        return false;
+    }
+
     // Bare executable names only: ./cat is an arbitrary local program.
     // Nothing here writes without a redirection, and the only redirections the
     // scan above admits are /dev/null and fd duplication. Deliberately absent:

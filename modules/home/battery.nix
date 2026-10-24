@@ -38,15 +38,27 @@ let
 
       # busctl answers raw typed values ("d 22.145901", "u 2"): no locale
       # decimal separators and no scraping of textual upower -i output.
-      percentage_line=$(
-        busctl --user get-property org.freedesktop.UPower "$display_device" \
-          org.freedesktop.UPower.Device Percentage 2>/dev/null
-      ) || exit 0
+      #
+      # UPower lives on the system bus. Asking the user bus failed on every run,
+      # and exiting 0 on that failure meant no warning ever fired while the unit
+      # reported success every minute. A query that fails is a failed unit, so it
+      # shows in `systemctl --user --failed`; the timer keeps firing regardless.
+      if ! percentage_line=$(
+        busctl --system get-property org.freedesktop.UPower "$display_device" \
+          org.freedesktop.UPower.Device Percentage
+      ); then
+        echo "battery-alertd: cannot read Percentage from UPower" >&2
+        exit 1
+      fi
       percentage=''${percentage_line#* }
-      state_line=$(
-        busctl --user get-property org.freedesktop.UPower "$display_device" \
-          org.freedesktop.UPower.Device State 2>/dev/null
-      ) || exit 0
+
+      if ! state_line=$(
+        busctl --system get-property org.freedesktop.UPower "$display_device" \
+          org.freedesktop.UPower.Device State
+      ); then
+        echo "battery-alertd: cannot read State from UPower" >&2
+        exit 1
+      fi
       state=''${state_line#* }
 
       # UPower may report a fractional percentage (for example, 22.1459%).

@@ -1,15 +1,11 @@
-/** Translate harness lifecycle events into the shared shell checks.
- * Hooks own state per client and session. Event inputs avoid private transcript
- * formats; Codex turn IDs prevent consent leaking into a different turn.
- */
+/** Serialize client events into one versioned proposal and exact human consent. */
 import { spawnSync } from "node:child_process";
-import { createHash } from "node:crypto";
+import { createHash, randomUUID } from "node:crypto";
 import {
     chmodSync,
     closeSync,
     existsSync,
     mkdirSync,
-    mkdtempSync,
     openSync,
     readFileSync,
     realpathSync,
@@ -18,7 +14,7 @@ import {
     statSync,
     writeFileSync,
 } from "node:fs";
-import { homedir, tmpdir } from "node:os";
+import { homedir } from "node:os";
 import { basename, dirname, isAbsolute, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { expandHome, shellEffect } from "./shell-policy.ts";
@@ -29,6 +25,7 @@ type HookInput = {
     cwd: string;
     hook_event_name: string;
     turn_id?: string;
+    tool_use_id?: string;
     source?: string;
     prompt?: string;
     tool_name?: string;
@@ -36,70 +33,139 @@ type HookInput = {
     tool_response?: unknown;
     last_assistant_message?: string | null;
     stop_hook_active?: boolean;
+    // Provenance supplied by the client bridge, never inferred from an "ok".
+    synthetic?: boolean;
+    continuation?: boolean;
+    human_event_id?: string;
 };
+type Snapshot = { path: string; hash: string; identity: string };
+type Proposal = Snapshot & { id: string; shown: boolean; approved: boolean };
 type State = {
+    protocol: 3;
+    humanId: string | null;
     prompt: string;
     turnId: string | null;
-    active: boolean;
-    touched: string[];
     rules: string[];
+    proposal: Proposal | null;
+    plansWritten: string[];
+    inFlight: string[];
     stopFeedback?: string;
 };
+type Effect = { paths: string[]; removed: string[]; shell: boolean; readonly: boolean };
+type GateRecord = { ambiguous?: boolean; plan_written?: string; governed_by?: string; presented?: string; hash?: string };
+const injected = /^<(task-notification|command-name|local-command-caveat|local-command-stdout)>/;
 const entrypoint = fileURLToPath(import.meta.url);
 const hooks = dirname(entrypoint);
-const writeTools = new Set(["Write", "Edit", "MultiEdit", "NotebookEdit", "apply_patch"]);
-const freshState = (): State => ({ prompt: "", turnId: null, active: false, touched: [], rules: [] });
+const writeTools = new Set(["Write", "Edit", "MultiEdit", "NotebookEdit"]);
+const freshState = (): State => ({
+    protocol: 3,
+    humanId: null,
+    prompt: "",
+    turnId: null,
+    rules: [],
+    proposal: null,
+    plansWritten: [],
+    inFlight: [],
+});
+const unique = (items: string[]) => [...new Set(items)].sort();
 let currentEvent: string | undefined;
+let freePlanWrite = false;
 
 function canonicalPath(path: string): string {
     try {
         return realpathSync(path);
     } catch (error) {
-        if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
+        if ((error as NodeJS.ErrnoException).code !== "ENOENT") {
+            throw error;
+        }
+
         const parent = dirname(path);
-        if (parent === path) throw error;
+
+        if (parent === path) {
+            throw error;
+        }
+
         return resolve(canonicalPath(parent), basename(path));
     }
 }
 
 function fullPath(value: unknown, cwd: string): string {
-    if (typeof value !== "string" || !value || /[\n\0]/.test(value)) throw new Error("missing or invalid file path");
+    if (typeof value !== "string" || !value || /[\n\0]/.test(value)) {
+        throw new Error("missing or invalid file path");
+    }
+
     const path = expandHome(value);
-    // Resolve existing symlinks before normalizing '..' and new path components.
     return canonicalPath(isAbsolute(path) ? path : `${cwd}/${path}`);
 }
 
-// Only write sets matter here. Reads used to be collected too, so that reading
-// skills/software-design/SKILL.md could arm the loop; activation is manual now,
-// and nothing else ever consumed them.
-function toolEffect(input: HookInput): { paths: string[] } {
-    const tool = input.tool_name ?? "",
-        args = input.tool_input ?? {};
-    if (typeof args !== "object" || Array.isArray(args)) throw new Error("tool_input must be an object");
+// Only declared file targets qualify. A shell working directory is never a target.
+// Keep this fast path in step with write-gate.sh; exempt writes need no storage.
+function exemptPath(path: string): boolean {
+    const userHome = canonicalPath(homedir());
+    const roots = [
+        ".claude", ".codex", ".agents", ".config/opencode", ".local/share/opencode", "tmp",
+    ].map((directory) => join(userHome, directory));
+    roots.push("/tmp");
+    return basename(path) === "PLAN.md" || roots.some((directory) => path.startsWith(`${directory}/`));
+}
+
+function toolEffect(input: HookInput): Effect {
+    const tool = input.tool_name ?? "";
+    const args = input.tool_input ?? {};
+
+    if (typeof args !== "object" || Array.isArray(args)) {
+        throw new Error("tool_input must be an object");
+    }
+
     if (tool === "apply_patch") {
         const patch = args.command;
+
         if (
             typeof patch !== "string" ||
             !patch.trimStart().startsWith("*** Begin Patch\n") ||
             !patch.trimEnd().endsWith("*** End Patch")
-        )
+        ) {
             throw new Error("cannot identify the files in this patch");
-        const paths = [...patch.matchAll(/^\*\*\* (?:Add File|Update File|Delete File|Move to): (.+)$/gm)].map(
-            (match) => fullPath(match[1], input.cwd),
-        );
-        if (!paths.length) throw new Error("patch has no recognized file targets");
-        return { paths: [...new Set(paths)].sort() };
+        }
+
+        const targets = [...patch.matchAll(/^\*\*\* (?:Add File|Update File|Delete File|Move to): (.+)$/gm)];
+        const paths = unique(targets.map((match) => fullPath(match[1], input.cwd)));
+        const deletions = [...patch.matchAll(/^\*\*\* Delete File: (.+)$/gm)];
+        const moves = [...patch.matchAll(/^\*\*\* Update File: (.+)\n\*\*\* Move to: /gm)];
+        const removed = unique([...deletions, ...moves].map((match) => fullPath(match[1], input.cwd)));
+
+        if (!paths.length) {
+            throw new Error("patch has no recognized file targets");
+        }
+
+        return { paths, removed, shell: false, readonly: false };
     }
-    if (writeTools.has(tool)) return { paths: [fullPath(args.file_path ?? args.notebook_path, input.cwd)] };
+
+    if (writeTools.has(tool)) {
+        return {
+            paths: [fullPath(args.file_path ?? args.notebook_path, input.cwd)],
+            removed: [],
+            shell: false,
+            readonly: false,
+        };
+    }
+
     if (tool === "Bash") {
-        if (typeof args.command !== "string") throw new Error("missing shell command");
+        if (typeof args.command !== "string") {
+            throw new Error("missing shell command");
+        }
+
         const workdir = fullPath(args.workdir ?? input.cwd, input.cwd);
         const effect = shellEffect(args.command, workdir);
-        // Arbitrary programs have unknowable write sets. Require a plan in each
-        // identifiable working directory; patches get per-file checks instead.
-        return { paths: effect.readonly ? [] : effect.directories.map((dir) => fullPath(".shell-command", dir)) };
+        return {
+            paths: effect.readonly ? [] : [fullPath(".shell-command", workdir)],
+            removed: [],
+            shell: true,
+            readonly: effect.readonly,
+        };
     }
-    return { paths: [] };
+
+    return { paths: [], removed: [], shell: false, readonly: true };
 }
 
 function succeeded(response: unknown): boolean {
@@ -110,219 +176,445 @@ function succeeded(response: unknown): boolean {
             return true;
         }
     }
-    if (!response || typeof response !== "object") return true;
+
+    if (!response || typeof response !== "object") {
+        return true;
+    }
+
     const value = response as Record<string, unknown>;
     return !value.isError && !value.is_error && (value.exit_code == null || value.exit_code === 0);
 }
 
-// The loop is armed by hand and never by inference. A successful Skill tool_use
-// is the one signal here; the other is `$software-design` typed into a Codex
-// prompt, handled in dispatch. Reading skills/software-design/SKILL.md used to
-// arm it on clients with no Skill tool, on the theory that there the read IS the
-// load — but a read is also how the file gets edited, grepped or quoted, so that
-// path armed the loop for people who had merely opened it. Opening a file is not
-// a decision to work under a design loop.
-// Naming it is a fact about the user's message; "this task looks like a fit" is a
-// claim about the model's judgement. The skill's own description says INVOKE ONLY
-// WHEN THE USER ASKS FOR IT BY NAME, but a description is a prompt — nothing stopped
-// a model from reading an ordinary refactor as a good fit and arming a loop the user
-// never chose and cannot leave without ending the session. The prompt is the record
-// of what was actually asked for, so the gate reads that instead.
-//
-// The skill content still loads either way. What this withholds is the enforcement,
-// which is the part the user did not ask for.
-function skillLoaded(input: HookInput, prompt: string): boolean {
-    if (!succeeded(input.tool_response)) return false;
-    if (input.tool_name !== "Skill" || input.tool_input?.skill !== "software-design") return false;
-    return /software-design|design[ -]loop/i.test(prompt);
+function snapshot(path: string): Snapshot | null {
+    try {
+        const resolved = canonicalPath(path);
+        const content = readFileSync(resolved);
+        const info = statSync(resolved, { bigint: true });
+        return {
+            path: resolved,
+            hash: createHash("sha256").update(content).digest("hex"),
+            // File identity catches deletion/recreation and edits restored to the
+            // same bytes. Re-presenting a file changes none of these fields.
+            identity: `${info.dev}:${info.ino}:${info.ctimeNs}`,
+        };
+    } catch (error) {
+        if ((error as NodeJS.ErrnoException).code === "ENOENT") {
+            return null;
+        }
+
+        throw error;
+    }
 }
 
-// Rules fire on what a turn wrote, never on what it loaded. A file in ../rules with
-// a matching `when:` glob applies in any session — implementation, a one-line fix,
-// one that has never heard of the design loop — which is the difference between
-// this and a skill.
-//
-// Injected once per file per session: thirty Rust edits must not repeat the same
-// paragraph thirty times. The ledger is session state, so a new session sees them
-// again, which is right — a new session has not read them.
-//
-// A failure here is silent. The tool call already succeeded, and an unreadable
-// rules file is not a reason to report an error against work that landed.
+function sameVersion(left: Snapshot, right: Snapshot): boolean {
+    return left.path === right.path && left.hash === right.hash && left.identity === right.identity;
+}
+
+function proposalFor(value: Snapshot): Proposal {
+    return { ...value, id: randomUUID(), shown: false, approved: false };
+}
+
+function reconcile(state: State): void {
+    if (!state.proposal) {
+        return;
+    }
+
+    const current = snapshot(state.proposal.path);
+
+    if (!current) {
+        // Closing discards authority, including the presentation record. An
+        // identical file created later can only acquire a fresh proposal ID.
+        state.proposal = null;
+    } else if (!sameVersion(state.proposal, current)) {
+        state.proposal = proposalFor(current);
+    }
+}
+
 function ruleContext(paths: string[], input: HookInput, state: State): string {
-    if (!succeeded(input.tool_response) || !paths.length) return "";
+    if (!succeeded(input.tool_response) || !paths.length) {
+        return "";
+    }
+
     const bodies: string[] = [];
+
     for (const path of paths) {
         const result = spawnSync("bash", [join(hooks, "rules.sh"), path], {
             encoding: "utf8",
             timeout: 5_000,
             maxBuffer: 256 * 1024,
         });
-        if (result.status !== 0 || !result.stdout) continue;
+
+        if (result.status !== 0 || !result.stdout) {
+            continue;
+        }
+
         for (const file of result.stdout.split("\n").filter(Boolean)) {
-            if (state.rules.includes(file)) continue;
+            if (state.rules.includes(file)) {
+                continue;
+            }
+
             state.rules.push(file);
+
             try {
-                // Strip the frontmatter: `when:` is configuration for the hook, not
-                // guidance for the reader.
                 bodies.push(readFileSync(file, "utf8").replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n/, "").trim());
             } catch {
-                /* unreadable rule: recorded as seen, so it is not retried every write */
+                // An unreadable rule cannot turn a completed write into a failure.
             }
         }
     }
+
     return bodies.filter(Boolean).join("\n\n");
 }
 
-function runCheck(script: string, mode: string | null, input: HookInput, state: State, filePath?: string): number {
-    // The established validators consume this small Claude-shaped protocol.
-    // Clients supply the same facts, keeping one implementation of policy.
-    const content: Record<string, unknown>[] = [];
-    if (state.active) content.push({ type: "tool_use", name: "Skill", input: { skill: "software-design" } });
-    for (const path of state.touched) content.push({ type: "tool_use", name: "Write", input: { file_path: path } });
-    if (input.last_assistant_message != null) content.push({ type: "text", text: input.last_assistant_message });
-    const rows = [
-        { type: "user", message: { content: state.prompt } },
-        { type: "assistant", message: { content } },
-    ];
-    const temporary = mkdtempSync(join(tmpdir(), "agent-hook-"));
-    try {
-        const transcript = join(temporary, "transcript.jsonl");
-        writeFileSync(transcript, rows.map((row) => JSON.stringify(row)).join("\n") + "\n", { mode: 0o600 });
-        const payload = {
-            ...input,
-            transcript_path: transcript,
-            ...(filePath ? { tool_input: { file_path: filePath } } : {}),
-        };
-        const result = spawnSync("bash", [join(hooks, script), ...(mode ? [mode] : [])], {
-            input: JSON.stringify(payload),
-            encoding: "utf8",
-            cwd: input.cwd,
-            timeout: 20_000,
-            maxBuffer: 2 * 1024 * 1024,
-        });
-        if (result.error) throw result.error;
-        if (result.status !== 0 && result.status !== 2) throw new Error(`${script} failed: ${result.stderr.trim()}`);
-        process.stdout.write(result.stdout);
-        process.stderr.write(result.stderr);
-        if (mode === "stop" && result.status === 2) state.stopFeedback = result.stderr.trim();
-        return result.status;
-    } finally {
-        rmSync(temporary, { recursive: true, force: true });
+function gate(mode: "pre-write" | "stop", input: HookInput, state: State, fields: Record<string, unknown> = {}) {
+    const result = spawnSync("bash", [join(hooks, "write-gate.sh"), mode], {
+        input: JSON.stringify({ ...input, ...fields, prompt: state.prompt, proposal: state.proposal }),
+        encoding: "utf8",
+        cwd: input.cwd,
+        timeout: 20_000,
+        maxBuffer: 2 * 1024 * 1024,
+    });
+
+    if (result.error) {
+        throw result.error;
+    }
+
+    if (result.status !== 0 && result.status !== 2) {
+        throw new Error(`write-gate.sh failed: ${result.stderr.trim()}`);
+    }
+
+    const records = result.stdout.split("\n").filter(Boolean).map((line) => JSON.parse(line) as GateRecord);
+    return { status: result.status, reason: result.stderr.trim(), records };
+}
+
+function context(event: string, text: string): void {
+    if (text) {
+        process.stdout.write(JSON.stringify({ hookSpecificOutput: { hookEventName: event, additionalContext: text } }));
     }
 }
 
-function dispatch(client: Client, input: HookInput, state: State): number {
+type HumanEvent = { id: string; prompt: string; turnId: string | null };
+
+function readHuman(path: string): HumanEvent | null {
+    if (!existsSync(path)) {
+        return null;
+    }
+
+    return JSON.parse(readFileSync(path, "utf8")) as HumanEvent;
+}
+
+function writeHuman(path: string, event: HumanEvent): void {
+    const temporary = `${path}.${process.pid}.tmp`;
+
+    try {
+        writeFileSync(temporary, JSON.stringify(event), { mode: 0o600 });
+        renameSync(temporary, path);
+    } finally {
+        rmSync(temporary, { force: true });
+    }
+}
+
+function humanCurrent(state: State, journal: string): boolean {
+    const latest = readHuman(journal);
+    return latest !== null && latest.id === state.humanId && latest.prompt === "ok" && state.prompt === "ok";
+}
+
+function dispatch(client: Client, input: HookInput, state: State, journal: string): number {
     const event = input.hook_event_name;
+
     if (event === "SessionStart") {
         if (input.source === "startup" || input.source === "clear") {
             Object.assign(state, freshState());
             delete state.stopFeedback;
         } else if (input.source === "resume") {
-            Object.assign(state, { prompt: "", turnId: null, touched: [] });
+            state.prompt = "";
+            state.turnId = null;
+
+            if (state.proposal) {
+                state.proposal.approved = false;
+            }
         }
-        return runCheck("design-loop.sh", "activate", input, state);
-    }
-    if (event === "UserPromptSubmit") {
-        if (typeof input.prompt !== "string") throw new Error("missing user prompt");
-        // A rejected Codex Stop creates a synthetic user prompt. Quoted "OK" or
-        // a path named "yes" in that feedback must never grant human consent.
-        const continuation = !!state.stopFeedback && input.prompt.includes(state.stopFeedback);
-        delete state.stopFeedback;
-        Object.assign(state, { prompt: continuation ? "" : input.prompt, turnId: input.turn_id ?? null, touched: [] });
-        if (client === "codex" && /\$software-design\b/.test(input.prompt)) state.active = true;
+
+        reconcile(state);
         return 0;
     }
-    if (client !== "claude" && (input.turn_id ?? null) !== state.turnId) {
-        Object.assign(state, { prompt: "", turnId: input.turn_id ?? null, touched: [] });
-    }
-    if (event === "PreToolUse" || event === "PostToolUse") {
-        const effect = toolEffect(input);
-        if (event === "PostToolUse") {
-            state.active ||= skillLoaded(input, state.prompt);
-            const context = ruleContext(effect.paths, input, state);
-            if (context)
-                process.stdout.write(
-                    JSON.stringify({
-                        hookSpecificOutput: { hookEventName: "PostToolUse", additionalContext: context },
-                    }),
-                );
+
+    reconcile(state);
+
+    if (event === "UserPromptSubmit") {
+        if (typeof input.prompt !== "string") {
+            throw new Error("missing user prompt");
+        }
+
+        // OpenCode supplies provenance. Claude's injected notifications have
+        // stable tags. Codex exposes its Stop retry as the exact reason we sent;
+        // match that complete, uniquely tagged reason, never a substring.
+        const feedback = client === "codex" && state.stopFeedback && input.prompt === state.stopFeedback;
+
+        if (input.synthetic === true || input.continuation === true || injected.test(input.prompt) || feedback) {
+            state.turnId = input.turn_id ?? state.turnId;
+
+            if (feedback) {
+                delete state.stopFeedback;
+            }
+
             return 0;
         }
-        if (!effect.paths.length) return 0;
-        const consent = runCheck("ask-first.sh", null, input, state);
-        if (consent) return consent;
-        // Check every file before recording any writes. Adding PLAN.md and source
-        // in one patch cannot bypass a missing plan; renames check both endpoints.
-        for (const path of effect.paths) {
-            const code = runCheck("design-loop.sh", "pre-write", input, state, path);
-            if (code) return code;
+
+        const latest = readHuman(journal);
+
+        if (!input.human_event_id || latest?.id !== input.human_event_id) {
+            // A newer human message arrived while this event waited for the lock.
+            return 0;
         }
-        state.touched = [...new Set([...state.touched, ...effect.paths])].sort();
+
+        const wasApproved = state.proposal?.approved === true;
+        state.humanId = input.human_event_id;
+        state.prompt = input.prompt;
+        state.turnId = input.turn_id ?? null;
+        delete state.stopFeedback;
+
+        if (state.proposal) {
+            // An ok received before presentation never approves a future plan.
+            state.proposal.approved = input.prompt === "ok" && state.proposal.shown;
+        }
+
+        if (input.prompt !== "ok" && (state.inFlight.length || wasApproved)) {
+            context(event, "Implementation paused. Request cancellation of running mutating commands using the client's interrupt controls. Keep the batch paused until a new exact ok; reading remains allowed.");
+        }
+
         return 0;
     }
-    if (event === "Stop") return runCheck("design-loop.sh", "stop", input, state);
+
     if (event === "Interrupt") {
-        Object.assign(state, { prompt: "", turnId: null, touched: [] });
+        if (client !== "claude" && input.turn_id && state.turnId && input.turn_id !== state.turnId) {
+            return 0;
+        }
+
+        if (input.human_event_id && readHuman(journal)?.id !== input.human_event_id) {
+            return 0;
+        }
+
+        state.humanId = input.human_event_id ?? state.humanId;
+        state.prompt = "";
+        state.turnId = null;
+        state.inFlight = [];
+        delete state.stopFeedback;
+
+        if (state.proposal) {
+            state.proposal.approved = false;
+        }
+
         return 0;
     }
+
+    if (event === "PreToolUse") {
+        const effect = toolEffect(input);
+        const unrestricted = !effect.shell && effect.paths.every(exemptPath);
+
+        if (!unrestricted && !humanCurrent(state, journal)) {
+            console.error("write-gate: this change is not authorized by the latest human message.");
+            return 2;
+        }
+
+        if (!unrestricted && client !== "claude" && (input.turn_id ?? null) !== state.turnId) {
+            console.error("write-gate: this change is not authorized in the current human turn.");
+            return 2;
+        }
+
+        const records: GateRecord[] = [];
+
+        for (const path of effect.paths) {
+            const result = gate("pre-write", input, state, { tool_input: { file_path: path } });
+
+            if (result.status) {
+                console.error(result.reason);
+                return result.status;
+            }
+
+            records.push(...result.records);
+        }
+
+        if (!unrestricted && !humanCurrent(state, journal)) {
+            console.error("write-gate: approval was superseded by a newer human message; mutation paused.");
+            return 2;
+        }
+
+        state.plansWritten = unique([...state.plansWritten, ...records.flatMap((record) => record.plan_written ?? [])]);
+
+        if (!effect.readonly && !unrestricted) {
+            state.inFlight = unique([...state.inFlight, input.tool_use_id ?? input.tool_name ?? "write"]);
+        }
+
+        return 0;
+    }
+
+    if (event === "PostToolUse" || event === "PostToolUseFailure") {
+        const effect = toolEffect(input);
+        const callId = input.tool_use_id ?? input.tool_name ?? "write";
+        state.inFlight = state.inFlight.filter((value) => value !== callId);
+
+        if (event === "PostToolUse" && succeeded(input.tool_response) && state.proposal && effect.removed.includes(state.proposal.path)) {
+            state.proposal = null;
+        }
+
+        reconcile(state);
+
+        if (event === "PostToolUse") {
+            context(event, ruleContext(effect.shell ? [] : effect.paths, input, state));
+        }
+
+        return 0;
+    }
+
+    if (event === "Stop") {
+        if (client !== "claude" && state.turnId !== null && (input.turn_id ?? null) !== state.turnId) {
+            return 0;
+        }
+
+        const result = gate("stop", input, state, { plans_written: state.plansWritten });
+
+        if (result.records.some((record) => record.ambiguous)) {
+            state.proposal = null;
+        }
+
+        for (const { presented, hash } of result.records) {
+            if (!presented || !hash) {
+                continue;
+            }
+
+            const current = snapshot(presented);
+
+            if (!current || current.hash !== hash) {
+                continue;
+            }
+
+            if (!state.proposal || !sameVersion(state.proposal, current)) {
+                state.proposal = proposalFor(current);
+            }
+
+            state.proposal.shown = true;
+        }
+
+        if (result.status === 2) {
+            state.stopFeedback = `[agent-hooks correction ${randomUUID()}]\n${result.reason}`;
+            console.error(state.stopFeedback);
+            return 2;
+        }
+
+        state.plansWritten = [];
+        delete state.stopFeedback;
+        return 0;
+    }
+
     throw new Error(`unsupported hook event: ${event}`);
 }
 
 function main(): number {
     const client = process.argv[2];
-    if (client !== "claude" && client !== "codex" && client !== "opencode")
+
+    if (client !== "claude" && client !== "codex" && client !== "opencode") {
         throw new Error("usage: adapter.ts claude|codex|opencode");
-    const source = readFileSync(0, "utf8"),
-        input = JSON.parse(source) as HookInput;
+    }
+
+    let source = readFileSync(0, "utf8");
+    const input = JSON.parse(source) as HookInput;
     currentEvent = input.hook_event_name;
-    if (typeof input.session_id !== "string" || !input.session_id) throw new Error("missing session_id");
-    if (typeof input.cwd !== "string" || !statSync(input.cwd).isDirectory()) throw new Error("missing or invalid cwd");
-    // These events cannot change state or require a validator. In particular,
-    // read-only tools must remain usable when the state filesystem cannot write.
-    if (input.hook_event_name === "PreToolUse" && !toolEffect(input).paths.length) return 0;
-    if (input.hook_event_name === "Stop" && input.stop_hook_active) return 0;
+
+    if (typeof input.session_id !== "string" || !input.session_id) {
+        throw new Error("missing session_id");
+    }
+
+    if (typeof input.cwd !== "string" || !statSync(input.cwd).isDirectory()) {
+        throw new Error("missing or invalid cwd");
+    }
+
+    if (input.hook_event_name === "PreToolUse") {
+        const effect = toolEffect(input);
+        freePlanWrite = !effect.shell && effect.paths.every(exemptPath);
+
+        if (effect.readonly || (!effect.shell && effect.paths.every((path) => basename(path) !== "PLAN.md" && exemptPath(path)))) {
+            return 0;
+        }
+    }
+
     const root = join(process.env.XDG_STATE_HOME ?? join(homedir(), ".local/state"), "agent-hooks", client);
     mkdirSync(root, { recursive: true, mode: 0o700 });
     const key = createHash("sha256").update(input.session_id).digest("hex");
-    const path = join(root, `${key}.json`),
-        lock = join(root, `${key}.lock`);
+    const path = join(root, `${key}.json`);
+    const lock = join(root, `${key}.lock`);
+    const journal = `${path}.human`;
+
     if (process.argv[3] !== "--locked") {
+        // Publish human events before waiting for the policy lock. A question
+        // must be able to revoke an approval check that is already running.
+        const promptEvent = input.hook_event_name === "UserPromptSubmit";
+        const markedSynthetic = input.synthetic === true || input.continuation === true || injected.test(input.prompt ?? "");
+        const feedback = client === "codex" && promptEvent && existsSync(path)
+            ? JSON.parse(readFileSync(path, "utf8")).stopFeedback
+            : undefined;
+        const correlated = typeof feedback === "string" && input.prompt === feedback;
+        const latest = readHuman(journal);
+        const interrupt = input.hook_event_name === "Interrupt" &&
+            !(client !== "claude" && input.turn_id && latest?.turnId && input.turn_id !== latest.turnId);
+
+        if ((promptEvent && !markedSynthetic && !correlated) || interrupt) {
+            if (promptEvent && typeof input.prompt !== "string") {
+                throw new Error("missing user prompt");
+            }
+
+            input.human_event_id = randomUUID();
+            writeHuman(journal, {
+                id: input.human_event_id,
+                prompt: interrupt ? "" : input.prompt!,
+                turnId: input.turn_id ?? null,
+            });
+            source = JSON.stringify(input);
+        }
+
         closeSync(openSync(lock, "a", 0o600));
         chmodSync(lock, 0o600);
-        // flock releases the lock even if a hook is interrupted or times out.
-        const result = spawnSync(
-            "flock",
-            ["-x", "-w", "20", lock, process.execPath, "--experimental-strip-types", entrypoint, client, "--locked"],
-            {
-                input: source,
-                encoding: "utf8",
-                maxBuffer: 2 * 1024 * 1024,
-            },
-        );
-        if (result.error) throw result.error;
+        const result = spawnSync("flock", ["-x", "-w", "20", lock, process.execPath, "--experimental-strip-types", entrypoint, client, "--locked"], {
+            input: source,
+            encoding: "utf8",
+            maxBuffer: 2 * 1024 * 1024,
+        });
+
+        if (result.error) {
+            throw result.error;
+        }
+
         process.stdout.write(result.stdout);
         process.stderr.write(result.stderr);
-        if (result.status !== 0 && result.status !== 2) throw new Error("could not run the locked hook");
+
+        if (result.status !== 0 && result.status !== 2) {
+            throw new Error("could not run the locked hook");
+        }
+
         return result.status;
     }
-    const state: State = existsSync(path) ? JSON.parse(readFileSync(path, "utf8")) : freshState();
-    // A state file written before rules existed carries no `rules`. Coerce rather
-    // than validate: throwing would break every session that was live at the moment
-    // this shipped, on its next tool call, for a field it could not have known about.
-    if (!Array.isArray(state.rules)) state.rules = [];
-    if (typeof state.prompt !== "string" || typeof state.active !== "boolean" || !Array.isArray(state.touched))
+
+    const stored = existsSync(path) ? JSON.parse(readFileSync(path, "utf8")) : freshState();
+    const state: State = stored.protocol === 3 ? stored : { ...freshState(), rules: stored.rules ?? [] };
+
+    if (typeof state.prompt !== "string" || !Array.isArray(state.rules) || !Array.isArray(state.plansWritten) || !Array.isArray(state.inFlight)) {
         throw new Error("invalid hook state");
-    // An inactive loop has nothing to check. Avoid the temporary transcript and
-    // the redundant state write on every ordinary Claude response.
-    if (input.hook_event_name === "Stop" && !state.active) return 0;
-    const code = dispatch(client, input, state);
+    }
+
+    if (state.proposal && (typeof state.proposal.id !== "string" || typeof state.proposal.path !== "string" || typeof state.proposal.hash !== "string" || typeof state.proposal.identity !== "string" || typeof state.proposal.shown !== "boolean" || typeof state.proposal.approved !== "boolean")) {
+        throw new Error("invalid proposal state");
+    }
+
+    const code = dispatch(client, input, state, journal);
     const temporary = `${path}.${process.pid}.tmp`;
+
     try {
         writeFileSync(temporary, JSON.stringify(state), { mode: 0o600 });
         renameSync(temporary, path);
     } finally {
         rmSync(temporary, { force: true });
     }
+
     return code;
 }
 
@@ -330,13 +622,14 @@ try {
     process.exitCode = main();
 } catch (error) {
     const detail = error instanceof Error ? error.message : String(error);
-    if (currentEvent === "Stop") {
-        // A broken stop check must not trap the assistant in an endless retry.
-        // A deliberate validator rejection returns 2 from main and still blocks.
+
+    if (freePlanWrite) {
+        console.error(`agent-hooks: proposal bookkeeping unavailable: ${detail}; allowing the exempt write.`);
+        process.exitCode = 0;
+    } else if (currentEvent === "Stop") {
         console.error(`agent-hooks: stop check unavailable: ${detail}; allowing turn to end.`);
         process.exitCode = 0;
     } else {
-        // A generic nonzero exit can let a pre-tool call proceed; exit 2 blocks it.
         console.error(`agent-hooks: ${detail}; operation blocked.`);
         process.exitCode = 2;
     }

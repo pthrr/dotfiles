@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-case "${@: -1}" in
+case "${*: -1}" in
 *://* | *.html)
 	exec $BROWSER "$@"
 	;;
@@ -15,7 +15,7 @@ case "${@: -1}" in
 	exec $MEDIAPLAYER "$@"
 	;;
 *.zip | *.tar.gz | *.tgz | *.tar.bz2 | *.tbz2 | *.tar.xz | *.txz | *.tar.zst | *.tar | *.rar | *.7z)
-	archive="${@: -1}"
+	archive="${*: -1}"
 	archive="$(realpath "$archive")"
 	archive_dir="$(dirname "$archive")"
 	archive_name="$(basename "$archive")"
@@ -40,7 +40,7 @@ case "${@: -1}" in
 	exec extract "$archive"
 	;;
 *)
-	if [ -d "${@: -1}" ]; then
+	if [ -d "${*: -1}" ]; then
 		exec $FILEMANAGER "$@"
 	else
 		xdg-open "$@"

@@ -21,7 +21,13 @@ tasks:
     cmds:
       - nixfmt --check flake.nix modules/home/*.nix
       - nix flake check --no-build
-      - bash -n install.sh dotfiles/install.sh system/*.sh system/*.bash dotfiles/agents/.agents/hooks/*.sh dotfiles/agents/.agents/claude/statusline.sh
+      - find . -maxdepth 1 -type f -name '*.sh' -exec bash -n {} +
+      - find system dotfiles -type f -name '*.sh' -exec bash -n {} +
+      - find system dotfiles -type f -name '*bash*' -exec bash -n {} +
+      - find dotfiles/misc/bin -type f -exec bash -n {} +
+      - find system dotfiles -type f -name '*.sh' ! -path dotfiles/bash/z.sh ! -path dotfiles/bash/git-prompt.sh -exec shellcheck --severity=warning {} +
+      - find system dotfiles -type f -name '*bash*' -exec shellcheck --severity=warning {} +
+      - find dotfiles/misc/bin -type f -exec shellcheck --severity=warning {} +
       - nix-instantiate --parse modules/home/*.nix >/dev/null
 
   home:
@@ -32,8 +38,8 @@ tasks:
   test:
     desc: Run shared agent hook tests
     cmds:
-      - bash dotfiles/agents/.agents/hooks/ask-first.test.sh
-      - bash dotfiles/agents/.agents/hooks/design-loop.test.sh
+      - bash dotfiles/agents/.agents/hooks/write-gate.test.sh
+      - bash dotfiles/bash/bashrc.test.sh
       - node --experimental-strip-types --test dotfiles/agents/.agents/hooks/adapter.test.ts
       - node --experimental-strip-types --test dotfiles/agents/.agents/opencode/plugin.test.ts
 

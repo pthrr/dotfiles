@@ -14,10 +14,12 @@
 # than useless here, since `**/*.rs` in a case pattern requires a slash and so
 # would miss a crate root's main.rs.
 #
-# Independent of every skill. Nothing here reads the design loop's state, and a
-# rule fires because a file was written, not because something was loaded. That is
-# the whole point: guidance that applies in an implementation session, a one-line
-# fix, or a session that has never heard of the design loop.
+# Independent of every skill. A rule fires because a file was written, not because
+# something was loaded. That is the whole point: guidance that applies in an
+# implementation session or a one-line fix alike.
+#
+# AGENT_RULES_DIR replaces ../rules, so tests can run against fixture rules instead
+# of whatever guidance happens to be installed.
 #
 # Exit is always 0. A rule that cannot be read is not a reason to fail a tool call
 # that already succeeded.
@@ -27,7 +29,7 @@ set -uo pipefail
 path=${1:-}
 [ -n "$path" ] || exit 0
 
-dir=$(cd "$(dirname "${BASH_SOURCE[0]}")/../rules" 2>/dev/null && pwd) || exit 0
+dir=$(cd "${AGENT_RULES_DIR:-$(dirname "${BASH_SOURCE[0]}")/../rules}" 2>/dev/null && pwd) || exit 0
 
 for f in "$dir"/*.md; do
     [ -f "$f" ] || continue
@@ -38,9 +40,13 @@ for f in "$dir"/*.md; do
     when=${when//\"/}
     when=${when//\'/}
 
-    # Unquoted on purpose — word splitting gives the list, and the glob has to stay
-    # a glob for `case` to match it as one.
-    for glob in $when; do
+    # Split with read, not with an unquoted $when: that also ran pathname expansion
+    # against the working directory, which is the session's project root. A crate
+    # with build.rs at its root turned `*.rs` into `build.rs`, and the rule never
+    # fired for anything under src/. Each glob has to reach `case` as a glob.
+    read -r -a globs <<<"$when"
+    for glob in "${globs[@]}"; do
+        # Unquoted on purpose: quoted, `case` would match the glob literally.
         # shellcheck disable=SC2254
         case $path in
             $glob)

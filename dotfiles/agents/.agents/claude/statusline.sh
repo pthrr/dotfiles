@@ -27,7 +27,7 @@ if [[ -n "$cwd" && -d "$cwd" ]]; then
 
  # Check sync status with upstream
  sync_status=""
- upstream=$(git -C "$cwd" rev-parse --abbrev-ref @{upstream} 2>/dev/null)
+ upstream=$(git -C "$cwd" rev-parse --abbrev-ref '@{upstream}' 2>/dev/null)
  if [[ -n "$upstream" ]]; then
  # Get last fetch time
  fetch_head="$cwd/.git/FETCH_HEAD"
@@ -49,7 +49,7 @@ if [[ -n "$cwd" && -d "$cwd" ]]; then
  fi
  fi
 
- counts=$(git -C "$cwd" rev-list --left-right --count HEAD...@{upstream} 2>/dev/null)
+ counts=$(git -C "$cwd" rev-list --left-right --count 'HEAD...@{upstream}' 2>/dev/null)
  ahead=$(echo "$counts" | cut -f1)
  behind=$(echo "$counts" | cut -f2)
  if [[ "$ahead" -eq 0 && "$behind" -eq 0 ]]; then
@@ -137,10 +137,9 @@ fi
 # can be read as the other.
 #
 # Badge 1: every distinct skill invoked this session, in first-invoked order.
-# All of them, not the last one: skills are sticky — software-design and
-# ponytail both declare themselves active every response — and nothing in the
-# transcript marks one as done, so the whole set is live. Showing only the most
-# recent hid ponytail behind software-design during implementation.
+# All of them, not the last one: skills are sticky and nothing in the transcript
+# marks one as done, so the whole set is live. Showing only the most recent hid
+# the earlier ones behind it.
 skills=""
 if [[ -n "$transcript_path" && -f "$transcript_path" ]]; then
  skills=$(jq -rs '
@@ -154,18 +153,16 @@ if [[ -n "$transcript_path" && -f "$transcript_path" ]]; then
  ' < "$transcript_path" 2>/dev/null)
 fi
 
-# Which loop is read off the plan that GOVERNS cwd — the nearest non-empty
-# PLAN.md at or above it, the same resolution design-loop.sh uses to gate
-# writes. A repo-wide "any plan in the repo" rule was wrong: it reported `design`
-# from a directory no plan covers, because an unrelated sibling subtree had one.
-#
-# There are two states because there are two loops. The old third state came from
-# a `## Closed` / `## Finished` marker in PLAN.md, and both markers are gone:
-# implementation is the user's, in a session that never loads the skill, and
-# nothing on disk marks it.
+# Whether a plan GOVERNS cwd — a non-empty PLAN.md at or above it, the same walk
+# write-gate.sh uses to gate writes, container boundaries included. A repo-wide
+# "any plan in the repo" rule was wrong: it reported a plan from a directory no
+# plan covers, because an unrelated sibling subtree had one.
 plan_state="none"
+home=${HOME:-/nonexistent}
+tmp=${TMPDIR:-/tmp}
 d="$cwd"
 while [[ -n "$d" && "$d" != "/" && "$d" != "." ]]; do
+ [[ "$d" == "$home" || "$d" == "$tmp" || "$d" == "/tmp" ]] && break
  if [[ -s "$d/PLAN.md" ]]; then
   plan_state="open"
   break
@@ -176,15 +173,14 @@ done
 
 # Plans elsewhere in the repo are deliberately NOT shown. A `+elsewhere` tag
 # lived here briefly and its only effect was to be misread as the state itself:
-# `design:+stemsplitter/app` parses to the eye as "stemsplitter is in design".
+# `plan:+stemsplitter/app` parses to the eye as "stemsplitter has the plan".
 # The plan governing cwd is the whole job of badge 2; other subtrees have their
 # own sessions and their own badge.
 
-# Badge 2: which loop the hook will hold this directory to, named for what it
-# does rather than for what is on disk.
+# Badge 2: what the write gate will do in this directory.
 case "$plan_state" in
- none) plan_badge="problem"; plan_color="208" ;;  # writes DENIED but PLAN.md
- open) plan_badge="design";  plan_color="108" ;;  # writes ok, render owed
+ none) plan_badge="no plan"; plan_color="208" ;;  # writes DENIED but PLAN.md
+ open) plan_badge="plan";    plan_color="108" ;;  # writes ok, given consent
 esac
 
 output=""
