@@ -139,20 +139,4 @@ in
     ''
   );
 
-  home.activation.ensureHaskellTools = lib.hm.dag.entryAfter [ "installPackages" ] (
-    nixbitsLib.ts ''
-      const home = requireEnv("HOME");
-      process.env.PATH = [
-        home + "/.ghcup/bin",
-        home + "/.cabal/bin",
-        home + "/.nix-profile/bin",
-        "/usr/local/bin",
-        "/usr/bin",
-        process.env.PATH,
-      ].join(":");
-      run("ghcup", "install", "ghc", "9.8.4", "--set");
-      run("ghcup", "install", "cabal", "3.16.1.0", "--set");
-      run("cabal", "update");
-    ''
-  );
 }

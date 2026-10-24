@@ -5,9 +5,6 @@ vim.g.loaded_ruby_provider = 0
 vim.g.loaded_perl_provider = 0
 vim.g.loaded_node_provider = 0
 
--- Neovim has no built-in filetype mapping for Quint specifications.
-vim.filetype.add({ extension = { qnt = "quint" } })
-
 -- ==============================================================================
 -- 1. ENVIRONMENT DETECTION
 -- ==============================================================================
@@ -243,11 +240,6 @@ now(function()
             filetypes = { "typescript", "javascript", "typescriptreact", "javascriptreact" },
             root_markers = { "package.json", "tsconfig.json", ".git", ".jj" },
         },
-        leanls = {
-            cmd = { "lean", "--server" },
-            filetypes = { "lean" },
-            root_markers = { "lean-toolchain", "lakefile.lean", ".git", ".jj" },
-        },
         zls = {
             cmd = { "zls" },
             filetypes = { "zig" },
@@ -381,11 +373,6 @@ now(function()
             filetypes = { "markdown" },
             root_markers = { ".marksman.toml", ".git", ".jj" },
         },
-        quint = {
-            cmd = { "quint-language-server", "--stdio" },
-            filetypes = { "quint" },
-            root_markers = { ".git", ".jj" },
-        },
     }
 
     -- Enable all configured language servers
@@ -499,7 +486,6 @@ vim.api.nvim_create_autocmd("BufWritePre", {
         "*.typ", -- Typst
         "*.lua", -- Lua
         "*.nix", -- Nix
-        "*.lean", -- Lean
         "*.md", -- Markdown
     },
     callback = function()
@@ -550,8 +536,6 @@ vim.api.nvim_create_autocmd("BufWritePre", {
             end
         elseif file:match("%.nix$") then
             run_external_formatter("nixfmt", { file })
-        elseif file:match("%.lean$") then
-            vim.lsp.buf.format({ async = false })
         else
             -- Fallback to LSP formatting
             vim.lsp.buf.format({ async = false })
@@ -586,17 +570,6 @@ now(function()
         end,
     })
 end)
-
--- Quint ships no Treesitter parser, so fall back to the vendored Vim syntax
--- file (syntax/quint.vim). Sourcing it works even with `syntax off` above:
--- Neovim still applies the loaded rules to the buffer.
-vim.api.nvim_create_autocmd("FileType", {
-    pattern = "quint",
-    callback = function()
-        vim.bo.syntax = "quint"
-        vim.cmd("runtime! syntax/quint.vim")
-    end,
-})
 
 later(function()
     local hipat = require("mini.hipatterns")

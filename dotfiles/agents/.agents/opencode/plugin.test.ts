@@ -1,6 +1,5 @@
 import assert from "node:assert/strict";
 import { mkdirSync, mkdtempSync, rmSync, unlinkSync, writeFileSync } from "node:fs";
-import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
 import sharedHooks from "./plugin.ts";
@@ -9,19 +8,40 @@ type Context = Parameters<typeof sharedHooks>[0];
 type History = NonNullable<Awaited<ReturnType<Context["client"]["session"]["messages"]>>["data"]>;
 type Prompt = Parameters<Context["client"]["session"]["promptAsync"]>[0];
 
+const plan = `# New module
+
+## Problem
+
+The project needs a new module that produces the result.
+
+## Changes
+
+- \`new.ts\` — add the module and export the function that produces the result
+
+## Verify
+
+Run the plugin tests and check that every scenario passes.
+`;
+
 async function harness() {
-    const root = mkdtempSync(join(tmpdir(), "opencode-hooks-test-"));
+    const root = mkdtempSync("/var/tmp/opencode-hooks-test-");
     const previousStateHome = process.env.XDG_STATE_HOME;
     process.env.XDG_STATE_HOME = join(root, "state");
     mkdirSync(join(root, ".git"));
-    writeFileSync(join(root, "PLAN.md"), "## Done when\n\nProduce the result.\n\n## Stack\n\nTypeScript.\n");
+    writeFileSync(join(root, "PLAN.md"), plan);
     const corrections: Prompt[] = [];
+    const aborts: string[] = [];
+    let abortFails = false;
     let history: History = [];
     let reading: (() => Promise<void>) | undefined;
     const context: Context = {
         directory: root,
         client: {
             session: {
+                abort: async ({ path }) => {
+                    aborts.push(path.id);
+                    return abortFails ? { error: "unavailable" } : {};
+                },
                 messages: async () => {
                     await reading?.();
                     return { data: history };
@@ -34,46 +54,48 @@ async function harness() {
         },
     };
     const plugin = await sharedHooks(context);
+    const prompt = (text = "ok", id = "user-1", synthetic = false) =>
+        plugin["chat.message"]({ sessionID: "session" }, { message: { id }, parts: [{ type: "text", text, synthetic }] });
+    const finished = (options: { parentID?: string; error?: unknown; text?: string } = {}) => {
+        const parentID = options.parentID ?? "user-1";
+        history = [
+            {
+                info: {
+                    id: `assistant-${parentID}`,
+                    role: "assistant",
+                    parentID,
+                    time: { completed: 1 },
+                    error: options.error,
+                    agent: "build",
+                    providerID: "chosen-provider",
+                    modelID: "chosen-model",
+                },
+                parts: [{ type: "text", text: options.text ?? "Done." }],
+            },
+        ];
+    };
+    const idle = () => plugin.event({ event: { type: "session.idle", properties: { sessionID: "session" } } });
     return {
         root,
         context,
         plugin,
         corrections,
-        // The default does two jobs: "ok" satisfies the consent gate, and naming the
-        // skill satisfies the arming gate, which reads the prompt so that "the user
-        // asked for it by name" is a fact about their message rather than a claim
-        // about the model's judgement.
-        prompt: (text = "ok, run the design loop", id = "user-1", synthetic = false) =>
-            plugin["chat.message"](
-                { sessionID: "session" },
-                { message: { id }, parts: [{ type: "text", text, synthetic }] },
-            ),
+        aborts,
+        failAbort: () => { abortFails = true; },
+        prompt,
+        finished,
+        idle,
+        // A turn that ends with the plan pasted in full: the one way it counts as shown.
+        show: async (id = "user-0") => {
+            await prompt("show me the plan", id);
+            finished({ parentID: id, text: plan });
+            await idle();
+        },
         tool: (tool: string, args: Record<string, unknown>) =>
             plugin["tool.execute.before"]({ sessionID: "session", tool, callID: "call" }, { args }),
-        skill: () =>
-            plugin["tool.execute.after"](
-                { sessionID: "session", tool: "skill", callID: "skill", args: { name: "software-design" } },
-                { metadata: {} },
-            ),
-        finished: (options: { parentID?: string; error?: unknown; text?: string } = {}) => {
-            history = [
-                {
-                    info: {
-                        id: "assistant-1",
-                        role: "assistant",
-                        parentID: options.parentID ?? "user-1",
-                        time: { completed: 1 },
-                        error: options.error,
-                        agent: "build",
-                        providerID: "chosen-provider",
-                        modelID: "chosen-model",
-                    },
-                    parts: [{ type: "text", text: options.text ?? "Done." }],
-                },
-            ];
-        },
+        after: (tool: string, args: Record<string, unknown>, exit = 0) =>
+            plugin["tool.execute.after"]({ sessionID: "session", tool, callID: "call", args }, { metadata: { exit } }),
         onRead: (callback: () => Promise<void>) => (reading = callback),
-        idle: () => plugin.event({ event: { type: "session.idle", properties: { sessionID: "session" } } }),
         cleanup: () => {
             if (previousStateHome === undefined) delete process.env.XDG_STATE_HOME;
             else process.env.XDG_STATE_HOME = previousStateHome;
@@ -93,125 +115,137 @@ function scenario(name: string, check: (h: Awaited<ReturnType<typeof harness>>) 
     });
 }
 
-scenario("native write and shell tools require consent; reads remain available", async (h) => {
+scenario("native writes require exact approval; reads remain available", async (h) => {
     await h.tool("read", { filePath: "PLAN.md" });
     await h.tool("shell", { command: "git status --short" });
-    for (const tool of ["write", "edit", "multiedit"]) {
-        await assert.rejects(h.tool(tool, { filePath: "new.ts" }), /not authorized/);
+    await assert.rejects(h.tool("write", { filePath: "new.ts" }), /not authorized/);
+    await h.show();
+
+    for (const text of ["yes", "OK", "ok do 1", "ok ", "is this ok?"]) {
+        await h.prompt(text);
+        await assert.rejects(h.tool("write", { filePath: "new.ts" }), /not authorized/);
     }
-    await assert.rejects(h.tool("shell", { command: "touch new.ts" }), /not authorized/);
-    await assert.rejects(h.tool("execute", { code: "writeFile()" }), /not authorized/);
+
     await h.prompt();
     await h.tool("write", { filePath: "new.ts" });
-    await h.tool("bash", { command: "touch new.ts" });
-    await h.prompt("review it", "user-2");
-    await assert.rejects(h.tool("edit", { filePath: "new.ts" }), /not authorized/);
+    await h.after("write", { filePath: "new.ts" });
 });
 
-scenario("patchText targets and shell workdirs keep their own plan checks", async (h) => {
-    mkdirSync(join(h.root, "foreign/.git"), { recursive: true });
+scenario("a question pauses writes and aborts a running mutation", async (h) => {
+    await h.show();
     await h.prompt();
-    await h.tool("apply_patch", { patchText: "*** Begin Patch\n*** Add File: new.ts\n+code\n*** End Patch" });
-    await assert.rejects(
-        h.tool("apply_patch", {
-            patchText: "*** Begin Patch\n*** Update File: new.ts\n*** Move to: foreign/new.ts\n*** End Patch",
-        }),
-        /no non-empty PLAN/,
-    );
-    await assert.rejects(
-        h.tool("shell", { command: "touch new.ts", workdir: join(h.root, "foreign") }),
-        /no non-empty PLAN/,
-    );
-    unlinkSync(join(h.root, "PLAN.md"));
-    await assert.rejects(h.tool("write", { filePath: "new.ts" }), /no non-empty PLAN/);
-    await h.tool("write", { filePath: "PLAN.md" });
+    await h.tool("bash", { command: "node build.js" });
+    await h.prompt("what changed?", "question");
+    assert.deepEqual(h.aborts, ["session"]);
+    await h.tool("read", { filePath: "new.ts" });
+    await assert.rejects(h.tool("write", { filePath: "new.ts" }), /not authorized/);
+    await h.prompt("ok", "resume");
+    await h.tool("write", { filePath: "new.ts" });
 });
 
-scenario("synthetic and ignored text never grant consent", async (h) => {
+scenario("failed cancellation leaves implementation paused", async (h) => {
+    await h.show();
     await h.prompt();
+    await h.tool("bash", { command: "node build.js" });
+    h.failAbort();
+    await h.prompt("explain", "question");
+    assert.equal(h.aborts.length, 1);
+    await assert.rejects(h.tool("write", { filePath: "new.ts" }), /not authorized/);
+});
+
+scenario("read-only work does not request cancellation", async (h) => {
+    await h.show();
+    await h.prompt();
+    await h.tool("bash", { command: "rg --files" });
+    await h.prompt("explain", "question");
+    assert.deepEqual(h.aborts, []);
+});
+
+scenario("a temporary working directory cannot exempt a shell mutation", async (h) => {
+    await assert.rejects(h.tool("bash", { command: `touch ${h.root}/new.ts`, workdir: "/tmp" }), /not authorized/);
+    await h.tool("write", { filePath: "/tmp/opencode-free-file.ts" });
+    await h.show();
+    await h.prompt();
+    await h.tool("bash", { command: "node build.js", workdir: "/tmp" });
+    await assert.rejects(h.tool("write", { filePath: "other.ts" }), /not listed under ## Changes/);
+});
+
+scenario("synthetic prompts preserve human state and cannot grant consent", async (h) => {
+    await h.show();
     await h.prompt("ok", "generated", true);
     await assert.rejects(h.tool("write", { filePath: "new.ts" }), /not authorized/);
-    await h.plugin["chat.message"](
-        { sessionID: "session" },
-        { message: { id: "user-2" }, parts: [{ type: "text", text: "yes", ignored: true }] },
-    );
+    await h.prompt();
+    await h.prompt("synthetic context", "generated-2", true);
+    await h.tool("write", { filePath: "new.ts" });
+    await h.prompt("explain", "question");
+    await h.prompt("ok", "generated-3", true);
     await assert.rejects(h.tool("write", { filePath: "new.ts" }), /not authorized/);
 });
 
-scenario("reopening a session preserves design context and revokes consent", async (h) => {
+scenario("ordinary completion and unchanged re-presentation preserve the batch", async (h) => {
+    await h.show();
     await h.prompt();
-    await h.skill();
-    const reopened = await sharedHooks(h.context);
-    const output = { system: [] as string[] };
-    await reopened["experimental.chat.system.transform"]({ sessionID: "session" }, output);
-    assert.match(output.system.join("\n"), /Produce the result/);
-    await assert.rejects(
-        reopened["tool.execute.before"](
-            { sessionID: "session", tool: "write", callID: "call" },
-            { args: { filePath: "new.ts" } },
-        ),
-        /not authorized/,
-    );
+    await h.tool("write", { filePath: "new.ts" });
+    await h.after("write", { filePath: "new.ts" });
+    h.finished();
+    await h.idle();
+    assert.equal(h.corrections.length, 0);
+    await h.tool("write", { filePath: "new.ts" });
+    await h.prompt("ok", "another-ok");
+    h.finished({ parentID: "another-ok", text: plan });
+    await h.idle();
+    await h.tool("write", { filePath: "new.ts" });
 });
 
-scenario("completed writes request one synthetic correction with the existing model", async (h) => {
+scenario("deletion closes the batch and identical recreation needs presentation", async (h) => {
+    await h.show();
     await h.prompt();
-    await h.skill();
-    await h.tool("write", { filePath: "new.ts" });
+    unlinkSync(join(h.root, "PLAN.md"));
     h.finished();
+    await h.idle();
+    writeFileSync(join(h.root, "PLAN.md"), plan);
+    await h.prompt("ok", "old-ok");
+    await assert.rejects(h.tool("write", { filePath: "new.ts" }), /approved proposal/);
+    await h.show("new-presentation");
+    await h.prompt("ok", "new-ok");
+    await h.tool("write", { filePath: "new.ts" });
+});
+
+scenario("reopening and session errors pause consent", async (h) => {
+    await h.show();
+    await h.prompt();
+    const reopened = await sharedHooks(h.context);
+    await assert.rejects(reopened["tool.execute.before"](
+        { sessionID: "session", tool: "write", callID: "call" }, { args: { filePath: "new.ts" } },
+    ), /not authorized/);
+    await h.prompt();
+    await h.tool("write", { filePath: "new.ts" });
+    await h.plugin.event({ event: { type: "session.error", properties: { sessionID: "session" } } });
+    await assert.rejects(h.tool("write", { filePath: "new.ts" }), /not authorized/);
+});
+
+scenario("an unshown plan requests one correlated correction", async (h) => {
+    await h.prompt("draft it");
+    await h.tool("write", { filePath: "PLAN.md" });
+    h.finished({ text: "Plan written." });
     await Promise.all([h.idle(), h.idle()]);
     assert.equal(h.corrections.length, 1);
     const correction = h.corrections[0];
     assert.equal(correction.body.parts[0].synthetic, true);
     assert.deepEqual(correction.body.model, { providerID: "chosen-provider", modelID: "chosen-model" });
     await h.prompt(correction.body.parts[0].text, "correction", true);
-    await assert.rejects(h.tool("edit", { filePath: "new.ts" }), /not authorized/);
-    h.finished({ parentID: "correction" });
+    h.finished({ parentID: "correction", text: plan });
     await h.idle();
     assert.equal(h.corrections.length, 1);
+    await h.prompt("ok", "approval");
+    await h.tool("write", { filePath: "new.ts" });
 });
 
-// No marker releases the render any more, so the third case is the only thing
-// that ever should have: the turn ended in a well-formed block whose every row is
-// true of the tree.
-const render = `DESIGN 1
-GOAL   Produce the result.
-
-1 CODE ORGA
-  new.ts                      the new thing
-
-2 LOGICAL ARCH
-  new.ts  uses  -
-    :2  fn  run  ()
-        !  deterministic
-
-3 INTERACTION
-  main -> run  direct call  sync  -  run
-
-DELTA  declared run
-OPEN   -
-`;
-
-scenario("good renders, failures, and stale completions do not request corrections", async (h) => {
-    await h.prompt();
-    await h.skill();
-    await h.tool("write", { filePath: "new.ts" });
-    h.finished({ error: { name: "MessageAbortedError" } });
-    await h.idle();
-    h.finished({ parentID: "previous-user" });
-    await h.idle();
-    writeFileSync(join(h.root, "new.ts"), "// new\nexport function run() {\n}\n");
-    h.finished({ text: render });
-    await h.idle();
-    assert.equal(h.corrections.length, 0);
-});
-
-scenario("a newer prompt cancels an in-flight completion check", async (h) => {
-    await h.prompt();
-    await h.skill();
-    await h.tool("write", { filePath: "new.ts" });
-    h.finished();
-    h.onRead(() => h.prompt("explain", "user-2"));
+scenario("a newer human message cancels an in-flight completion check", async (h) => {
+    await h.prompt("draft it");
+    await h.tool("write", { filePath: "PLAN.md" });
+    h.finished({ text: "Plan written." });
+    h.onRead(() => h.prompt("explain", "question"));
     await h.idle();
     assert.equal(h.corrections.length, 0);
 });

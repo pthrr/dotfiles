@@ -2,7 +2,7 @@
   "hooks": {
     "SessionStart": [
       {
-        "matcher": "startup|resume|clear|compact",
+        "matcher": "startup|resume|clear",
         "hooks": [
           {
             "type": "command",
@@ -47,17 +47,6 @@
         ]
       }
     ],
-    "Stop": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node --experimental-strip-types ~/.agents/hooks/adapter.ts codex",
-            "timeout": 30
-          }
-        ]
-      }
-    ],
     "Interrupt": [
       {
         "hooks": [
@@ -65,6 +54,17 @@
             "type": "command",
             "command": "node --experimental-strip-types ~/.agents/hooks/adapter.ts codex",
             "timeout": 3
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node --experimental-strip-types ~/.agents/hooks/adapter.ts codex",
+            "timeout": 30
           }
         ]
       }

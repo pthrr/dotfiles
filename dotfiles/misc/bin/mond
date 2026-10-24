@@ -9,6 +9,6 @@ inotifywait -q --event modify,create,delete,move -mr $DIR |
         sleep 1
         echo "[[=== start ===]]"
         echo "Trigger: directory=$directory file=$file action=$action"
-        ${@:2}
+        "${@:2}"
         echo "[[=== done ===]]"
     done

@@ -1,47 +1,47 @@
 /** Exercise decisions through the JSON/stdin interface used by the harnesses. */
 import assert from "node:assert/strict";
-import { spawnSync } from "node:child_process";
-import { mkdirSync, mkdtempSync, readdirSync, rmSync, symlinkSync, unlinkSync, writeFileSync } from "node:fs";
-import { tmpdir } from "node:os";
+import { spawn, spawnSync } from "node:child_process";
+import {
+    existsSync,
+    mkdirSync,
+    mkdtempSync,
+    readFileSync,
+    readdirSync,
+    rmSync,
+    symlinkSync,
+    unlinkSync,
+    writeFileSync,
+} from "node:fs";
+import { homedir, tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { test } from "node:test";
 import { shellEffect } from "./shell-policy.ts";
 
 const adapter = fileURLToPath(new URL("./adapter.ts", import.meta.url));
-const render = `DESIGN 1
-GOAL   Produce the result.
+const plan = `# Example
 
-1 CODE ORGA
-  src/example.ts              the example
+## Problem
 
-2 LOGICAL ARCH
-  src/example.ts  uses  -
-    :2  fn  example  ()
-        !  deterministic
+The example module needs a function that produces the result.
 
-3 INTERACTION
-  main -> example  direct call  sync  -  example
+## Changes
 
-DELTA  declared example
-OPEN   -
+- \`src/example.ts\` — declare example() and make it produce the result
+- \`src/another.ts\` — a second module the consent scenarios edit alongside it
+- \`brand/\` — new directories the path scenarios create anywhere under it
+
+## Verify
+
+Run the adapter tests and check that every scenario passes.
 `;
-const problem = `PROBLEM 1
-DONE WHEN  Produce the result.
-IN / OUT   nothing  -  -  once  process  caller  -
-BUDGETS    unbounded, accepted
-FAILURES   no input -> refuse to start
-NON-GOALS  anything else
-STACK      TypeScript  node  node:test  linux  pinned
-EXISTING   nothing yet
-UNKNOWNS   spike  whether it links
-ASK        what is the output format?
-`;
+const revised = plan.replace("produce the result", "produce the result, memoized");
 
 for (const client of ["claude", "codex", "opencode"] as const) {
     function scenario(name: string, check: (h: ReturnType<typeof harness>) => void) {
         test(`${client}: ${name}`, () => {
             const h = harness(client);
+
             try {
                 check(h);
             } finally {
@@ -50,297 +50,352 @@ for (const client of ["claude", "codex", "opencode"] as const) {
         });
     }
 
-    scenario("read-only exploration works without consent; writes do not", (h) => {
+    scenario("reads stay free and protected writes require consent", (h) => {
         h.shell("git status --short; rg --files");
         h.patch("src/example.ts", 2);
         h.shell("printf content > src/example.ts", 2);
-        h.prompt("please fix it");
-        h.patch("src/example.ts", 2);
-        h.hook("PreToolUse", 2, { tool_name: "Write", tool_input: { file_path: "PLAN.md" } });
+        h.hook("PreToolUse", 0, { tool_name: "Write", tool_input: { file_path: "PLAN.md" } });
     });
 
-    scenario("consent covers a turn and resets on the next message", (h) => {
-        for (const text of ["yes", "Y", "Ok, do it"]) {
-            h.prompt(text);
-            h.patch();
-            h.patch("src/another.ts");
-        }
-        for (const text of ["what changed?", "yesterday", "okay", ""]) {
+    scenario("only the exact human message ok approves a shown plan", (h) => {
+        h.present();
+
+        for (const text of ["yes", "y", "OK", "Ok", "ok ", " ok", "ok\n", "ok do 1 and 2", "is this ok?", "not ok", ""]) {
             h.prompt(text);
             h.patch("src/example.ts", 2);
         }
-        h.prompt();
-        h.patch("src/example.ts", 2, { session_id: "another-session" });
+
+        h.prompt("ok");
+        h.patch();
     });
 
-    scenario("creating a plan cannot smuggle source edits in the same patch", (h) => {
-        unlinkSync(join(h.root, "PLAN.md"));
-        h.prompt();
-        h.patch("PLAN.md");
+    scenario("questions pause the batch, allow reads, and request cancellation", (h) => {
+        h.ready();
+        h.patch();
+        const id = h.state().proposal.id;
+        const pause = h.prompt("what changed?");
+        assert.match(pause.stdout, /cancellation/);
+        h.shell("cat src/example.ts");
         h.patch("src/example.ts", 2);
+        h.hook("Stop", 0, { last_assistant_message: "Here is the explanation." });
+        h.prompt();
+        assert.equal(h.state().proposal.id, id);
+        h.patch();
+    });
+
+    scenario("ordinary turn endings and re-presentation preserve approval", (h) => {
+        h.ready();
+        h.patch();
+        const id = h.state().proposal.id;
+        h.hook("Stop", 0, { last_assistant_message: "The first part is done." });
+        h.patch("src/another.ts");
+        h.present();
+        assert.equal(h.state().proposal.id, id);
+        h.patch();
+        h.shell("rm PLAN.md");
+    });
+
+    scenario("an ok cannot approve a plan presented later", (h) => {
+        h.prompt();
+        h.patch("src/example.ts", 2);
+        h.present();
+        h.patch("src/example.ts", 2);
+        h.prompt();
+        h.patch();
+    });
+
+    scenario("a revision or restored old content requires presentation and a fresh ok", (h) => {
+        h.ready();
+        const id = h.state().proposal.id;
+        h.revise(revised);
+        h.patch("src/example.ts", 2);
+        h.revise(plan);
+        h.patch("src/example.ts", 2);
+        h.present();
+        h.patch("src/example.ts", 2);
+        h.prompt();
+        h.patch();
+        assert.notEqual(h.state().proposal.id, id);
+    });
+
+    scenario("showing a second proposal does not approve the first", (h) => {
+        h.present();
+        const other = join(h.root, "other/PLAN.md");
+        mkdirSync(join(h.root, "other/src"), { recursive: true });
+        const otherPlan = plan.replace("# Example", "# Second proposal");
+        h.hook("PreToolUse", 0, { tool_name: "Write", tool_input: { file_path: other } });
+        writeFileSync(other, otherPlan);
+        h.hook("Stop", 0, { last_assistant_message: otherPlan });
+        h.prompt();
+        h.patch("src/example.ts", 2);
+        h.patch("other/src/example.ts");
+    });
+
+    scenario("multiple proposals cannot be selected by one ok", (h) => {
+        h.present();
+        const other = join(h.root, "other/PLAN.md");
+        mkdirSync(join(h.root, "other"));
+        const otherPlan = plan.replace("# Example", "# Second proposal");
+        h.hook("PreToolUse", 0, { tool_name: "Write", tool_input: { file_path: other } });
+        writeFileSync(other, otherPlan);
+        h.hook("Stop", 2, { last_assistant_message: `${plan}\n${otherPlan}` });
+        h.prompt();
+        h.patch("src/example.ts", 2);
+    });
+
+    scenario("ambiguous correction retries clear an earlier approval", (h) => {
+        h.ready();
+        const other = join(h.root, "other/PLAN.md");
+        mkdirSync(join(h.root, "other"));
+        const otherPlan = plan.replace("# Example", "# Second proposal");
+        h.hook("PreToolUse", 0, { tool_name: "Write", tool_input: { file_path: other } });
+        writeFileSync(other, otherPlan);
+        h.hook("Stop", 0, { last_assistant_message: `${plan}\n${otherPlan}`, stop_hook_active: true });
+        assert.equal(h.state().proposal, null);
+        h.patch("src/example.ts", 2);
+        h.prompt();
+        h.patch("src/example.ts", 2);
+    });
+
+    scenario("deletion closes permanently and recreation needs a new proposal", (h) => {
+        h.ready();
+        const id = h.state().proposal.id;
+        h.patch();
+        unlinkSync(join(h.root, "PLAN.md"));
+        h.hook("Stop", 0, { last_assistant_message: "Closed." });
+        assert.equal(h.state().proposal, null);
+        h.plan();
+        h.prompt();
+        h.patch("src/example.ts", 2);
+        h.present();
+        h.patch("src/example.ts", 2);
+        h.prompt();
+        h.patch();
+        assert.notEqual(h.state().proposal.id, id);
+    });
+
+    scenario("deletion and recreation between events cannot reuse approval", (h) => {
+        h.ready();
+        unlinkSync(join(h.root, "PLAN.md"));
+        h.plan();
+        h.patch("src/example.ts", 2);
+    });
+
+    scenario("successful patch deletion closes even if a replacement already exists", (h) => {
+        h.ready();
+        const command = "*** Begin Patch\n*** Delete File: PLAN.md\n*** End Patch";
+        h.hook("PreToolUse", 0, { tool_name: "apply_patch", tool_input: { command } });
+        h.hook("PostToolUse", 0, { tool_name: "apply_patch", tool_input: { command }, tool_response: { exit_code: 0 } });
+        assert.equal(h.state().proposal, null);
+        h.patch("src/example.ts", 2);
+    });
+
+    scenario("a failed deletion preserves an unchanged open proposal", (h) => {
+        h.ready();
+        const command = "*** Begin Patch\n*** Delete File: PLAN.md\n*** End Patch";
+        h.hook("PreToolUse", 0, { tool_name: "apply_patch", tool_input: { command } });
+        h.hook("PostToolUse", 0, { tool_name: "apply_patch", tool_input: { command }, tool_response: { exit_code: 1 } });
+        h.patch();
+    });
+
+    scenario("direct writes check every patch target and the listed file scope", (h) => {
+        h.ready();
+        h.patch("src/unlisted.ts", 2);
+        h.patch("brand/new/file.ts");
         h.hook("PreToolUse", 2, {
             tool_name: "apply_patch",
-            tool_input: {
-                command:
-                    "*** Begin Patch\n*** Add File: PLAN.md\n+goal\n*** Add File: src/new.ts\n+code\n*** End Patch",
-            },
+            tool_input: { command: "*** Begin Patch\n*** Update File: PLAN.md\n+x\n*** Update File: src/unlisted.ts\n+y\n*** End Patch" },
         });
+        assert.deepEqual(h.state().plansWritten, []);
     });
 
-    scenario("rename endpoints, deletions, and new paths use their own plan", (h) => {
-        mkdirSync(join(h.root, "foreign/.git"), { recursive: true });
-        h.prompt();
-        for (const operation of [
-            "*** Delete File: foreign/x.ts",
-            "*** Update File: src/example.ts\n*** Move to: foreign/x.ts",
-        ]) {
-            h.hook("PreToolUse", 2, {
-                tool_name: "apply_patch",
-                tool_input: { command: `*** Begin Patch\n${operation}\n*** End Patch` },
-            });
+    scenario("temporary targets are free but their neighboring directories are gated", (h) => {
+        h.prompt("explain");
+
+        for (const path of ["/tmp/probe", "/tmp/ordinary/project/probe", join(homedir(), "tmp/probe"), join(homedir(), "tmp/project/probe")]) {
+            h.hook("PreToolUse", 0, { tool_name: "Write", tool_input: { file_path: path } });
         }
-        h.patch("brand/new/directory/file.ts");
-    });
 
-    scenario("symlinks do not borrow the source directory's plan", (h) => {
-        mkdirSync(join(h.root, "foreign/.git"), { recursive: true });
-        symlinkSync(join(h.root, "foreign"), join(h.root, "src/link"), "dir");
-        h.prompt();
-        h.patch("src/link/file.ts", 2);
-    });
-
-    // There is no marker. `## Closed` and `## Finished` were deleted with the
-    // phase they served: implementation is the user's, in a session that never
-    // loads the skill, so nothing written into PLAN.md releases the render — and
-    // the old markers must not be special-cased back in by accident.
-    scenario("nothing written into PLAN.md releases the loop", (h) => {
-        for (const marker of ["\n## Closed\n", "\n## Finished\n", "\n## Implementing\n"]) {
-            h.plan(marker);
-            h.prompt();
-            h.loadSkill();
-            h.patch();
-            h.hook("Stop", 2, { last_assistant_message: "Done." });
+        for (const path of ["/tmp-other/probe", join(homedir(), "tmp-other/probe")]) {
+            h.hook("PreToolUse", 2, { tool_name: "Write", tool_input: { file_path: path } });
         }
-        h.plan();
+    });
+
+    scenario("symlinks use the actual destination rather than the temporary alias", (h) => {
+        const scratch = mkdtempSync("/tmp/agent-hook-alias-");
+
+        try {
+            symlinkSync(join(h.root, "src"), join(scratch, "project"), "dir");
+            h.hook("PreToolUse", 2, { tool_name: "Write", tool_input: { file_path: join(scratch, "project/example.ts") } });
+            symlinkSync(scratch, join(h.root, "src/scratch"), "dir");
+            h.patch("src/scratch/probe");
+        } finally {
+            rmSync(scratch, { recursive: true, force: true });
+        }
+    });
+
+    scenario("a shell working directory grants no exemption", (h) => {
+        h.prompt("explain");
+
+        for (const workdir of ["/tmp", join(homedir(), "tmp"), join(homedir(), ".claude")]) {
+            h.hook("PreToolUse", 2, { tool_name: "Bash", tool_input: { command: `touch ${h.root}/src/example.ts`, workdir } });
+        }
+
+        h.present();
         h.prompt();
+        h.hook("PreToolUse", 0, { tool_name: "Bash", tool_input: { command: "node build.js", workdir: "/tmp" } });
+    });
+
+    scenario("synthetic events neither displace nor forge human approval", (h) => {
+        h.ready();
+        h.hook("UserPromptSubmit", 0, { prompt: "synthetic context", synthetic: true });
         h.patch();
-        h.hook("Stop", 0, { last_assistant_message: render });
-    });
-
-    scenario("shell commands require consent and a plan in their working directory", (h) => {
-        mkdirSync(join(h.root, "foreign/.git"), { recursive: true });
-        h.shell("node script.js", 2);
-        h.prompt();
-        h.shell("node script.js");
-        h.shell("cd foreign && touch x", 2);
-        h.hook("PreToolUse", 2, {
-            tool_name: "Bash",
-            tool_input: { command: "touch x", workdir: join(h.root, "foreign") },
-        });
-    });
-
-    scenario("sed options after a print script require consent and a plan", (h) => {
-        h.shell("sed -n 1p src/example.ts");
-        h.shell("sed -n 1p -i src/example.ts", 2);
-        h.prompt();
-        unlinkSync(join(h.root, "PLAN.md"));
-        h.shell("sed -n 1p -i src/example.ts", 2);
-        h.plan();
-        h.shell("sed -n 1p -i src/example.ts");
-    });
-
-    scenario("the render is required only after skill activation and writes", (h) => {
-        h.prompt();
-        h.patch();
-        h.hook("Stop", 0, { last_assistant_message: "Done." });
-        h.loadSkill();
-        h.hook("Stop", 2, { last_assistant_message: "Done." });
-        h.hook("Stop", 0, { last_assistant_message: render });
-        h.hook("Stop", 2, { last_assistant_message: render.replace(":2", ":9999") });
-        h.hook("Stop", 0, { stop_hook_active: true, last_assistant_message: "Done." });
-        h.prompt("explain the design");
-        h.hook("Stop", 0, { last_assistant_message: "Explanation only." });
-    });
-
-    scenario("shell mutations owe the same render", (h) => {
-        h.prompt();
-        h.loadSkill();
-        h.shell("node edit.js");
-        h.hook("Stop", 2, { last_assistant_message: "Done." });
-    });
-
-    // The render is owed for what the turn WROTE. A turn that wrote nothing, or
-    // whose only write was denied, is not design work and owes nothing.
-    scenario("turns that wrote nothing and denied patches do not require renders", (h) => {
-        h.prompt();
-        h.loadSkill();
-        h.hook("Stop", 0, { last_assistant_message: "Nothing written yet." });
-        h.prompt("discuss this");
+        h.prompt("explain");
+        h.hook("UserPromptSubmit", 0, { prompt: "ok", synthetic: true });
         h.patch("src/example.ts", 2);
-        h.hook("Stop", 0, { last_assistant_message: "Discussion." });
+        h.prompt("<local-command-stdout>ok</local-command-stdout>");
+        h.patch("src/example.ts", 2);
     });
 
-    scenario("resume and compaction preserve design state; fresh sessions reset it", (h) => {
+    scenario("draft plans must be shown, but retries never loop", (h) => {
+        h.prompt("draft it");
+        h.revise(revised);
+        h.hook("Stop", 2, { last_assistant_message: "Plan written." });
+        h.hook("Stop", 0, { last_assistant_message: revised, stop_hook_active: true });
         h.prompt();
-        h.loadSkill();
-        const compact = h.hook("SessionStart", 0, { source: "compact" });
-        assert.match(compact.stdout, /Produce the result/);
-        assert.match(compact.stdout, /TypeScript, node:test/);
         h.patch();
-        const resume = h.hook("SessionStart", 0, { source: "resume" });
-        assert.match(resume.stdout, /DESIGN <n>/);
+    });
+
+    scenario("resume pauses, compaction preserves, and clear forgets approval", (h) => {
+        h.ready();
+        h.hook("SessionStart", 0, { source: "compact" });
+        h.patch();
+        h.hook("SessionStart", 0, { source: "resume" });
         h.patch("src/example.ts", 2);
+        h.prompt();
+        h.patch();
         h.hook("SessionStart", 0, { source: "clear" });
         h.prompt();
+        h.patch("src/example.ts", 2);
+    });
+
+    scenario("old presentation-history state does not migrate approval", (h) => {
+        h.ready();
+        const stateDir = join(h.root, "state/agent-hooks", client);
+        const file = readdirSync(stateDir).find((value) => value.endsWith(".json"))!;
+        writeFileSync(join(stateDir, file), JSON.stringify({ prompt: "ok", active: true, touched: [], rules: [] }));
+        h.patch("src/example.ts", 2);
+        h.present();
+        h.prompt();
         h.patch();
-        h.hook("Stop", 0, { last_assistant_message: "No active loop." });
     });
 
-    scenario("the Skill tool activates the loop", (h) => {
-        h.hook("SessionStart", 0, { source: "startup" });
-        h.prompt();
-        h.loadSkill();
-        h.patch();
-        h.hook("Stop", 2, { last_assistant_message: "Done." });
+    scenario("rules still fire once on a successful direct write", (h) => {
+        const event = { tool_name: "Write", tool_input: { file_path: join(h.root, "src/lib.rs") } };
+        assert.equal(h.hook("PostToolUse", 0, { ...event, tool_response: { exit_code: 1 } }).stdout, "");
+        const output = h.hook("PostToolUse", 0, event).stdout;
+        assert.match(output, /pub\(crate\)/);
+        assert.doesNotMatch(output, /when:/);
+        assert.equal(h.hook("PostToolUse", 0, event).stdout, "");
     });
 
-    // The loop is armed by hand on every client. Reading the skill file used to
-    // arm it where there is no Skill tool, on the theory that the read IS the
-    // load — but a read is also how the file gets edited, grepped or quoted, and
-    // none of those is a decision to work under a design loop.
-    scenario("reading SKILL.md never activates the loop", (h) => {
-        for (const read of [
-            { tool_name: "Read", tool_input: { file_path: "/skills/software-design/SKILL.md" } },
-            { tool_name: "Bash", tool_input: { command: "cat ~/.agents/skills/software-design/SKILL.md" } },
-        ]) {
-            h.hook("SessionStart", 0, { source: "startup" });
-            h.prompt();
-            h.hook("PostToolUse", 0, { ...read, tool_response: {} });
-            h.patch();
-            h.hook("Stop", 0, { last_assistant_message: "Done." });
-        }
-    });
-
-    // Loading the skill is the model's call; being put under the loop is not. The
-    // skill's description says INVOKE ONLY WHEN THE USER ASKS FOR IT BY NAME, but a
-    // description is a prompt — so the gate reads the prompt instead. The content
-    // still loads here; what is withheld is the enforcement nobody asked for.
-    scenario("a Skill call the user never asked for does not activate the loop", (h) => {
-        for (const ask of ["clean up the parser", "refactor this module", "what are the primitives here?"]) {
-            h.hook("SessionStart", 0, { source: "startup" });
-            h.prompt(`ok, ${ask}`);
-            h.loadSkill();
-            h.patch();
-            h.hook("Stop", 0, { last_assistant_message: "Done." });
-        }
-    });
-
-    scenario("naming it any of the documented ways does activate the loop", (h) => {
-        for (const ask of ["run the software-design skill", "design loop please", "/software-design"]) {
-            h.hook("SessionStart", 0, { source: "startup" });
-            h.prompt(`ok, ${ask}`);
-            h.loadSkill();
-            h.patch();
-            h.hook("Stop", 2, { last_assistant_message: "Done." });
-        }
-    });
-
-    // Rules are the counterpart to skills: a file in ../rules declares the paths it
-    // applies to and fires on a write, with no skill, no plan and no consent word in
-    // play. Guidance that reaches an implementation session is the whole point.
-    const wrote = (h: ReturnType<typeof harness>, file: string, response: unknown = {}) =>
-        h.hook("PostToolUse", 0, {
-            tool_name: "Write",
-            tool_input: { file_path: join(h.root, file) },
-            tool_response: response,
-        });
-
-    scenario("a rules file fires on the extension it declares, once per session", (h) => {
-        h.prompt("ok, add a struct");
-        assert.match(wrote(h, "src/lib.rs").stdout, /pub\(crate\)/);
-        // A second Rust file in the same session must not repeat the paragraph.
-        assert.equal(wrote(h, "src/other.rs").stdout, "");
-    });
-
-    scenario("an extension no rule claims injects nothing", (h) => {
-        h.prompt();
-        assert.equal(wrote(h, "src/example.ts").stdout, "");
-    });
-
-    scenario("rules need neither a skill nor a plan nor consent", (h) => {
-        unlinkSync(join(h.root, "PLAN.md"));
-        h.prompt("fix a typo");
-        assert.match(wrote(h, "src/lib.rs").stdout, /pub\(crate\)/);
-    });
-
-    scenario("a failed write injects nothing", (h) => {
-        h.prompt();
-        assert.equal(wrote(h, "src/lib.rs", { exit_code: 1 }).stdout, "");
-    });
-
-    scenario("the frontmatter is configuration, not guidance", (h) => {
-        h.prompt();
-        const out = wrote(h, "src/lib.rs").stdout;
-        assert.match(out, /pub\(crate\)/);
-        assert.doesNotMatch(out, /when:/);
-    });
-
-    scenario("a failed Skill call does not activate the loop", (h) => {
-        h.prompt();
-        h.hook("PostToolUse", 0, {
-            tool_name: "Skill",
-            tool_input: { skill: "software-design" },
-            tool_response: { exit_code: 1 },
-        });
-        h.patch();
-        h.hook("Stop", 0, { last_assistant_message: "Done." });
-    });
-
-    // With nothing settled there is nothing to design against, so the problem
-    // loop owes its own block every turn — including a turn that wrote nothing,
-    // which is every turn of that loop, since the write gate allows only PLAN.md.
-    scenario("with no PLAN.md the loop owes a PROBLEM block", (h) => {
-        unlinkSync(join(h.root, "PLAN.md"));
-        h.prompt();
-        h.loadSkill();
-        h.hook("Stop", 2, { last_assistant_message: "Done." });
-        h.hook("Stop", 2, { last_assistant_message: render });
-        h.hook("Stop", 0, { last_assistant_message: problem });
-    });
-
-    scenario("malformed events and corrupted state fail closed", (h) => {
+    scenario("malformed events fail closed", (h) => {
         h.hook("PreToolUse", 2, { tool_name: "apply_patch", tool_input: { command: "unparseable" } });
         h.hook("PreToolUse", 2, { tool_name: "Bash", tool_input: {} });
         h.hook("PreToolUse", 2, { session_id: null });
-        h.prompt();
-        const stateDir = join(h.root, "state/agent-hooks", client);
-        for (const file of readdirSync(stateDir).filter((file) => file.endsWith(".json")))
-            writeFileSync(join(stateDir, file), "{");
-        h.patch("src/example.ts", 2);
     });
 
     if (client === "codex") {
-        scenario("turn IDs and interruptions revoke old consent", (h) => {
-            h.prompt();
-            h.patch("src/example.ts", 2, { turn_id: "turn-2" });
-            h.prompt();
-            h.hook("Interrupt");
-            h.patch("src/example.ts", 2);
+        scenario("stale calls and posts cannot replace the latest human turn", (h) => {
+            h.ready();
+            h.prompt("ok", { turn_id: "new-turn" });
+            h.hook("PostToolUse", 0, { tool_name: "Bash", tool_input: { command: "node build.js" }, turn_id: "turn-1" });
+            h.patch("src/example.ts", 2, { turn_id: "turn-1" });
+            h.patch("src/example.ts", 0, { turn_id: "new-turn" });
         });
 
-        scenario("explicit skill invocations activate; generated prompts never grant consent", (h) => {
-            h.prompt("ok, $software-design");
-            h.patch();
-            const blocked = h.hook("Stop", 2, { last_assistant_message: "Done." });
-            h.prompt(blocked.stderr.trim(), { turn_id: "turn-2" });
-            h.patch("src/example.ts", 2, { turn_id: "turn-2" });
-            h.prompt("ok", { turn_id: "turn-3" });
-            h.patch("src/example.ts", 0, { turn_id: "turn-3" });
+        scenario("only exact correlated Stop feedback continues consent", (h) => {
+            h.ready();
+            h.hook("PreToolUse", 0, { tool_name: "Write", tool_input: { file_path: "PLAN.md" } });
+            const held = h.hook("Stop", 2, { last_assistant_message: "Plan written." });
+            h.prompt(held.stderr.trim(), { turn_id: "turn-2" });
+            h.patch("src/example.ts", 0, { turn_id: "turn-2" });
+            h.hook("Stop", 2, { last_assistant_message: "Plan written.", turn_id: "turn-2" });
+            const feedback = h.state().stopFeedback;
+            h.prompt(`${feedback}\nok`, { turn_id: "turn-3" });
+            h.patch("src/example.ts", 2, { turn_id: "turn-3" });
         });
     }
 }
 
-test("Claude Stop and read-only tools survive unavailable hook storage", () => {
+test("a human question revokes an approval check already running under the lock", async () => {
+    const h = harness("codex");
+    const barrier = join(h.root, "hash-started");
+    const release = join(h.root, "release-hash");
+    const toolsDirectory = join(h.root, "bin");
+    mkdirSync(toolsDirectory);
+    const actualHash = spawnSync("which", ["sha256sum"], { encoding: "utf8" }).stdout.trim();
+    assert.ok(actualHash);
+    writeFileSync(join(toolsDirectory, "sha256sum"), `#!/usr/bin/env bash
+printf ready > '${barrier}'
+while [ ! -e '${release}' ]; do sleep 0.01; done
+exec '${actualHash}' "$@"
+`, { mode: 0o700 });
+    h.ready();
+
+    function launch(event: string, fields: Record<string, unknown>, slow = false) {
+        const process = spawn(globalThis.process.execPath, ["--experimental-strip-types", adapter, "codex"], {
+            cwd: h.root,
+            env: {
+                ...globalThis.process.env,
+                XDG_STATE_HOME: join(h.root, "state"),
+                ...(slow ? { PATH: `${toolsDirectory}:${globalThis.process.env.PATH}` } : {}),
+            },
+        });
+        let stderr = "";
+        process.stderr.on("data", (data) => { stderr += data; });
+        process.stdout.resume();
+        const done = new Promise<{ code: number | null; stderr: string }>((resolve, reject) => {
+            process.on("error", reject);
+            process.on("close", (code) => resolve({ code, stderr }));
+        });
+        process.stdin.end(JSON.stringify({ session_id: "session", cwd: h.root, hook_event_name: event, turn_id: "turn-1", ...fields }));
+        return { process, done };
+    }
+
+    async function until(check: () => boolean) {
+        const deadline = Date.now() + 10_000;
+
+        while (!check()) {
+            assert.ok(Date.now() < deadline, "timed out waiting for the approval boundary");
+            await new Promise((resolve) => setTimeout(resolve, 10));
+        }
+    }
+
+    const mutation = launch("PreToolUse", { tool_name: "Bash", tool_input: { command: "node build.js" } }, true);
+    let question: ReturnType<typeof launch> | undefined;
+
+    try {
+        await until(() => existsSync(barrier));
+        question = launch("UserPromptSubmit", { prompt: "explain", turn_id: "question" });
+        const directory = join(h.root, "state/agent-hooks/codex");
+        const journal = join(directory, readdirSync(directory).find((file) => file.endsWith(".human"))!);
+        await until(() => JSON.parse(readFileSync(journal, "utf8")).prompt === "explain");
+        writeFileSync(release, "continue");
+        const denied = await mutation.done;
+        assert.equal(denied.code, 2, denied.stderr);
+        assert.match(denied.stderr, /superseded/);
+        assert.equal((await question.done).code, 0);
+        h.patch("src/example.ts", 2);
+    } finally {
+        writeFileSync(release, "continue");
+        mutation.process.kill();
+        question?.process.kill();
+        rmSync(h.root, { recursive: true, force: true });
+    }
+});
+
+test("Stop and read-only tools survive unavailable hook storage", () => {
     const root = mkdtempSync(join(tmpdir(), "agent-hooks-storage-test-"));
     try {
         const blocker = join(root, "state-blocker");
@@ -353,6 +408,7 @@ test("Claude Stop and read-only tools survive unavailable hook storage", () => {
                 env: { ...process.env, XDG_STATE_HOME: blocker },
             });
 
+        // A broken stop check must let the turn end rather than trap it.
         const stop = invoke("Stop", { last_assistant_message: "Done." });
         assert.equal(stop.status, 0, stop.stderr);
         assert.match(stop.stderr, /stop check unavailable/);
@@ -363,22 +419,9 @@ test("Claude Stop and read-only tools survive unavailable hook storage", () => {
 
         const write = invoke("PreToolUse", { tool_name: "Bash", tool_input: { command: "touch file" } });
         assert.equal(write.status, 2, write.stderr);
-    } finally {
-        rmSync(root, { recursive: true, force: true });
-    }
-});
 
-test("inactive Claude Stop skips temporary transcript I/O", () => {
-    const root = mkdtempSync(join(tmpdir(), "agent-hooks-stop-test-"));
-    try {
-        const stop = spawnSync(process.execPath, ["--experimental-strip-types", adapter, "claude"], {
-            input: JSON.stringify({ session_id: "session", cwd: root, hook_event_name: "Stop" }),
-            encoding: "utf8",
-            timeout: 15_000,
-            env: { ...process.env, XDG_STATE_HOME: join(root, "state"), TMPDIR: join(root, "missing") },
-        });
-        assert.equal(stop.status, 0, stop.stderr);
-        assert.equal(stop.stderr, "");
+        const freePlan = invoke("PreToolUse", { tool_name: "Write", tool_input: { file_path: join(root, "PLAN.md") } });
+        assert.equal(freePlan.status, 0, freePlan.stderr);
     } finally {
         rmSync(root, { recursive: true, force: true });
     }
@@ -451,6 +494,7 @@ test("compound commands and potential shell side effects require consent", () =>
         "sort --o out file",
         "uniq in out",
         "env FOO=1 ls",
+        "printf -v PATH /tmp; cat file",
     ]) {
         assert.equal(shellEffect(command, "/tmp").readonly, false, command);
     }
@@ -477,17 +521,22 @@ test("sed rejects trailing write options and operands that can expand into optio
 });
 
 function harness(client: "claude" | "codex" | "opencode") {
-    const root = mkdtempSync(join(tmpdir(), "agent-hooks-test-"));
+    // Protected project checks must run outside the exempt /tmp and ~/tmp trees.
+    const root = mkdtempSync("/var/tmp/agent-hooks-test-");
     mkdirSync(join(root, ".git"));
     mkdirSync(join(root, "src"));
     writeFileSync(join(root, "src/example.ts"), "// example\nfunction example() {\n}\n");
-    function plan(suffix = "") {
-        writeFileSync(
-            join(root, "PLAN.md"),
-            "## Done when\n\nProduce the result.\n\n## Stack\n\nTypeScript, node:test.\n" + suffix,
-        );
+    // A fixture rule, so the rules scenarios do not depend on what is installed.
+    mkdirSync(join(root, "rules"));
+    writeFileSync(
+        join(root, "rules/rust.md"),
+        '---\nwhen: "*.rs"\n---\n\n# Rust\n\n- `pub(crate)` shares code; it does not expose a boundary.\n',
+    );
+    const planFile = join(root, "PLAN.md");
+    function writePlan(text = plan) {
+        writeFileSync(planFile, text);
     }
-    plan();
+    writePlan();
     function hook(event: string, expected = 0, fields: Record<string, unknown> = {}) {
         const input = {
             session_id: "session",
@@ -496,11 +545,13 @@ function harness(client: "claude" | "codex" | "opencode") {
             ...(client !== "claude" ? { turn_id: "turn-1" } : {}),
             ...fields,
         };
+        // Run in the project root, as the harnesses do.
         const result = spawnSync(process.execPath, ["--experimental-strip-types", adapter, client], {
             input: JSON.stringify(input),
+            cwd: root,
             encoding: "utf8",
             timeout: 15_000,
-            env: { ...process.env, XDG_STATE_HOME: join(root, "state") },
+            env: { ...process.env, XDG_STATE_HOME: join(root, "state"), AGENT_RULES_DIR: join(root, "rules") },
         });
         assert.equal(
             result.status,
@@ -510,16 +561,28 @@ function harness(client: "claude" | "codex" | "opencode") {
         if (result.stdout) JSON.parse(result.stdout);
         return result;
     }
+    const prompt = (text = "ok", fields: Record<string, unknown> = {}) =>
+        hook("UserPromptSubmit", 0, { prompt: text, ...fields });
+    // End a turn with the plan on disk pasted in full: the one way it counts as shown.
+    const present = () => hook("Stop", 0, { last_assistant_message: readFileSync(planFile, "utf8") });
     return {
         root,
-        plan,
+        state: () => JSON.parse(readFileSync(join(root, "state/agent-hooks", client, readdirSync(join(root, "state/agent-hooks", client)).find((file) => file.endsWith(".json"))!), "utf8")),
+        // Change the plan on disk behind the hooks' back.
+        plan: writePlan,
+        // Change it the way an agent does: a write the gate sees, then the file.
+        revise: (text: string) => {
+            hook("PreToolUse", 0, { tool_name: "Write", tool_input: { file_path: planFile } });
+            writePlan(text);
+        },
         hook,
-        // The default does two jobs: "ok" satisfies the consent gate, and naming
-        // the skill satisfies the arming gate, which reads the prompt so that
-        // "the user asked for it by name" is a fact about their message rather
-        // than a claim about the model's judgement.
-        prompt: (text = "ok, run the design loop", fields: Record<string, unknown> = {}) =>
-            hook("UserPromptSubmit", 0, { prompt: text, ...fields }),
+        prompt,
+        present,
+        // A plan shown, then the user's ok: where every change starts.
+        ready: () => {
+            present();
+            prompt();
+        },
         patch: (path = "src/example.ts", expected = 0, fields: Record<string, unknown> = {}) =>
             hook("PreToolUse", expected, {
                 tool_name: "apply_patch",
@@ -528,13 +591,5 @@ function harness(client: "claude" | "codex" | "opencode") {
             }),
         shell: (command: string, expected = 0) =>
             hook("PreToolUse", expected, { tool_name: "Bash", tool_input: { command } }),
-        // The Skill tool is the one load signal every client honours; reading
-        // the file only counts where reading is how a skill loads.
-        loadSkill: () =>
-            hook("PostToolUse", 0, {
-                tool_name: "Skill",
-                tool_input: { skill: "software-design" },
-                tool_response: {},
-            }),
     };
 }

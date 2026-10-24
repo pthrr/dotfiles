@@ -1,4 +1,5 @@
 # bash/zsh jj prompt support
+# shellcheck shell=bash
 #
 # Based on git-prompt.sh but adapted for Jujutsu (jj)
 # Optimized for speed - only shows bookmark/change ID
@@ -29,7 +30,8 @@ __jj_ps1 ()
 
     # Get bookmark name or change ID in a single call
     # Returns either a bookmark name or change ID (without parens)
-    local b=$(jj log --no-graph --no-pager -r @ -T 'coalesce(bookmarks.join(" "), change_id.shortest(8))' 2>/dev/null | head -n1)
+    local b
+    b=$(jj log --no-graph --no-pager -r @ -T 'coalesce(bookmarks.join(" "), change_id.shortest(8))' 2>/dev/null | head -n1)
 
     [ -z "$b" ] && return $exit
 

@@ -5,78 +5,9 @@
 }:
 
 let
-  ghcup = pkgs.stdenv.mkDerivation {
-    pname = "ghcup";
-    version = "latest";
-    src = pkgs.fetchurl {
-      url = "https://downloads.haskell.org/~ghcup/x86_64-linux-ghcup";
-      hash = "sha256-ntXaVEm0gEOg0X52fAXS71heJaY5u5NDKUlsbS+tnPg=";
-    };
-    dontUnpack = true;
-    installPhase = ''
-      install -Dm755 $src $out/bin/ghcup
-    '';
-  };
-
   xyceParallelNoCheck = pkgs.xyce-parallel.override {
     enableDocs = false;
     enableTests = false;
-  };
-
-  # nixpkgs only ships the Quint CLI, not its language server. Build it from
-  # the monorepo's vscode/quint-vscode/server workspace; the tag tracks
-  # pkgs.quint so the server and CLI stay compatible.
-  quintLanguageServer = pkgs.buildNpmPackage {
-    pname = "quint-language-server";
-    version = "0.19.0";
-
-    src = pkgs.fetchFromGitHub {
-      owner = "quint-co";
-      repo = "quint";
-      tag = "v0.32.0";
-      hash = "sha256-GTbphBmALx/gDc/iV/wtE1ovpK43VtCQoneN5AqUmvg=";
-    };
-    sourceRoot = "source/vscode/quint-vscode/server";
-
-    npmDepsHash = "sha256-BT5KN9E5aRUIJQR0zGlT00tDmRpS2oFF/yOdQOPIGgQ=";
-    npmBuildScript = "compile";
-
-    nativeBuildInputs = [ pkgs.makeWrapper ];
-
-    # Upstream quirk: src/complete.ts imports the type-only MarkupContent from
-    # vscode-languageclient, which this package does not depend on (the sibling
-    # VSCode extension hoists it at dev time). Swap it for the equivalent
-    # re-export in vscode-languageserver, which is a real dependency.
-    postPatch = ''
-      substituteInPlace src/complete.ts \
-        --replace-fail "from 'vscode-languageclient'" "from 'vscode-languageserver'"
-    '';
-
-    installPhase = ''
-      runHook preInstall
-
-      # Overriding installPhase skips buildNpmPackage's default prune, which
-      # would otherwise leave devDependencies (eslint, typescript, ...) in
-      # node_modules — colliding with the top-level eslint in home-manager's
-      # buildEnv. Prune, and nest under share/ to avoid the lib/node_modules
-      # merge point entirely.
-      npm prune --omit=dev --no-audit --no-fund
-
-      mkdir -p $out/share/quint-language-server
-      cp -r out node_modules $out/share/quint-language-server/
-
-      makeWrapper ${pkgs.nodejs}/bin/node $out/bin/quint-language-server \
-        --add-flags "$out/share/quint-language-server/out/src/server.js"
-
-      runHook postInstall
-    '';
-
-    meta = {
-      description = "Language Server for the Quint specification language";
-      homepage = "https://quint-lang.org";
-      license = pkgs.lib.licenses.asl20;
-      mainProgram = "quint-language-server";
-    };
   };
 
   # Not in nixpkgs; consumed from upstream's own flake package output. The
@@ -154,7 +85,7 @@ in
         ninja
         bazelisk
         bmake
-        m4
+        om4
         bear
         buck2
         git-repo
@@ -170,16 +101,12 @@ in
         # clangd for the C/C++ LSP, plus clang-format/clang-tidy matching
         # the .clang-format and .clang-tidy wired up below.
         clang-tools
-        ocaml
-        opam
-        lean4
         rustup
         (agda.withPackages (p: [
           p.cubical
           p.standard-library
         ]))
         cornelis
-        ghcup
       ]
     ++
 
@@ -206,14 +133,6 @@ in
         # python3Packages.jupyterlab
         cppman
         python3Packages.grip
-      ]
-    ++
-
-      # Java tooling
-      [
-        jdk
-        maven
-        gradle
       ]
     ++
 
@@ -283,12 +202,12 @@ in
     ++
 
       # WebAssembly
-      [
-        # emscripten
-        wasmtime
-        wabt
-      ]
-    ++
+      #   [
+      #     # emscripten
+      #     wasmtime
+      #     wabt
+      #   ]
+      # ++
 
       # Document tools
       [
@@ -339,8 +258,6 @@ in
         nuxmv
         z3
         tlaplus
-        quint
-        quintLanguageServer
       ]
     ++
 

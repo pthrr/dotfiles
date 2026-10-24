@@ -1,4 +1,5 @@
 # set PATH so it includes bin if it exists
+# shellcheck shell=bash
 if [ -d "/usr/sbin" ]; then
     export PATH="/usr/sbin:$PATH"
 fi
@@ -18,11 +19,6 @@ if [ -f "$HOME/.cargo/env" ]; then
     . "$HOME/.cargo/env"
 fi
 
-# include Haskell environment
-if [ -d "$HOME/.cabal/bin" ]; then
-    export PATH="$HOME/.cabal/bin:$PATH"
-fi
-
 # include LV2 plugins
 if [ -d "$HOME/.lv2" ]; then
     export LV2_PATH="$HOME/.lv2${LV2_PATH:+:$LV2_PATH}"
@@ -39,11 +35,6 @@ fi
 
 if [ -f "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh" ]; then
     . "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
-fi
-
-# include OCaml/opam environment
-if [ -d "$HOME/.opam" ]; then
-    eval "$(opam env)"
 fi
 
 # source custom env vars
@@ -170,6 +161,33 @@ function zellij() {
         command zellij
     fi
 }
+function claude() {
+    [[ $# -gt 0 ]] && { command claude "$@"; return; }
+    local root slug
+    root=$(git rev-parse --show-toplevel 2>/dev/null) || root=$PWD
+    slug=$(printf '%s' "$root" | tr -c 'A-Za-z0-9' '-')
+    if compgen -G "$HOME/.claude/projects/${slug}/*.jsonl" >/dev/null; then
+        command claude --continue
+    else
+        command claude
+    fi
+}
+function codex() {
+    [[ $# -gt 0 ]] && { command codex "$@"; return; }
+    command codex resume --last
+}
+function opencode() {
+    [[ $# -gt 0 ]] && { command opencode "$@"; return; }
+    local id
+    id=$(command opencode session list --format json -n 100 2>/dev/null |
+        jq -re --arg a "$PWD" --arg b "$(pwd -P)" \
+            '[.[] | select(.directory == $a or .directory == $b)][0].id' 2>/dev/null) || id=
+    if [[ -n $id ]]; then
+        command opencode -s "$id"
+    else
+        command opencode
+    fi
+}
 function lsd() {
     tree -a -C -L 6 -d -I '.git|.jj|.venv|__pycache__|*cache|build|target' "${@:-.}" | less -R
 }
@@ -184,7 +202,9 @@ function kpusr() {
 }
 function jupnote() {
     killall "jupyter-lab"
-    jupyter-lab --no-browser --notebook-dir="${@:-"$XDG_DOCUMENTS_DIR/notebooks"}" &
+    local dir
+    dir="${1:-$XDG_DOCUMENTS_DIR/notebooks}"
+    jupyter-lab --no-browser --notebook-dir="$dir" &
     sleep 2
     $BROWSER http://localhost:8888/
 }
@@ -279,7 +299,8 @@ alias printers='lpstat -p -d'
 alias printman='xdg http://localhost:631'
 alias scanners='scanimage -L'
 scan() {
-    local out="scan-$(date +%Y%m%d-%H%M%S).png"
+    local out
+    out="scan-$(date +%Y%m%d-%H%M%S).png"
     scanimage --mode Color --resolution 300 --format=png --output-file "$out" && echo "$out"
 }
 alias cal='calcurse'
@@ -295,6 +316,7 @@ _dedup_pathvar XDG_DATA_DIRS
 _dedup_pathvar MANPATH
 unset -f _dedup_pathvar
 source "$HOME/z.sh"
+# shellcheck disable=SC2034 # consumed by git-prompt.sh in this same shell
 GIT_PS1_SHOWUPSTREAM=""
 source "$HOME/git-prompt.sh"
 source "$HOME/jj-prompt.sh"
