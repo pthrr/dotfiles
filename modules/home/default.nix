@@ -53,6 +53,9 @@ in
       # OpenCode enables its built-in LSP servers from opencode.json; this keeps
       # it to the servers home-manager installs instead of downloading its own.
       OPENCODE_DISABLE_LSP_DOWNLOAD = "true";
+      # OpenCode reads ~/.claude/skills as well as ~/.agents/skills, and both
+      # carry the same tree, so every skill would be listed twice.
+      OPENCODE_DISABLE_CLAUDE_CODE_SKILLS = "1";
     };
   };
 
