@@ -53,7 +53,8 @@ type State = {
 };
 type Effect = { paths: string[]; removed: string[]; shell: boolean; readonly: boolean };
 type GateRecord = { ambiguous?: boolean; plan_written?: string; governed_by?: string; presented?: string; hash?: string };
-const injected = /^<(task-notification|command-name|local-command-caveat|local-command-stdout)>/;
+// A sub-agent's hand-back arrives as a prompt too, tagged with its sender.
+const injected = /^<((task-notification|command-name|local-command-caveat|local-command-stdout)>|agent-message from=")/;
 const entrypoint = fileURLToPath(import.meta.url);
 const hooks = dirname(entrypoint);
 const writeTools = new Set(["Write", "Edit", "MultiEdit", "NotebookEdit"]);

@@ -80,6 +80,25 @@ printf '%s' "${PLAN/result/result, cached}" >PLAN.md
 chk "changed plan requires a new approval" 2 "$(W "$work/src/file.rs")"
 printf '%s' "$PLAN" >PLAN.md
 
+# A linked worktree is judged at the same path in its main checkout.
+repo=$work/repo
+unit=$repo/.worktrees/unit
+git init -q "$repo"
+git -C "$repo" -c user.name=test -c user.email=test@example.invalid -c commit.gpgsign=false \
+    -c core.hooksPath=/dev/null commit -q --allow-empty -m init
+git -C "$repo" worktree add -q "$unit"
+printf '%s' "$PLAN" >"$repo/PLAN.md"
+proposal=$(jq -cn --arg p "$repo/PLAN.md" --arg h "$(sha256sum "$repo/PLAN.md" | cut -d' ' -f1)" \
+    '{id:"version-2",path:$p,hash:$h,shown:true,approved:true}')
+chk "a listed path in a linked worktree is allowed" 0 "$(W "$unit/src/file.rs")"
+chk "an unlisted path in a linked worktree is denied" 2 "$(W "$unit/README.md")"
+printf '%s' "$PLAN" >"$unit/PLAN.md"
+chk "a worktree's own plan still governs it" 2 "$(W "$unit/src/file.rs")"
+rm "$unit/PLAN.md"
+git init -q --separate-git-dir "$work/separate.git" "$repo/separate"
+chk "a .git file outside a worktree remains a boundary" 2 "$(W "$repo/separate/src/file.rs")"
+proposal=$saved
+
 prompt='please explain'
 
 for path in \

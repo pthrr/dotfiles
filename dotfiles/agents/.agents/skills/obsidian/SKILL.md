@@ -47,3 +47,13 @@ and missing pieces — preserve its frontmatter and keep the author's voice.
 - Obsidian markdown: `[[wikilinks]]`, `#tags`, `---` frontmatter.
 - Keep notes terse: brief definitions, named theorems, bulleted options.
 - No prose, no filler, no elaboration — dense reference material over explanations.
+
+## Formatting
+
+- Math uses Obsidian's LaTeX syntax: inline `$...$`, display `$$...$$`.
+- Format every variable, subscript, Greek letter, operator and relation as
+  math; never leave `t_A(x)`, `2^n`, `NP = P` or `->` in prose.
+- Use `\text{}` for multi-letter names: `$\text{TSP}_{\text{opt}}$`,
+  `$\text{CNF-Sat}$`.
+- Read [formatting](references/formatting.md) before writing or editing a note
+  with math, tables or other markup.

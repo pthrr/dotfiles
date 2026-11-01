@@ -42,6 +42,8 @@ tasks:
       - bash dotfiles/bash/bashrc.test.sh
       - node --experimental-strip-types --test dotfiles/agents/.agents/hooks/adapter.test.ts
       - node --experimental-strip-types --test dotfiles/agents/.agents/opencode/plugin.test.ts
+      - node --experimental-strip-types --test dotfiles/agents/.agents/skills/offload-compute/scripts/tinyci.test.ts
+      - node --experimental-strip-types --test dotfiles/agents/.agents/skills/offload-compute/scripts/pack.test.ts
 
   precommit:
     desc: Run fast checks before a commit

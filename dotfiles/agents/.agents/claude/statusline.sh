@@ -167,6 +167,17 @@ while [[ -n "$d" && "$d" != "/" && "$d" != "." ]]; do
   plan_state="open"
   break
  fi
+
+ # A linked worktree without a plan of its own falls back to its main
+ # checkout, as in write-gate.sh's main_checkout_path.
+ if [[ -f "$d/.git" ]]; then
+  common=$(git -C "$d" rev-parse --path-format=absolute --git-common-dir 2>/dev/null)
+  [[ "${common##*/}" == .git ]] || break
+  [[ "$(git --git-dir="$common" rev-parse --is-bare-repository 2>/dev/null)" == false ]] || break
+  d=${common%/.git}${cwd#"$d"}
+  continue
+ fi
+
  [[ -e "$d/.git" ]] && break
  d=$(dirname "$d")
 done

@@ -17,11 +17,12 @@ when:
 
 - This project is interfaced using the tasks defined in Taskfile.yml. Building, testing, linting all run through `task`
   calls.
-- We use test suites of stepped complexity (pre-commit/ci/nightly).
+- We use test suites of stepped complexity (pre/ci/nightly).
 - Run `task pre` after completing substantial tasks for verification and validation.
-- Test suite runs in pre-commit with max duration of 30 seconds.
+- Test suite runs in pre-commit (task pre) with max duration of 30 seconds with a warm cache.
 - CI runs are limited to 10 minutes.
-- Nightly runs are limited to 1 hour.
+- Nightly runs are limited to 3 hours.
+- Make sure to provide all project dependencies through a nix dev shell except for already globally installed tools.
 
 ## Code Style
 

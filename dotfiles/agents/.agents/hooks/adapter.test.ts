@@ -257,6 +257,15 @@ for (const client of ["claude", "codex", "opencode"] as const) {
         h.patch("src/example.ts", 2);
     });
 
+    scenario("a sub-agent hand-back neither revokes nor grants approval", (h) => {
+        h.ready();
+        h.prompt('<agent-message from="worker">\n[Subagent hand-back] Worker done.\n</agent-message>');
+        h.patch();
+        h.prompt("explain");
+        h.prompt('<agent-message from="worker">\nok\n</agent-message>');
+        h.patch("src/example.ts", 2);
+    });
+
     scenario("draft plans must be shown, but retries never loop", (h) => {
         h.prompt("draft it");
         h.revise(revised);

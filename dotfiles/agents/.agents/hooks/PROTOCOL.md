@@ -6,6 +6,8 @@ PLAN.md or the following trees are free: ~/.claude, ~/.codex, ~/.agents,
 file targets, including every endpoint of a patch. A shell working directory
 never qualifies a command for a path exemption. Other shell commands require
 approval for the session's current proposal regardless of working directory.
+A direct file write inside a linked git worktree without its own PLAN.md is
+judged as the same path in the main checkout.
 
 One proposal is current per client/session. Showing a valid PLAN.md in full
 records its path, content hash, file identity and unique version ID. A subsequent

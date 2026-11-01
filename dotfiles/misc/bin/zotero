@@ -1,0 +1,418 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+API=${ZOTERO_LOCAL_API:-http://localhost:23119/api/users/0}
+
+die() {
+    printf 'zotero: %s\n' "$*" >&2
+    exit 1
+}
+
+usage() {
+    cat <<'EOF'
+Zotero local library
+
+Usage: zotero <command> [options]
+
+Search:
+  search QUERY [--fulltext] [--type TYPE] [--tag TAG] [--collection KEY]
+               [--limit N] [--json]
+  recent [N] [--json]
+  collections [--json]
+  collection KEY [--limit N] [--json]
+
+Read:
+  item KEY [--json]
+  file KEY
+  notes KEY
+
+Cite:
+  bib KEY [KEY...]
+
+Zotero must be running with the local API enabled:
+Settings -> Advanced -> "Allow other applications on this computer to communicate with Zotero"
+EOF
+}
+
+api() {
+    local response status body
+
+    if ! response=$(curl -sS -H 'Zotero-API-Version: 3' -w '\n%{http_code}' "$@"); then
+        die "cannot reach the Zotero local API; is Zotero running?"
+    fi
+
+    status=${response##*$'\n'}
+    body=${response%$'\n'*}
+
+    case $status in
+        200) printf '%s' "$body" ;;
+        403) die "local API is disabled; enable Settings -> Advanced -> \"Allow other applications on this computer to communicate with Zotero\" and retry" ;;
+        404) return 4 ;;
+        *) die "local API returned HTTP $status${body:+: $body}" ;;
+    esac
+}
+
+fetch() {
+    local what=$1
+    shift
+    local body status
+
+    if body=$(api "$@"); then
+        printf '%s' "$body"
+        return 0
+    else
+        status=$?
+    fi
+
+    if [ "$status" -eq 4 ]; then
+        die "$what not found"
+    fi
+
+    exit "$status"
+}
+
+format_items() {
+    jq -r '
+        def year:
+            (.meta.parsedDate // .data.date // "") as $date
+            | (first($date | scan("[0-9]{4}")) // "");
+        def clean: gsub("[\u2066-\u2069]"; "");
+        def title:
+            .data.title // .data.filename // (if .data.itemType == "note" then "note" else "" end);
+        .[]
+        | [.key, year, .data.itemType, ((.meta.creatorSummary // "") | clean), title] | @tsv
+    '
+}
+
+format_collections() {
+    jq -r '
+        (map({key: .key, value: .data.name}) | from_entries) as $names
+        | (map({key: .key, value: (.data.parentCollection // false)}) | from_entries) as $parents
+        | def chain($key):
+            if $key == false or $key == null or ($names[$key] == null) then empty
+            else chain($parents[$key]), $names[$key]
+            end;
+          .[]
+        | [.key, ((.meta.numItems // 0) | tostring), ([chain(.key)] | join("/"))] | @tsv
+    '
+}
+
+format_item() {
+    local item=$1 children=$2 collections=$3
+
+    jq -s -r '
+        def clean: gsub("[\u2066-\u2069]"; "");
+        def creator_name:
+            if .name then (.name | clean)
+            elif .lastName and .firstName then ((.lastName | clean) + ", " + (.firstName | clean))
+            else ((.lastName // .firstName // "") | clean) end;
+
+        .[0] as $item
+        | .[1] as $children
+        | .[2] as $collections
+        | "key: \($item.key)",
+          "type: \($item.data.itemType)",
+          (if $item.data.title then "title: \($item.data.title)" else empty end),
+          ($item.data | to_entries[]
+           | select(.key != "key" and .key != "version" and .key != "itemType"
+                    and .key != "title" and .key != "creators" and .key != "tags"
+                    and .key != "collections" and .key != "relations")
+           | select(.value != null and .value != "" and .value != [])
+           | "\(.key): \(.value)"),
+          ([$item.data.creators[]? | "\(creator_name) (\(.creatorType // "creator"))"] as $creators
+           | if ($creators | length) > 0 then "creators: \($creators | join("; "))" else empty end),
+          ([$item.data.tags[]?.tag] as $tags
+           | if ($tags | length) > 0 then "tags: \($tags | join(", "))" else empty end),
+          ([$item.data.collections[]? as $key
+            | $collections[] | select(.key == $key) | .data.name] as $names
+           | if ($names | length) > 0 then "collections: \($names | join(", "))" else empty end),
+          ([$children[] | select(.data.itemType == "attachment")
+            | "  - \(.key) (\(.data.contentType // "unknown")\(if .data.filename then ", " + .data.filename else "" end))"] as $attachments
+           | if ($attachments | length) > 0 then "attachments:\n\($attachments | join("\n"))" else empty end),
+          ([$children[] | select(.data.itemType == "note")] as $notes
+           | if ($notes | length) > 0 then "notes: \($notes | length) (run `zotero notes \($item.key)`)" else empty end)
+    ' <(printf '%s' "$item") <(printf '%s' "$children") <(printf '%s' "$collections")
+}
+
+cmd_search() {
+    local query="" fulltext=0 limit=20 type="" tag="" collection="" json=0
+
+    while [ $# -gt 0 ]; do
+        case $1 in
+            --fulltext) fulltext=1; shift ;;
+            --limit) [ $# -ge 2 ] || die "--limit needs a value"; limit=$2; shift 2 ;;
+            --type) [ $# -ge 2 ] || die "--type needs a value"; type=$2; shift 2 ;;
+            --tag) [ $# -ge 2 ] || die "--tag needs a value"; tag=$2; shift 2 ;;
+            --collection) [ $# -ge 2 ] || die "--collection needs a value"; collection=$2; shift 2 ;;
+            --json) json=1; shift ;;
+            --) shift; query="${query:+$query }$*"; break ;;
+            -*) die "unknown option: $1" ;;
+            *) query="${query:+$query }$1"; shift ;;
+        esac
+    done
+
+    [ -n "$query" ] || die "usage: zotero search QUERY [--fulltext] [--limit N] [--type TYPE] [--tag TAG] [--collection KEY] [--json]"
+
+    local endpoint="$API/items/top"
+
+    if [ -n "$collection" ]; then
+        fetch "collection $collection" "$API/collections/$collection" >/dev/null
+        endpoint="$API/collections/$collection/items/top"
+    fi
+
+    local args=(--get --data-urlencode "q=$query" --data-urlencode "limit=$limit" --data-urlencode "sort=dateModified" --data-urlencode "direction=desc")
+
+    if [ "$fulltext" -eq 1 ]; then
+        args+=(--data-urlencode "qmode=everything")
+    fi
+
+    if [ -n "$type" ]; then
+        args+=(--data-urlencode "itemType=$type")
+    fi
+
+    if [ -n "$tag" ]; then
+        args+=(--data-urlencode "tag=$tag")
+    fi
+
+    local response
+    response=$(fetch "search" "$endpoint" "${args[@]}")
+
+    if [ "$json" -eq 1 ]; then
+        jq . <<<"$response"
+        return
+    fi
+
+    if [ "$(jq 'length' <<<"$response")" -eq 0 ]; then
+        printf 'no matches\n' >&2
+        return
+    fi
+
+    format_items <<<"$response"
+}
+
+cmd_recent() {
+    local limit=10 json=0
+
+    while [ $# -gt 0 ]; do
+        case $1 in
+            --json) json=1; shift ;;
+            -*) die "unknown option: $1" ;;
+            *) limit=$1; shift ;;
+        esac
+    done
+
+    local response
+    response=$(fetch "recent items" "$API/items/top" --get --data-urlencode "limit=$limit" --data-urlencode "sort=dateAdded" --data-urlencode "direction=desc")
+
+    if [ "$json" -eq 1 ]; then
+        jq . <<<"$response"
+        return
+    fi
+
+    format_items <<<"$response"
+}
+
+cmd_collections() {
+    local json=0
+
+    while [ $# -gt 0 ]; do
+        case $1 in
+            --json) json=1; shift ;;
+            *) die "unexpected argument: $1" ;;
+        esac
+    done
+
+    local response
+    response=$(fetch "collections" "$API/collections")
+
+    if [ "$json" -eq 1 ]; then
+        jq . <<<"$response"
+        return
+    fi
+
+    format_collections <<<"$response"
+}
+
+cmd_collection() {
+    local key="${1:-}" limit=50 json=0
+
+    [ -n "$key" ] || die "usage: zotero collection KEY [--limit N] [--json]"
+    shift
+
+    while [ $# -gt 0 ]; do
+        case $1 in
+            --limit) [ $# -ge 2 ] || die "--limit needs a value"; limit=$2; shift 2 ;;
+            --json) json=1; shift ;;
+            -*) die "unknown option: $1" ;;
+            *) die "unexpected argument: $1" ;;
+        esac
+    done
+
+    local response
+    fetch "collection $key" "$API/collections/$key" >/dev/null
+    response=$(fetch "collection $key" "$API/collections/$key/items/top" --get --data-urlencode "limit=$limit")
+
+    if [ "$json" -eq 1 ]; then
+        jq . <<<"$response"
+        return
+    fi
+
+    format_items <<<"$response"
+}
+
+cmd_item() {
+    local key="${1:-}" json=0
+
+    [ -n "$key" ] || die "usage: zotero item KEY [--json]"
+    shift
+
+    while [ $# -gt 0 ]; do
+        case $1 in
+            --json) json=1; shift ;;
+            -*) die "unknown option: $1" ;;
+            *) die "unexpected argument: $1" ;;
+        esac
+    done
+
+    local item children
+    item=$(fetch "item $key" "$API/items/$key")
+    children=$(fetch "item $key" "$API/items/$key/children")
+
+    if [ "$json" -eq 1 ]; then
+        jq -s '{item: .[0], children: .[1]}' <(printf '%s' "$item") <(printf '%s' "$children")
+        return
+    fi
+
+    local collections='[]'
+
+    if [ "$(jq '.data.collections | length' <<<"$item")" -gt 0 ]; then
+        collections=$(fetch "collections" "$API/collections")
+    fi
+
+    format_item "$item" "$children" "$collections"
+}
+
+print_attachment_file() {
+    local key=$1 url path status
+
+    if url=$(api "$API/items/$key/file/view/url"); then
+        case $url in
+            file://*)
+                path=$(python3 -c 'import sys, urllib.parse; print(urllib.parse.unquote(sys.argv[1]))' "${url#file://}")
+                printf '%s\n' "$path"
+                ;;
+            *)
+                printf 'zotero: attachment %s is not a local file: %s\n' "$key" "$url" >&2
+                ;;
+        esac
+
+        return 0
+    else
+        status=$?
+    fi
+
+    if [ "$status" -eq 4 ]; then
+        printf 'zotero: attachment %s has no file\n' "$key" >&2
+        return 0
+    fi
+
+    exit "$status"
+}
+
+cmd_file() {
+    local key="${1:-}" item
+
+    [ -n "$key" ] || die "usage: zotero file KEY"
+    [ $# -eq 1 ] || die "unexpected argument: ${2:-}"
+
+    item=$(fetch "item $key" "$API/items/$key")
+
+    if [ "$(jq -r '.data.itemType' <<<"$item")" = "attachment" ]; then
+        print_attachment_file "$key"
+        return
+    fi
+
+    local children attachment_keys
+    children=$(fetch "item $key" "$API/items/$key/children")
+    attachment_keys=$(jq -r '[.[] | select(.data.itemType == "attachment")] | sort_by(.data.contentType != "application/pdf")[] | .key' <<<"$children")
+
+    [ -n "$attachment_keys" ] || die "item $key has no attachments"
+
+    local attachment_key
+
+    while IFS= read -r attachment_key; do
+        print_attachment_file "$attachment_key"
+    done <<<"$attachment_keys"
+}
+
+cmd_notes() {
+    local key="${1:-}" children notes
+
+    [ -n "$key" ] || die "usage: zotero notes KEY"
+    [ $# -eq 1 ] || die "unexpected argument: ${2:-}"
+
+    fetch "item $key" "$API/items/$key" >/dev/null
+    children=$(fetch "item $key" "$API/items/$key/children")
+    notes=$(jq '[.[] | select(.data.itemType == "note") | {title: .data.title, note: .data.note}]' <<<"$children")
+
+    if [ "$(jq 'length' <<<"$notes")" -eq 0 ]; then
+        die "item $key has no notes"
+    fi
+
+    python3 -c '
+import html, json, re, sys
+
+notes = json.load(sys.stdin)
+
+for index, entry in enumerate(notes):
+    text = entry["note"]
+    text = re.sub(r"<br\s*/?>", "\n", text, flags=re.I)
+    text = re.sub(r"</p\s*>", "\n\n", text, flags=re.I)
+    text = re.sub(r"<[^>]+>", "", text)
+    text = html.unescape(text).strip()
+
+    if index:
+        print("\n---\n")
+
+    title = entry.get("title")
+
+    if title:
+        print("# " + str(title) + "\n")
+
+    print(text)
+' <<<"$notes"
+}
+
+cmd_bib() {
+    local keys=("$@")
+
+    [ "${#keys[@]}" -gt 0 ] || die "usage: zotero bib KEY [KEY...]"
+
+    local key
+
+    for key in "${keys[@]}"; do
+        fetch "item $key" "$API/items/$key?format=bibtex"
+        printf '\n'
+    done
+}
+
+if [ $# -eq 0 ]; then
+    usage
+    exit 0
+fi
+
+subcommand=$1
+shift
+
+case $subcommand in
+    search) cmd_search "$@" ;;
+    item) cmd_item "$@" ;;
+    collections) cmd_collections "$@" ;;
+    collection) cmd_collection "$@" ;;
+    recent) cmd_recent "$@" ;;
+    bib) cmd_bib "$@" ;;
+    file) cmd_file "$@" ;;
+    notes) cmd_notes "$@" ;;
+    help|-h|--help) usage ;;
+    *) die "unknown command: $subcommand (run zotero --help)" ;;
+esac

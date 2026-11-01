@@ -95,6 +95,38 @@ find_plan() {
     return 1
 }
 
+# The same path in the main checkout, for a path inside a linked worktree.
+#
+# A worktree's root holds a .git file, so find_plan stops there and the plan of
+# the main checkout never covers it. Parallel workers each edit, on their own
+# branch, files that plan approved: the same change, judged at the same path in
+# the main checkout. A submodule or a separate git dir also has a .git file, but
+# its common dir is not <main>/.git, and a bare repo has no checkout; both stay
+# boundaries. Same container stops as find_plan.
+main_checkout_path() {
+    local d common
+    d=$(dirname "$1")
+
+    while [ -n "$d" ] && [ "$d" != "/" ] && [ "$d" != "." ]; do
+        [ "$d" = "$home" ] && return 1
+        [ "$d" = "$tmp" ] && return 1
+        [ "$d" = "/tmp" ] && return 1
+
+        if [ -e "$d/.git" ]; then
+            [ -f "$d/.git" ] || return 1
+            common=$(git -C "$d" rev-parse --path-format=absolute --git-common-dir 2>/dev/null) || return 1
+            [ "${common##*/}" = .git ] || return 1
+            [ "$(git --git-dir="$common" rev-parse --is-bare-repository 2>/dev/null)" = false ] || return 1
+            printf '%s\n' "$(realpath -m -- "${common%/.git}")${1#"$d"}"
+            return 0
+        fi
+
+        d=$(dirname "$d")
+    done
+
+    return 1
+}
+
 # The plan format. Each section has to say something, and each Changes bullet has
 # to name a file and say what happens to it, so a token plan fails here rather
 # than reaching the user as something to approve:
@@ -246,9 +278,12 @@ pre-write)
         exit 0
     fi
 
+    # A worktree without a plan of its own falls back to its main checkout.
     if ! plan_dir=$(find_plan "$target_dir"); then
-        echo "write-gate: no PLAN.md at or above $target_dir." >&2
-        exit 2
+        if ! target=$(main_checkout_path "$target") || ! plan_dir=$(find_plan "$(dirname "$target")"); then
+            echo "write-gate: no PLAN.md at or above $target_dir." >&2
+            exit 2
+        fi
     fi
 
     if [ "$plan_dir/PLAN.md" != "$plan" ]; then
