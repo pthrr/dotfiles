@@ -1,14 +1,9 @@
 repos:
   - repo: local
     hooks:
-      - id: dotfiles-ci
+      - id: dotfiles-pre
         name: dotfiles checks
-        entry: env -u GIT_INDEX_FILE -u GIT_DIR -u GIT_WORK_TREE task precommit
+        entry: env -u GIT_INDEX_FILE -u GIT_DIR -u GIT_WORK_TREE nix develop -c task pre
         language: system
         pass_filenames: false
         always_run: true
-      - id: nixfmt
-        name: check nix formatting
-        entry: nix fmt -- --check
-        language: system
-        pass_filenames: false

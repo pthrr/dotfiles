@@ -1,0 +1,83 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup|resume|clear",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node --experimental-strip-types ~/.agents/hooks/gate/gate.ts codex",
+            "timeout": 30
+          },
+          {
+            "type": "command",
+            "command": "node --experimental-strip-types ~/.agents/hooks/rules/rules.ts codex",
+            "timeout": 30
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node --experimental-strip-types ~/.agents/hooks/gate/gate.ts codex",
+            "timeout": 30
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "^(Bash|apply_patch|Write|Edit|MultiEdit|NotebookEdit)$",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node --experimental-strip-types ~/.agents/hooks/gate/gate.ts codex",
+            "timeout": 30
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": ".*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node --experimental-strip-types ~/.agents/hooks/gate/gate.ts codex",
+            "timeout": 30
+          },
+          {
+            "type": "command",
+            "command": "node --experimental-strip-types ~/.agents/hooks/rules/rules.ts codex",
+            "timeout": 30
+          }
+        ]
+      }
+    ],
+    "Interrupt": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node --experimental-strip-types ~/.agents/hooks/gate/gate.ts codex",
+            "timeout": 30
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node --experimental-strip-types ~/.agents/hooks/gate/gate.ts codex",
+            "timeout": 30
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -24,10 +24,8 @@ Never write directly to the vault. Everything goes to `inbox/` for the user to
 review and migrate by hand.
 
 ```
-obsidian create path="inbox/Foo.md" content="..."             # new
-obsidian create path="inbox/Foo.md" content="..." overwrite   # restage
-obsidian delete path="inbox/Foo.md"                           # moves to trash
-obsidian create path="inbox/Foo.md" content="$(cat /tmp/draft.md)"   # multiline
+obsidian create path="inbox/<title>.md" content="$(cat /tmp/draft.md)"             # new
+obsidian create path="inbox/<title>.md" content="$(cat /tmp/draft.md)" overwrite   # restage
 ```
 
 **CLI gotcha:** use `path=` when the target has a folder component. `name=`
@@ -35,25 +33,22 @@ accepts a filename only — slashes error out.
 
 What to stage:
 
-- **New note** → full body to `inbox/<title>.md`.
-- **Small edit** → diff snippet plus a few lines of context to `inbox/<title>_diff.md`. Don't restage a whole file for a localized change; the user reviews by eye.
-- **Large rewrite** → full updated version to `inbox/<title>.md`.
+- **Further changes** → reuse the note's inbox file, with or without `_diff`;
+  read it first. The user may have changed it too; their changes are retained
+  in any case.
+- **No original note** → the changes are a new file, `inbox/<title>.md`,
+  without the `_diff` postfix.
+- **Original note exists** → `inbox/<title>_diff.md`. It can incorporate the
+  original note, which does not have to be retained verbatim.
 
 Embellishing means reading the note first, then adding detail, structure, links
 and missing pieces — preserve its frontmatter and keep the author's voice.
 
-## Guidelines
+## Style
 
 - Obsidian markdown: `[[wikilinks]]`, `#tags`, `---` frontmatter.
-- Keep notes terse: brief definitions, named theorems, bulleted options.
-- No prose, no filler, no elaboration — dense reference material over explanations.
-
-## Formatting
-
-- Math uses Obsidian's LaTeX syntax: inline `$...$`, display `$$...$$`.
-- Format every variable, subscript, Greek letter, operator and relation as
-  math; never leave `t_A(x)`, `2^n`, `NP = P` or `->` in prose.
-- Use `\text{}` for multi-letter names: `$\text{TSP}_{\text{opt}}$`,
-  `$\text{CNF-Sat}$`.
-- Read [formatting](references/formatting.md) before writing or editing a note
-  with math, tables or other markup.
+- Keep notes terse: brief definitions, named theorems, bulleted options; no
+  prose, no filler, no elaboration.
+- Every variable, subscript, Greek letter, operator and relation is math. Read
+  [formatting](references/formatting.md) before writing or editing a note with
+  math, tables or other markup.

@@ -249,7 +249,9 @@ test("submit uploads only what the server lacks and posts each job with its tree
         writeFileSync(join(base, "jobs.json"), JSON.stringify({ version: 1, jobs: { build: job } }));
 
         const progress: string[] = [];
-        const result = await submit(new Server(fake.url), join(base, "jobs.json"), "try", (line) => progress.push(line));
+        const result = await submit(new Server(fake.url), join(base, "jobs.json"), "try", (line) =>
+            progress.push(line),
+        );
         assert.deepEqual(result, { run_id: "run-1", dashboard: `${fake.url}/` });
         assert.deepEqual(progress, ["uploading 1 files (0.0 MiB) the server lacks", "uploaded 1 files (0.0 MiB)"]);
 
@@ -297,7 +299,11 @@ test("fetch writes a job's outputs into a new directory, and nothing through a s
 
         store.remove();
         fake.objects.set(`trees/${digest}`, bytes);
-        fake.runs.set("run-1", { id: "run-1", label: "", jobs: { build: { state: "cancelled", output_tree: digest } } });
+        fake.runs.set("run-1", {
+            id: "run-1",
+            label: "",
+            jobs: { build: { state: "cancelled", output_tree: digest } },
+        });
 
         const dest = join(scratch(), "fetched");
         const previousUmask = process.umask(0o077);
@@ -334,7 +340,11 @@ test("fetch writes a job's outputs into a new directory, and nothing through a s
         });
         fake.objects.set(`trees/${sha256(sneaky)}`, Buffer.from(sneaky));
         fake.objects.set(`blobs/${sha256("x")}`, Buffer.from("x"));
-        fake.runs.set("run-2", { id: "run-2", label: "", jobs: { build: { state: "failed", output_tree: sha256(sneaky) } } });
+        fake.runs.set("run-2", {
+            id: "run-2",
+            label: "",
+            jobs: { build: { state: "failed", output_tree: sha256(sneaky) } },
+        });
         await assert.rejects(fetchOutputs(server, "run-2", "build", join(scratch(), "fetched")), /through a symlink/);
     } finally {
         await fake.close();
@@ -427,11 +437,16 @@ test("a run: input reuses stored outputs by digest without moving their files", 
 
     try {
         const outputs = storeOutputs(fake, { "out/app": "built binary" });
-        fake.runs.set("run-0", { id: "run-0", label: "", jobs: { build: { state: "succeeded", output_tree: outputs } } });
+        fake.runs.set("run-0", {
+            id: "run-0",
+            label: "",
+            jobs: { build: { state: "succeeded", output_tree: outputs } },
+        });
 
         await submit(server, jobFile(["src", "run:run-0/build"]), "", ignoreProgress);
         const posted = fake.calls.find((call) => call.path === "/v1/runs" && call.body?.dry_run !== true)?.body;
-        const sent = (posted?.jobs as { build: { inputs: string[]; source_tree: string } }).build;
+        assert.ok(posted);
+        const sent = (posted.jobs as { build: { inputs: string[]; source_tree: string } }).build;
         assert.deepEqual(sent.inputs, ["src", `tree:${outputs}`]);
 
         const tree = JSON.parse(fake.objects.get(`trees/${sent.source_tree}`)?.toString() ?? "{}");
@@ -452,7 +467,10 @@ test("a run: input reuses stored outputs by digest without moving their files", 
         await assert.rejects(submit(server, clashing, "", ignoreProgress), /different entries at out\/app/);
 
         fake.objects.delete(`blobs/${sha256("built binary")}`);
-        await assert.rejects(submit(server, jobFile(["run:run-0/build"]), "", ignoreProgress), /files are gone from the store/);
+        await assert.rejects(
+            submit(server, jobFile(["run:run-0/build"]), "", ignoreProgress),
+            /files are gone from the store/,
+        );
     } finally {
         await fake.close();
     }
@@ -480,7 +498,8 @@ test("fetch writes only the asked-for paths, and refuses one the job has not", a
 });
 
 test("newLines gives what follows the last window: grown, moved, the final log, or no overlap", () => {
-    const lines = (from: number, to: number) => Array.from({ length: to - from + 1 }, (_, index) => `line ${from + index}`);
+    const lines = (from: number, to: number) =>
+        Array.from({ length: to - from + 1 }, (_, index) => `line ${from + index}`);
 
     assert.deepEqual(newLines([], lines(1, 3)), lines(1, 3));
     assert.deepEqual(newLines(lines(1, 3), lines(1, 5)), lines(4, 5));
@@ -523,7 +542,9 @@ test("waitForJob returns one job's record and whether it succeeded", async () =>
         });
 
         setTimeout(() => {
-            fake.runs.get("run-1")!.jobs.build.state = "succeeded";
+            const run = fake.runs.get("run-1");
+            assert.ok(run);
+            run.jobs.build.state = "succeeded";
         }, 20);
 
         const result = await waitForJob(server, "run-1", "build", 10);
@@ -537,7 +558,7 @@ test("waitForJob returns one job's record and whether it succeeded", async () =>
 test("follow caps live lines and adds the error and a failure tail", async () => {
     const fake = await fakeServer();
     const server = new Server(fake.url);
-    const log = Array.from({ length: 100 }, (_, index) => `line ${index}`).join("\n") + "\n";
+    const log = `${Array.from({ length: 100 }, (_, index) => `line ${index}`).join("\n")}\n`;
     const output: string[] = [];
     fake.runs.set("run-1", { id: "run-1", label: "", jobs: { build: { state: "running", log } } });
 
@@ -545,7 +566,9 @@ test("follow caps live lines and adds the error and a failure tail", async () =>
         const following = follow(server, "run-1", "build", 10, (text) => output.push(text));
 
         setTimeout(() => {
-            const job = fake.runs.get("run-1")!.jobs.build;
+            const run = fake.runs.get("run-1");
+            assert.ok(run);
+            const job = run.jobs.build;
             job.state = "failed";
             job.error = "boom";
         }, 100);
@@ -567,14 +590,7 @@ test("compactLines drops redraws, ANSI, blanks, repeats and excess length", () =
     const long = "x".repeat(1000);
 
     assert.deepEqual(
-        compactLines([
-            "\u001b[31mred\u001b[0m",
-            "",
-            "progress 10%\rprogress 50%\rprogress 100%",
-            "same",
-            "same",
-            long,
-        ]),
+        compactLines(["\u001b[31mred\u001b[0m", "", "progress 10%\rprogress 50%\rprogress 100%", "same", "same", long]),
         ["red", "progress 100%", "same", `${"x".repeat(400)}…`],
     );
 });
@@ -604,7 +620,11 @@ test("follow prints a job's log and returns its exit status", async () => {
     const offload = fileURLToPath(new URL("./offload.ts", import.meta.url));
 
     try {
-        for (const [state, exitStatus] of [["succeeded", 0], ["failed", 1], ["cancelled", 1]] as const) {
+        for (const [state, exitStatus] of [
+            ["succeeded", 0],
+            ["failed", 1],
+            ["cancelled", 1],
+        ] as const) {
             fake.runs.set("run-1", {
                 id: "run-1",
                 label: "",
@@ -680,8 +700,16 @@ test("wait prints one job's compact summary", async () => {
 test("the command line rejects missing and removed commands", () => {
     const offload = fileURLToPath(new URL("./offload.ts", import.meta.url));
 
-    for (const args of [[], ["status", "run-1"], ["stop", "run-1"], ["retry", "run-1", "build"], ["log", "run-1", "build"]]) {
-        const result = spawnSync(process.execPath, ["--experimental-strip-types", offload, ...args], { encoding: "utf8" });
+    for (const args of [
+        [],
+        ["status", "run-1"],
+        ["stop", "run-1"],
+        ["retry", "run-1", "build"],
+        ["log", "run-1", "build"],
+    ]) {
+        const result = spawnSync(process.execPath, ["--experimental-strip-types", offload, ...args], {
+            encoding: "utf8",
+        });
         assert.equal(result.status, 2);
         assert.match(result.stderr, /usage: offload\.ts/);
     }
@@ -690,8 +718,13 @@ test("the command line rejects missing and removed commands", () => {
 test("the command line rejects malformed options as usage errors", () => {
     const offload = fileURLToPath(new URL("./offload.ts", import.meta.url));
 
-    for (const args of [["submit", "jobs.json", "--bogus"], ["submit", "jobs.json", "--label"]]) {
-        const result = spawnSync(process.execPath, ["--experimental-strip-types", offload, ...args], { encoding: "utf8" });
+    for (const args of [
+        ["submit", "jobs.json", "--bogus"],
+        ["submit", "jobs.json", "--label"],
+    ]) {
+        const result = spawnSync(process.execPath, ["--experimental-strip-types", offload, ...args], {
+            encoding: "utf8",
+        });
         assert.equal(result.status, 2, result.stderr);
         assert.match(result.stderr, /usage: offload\.ts/);
     }

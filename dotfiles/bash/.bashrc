@@ -45,7 +45,7 @@ if [ -f ~/.env ]; then
 fi
 
 # create standard dirs
-for d in .lv2 .clap tmp bin opt datasets fun analysis business job Drive \
+for d in .lv2 .clap tmp bin opt datasets fun analysis business job \
          Dokumente/notes Dokumente/notebooks Dokumente/letters \
          Vorlagen/slides Audio; do
     mkdir -p "$HOME/$d" 2>/dev/null
@@ -90,8 +90,6 @@ export CPM_SOURCE_CACHE="$XDG_CACHE_HOME/CPM"
 export SYSTEMC_HOME="/opt/systemc"
 export SYSTEMC_AMS_HOME="/opt/systemc-ams"
 export ICSC_HOME="$HOME/opt/sc_tools"
-export VERUS_ROOT="$HOME/opt/verus/source/target-verus/release"
-export VERUS_Z3_PATH="$HOME/opt/verus/source/z3"
 export HISTCONTROL=ignorespace:erasedups
 export HISTSIZE=50000
 export HISTFILESIZE=100000
@@ -163,14 +161,21 @@ function zellij() {
 }
 function claude() {
     [[ $# -gt 0 ]] && { command claude "$@"; return; }
-    local root slug
-    root=$(git rev-parse --show-toplevel 2>/dev/null) || root=$PWD
-    slug=$(printf '%s' "$root" | tr -c 'A-Za-z0-9' '-')
-    if compgen -G "$HOME/.claude/projects/${slug}/*.jsonl" >/dev/null; then
-        command claude --continue
-    else
-        command claude
-    fi
+    local dir slug args=()
+
+    # Claude keeps chats per start directory, so --continue only finds chats of this one.
+    for dir in "$PWD" "$(pwd -P)"; do
+        slug=$(printf '%s' "$dir" | tr -c 'A-Za-z0-9' '-')
+
+        if compgen -G "$HOME/.claude/projects/${slug}/*.jsonl" >/dev/null; then
+            args=(--continue)
+            break
+        fi
+    done
+
+    # Started outside the loop: Ctrl+Z on a command inside a loop makes bash
+    # carry on after it, which would start a second instance.
+    command claude "${args[@]}"
 }
 function codex() {
     [[ $# -gt 0 ]] && { command codex "$@"; return; }
@@ -189,10 +194,10 @@ function opencode() {
     fi
 }
 function lsd() {
-    tree -a -C -L 6 -d -I '.git|.jj|.venv|__pycache__|*cache|build|target' "${@:-.}" | less -R
+    lst -d "${@:-.}" | less -R
 }
 function lsf() {
-    tree -a -C -L 6 -I '.git|.jj|.venv|__pycache__|*cache|build|target' "${@:-.}" | less -R
+    lst "${@:-.}" | less -R
 }
 function kppw() {
     keepassxc-cli clip "$(kpdb)" "$@"
@@ -244,10 +249,12 @@ alias mkdir='mkdir -pv'
 alias bazel='bazelisk'
 alias npm='pnpm'
 alias npx='pnpx'
+alias tsc='pnpm exec tsc'
+alias tsx='pnpm exec tsx'
 alias gg='git'
   alias task='go-task'
   alias tt='go-task'
-  alias nd='nix develop -c'
+  alias nd='nix develop'
 alias zj='zellij'
 alias j='jobs'
 alias c='clear'

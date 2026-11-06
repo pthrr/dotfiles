@@ -5,6 +5,10 @@ vim.g.loaded_ruby_provider = 0
 vim.g.loaded_perl_provider = 0
 vim.g.loaded_node_provider = 0
 
+-- Set leader keys before any plugin setup that may read them.
+vim.g.mapleader = ","
+vim.g.maplocalleader = "\\"
+
 -- ==============================================================================
 -- 1. ENVIRONMENT DETECTION
 -- ==============================================================================
@@ -38,13 +42,27 @@ if not vim.uv.fs_stat(mini_path) then
         "https://github.com/echasnovski/mini.nvim",
         mini_path,
     }
-    vim.fn.system(clone_cmd)
+    local output = vim.fn.system(clone_cmd)
+
+    if vim.v.shell_error ~= 0 then
+        vim.notify("Failed to install mini.nvim:\n" .. output, vim.log.levels.ERROR)
+        return
+    end
+
     vim.cmd("packadd mini.nvim | helptags ALL")
     vim.cmd('echo "Installed `mini.nvim`" | redraw')
 end
 
 require("mini.deps").setup({ path = { package = path_package } })
 local add, now, later = MiniDeps.add, MiniDeps.now, MiniDeps.later
+
+-- Clear this group on reload so re-sourcing init.lua does not stack autocmds.
+local config_group = vim.api.nvim_create_augroup("UserConfig", { clear = true })
+
+local function autocmd(event, opts)
+    opts.group = config_group
+    return vim.api.nvim_create_autocmd(event, opts)
+end
 
 -- ==============================================================================
 -- 3. HELPER FUNCTIONS
@@ -55,18 +73,24 @@ local add, now, later = MiniDeps.add, MiniDeps.now, MiniDeps.later
 --- :w writes the formatted buffer, avoiding mtime mismatch warnings.
 --- @param cmd string The command to execute
 --- @param args table Command arguments (must include the file path to format)
-local function run_external_formatter(cmd, args)
+--- @param cwd string|nil Directory to run the command in; nil runs it in Neovim's working directory
+local function run_external_formatter(cmd, args, cwd)
     if vim.fn.executable(cmd) ~= 1 then
         vim.notify("Formatter not found: " .. cmd, vim.log.levels.WARN)
         return
     end
+
     local view = vim.fn.winsaveview()
     local file = vim.fn.expand("%:p")
     local dir = vim.fn.fnamemodify(file, ":h")
     local ext = vim.fn.fnamemodify(file, ":e")
     local tmpfile = dir .. "/.nvim_fmt_" .. vim.fn.getpid() .. "." .. ext
 
-    vim.fn.writefile(vim.api.nvim_buf_get_lines(0, 0, -1, false), tmpfile)
+    if not pcall(vim.fn.writefile, vim.api.nvim_buf_get_lines(0, 0, -1, false), tmpfile) then
+        vim.fn.delete(tmpfile)
+        vim.notify("Formatter: could not write " .. tmpfile, vim.log.levels.ERROR)
+        return
+    end
 
     -- Swap the real file path for the temp file in the formatter args
     local tmp_args = {}
@@ -78,10 +102,23 @@ local function run_external_formatter(cmd, args)
         end
     end
 
-    vim.fn.system(vim.list_extend({ cmd }, tmp_args))
+    local result = vim.system(vim.list_extend({ cmd }, tmp_args), { cwd = cwd, text = true }):wait()
+    local exit_code = result.code
+    local output = result.stdout .. result.stderr
 
-    local new_lines = vim.fn.readfile(tmpfile)
+    if exit_code ~= 0 then
+        vim.fn.delete(tmpfile)
+        vim.notify(string.format("%s failed (exit %d): %s", cmd, exit_code, vim.trim(output)), vim.log.levels.ERROR)
+        return
+    end
+
+    local ok, new_lines = pcall(vim.fn.readfile, tmpfile)
     vim.fn.delete(tmpfile)
+
+    if not ok then
+        vim.notify("Formatter: could not read " .. tmpfile, vim.log.levels.ERROR)
+        return
+    end
 
     -- Apply only changed lines to preserve buffer state (folds, marks, etc.)
     local cur_lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
@@ -105,6 +142,29 @@ local function run_external_formatter(cmd, args)
         vim.api.nvim_exec_autocmds("TextChanged", { buffer = 0 })
     end
     vim.fn.winrestview(view)
+end
+
+--- Finds node_modules/<relative> in `dir` or the nearest parent that has it, so
+--- pnpm/yarn workspaces that hoist node_modules work.
+--- @param dir string Directory to start from
+--- @param relative string Path below node_modules, e.g. ".bin/tsc"
+--- @return string|nil
+local function find_node_modules_path(dir, relative)
+    while dir and dir ~= "" do
+        local candidate = dir .. "/node_modules/" .. relative
+
+        if vim.uv.fs_stat(candidate) then
+            return candidate
+        end
+
+        local parent = vim.fn.fnamemodify(dir, ":h")
+
+        if parent == dir then
+            break
+        end
+
+        dir = parent
+    end
 end
 
 -- ==============================================================================
@@ -152,11 +212,63 @@ now(function()
         vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, bufopts)
     end
 
+    -- TypeScript 7 is the native compiler: it ships no tsserver.js for
+    -- typescript-language-server and serves LSP itself (`tsc --lsp`).
+    local function native_typescript(root)
+        local package_json = find_node_modules_path(root, "typescript/package.json")
+
+        if not package_json then
+            return false
+        end
+
+        local typescript_dir = vim.fn.fnamemodify(package_json, ":h")
+        return vim.uv.fs_stat(typescript_dir .. "/lib/tsserver.js") == nil
+            and find_node_modules_path(root, ".bin/tsc") ~= nil
+    end
+
+    local clangd_root_markers = {
+        "MODULE.bazel",
+        "WORKSPACE",
+        "WORKSPACE.bazel",
+        "BUILD.bazel",
+        "compile_commands.json",
+        ".clangd",
+        ".git",
+        ".jj",
+    }
+
+    -- A rustup proxy is the rustup binary under another name, linked next to rustup.
+    local function is_rustup_proxy(path)
+        local binary = vim.uv.fs_stat(path)
+        local rustup = vim.uv.fs_stat(vim.fs.joinpath(vim.fs.dirname(path), "rustup"))
+        return binary ~= nil and rustup ~= nil and binary.dev == rustup.dev and binary.ino == rustup.ino
+    end
+
+    -- The first rust-analyzer on PATH that is not a rustup proxy. A proxy whose toolchain
+    -- lacks the component falls back to PATH, and nixpkgs' wrapped rustup, as in a nix
+    -- shell, then picks itself and recurses until it aborts.
+    local function rust_analyzer_path()
+        for _, dir in ipairs(vim.split(vim.env.PATH or "", ":", { trimempty = true })) do
+            local candidate = vim.fs.joinpath(dir, "rust-analyzer")
+
+            if vim.fn.executable(candidate) == 1 and not is_rustup_proxy(candidate) then
+                return candidate
+            end
+        end
+
+        return "rust-analyzer"
+    end
+
     -- Language servers configuration
     local servers = {
         ty = {
             cmd = { "ty", "server" },
             filetypes = { "python" },
+            init_options = {
+                experimental = {
+                    useUv = "scripts",
+                },
+            },
             root_markers = {
                 "MODULE.bazel",
                 "WORKSPACE",
@@ -175,25 +287,24 @@ now(function()
         },
         clangd = {
             cmd = { "clangd" },
-            filetypes = { "c", "cpp" },
-            root_markers = {
-                "MODULE.bazel",
-                "WORKSPACE",
-                "WORKSPACE.bazel",
-                "BUILD.bazel",
-                "compile_commands.json",
-                ".clangd",
-                ".git",
-                ".jj",
-            },
+            filetypes = { "cpp" },
+            root_markers = clangd_root_markers,
             init_options = {
                 fallbackFlags = { "--std=c++23" },
             },
         },
+        clangd_c = {
+            cmd = { "clangd" },
+            filetypes = { "c" },
+            root_markers = clangd_root_markers,
+            init_options = {
+                fallbackFlags = { "--std=c23" },
+            },
+        },
         rust_analyzer = {
-            cmd = { "rust-analyzer" },
+            cmd = { rust_analyzer_path() },
             filetypes = { "rust" },
-            root_dir = function(bufnr)
+            root_dir = function(bufnr, on_dir)
                 local root = vim.fs.root(bufnr, {
                     "MODULE.bazel",
                     "WORKSPACE",
@@ -204,27 +315,26 @@ now(function()
                     ".jj",
                 })
                 if root then
-                    return root
+                    on_dir(root)
+                    return
                 end
                 local bufname = vim.api.nvim_buf_get_name(bufnr)
                 if bufname == "" then
-                    return nil
+                    return
                 end
                 local fallback = vim.fn.fnamemodify(bufname, ":p:h")
-                vim.notify("rust-analyzer: no workspace root found, falling back to " .. fallback, vim.log.levels.WARN)
-                return fallback
+                vim.notify_once(
+                    "rust-analyzer: no workspace root found, falling back to " .. fallback,
+                    vim.log.levels.WARN
+                )
+                on_dir(fallback)
             end,
             settings = {
                 ["rust-analyzer"] = {
                     check = {
                         command = "clippy",
                         allTargets = true,
-                        extraArgs = {
-                            "--",
-                            "-W", "clippy::pedantic",
-                            "-A", "clippy::inline_always",
-                            "-W", "rust_2018_idioms",
-                        },
+                        extraArgs = { "--", "-Wclippy::pedantic", "-Aclippy::inline_always", "-Wrust_2018_idioms" },
                     },
                     diagnostics = {
                         enable = true,
@@ -238,7 +348,27 @@ now(function()
         ts_ls = {
             cmd = { "typescript-language-server", "--stdio" },
             filetypes = { "typescript", "javascript", "typescriptreact", "javascriptreact" },
-            root_markers = { "package.json", "tsconfig.json", ".git", ".jj" },
+            root_dir = function(bufnr, on_dir)
+                local root = vim.fs.root(bufnr, { "package.json", "tsconfig.json", ".git", ".jj" })
+
+                if root and not native_typescript(root) then
+                    on_dir(root)
+                end
+            end,
+        },
+        tsgo = {
+            cmd = function(dispatchers, config)
+                local tsc = find_node_modules_path(config.root_dir, ".bin/tsc")
+                return vim.lsp.rpc.start({ tsc, "--lsp", "--stdio" }, dispatchers, { cwd = config.root_dir })
+            end,
+            filetypes = { "typescript", "javascript", "typescriptreact", "javascriptreact" },
+            root_dir = function(bufnr, on_dir)
+                local root = vim.fs.root(bufnr, { "package.json", "tsconfig.json" })
+
+                if root and native_typescript(root) then
+                    on_dir(root)
+                end
+            end,
         },
         zls = {
             cmd = { "zls" },
@@ -267,75 +397,27 @@ now(function()
             filetypes = { "typst" },
             root_markers = { ".git", ".jj" },
         },
-        eslint = {
-            cmd = { "vscode-eslint-language-server", "--stdio" },
-            filetypes = { "typescript", "javascript", "typescriptreact", "javascriptreact" },
-            root_markers = {
-                "eslint.config.js",
-                "eslint.config.mjs",
-                "eslint.config.cjs",
-                ".eslintrc.json",
-                ".eslintrc.js",
-                ".eslintrc.yaml",
-                ".eslintrc.yml",
-                "package.json",
-                ".git",
-                ".jj",
-            },
-            -- vscode-eslint-language-server expects a VS Code-shaped settings
-            -- payload; without workspaceFolder + workingDirectory it throws
-            -- `TypeError [ERR_INVALID_ARG_TYPE]: path must be of type string`
-            -- on the first didOpen. workspaceFolder must be filled per-root.
-            settings = {
-                validate = "on",
-                packageManager = "pnpm",
-                useESLintClass = false,
-                experimental = { useFlatConfig = false },
-                codeActionOnSave = { enable = false, mode = "all" },
-                format = false,
-                quiet = false,
-                onIgnoredFiles = "off",
-                rulesCustomizations = {},
-                run = "onType",
-                problems = { shortenToSingleLine = false },
-                nodePath = "",
-                workingDirectory = { mode = "location" },
-                codeAction = {
-                    disableRuleComment = { enable = true, location = "separateLine" },
-                    showDocumentation = { enable = true },
-                },
-            },
-            before_init = function(params, config)
-                local folder = params.workspaceFolders and params.workspaceFolders[1]
-                if folder then
-                    config.settings.workspaceFolder = {
-                        uri = folder.uri,
-                        name = vim.fn.fnamemodify(vim.uri_to_fname(folder.uri), ":t"),
-                    }
+        biome = {
+            -- The project's own Biome when its node_modules has one (tinywdf,
+            -- einx-js), else the one on PATH (home packages or a nix dev shell).
+            cmd = function(dispatchers, config)
+                local biome = find_node_modules_path(config.root_dir, ".bin/biome") or "biome"
+                return vim.lsp.rpc.start({ biome, "lsp-proxy" }, dispatchers, { cwd = config.root_dir })
+            end,
+            filetypes = { "typescript", "javascript", "typescriptreact", "javascriptreact", "vue" },
+            -- Without a biome.json in the project, Biome uses ~/.config/biome/biome.json.
+            root_dir = function(bufnr, on_dir)
+                if vim.api.nvim_buf_get_name(bufnr) == "" then
+                    return
+                end
+
+                local root = vim.fs.root(bufnr, { "biome.json", "biome.jsonc" })
+                root = root or vim.fs.root(bufnr, { "package.json", ".git", ".jj" })
+
+                if root then
+                    on_dir(root)
                 end
             end,
-            -- vscode-eslint-language-server sends VS Code-only requests that
-            -- nvim has no default handlers for; without stubs each one logs
-            -- `MethodNotFound`. Reply with sensible defaults so the log stays
-            -- clean and the server proceeds.
-            handlers = {
-                ["eslint/noLibrary"] = function()
-                    return {}
-                end,
-                ["eslint/openDoc"] = function()
-                    return {}
-                end,
-                ["eslint/probeFailed"] = function()
-                    return {}
-                end,
-                ["eslint/showOutputChannel"] = function()
-                    return {}
-                end,
-                -- ConfirmExecutionResult.approved = 4
-                ["eslint/confirmESLintExecution"] = function()
-                    return 4
-                end,
-            },
         },
         lua_ls = {
             cmd = { "lua-language-server" },
@@ -403,26 +485,37 @@ now(function()
 
         -- Format diagnostic messages
         local messages = {}
-        local max_width = 0
         for _, diagnostic in ipairs(diagnostics) do
             local prefix = string.format("[%s] ", severity_names[diagnostic.severity] or "Unknown")
             for line in diagnostic.message:gmatch("[^\n]+") do
-                local msg = prefix .. line
-                table.insert(messages, msg)
-                max_width = math.max(max_width, #msg)
+                table.insert(messages, prefix .. line)
                 prefix = "         " -- Indent continuation lines
             end
         end
 
-        -- Calculate window dimensions
+        -- Show five lines; mark any dropped lines with a sixth row.
+        local shown = math.min(#messages, 5)
+        local displayed = vim.list_slice(messages, 1, shown)
+
+        if #messages > shown then
+            table.insert(displayed, "...")
+        end
+
+        -- Measure only the five message lines, not the marker.
         local editor_width = vim.o.columns
-        max_width = math.min(max_width, editor_width - 10)
+        local max_width = 0
+
+        for i = 1, shown do
+            max_width = math.max(max_width, vim.fn.strdisplaywidth(messages[i]))
+        end
+
+        max_width = math.min(max_width, editor_width - 4)
 
         local buf = vim.api.nvim_create_buf(false, true)
-        vim.api.nvim_buf_set_lines(buf, 0, -1, false, messages)
+        vim.api.nvim_buf_set_lines(buf, 0, -1, false, displayed)
 
         local height = vim.o.lines
-        local max_height = math.min(#messages, 5)
+        local max_height = #displayed
         local row = height - max_height - 4
         local col = editor_width - max_width - 2
 
@@ -439,7 +532,7 @@ now(function()
         })
 
         -- Auto-close on cursor movement
-        vim.api.nvim_create_autocmd({ "CursorMoved", "InsertEnter", "BufLeave", "FocusLost" }, {
+        autocmd({ "CursorMoved", "InsertEnter", "BufLeave", "FocusLost" }, {
             once = true,
             callback = function()
                 if diagnostic_float_win ~= nil and vim.api.nvim_win_is_valid(diagnostic_float_win) then
@@ -455,16 +548,105 @@ now(function()
     end
 
     -- Show diagnostics on cursor hold
-    vim.api.nvim_create_autocmd("CursorHold", {
+    autocmd("CursorHold", {
         callback = function()
             open_diagnostic_corner_float()
         end,
     })
 end)
 
--- Autoformat on save using external formatters
--- Falls back to LSP formatting if no external formatter is configured
-vim.api.nvim_create_autocmd("BufWritePre", {
+-- Autoformat on save using external formatters only. LSP formatting is never
+-- used, so the result does not depend on which language server is attached.
+-- The formatter is chosen by filetype, so `*.lagda.md` (filetype agda) is skipped.
+-- Each entry is the command and its arguments; the file path is appended.
+local formatters = {
+    rust = { "rustfmt" },
+    typst = { "typstyle", "-i" },
+    tla = { "tlafmt" },
+    zig = { "zig", "fmt" },
+    go = { "goimports", "-w" },
+    c = { "clang-format", "-i" },
+    cpp = { "clang-format", "-i" },
+    sh = { "shfmt", "-w" },
+    bash = { "shfmt", "-w" },
+    zsh = { "shfmt", "-w" },
+    python = { "ruff", "format", "--quiet" },
+    typescript = { "biome", "format", "--write", "--no-errors-on-unmatched" },
+    typescriptreact = { "biome", "format", "--write", "--no-errors-on-unmatched" },
+    javascript = { "biome", "format", "--write", "--no-errors-on-unmatched" },
+    javascriptreact = { "biome", "format", "--write", "--no-errors-on-unmatched" },
+    json = { "biome", "format", "--write", "--no-errors-on-unmatched" },
+    jsonc = { "biome", "format", "--write", "--no-errors-on-unmatched" },
+    yaml = { "biome", "format", "--write", "--no-errors-on-unmatched" },
+    vue = { "prettier", "--write" },
+    markdown = { "prettier", "--write" },
+    lua = { "stylua" },
+    nix = { "nixfmt" },
+}
+
+-- The directory of the nearest biome.json above dir, else the global config's.
+local function biome_config_dir(dir)
+    local config = vim.fs.find({ "biome.json", "biome.jsonc" }, { path = dir, upward = true })[1]
+    return config and vim.fs.dirname(config) or vim.fn.expand("~/.config/biome")
+end
+
+-- Editions by manifest, each with the modification times it was read at.
+local rust_editions = {}
+
+local function modified(path)
+    local stat = vim.uv.fs_stat(path)
+    return stat and stat.mtime.sec
+end
+
+-- The edition of the crate whose Cargo.toml is nearest above dir, as Cargo resolves it, so
+-- `edition.workspace = true` and the 2015 default hold. Cached until the crate's or its
+-- workspace's Cargo.toml changes. nil outside a crate: rustfmt then assumes 2015, as rustc
+-- does for a loose file. false when Cargo cannot answer, so the save is not formatted with a
+-- guessed edition.
+local function rust_edition(dir)
+    local manifest = vim.fs.find("Cargo.toml", { path = dir, upward = true })[1]
+
+    if not manifest then
+        return nil
+    end
+
+    local cached = rust_editions[manifest]
+
+    if cached and cached.mtime == modified(manifest) and cached.root_mtime == modified(cached.root) then
+        return cached.edition
+    end
+
+    local command = { "cargo", "metadata", "--no-deps", "--format-version", "1", "--manifest-path", manifest }
+    local started, process = pcall(vim.system, command, { text = true })
+    local result = started and process:wait()
+
+    if not result or result.code ~= 0 then
+        local reason = result and vim.trim(result.stderr) or tostring(process)
+        vim.notify("cargo metadata failed, not formatted: " .. reason, vim.log.levels.ERROR)
+        return false
+    end
+
+    local metadata = vim.json.decode(result.stdout)
+    local manifest_real = vim.uv.fs_realpath(manifest)
+    local edition = nil
+
+    for _, package in ipairs(metadata.packages) do
+        if vim.uv.fs_realpath(package.manifest_path) == manifest_real then
+            edition = package.edition
+        end
+    end
+
+    local root = vim.fs.joinpath(metadata.workspace_root, "Cargo.toml")
+    rust_editions[manifest] = {
+        edition = edition,
+        mtime = modified(manifest),
+        root = root,
+        root_mtime = modified(root),
+    }
+    return edition
+end
+
+autocmd("BufWritePre", {
     pattern = {
         "*.c",
         "*.cc",
@@ -476,6 +658,11 @@ vim.api.nvim_create_autocmd("BufWritePre", {
         "*.tsx",
         "*.js",
         "*.jsx", -- TypeScript/JavaScript
+        "*.json",
+        "*.jsonc", -- JSON
+        "*.yaml",
+        "*.yml", -- YAML
+        "*.vue", -- Vue
         "*.sh",
         "*.bash",
         "*.zsh", -- Shell scripts
@@ -489,57 +676,48 @@ vim.api.nvim_create_autocmd("BufWritePre", {
         "*.md", -- Markdown
     },
     callback = function()
-        -- Avoid spawning a formatter when nothing changed (e.g. plain :w on a clean buffer)
-        if not vim.bo.modified then
+        local formatter = formatters[vim.bo.filetype]
+
+        if not formatter then
             return
         end
 
-        local file = vim.fn.expand("%")
+        local cmd = formatter[1]
+        local args = vim.list_slice(formatter, 2)
+        local dir = vim.fn.expand("%:p:h")
+        local cwd = nil
 
-        -- Route to appropriate formatter based on file extension
-        if file:match("%.rs$") then
-            run_external_formatter("verusfmt", { file })
-        elseif file:match("%.typ$") then
-            run_external_formatter("typstyle", { "-i", file })
-        elseif file:match("%.tla$") then
-            run_external_formatter("tlafmt", { file })
-        elseif file:match("%.zig$") then
-            run_external_formatter("zig", { "fmt", file })
-        elseif file:match("%.go$") then
-            run_external_formatter("goimports", { "-w", file })
-        elseif
-            file:match("%.cc$")
-            or file:match("%.cpp$")
-            or file:match("%.hpp$")
-            or file:match("%.c$")
-            or file:match("%.h$")
-        then
-            run_external_formatter("clang-format", { "-i", file })
-        elseif file:match("%.sh$") or file:match("%.bash$") or file:match("%.zsh$") then
-            run_external_formatter("shfmt", { "-w", file })
-        elseif file:match("%.py$") then
-            run_external_formatter("ruff", { "format", "--quiet", file })
-        elseif
-            file:match("%.ts$")
-            or file:match("%.tsx$")
-            or file:match("%.js$")
-            or file:match("%.jsx$")
-            or file:match("%.md$")
-        then
-            run_external_formatter("prettier", { "--write", file })
-        elseif file:match("%.lua$") then
-            local config_path = vim.fn.expand("~") .. "/.config/stylua/stylua.toml"
-            if vim.fn.filereadable(config_path) == 1 then
-                run_external_formatter("stylua", { "--config-path", config_path, file })
-            else
-                run_external_formatter("stylua", { file })
+        if cmd == "biome" then
+            -- The project's own Biome when its node_modules has one, as for prettier.
+            -- Biome takes its project directory from where it runs and, run from anywhere
+            -- else, refuses a file at or below its config as a "nested root configuration".
+            -- So it runs from the config's directory, and is told that config explicitly.
+            cmd = find_node_modules_path(dir, ".bin/biome") or cmd
+            cwd = biome_config_dir(dir)
+            args[#args + 1] = "--config-path=" .. cwd
+        elseif cmd == "prettier" then
+            -- Prefer the project's prettier so formatting matches its version and plugins
+            cmd = find_node_modules_path(dir, ".bin/prettier") or cmd
+        elseif cmd == "rustfmt" then
+            local edition = rust_edition(dir)
+
+            if edition == false then
+                return
             end
-        elseif file:match("%.nix$") then
-            run_external_formatter("nixfmt", { file })
-        else
-            -- Fallback to LSP formatting
-            vim.lsp.buf.format({ async = false })
+
+            if edition then
+                vim.list_extend(args, { "--edition", edition })
+            end
+        elseif cmd == "stylua" then
+            local config_path = vim.fn.expand("~") .. "/.config/stylua/stylua.toml"
+
+            if vim.fn.filereadable(config_path) == 1 then
+                vim.list_extend(args, { "--config-path", config_path })
+            end
         end
+
+        args[#args + 1] = vim.fn.expand("%")
+        run_external_formatter(cmd, args, cwd)
     end,
 })
 
@@ -563,10 +741,11 @@ end)
 -- -----------------------------------------------------------------------------
 
 now(function()
-    -- nvim-treesitter is provided by NixOS home-manager with all grammars
-    vim.api.nvim_create_autocmd("FileType", {
-        callback = function()
-            pcall(vim.treesitter.start)
+    -- nvim-treesitter is provided by NixOS home-manager with all grammars.
+    -- Buffers without a parser keep their Vim syntax highlighting.
+    autocmd("FileType", {
+        callback = function(args)
+            pcall(vim.treesitter.start, args.buf)
         end,
     })
 end)
@@ -600,6 +779,10 @@ later(function()
     vim.keymap.set("n", "<leader>sS", function()
         extra.pickers.lsp({ scope = "workspace_symbol" })
     end, { desc = "List workspace symbols" })
+
+    vim.keymap.set("n", "<leader>sd", function()
+        extra.pickers.diagnostic()
+    end, { desc = "List diagnostics" })
 end)
 
 -- -----------------------------------------------------------------------------
@@ -617,9 +800,13 @@ end)
 later(function()
     require("mini.trailspace").setup({})
 
-    -- Auto-trim on save
-    vim.api.nvim_create_autocmd("BufWritePre", {
-        callback = function()
+    -- Auto-trim on save. Markdown hard line breaks are two trailing spaces.
+    autocmd("BufWritePre", {
+        callback = function(args)
+            if vim.bo[args.buf].filetype == "markdown" then
+                return
+            end
+
             MiniTrailspace.trim()
             MiniTrailspace.trim_last_lines()
         end,
@@ -636,6 +823,7 @@ end)
 
 later(function()
     require("neogit").setup({})
+    vim.keymap.set("n", "<leader>g", "<cmd>Neogit<cr>", { desc = "Open Neogit" })
 end)
 
 -- -----------------------------------------------------------------------------
@@ -643,6 +831,8 @@ end)
 -- -----------------------------------------------------------------------------
 
 now(function()
+    -- cornelis is installed globally via nix; don't stack-build it
+    vim.g.cornelis_use_global_binary = 1
     add({
         source = "agda/cornelis",
         checkout = "nvim-0.12-compat",
@@ -651,16 +841,11 @@ now(function()
             { source = "kana/vim-textobj-user" },
         },
     })
-    -- cornelis is installed globally via nix; don't stack-build it
-    vim.g.cornelis_use_global_binary = 1
 end)
 
 -- ==============================================================================
 -- 6. EDITOR SETTINGS
 -- ==============================================================================
-
--- Disable syntax (use Treesitter instead)
-vim.cmd("syntax off")
 
 -- -----------------------------------------------------------------------------
 -- UI Behavior
@@ -707,6 +892,7 @@ vim.o.fileencodings = "ucs-bom,utf-8,latin1,cp1252,default"
 -- Backup & Swap Files
 -- -----------------------------------------------------------------------------
 
+-- Deliberate: no swap or backup files, so unsaved edits are lost on a crash.
 vim.o.backup = false
 vim.o.writebackup = false
 vim.o.swapfile = false
@@ -733,7 +919,7 @@ vim.o.shell = "/bin/bash"
 vim.o.updatetime = 300
 vim.o.autoread = true
 
-vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "CursorHold", "CursorHoldI" }, {
+autocmd({ "FocusGained", "BufEnter", "CursorHold", "CursorHoldI" }, {
     callback = function()
         if vim.fn.getcmdwintype() == "" then
             vim.cmd.checktime()
@@ -836,43 +1022,51 @@ end
 -- -----------------------------------------------------------------------------
 
 -- Show cursorline only in active buffer
-vim.api.nvim_create_autocmd("BufEnter", {
+autocmd("BufEnter", {
     callback = function()
         vim.wo.cursorline = true
     end,
 })
 
-vim.api.nvim_create_autocmd("BufLeave", {
+autocmd("BufLeave", {
     callback = function()
         vim.wo.cursorline = false
     end,
 })
 
 -- Show relative numbers only in active buffer and normal mode
-vim.api.nvim_create_autocmd({ "BufEnter", "FocusGained", "InsertLeave" }, {
+autocmd({ "BufEnter", "FocusGained", "InsertLeave" }, {
     callback = function()
         vim.wo.relativenumber = true
     end,
 })
 
-vim.api.nvim_create_autocmd({ "BufLeave", "FocusLost", "InsertEnter" }, {
+autocmd({ "BufLeave", "FocusLost", "InsertEnter" }, {
     callback = function()
         vim.wo.relativenumber = false
     end,
 })
 
--- Underline cursorline in insert mode (replace whole highlight to clear bg/fg)
-vim.api.nvim_create_autocmd("InsertEnter", {
-    callback = function()
-        vim.api.nvim_set_hl(0, "CursorLine", { underline = true })
-    end,
-})
+-- Underline cursorline in insert mode, then restore the colorscheme's group.
+local cursorline_highlight = nil
 
-vim.api.nvim_create_autocmd("InsertLeave", {
-    callback = function()
-        vim.api.nvim_set_hl(0, "CursorLine", {})
-    end,
-})
+local function set_insert_cursorline()
+    if cursorline_highlight == nil then
+        cursorline_highlight = vim.api.nvim_get_hl(0, { name = "CursorLine", link = false })
+    end
+
+    vim.api.nvim_set_hl(0, "CursorLine", { underline = true })
+end
+
+local function restore_cursorline()
+    if cursorline_highlight ~= nil then
+        vim.api.nvim_set_hl(0, "CursorLine", cursorline_highlight)
+        cursorline_highlight = nil
+    end
+end
+
+autocmd("InsertEnter", { callback = set_insert_cursorline })
+autocmd("InsertLeave", { callback = restore_cursorline })
 
 -- -----------------------------------------------------------------------------
 -- Restore Cursor Position
@@ -885,13 +1079,6 @@ end)
 -- ==============================================================================
 -- 8. KEYMAPS
 -- ==============================================================================
-
--- -----------------------------------------------------------------------------
--- Leader Keys
--- -----------------------------------------------------------------------------
-
-vim.g.mapleader = ","
-vim.g.maplocalleader = "\\"
 
 -- -----------------------------------------------------------------------------
 -- Mode Switching
@@ -995,58 +1182,104 @@ later(function()
 end)
 
 -- -----------------------------------------------------------------------------
--- Comment Concealing (Rust)
+-- Comment Concealing
 -- -----------------------------------------------------------------------------
 
 do
-    local categories = {
-        line = { ns = vim.api.nvim_create_namespace("hide_comments_line"), key = "comments_hide_line" },
-        doc = { ns = vim.api.nvim_create_namespace("hide_comments_doc"), key = "comments_hide_doc" },
-        block = { ns = vim.api.nvim_create_namespace("hide_comments_block"), key = "comments_hide_block" },
-    }
+    local conceal_ns = vim.api.nvim_create_namespace("hide_comments")
+    -- A run is collapsed while a mark of this namespace lies inside it. Marks move
+    -- with edits, so the state follows the text, and fold commands never see it.
+    local collapsed_ns = vim.api.nvim_create_namespace("hide_comments_collapsed")
+    local comment_node_types = { "comment", "line_comment", "block_comment", "multiline_comment" }
+    local fold_expr = "v:lua.CommentFoldExpr(v:lnum)"
+    local comment_queries = {}
     local fold_lines_by_buf = {}
-    local fold_state_by_buf = {}
+    local runs_by_buf = {}
+    local last_tick_by_buf = {}
+    local comment_group = vim.api.nvim_create_augroup("UserComments", { clear = true })
 
-    local function classify_comment(node, bufnr)
-        local node_type = node:type()
-        local sr, sc = node:range()
-        local line = vim.api.nvim_buf_get_lines(bufnr, sr, sr + 1, false)[1] or ""
-        local text = line:sub(sc + 1)
-        if node_type == "line_comment" then
-            if text:match("^///") or text:match("^//!") then
-                return "doc"
-            end
-            return "line"
-        elseif node_type == "block_comment" then
-            if text:match("^/%*%*") or text:match("^/%*!") then
-                return "doc"
-            end
-            return "block"
+    -- Matches whichever conventional comment node types the grammar defines;
+    -- false when it defines none.
+    local function comment_query(lang)
+        if comment_queries[lang] ~= nil then
+            return comment_queries[lang]
         end
+
+        local symbols = vim.treesitter.language.inspect(lang).symbols
+        local patterns = {}
+
+        for _, node_type in ipairs(comment_node_types) do
+            if symbols[node_type] then
+                patterns[#patterns + 1] = "(" .. node_type .. ")"
+            end
+        end
+
+        local ok, query = false, nil
+
+        if #patterns > 0 then
+            ok, query = pcall(vim.treesitter.query.parse, lang, "[" .. table.concat(patterns, " ") .. "] @comment")
+        end
+
+        comment_queries[lang] = ok and query or false
+        return comment_queries[lang]
     end
 
-    local function refresh(bufnr)
-        bufnr = bufnr or vim.api.nvim_get_current_buf()
-        for _, cat in pairs(categories) do
-            vim.api.nvim_buf_clear_namespace(bufnr, cat.ns, 0, -1)
+    -- The buffer's tree-sitter parser and comment query, or nil when either is missing.
+    local function comment_parser(bufnr)
+        local ok, parser = pcall(vim.treesitter.get_parser, bufnr)
+
+        if not ok or not parser then
+            return nil
         end
+
+        local query = comment_query(parser:lang())
+
+        if not query then
+            return nil
+        end
+
+        return parser, query
+    end
+
+    -- The runs of a fold-lines table as a list sorted by first line, plus each run's
+    -- last line by its first line.
+    local function collect_runs(fold_lines)
+        local list = {}
+        local stop_of = {}
+
+        for lnum in pairs(fold_lines) do
+            if not fold_lines[lnum - 1] then
+                local stop = lnum
+
+                while fold_lines[stop + 1] do
+                    stop = stop + 1
+                end
+
+                list[#list + 1] = { start = lnum, stop = stop }
+                stop_of[lnum] = stop
+            end
+        end
+
+        table.sort(list, function(a, b)
+            return a.start < b.start
+        end)
+
+        return { list = list, stop_of = stop_of }
+    end
+
+    local function scan_comments(bufnr)
+        vim.api.nvim_buf_clear_namespace(bufnr, conceal_ns, 0, -1)
 
         local fold_lines = {}
         fold_lines_by_buf[bufnr] = fold_lines
+        runs_by_buf[bufnr] = collect_runs(fold_lines)
 
-        local any_hidden = false
-        for _, cat in pairs(categories) do
-            if vim.b[bufnr][cat.key] then
-                any_hidden = true
-                break
-            end
-        end
-        if not any_hidden then
+        if not vim.b[bufnr].comments_hidden then
             return
         end
 
-        local ok, parser = pcall(vim.treesitter.get_parser, bufnr, "rust")
-        if not ok or not parser then
+        local parser, query = comment_parser(bufnr)
+        if not parser then
             return
         end
         local tree = parser:parse()[1]
@@ -1054,35 +1287,31 @@ do
             return
         end
         local root = tree:root()
-        local query = vim.treesitter.query.parse("rust", "[(line_comment) (block_comment)] @comment")
+        -- One API call instead of one per comment line.
+        local buf_lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
 
         for _, node in query:iter_captures(root, bufnr, 0, -1) do
-            local kind = classify_comment(node, bufnr)
-            if kind and vim.b[bufnr][categories[kind].key] then
-                local sr, sc, er, ec = node:range()
-                -- Node ranges may include trailing newline (er=next row, ec=0); skip that row
-                if ec == 0 and er > sr then
-                    er = er - 1
-                    ec = #(vim.api.nvim_buf_get_lines(bufnr, er, er + 1, false)[1] or "")
-                end
-                local multiline = er > sr
-                for row = sr, er do
-                    local s_col = row == sr and sc or 0
-                    local line = vim.api.nvim_buf_get_lines(bufnr, row, row + 1, false)[1] or ""
-                    local e_col = row == er and ec or #line
-                    local before = line:sub(1, s_col)
-                    if before:match("^%s*$") then
-                        -- Comment-only line: fold only for multi-line blocks or consecutive line runs
-                        if node:type() == "line_comment" or multiline then
-                            fold_lines[row + 1] = true
-                        end
-                    elseif multiline then
-                        -- Inline comment: conceal only when the comment spans multiple lines
-                        vim.api.nvim_buf_set_extmark(bufnr, categories[kind].ns, row, s_col, {
-                            end_col = e_col,
-                            conceal = "…",
-                        })
-                    end
+            local sr, sc, er, ec = node:range()
+            -- Node ranges may include trailing newline (er=next row, ec=0); skip that row
+            if ec == 0 and er > sr then
+                er = er - 1
+                ec = #(buf_lines[er + 1] or "")
+            end
+            local multiline = er > sr
+            for row = sr, er do
+                local s_col = row == sr and sc or 0
+                local line = buf_lines[row + 1] or ""
+                local e_col = row == er and ec or #line
+                local before = line:sub(1, s_col)
+                if before:match("^%s*$") then
+                    -- Comment-only line: part of a run; single-line runs are dropped below
+                    fold_lines[row + 1] = true
+                elseif multiline then
+                    -- Inline comment: conceal only when the comment spans multiple lines
+                    vim.api.nvim_buf_set_extmark(bufnr, conceal_ns, row, s_col, {
+                        end_col = e_col,
+                        conceal = "…",
+                    })
                 end
             end
         end
@@ -1097,9 +1326,53 @@ do
         for _, lnum in ipairs(to_remove) do
             fold_lines[lnum] = nil
         end
+
+        runs_by_buf[bufnr] = collect_runs(fold_lines)
     end
 
-    function _G.RustCommentFoldExpr(lnum)
+    -- Whether two fold-lines tables mark exactly the same lines.
+    local function same_lines(a, b)
+        if not a or not b then
+            return false
+        end
+
+        for lnum in pairs(a) do
+            if not b[lnum] then
+                return false
+            end
+        end
+
+        for lnum in pairs(b) do
+            if not a[lnum] then
+                return false
+            end
+        end
+
+        return true
+    end
+
+    -- Recomputes the runs, then lets Vim recompute the folds of every window on the
+    -- buffer. Unlike zx/zX, this keeps each fold's open or closed state. When the runs
+    -- did not change, as after any edit within a line, Vim's folds are already right.
+    local function refresh(bufnr)
+        bufnr = bufnr or vim.api.nvim_get_current_buf()
+        local previous_lines = fold_lines_by_buf[bufnr]
+        scan_comments(bufnr)
+
+        if same_lines(previous_lines, fold_lines_by_buf[bufnr]) then
+            return
+        end
+
+        local line_count = vim.api.nvim_buf_line_count(bufnr)
+
+        for _, winid in ipairs(vim.fn.win_findbuf(bufnr)) do
+            if vim.wo[winid].foldexpr == fold_expr then
+                vim._foldupdate(winid, 0, line_count)
+            end
+        end
+    end
+
+    function _G.CommentFoldExpr(lnum)
         local lines = fold_lines_by_buf[vim.api.nvim_get_current_buf()]
         local treesitter_expr = vim.treesitter.foldexpr(lnum)
         if not lines or not lines[lnum] then
@@ -1114,7 +1387,7 @@ do
         return tostring(comment_level)
     end
 
-    function _G.RustCommentFoldText()
+    function _G.CommentFoldText()
         local lines = fold_lines_by_buf[vim.api.nvim_get_current_buf()]
         if not lines or not lines[vim.v.foldstart] then
             return vim.fn.foldtext()
@@ -1129,76 +1402,142 @@ do
     end
 
     local function any_hidden(bufnr)
-        for _, cat in pairs(categories) do
-            if vim.b[bufnr][cat.key] then
-                return true
-            end
-        end
-        return false
+        return vim.b[bufnr].comments_hidden == true
     end
 
-    local function comment_fold_starts(bufnr)
-        local starts = {}
-        local lines = fold_lines_by_buf[bufnr] or {}
-        for lnum in pairs(lines) do
-            if not lines[lnum - 1] then
-                starts[#starts + 1] = lnum
-            end
-        end
-        table.sort(starts)
-        return starts
+    -- The buffer's runs, sorted by first line.
+    local function runs_of(bufnr)
+        local runs = runs_by_buf[bufnr]
+        return runs and runs.list or {}
     end
 
     local function is_fold_start(lnum)
-        return tostring(_G.RustCommentFoldExpr(lnum)):match("^>") ~= nil
+        return tostring(_G.CommentFoldExpr(lnum)):match("^>") ~= nil
     end
 
-    local function capture_fold_state(bufnr, winid)
-        if not vim.api.nvim_win_is_valid(winid) or vim.api.nvim_win_get_buf(winid) ~= bufnr then
+    -- First line of the run that contains lnum, or nil.
+    local function run_start(bufnr, lnum)
+        local lines = fold_lines_by_buf[bufnr] or {}
+
+        if not lines[lnum] then
+            return nil
+        end
+
+        local start = lnum
+
+        while lines[start - 1] do
+            start = start - 1
+        end
+
+        return start
+    end
+
+    local function run_end(bufnr, start)
+        local runs = runs_by_buf[bufnr]
+        return runs and runs.stop_of[start] or start
+    end
+
+    local function is_collapsed(bufnr, start)
+        local range_start = { start - 1, 0 }
+        local range_end = { run_end(bufnr, start) - 1, -1 }
+        local marks = vim.api.nvim_buf_get_extmarks(bufnr, collapsed_ns, range_start, range_end, { limit = 1 })
+        return #marks > 0
+    end
+
+    local function set_collapsed(bufnr, start, collapsed)
+        vim.api.nvim_buf_clear_namespace(bufnr, collapsed_ns, start - 1, run_end(bufnr, start))
+
+        if collapsed then
+            vim.api.nvim_buf_set_extmark(bufnr, collapsed_ns, start - 1, 0, {})
+        end
+    end
+
+    -- Collapses every run, as on opening the file.
+    local function collapse_all(bufnr)
+        vim.api.nvim_buf_clear_namespace(bufnr, collapsed_ns, 0, -1)
+
+        for _, run in ipairs(runs_of(bufnr)) do
+            vim.api.nvim_buf_set_extmark(bufnr, collapsed_ns, run.start - 1, 0, {})
+        end
+    end
+
+    -- Opens every run the last change touched ('[ to ']), so text typed or commented
+    -- next to a collapsed run stays visible. Does nothing without a new change.
+    local function open_changed_runs(bufnr)
+        local tick = vim.b[bufnr].changedtick
+
+        if tick == last_tick_by_buf[bufnr] then
             return
         end
 
-        local closed_folds = {}
-        vim.api.nvim_win_call(winid, function()
-            for lnum = 1, vim.api.nvim_buf_line_count(bufnr) do
-                if vim.fn.foldclosed(lnum) == lnum then
-                    closed_folds[lnum] = true
-                end
+        last_tick_by_buf[bufnr] = tick
+        local first_changed = vim.api.nvim_buf_get_mark(bufnr, "[")[1]
+        local last_changed = vim.api.nvim_buf_get_mark(bufnr, "]")[1]
+
+        for _, run in ipairs(runs_of(bufnr)) do
+            if run.start <= last_changed and run.stop >= first_changed then
+                set_collapsed(bufnr, run.start, false)
             end
-        end)
-        fold_state_by_buf[bufnr] = {
-            level = vim.api.nvim_get_option_value("foldlevel", { win = winid }),
-            closed = closed_folds,
-        }
+        end
     end
 
-    local function restore_fold_state(bufnr, winid)
-        local state = fold_state_by_buf[bufnr]
-        if state == nil then
-            state = { level = 99, closed = {} }
-            for _, lnum in ipairs(comment_fold_starts(bufnr)) do
-                state.closed[lnum] = true
+    -- A stale fold tree must never make zc close a code fold: Vim's level at the
+    -- run's first line has to be the one CommentFoldExpr gives.
+    local function fold_is_current(lnum)
+        local comment_level = tonumber(tostring(_G.CommentFoldExpr(lnum)):match("%d+"))
+        return vim.fn.foldlevel(lnum) == comment_level
+    end
+
+    -- Makes the current window's comment folds match the collapsed marks. Fold
+    -- commands (zR, zM, zo, :set foldlevel, plugins) open and close comment folds
+    -- like any other fold; this puts them back.
+    local function sync_comment_folds(bufnr)
+        -- Off with zn, and in windows folding by something else, such as diff windows.
+        if not vim.wo.foldenable or vim.wo.foldmethod ~= "expr" then
+            return
+        end
+
+        local cursor_line = vim.fn.line(".")
+        local cursor_run = run_start(bufnr, cursor_line)
+
+        -- The cursor reached a hidden line (search, jump, undo): that run opens.
+        if cursor_run and cursor_line > cursor_run and is_collapsed(bufnr, cursor_run) then
+            set_collapsed(bufnr, cursor_run, false)
+        end
+
+        -- One call for all marks; marks and runs are both sorted, so one pass pairs them.
+        local marks = vim.api.nvim_buf_get_extmarks(bufnr, collapsed_ns, 0, -1, {})
+        local mark_index = 1
+        local view = nil
+
+        for _, run in ipairs(runs_of(bufnr)) do
+            -- A mark is { id, row, col } with a 0-based row.
+            while marks[mark_index] and marks[mark_index][2] + 1 < run.start do
+                mark_index = mark_index + 1
+            end
+
+            local collapsed = marks[mark_index] ~= nil and marks[mark_index][2] + 1 <= run.stop
+            -- Another line when an enclosing code fold is closed; the run is left alone then.
+            local closed_at = vim.fn.foldclosed(run.start)
+            local needs_close = collapsed and closed_at == -1
+            local needs_open = not collapsed and closed_at == run.start
+
+            if (needs_close or needs_open) and fold_is_current(run.start) then
+                view = view or vim.fn.winsaveview()
+                vim.api.nvim_win_set_cursor(0, { run.start, 0 })
+                vim.cmd(needs_close and "normal! zc" or "normal! zo")
             end
         end
 
-        vim.api.nvim_win_call(winid, function()
-            local view = vim.fn.winsaveview()
-            vim.wo.foldlevel = state.level
-            vim.cmd("normal! zX")
-            for lnum = 1, vim.api.nvim_buf_line_count(bufnr) do
-                if state.closed[lnum] and is_fold_start(lnum) and vim.fn.foldclosed(lnum) == -1 then
-                    vim.api.nvim_win_set_cursor(winid, { lnum, 0 })
-                    vim.cmd("normal! zc")
-                end
-            end
+        if view then
             vim.fn.winrestview(view)
-        end)
+        end
     end
 
     -- Window-local options must target the window that shows `bufnr`. Capture
     -- the winid at call time so a scheduled callback doesn't bleed into a
     -- different window the user has since switched to.
-    local function apply(bufnr, winid)
+    local function setup_window(bufnr, winid)
         winid = winid or vim.api.nvim_get_current_win()
         if not vim.api.nvim_win_is_valid(winid) then
             return
@@ -1207,102 +1546,151 @@ do
             return
         end
 
-        refresh(bufnr)
+        -- Diff mode folds by changes (foldmethod=diff); leave such windows alone.
+        if vim.wo[winid].diff then
+            return
+        end
+
         local hidden = any_hidden(bufnr)
 
+        -- vim.wo[0][0] is :setlocal, so these options stay with this buffer instead
+        -- of leaking into the next buffer shown in the window.
         vim.api.nvim_win_call(winid, function()
             if hidden then
-                vim.wo.conceallevel = 2
-                vim.wo.concealcursor = "vc"
-                vim.wo.foldenable = true
-                vim.wo.foldminlines = 0
-                vim.wo.foldmethod = "expr"
-                vim.wo.foldexpr = "v:lua.RustCommentFoldExpr(v:lnum)"
-                vim.wo.foldtext = "v:lua.RustCommentFoldText()"
-                vim.wo.foldlevel = 99
+                vim.wo[0][0].conceallevel = 2
+                vim.wo[0][0].concealcursor = "vc"
+                vim.wo[0][0].foldenable = true
+                vim.wo[0][0].foldminlines = 0
+                vim.wo[0][0].foldmethod = "expr"
+                vim.wo[0][0].foldexpr = fold_expr
+                vim.wo[0][0].foldtext = "v:lua.CommentFoldText()"
                 if not vim.wo.fillchars:match("fold:") then
                     vim.opt_local.fillchars:append("fold: ")
                 end
             else
-                vim.wo.conceallevel = 0
-                vim.wo.foldenable = true
-                vim.wo.foldmethod = "expr"
-                vim.wo.foldexpr = "v:lua.RustCommentFoldExpr(v:lnum)"
-                vim.wo.foldlevel = 99
+                vim.wo[0][0].conceallevel = 0
+                vim.wo[0][0].foldenable = true
+                vim.wo[0][0].foldmethod = "expr"
+                vim.wo[0][0].foldexpr = fold_expr
             end
-        end)
 
-        restore_fold_state(bufnr, winid)
+            sync_comment_folds(bufnr)
+        end)
+    end
+
+    local function apply(bufnr, winid)
+        refresh(bufnr)
+        setup_window(bufnr, winid)
+    end
+
+    -- Re-applies after a visibility toggle in the current window. Every hidden run
+    -- comes back collapsed; a cursor inside a run moves to its first line.
+    local function collapse_after_toggle(bufnr)
+        local winid = vim.api.nvim_get_current_win()
+        refresh(bufnr)
+        collapse_all(bufnr)
+        local cursor_run = run_start(bufnr, vim.fn.line("."))
+
+        if cursor_run then
+            vim.api.nvim_win_set_cursor(winid, { cursor_run, 0 })
+        end
+
+        setup_window(bufnr, winid)
     end
 
     local function open_fold_or_right()
-        if vim.fn.foldclosed(".") ~= -1 then
+        local count = vim.v.count1
+        local bufnr = vim.api.nvim_get_current_buf()
+        local lnum = vim.fn.line(".")
+
+        if run_start(bufnr, lnum) == lnum and is_collapsed(bufnr, lnum) then
+            set_collapsed(bufnr, lnum, false)
+            sync_comment_folds(bufnr)
+            count = count - 1
+        elseif vim.fn.foldclosed(".") ~= -1 then
             vim.cmd("normal! zo")
-        else
-            vim.cmd("normal! l")
+            count = count - 1
+        end
+
+        if count > 0 then
+            vim.cmd("normal! " .. count .. "l")
         end
     end
+
     local function close_fold_or_left()
+        local count = vim.v.count1
         local line = vim.api.nvim_get_current_line()
         local first_nonblank_col = #(line:match("^%s*") or "") + 1
         local at_or_before_content = vim.fn.col(".") <= first_nonblank_col
         local lnum = vim.fn.line(".")
-        if at_or_before_content and is_fold_start(lnum) and vim.fn.foldclosed(".") == -1 then
+        local bufnr = vim.api.nvim_get_current_buf()
+        local on_open_run = run_start(bufnr, lnum) == lnum and not is_collapsed(bufnr, lnum)
+
+        if at_or_before_content and on_open_run then
+            set_collapsed(bufnr, lnum, true)
+            sync_comment_folds(bufnr)
+            count = count - 1
+        elseif at_or_before_content and is_fold_start(lnum) and vim.fn.foldclosed(".") == -1 then
             vim.cmd("normal! zc")
-        else
-            vim.cmd("normal! h")
+            count = count - 1
+        end
+
+        if count > 0 then
+            vim.cmd("normal! " .. count .. "h")
         end
     end
 
-    vim.api.nvim_create_autocmd("FileType", {
-        pattern = "rust",
+    autocmd("FileType", {
         callback = function(args)
-            for _, cat in pairs(categories) do
-                vim.b[args.buf][cat.key] = true
+            -- Only file buffers whose tree-sitter grammar has comment nodes.
+            if vim.bo[args.buf].buftype ~= "" or not comment_parser(args.buf) then
+                return
             end
+
+            -- FileType fires again when the buffer is reloaded; drop the previous handlers.
+            vim.api.nvim_clear_autocmds({ group = comment_group, buffer = args.buf })
+
+            vim.b[args.buf].comments_hidden = true
+            last_tick_by_buf[args.buf] = vim.b[args.buf].changedtick
 
             local winid = vim.api.nvim_get_current_win()
             vim.schedule(function()
                 if vim.api.nvim_buf_is_valid(args.buf) then
-                    apply(args.buf, winid)
+                    refresh(args.buf)
+                    collapse_all(args.buf)
+                    setup_window(args.buf, winid)
                 end
             end)
 
-            -- BufReadPost covers autoread reloads, where FileType does not refire
-            -- but buffer content changes underneath the cached fold table.
-            vim.api.nvim_create_autocmd({ "TextChanged", "InsertLeave", "BufReadPost" }, {
+            vim.api.nvim_create_autocmd({ "TextChanged", "InsertLeave" }, {
+                group = comment_group,
                 buffer = args.buf,
                 callback = function()
                     refresh(args.buf)
+                    open_changed_runs(args.buf)
                 end,
             })
 
-            local function toggle(kind)
-                capture_fold_state(args.buf, vim.api.nvim_get_current_win())
-                vim.b[args.buf][categories[kind].key] = not vim.b[args.buf][categories[kind].key]
-                apply(args.buf)
-            end
+            -- An autoread reload, where FileType does not refire, replaces the text
+            -- underneath the cached fold table like opening the file does.
+            vim.api.nvim_create_autocmd("BufReadPost", {
+                group = comment_group,
+                buffer = args.buf,
+                callback = function()
+                    refresh(args.buf)
+                    collapse_all(args.buf)
+                    -- A reload is no edit: its '[ '] span the whole file.
+                    last_tick_by_buf[args.buf] = vim.b[args.buf].changedtick
+                end,
+            })
+
             local kopts = function(desc)
                 return { buffer = args.buf, desc = desc }
             end
 
-            vim.keymap.set("n", "<leader>cl", function()
-                toggle("line")
-            end, kopts("Toggle line comment visibility"))
-            vim.keymap.set("n", "<leader>cd", function()
-                toggle("doc")
-            end, kopts("Toggle doc comment visibility"))
-            vim.keymap.set("n", "<leader>cb", function()
-                toggle("block")
-            end, kopts("Toggle block comment visibility"))
-
             vim.keymap.set("n", "<leader>cc", function()
-                capture_fold_state(args.buf, vim.api.nvim_get_current_win())
-                local target = not any_hidden(args.buf)
-                for _, cat in pairs(categories) do
-                    vim.b[args.buf][cat.key] = target
-                end
-                apply(args.buf)
+                vim.b[args.buf].comments_hidden = not any_hidden(args.buf)
+                collapse_after_toggle(args.buf)
             end, kopts("Toggle all comment visibility"))
 
             vim.keymap.set("n", "l", open_fold_or_right, kopts("Open fold or move right"))
@@ -1310,14 +1698,8 @@ do
             vim.keymap.set("n", "h", close_fold_or_left, kopts("Close fold or move left"))
             vim.keymap.set("n", "<Left>", close_fold_or_left, kopts("Close fold or move left"))
 
-            vim.api.nvim_create_autocmd({ "BufWinLeave", "WinLeave" }, {
-                buffer = args.buf,
-                callback = function(event)
-                    capture_fold_state(event.buf, vim.api.nvim_get_current_win())
-                end,
-            })
-
             vim.api.nvim_create_autocmd({ "BufWinEnter", "WinEnter" }, {
+                group = comment_group,
                 buffer = args.buf,
                 callback = function(event)
                     local entered_winid = vim.api.nvim_get_current_win()
@@ -1331,27 +1713,40 @@ do
         end,
     })
 
-    vim.api.nvim_create_autocmd("BufDelete", {
+    -- SafeState fires each time Nvim goes idle, after every command and callback,
+    -- so it catches a change to a comment fold whatever made it.
+    autocmd("SafeState", {
+        callback = function()
+            local bufnr = vim.api.nvim_get_current_buf()
+
+            if fold_lines_by_buf[bufnr] and vim.wo.foldexpr == fold_expr and vim.api.nvim_get_mode().mode == "n" then
+                sync_comment_folds(bufnr)
+            end
+        end,
+    })
+
+    autocmd("BufDelete", {
         callback = function(args)
             fold_lines_by_buf[args.buf] = nil
-            fold_state_by_buf[args.buf] = nil
+            runs_by_buf[args.buf] = nil
+            last_tick_by_buf[args.buf] = nil
         end,
     })
 end
-vim.api.nvim_create_autocmd("FileType", {
+autocmd("FileType", {
     pattern = "*",
     callback = function(args)
         local name = args.file or vim.api.nvim_buf_get_name(args.buf)
-        if (vim.endswith(name, ".lagda")
-                or vim.endswith(name, ".lagda.md")
-                or vim.endswith(name, ".lagda.tex"))
-            and vim.bo[args.buf].filetype ~= "agda" then
+        if
+            (vim.endswith(name, ".lagda") or vim.endswith(name, ".lagda.md") or vim.endswith(name, ".lagda.tex"))
+            and vim.bo[args.buf].filetype ~= "agda"
+        then
             vim.bo[args.buf].filetype = "agda"
         end
     end,
 })
 -- agda
-vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
+autocmd({ "BufRead", "BufNewFile" }, {
     pattern = { "*.agda", "*.lagda", "*.lagda.md", "*.lagda.tex" },
     callback = function()
         local opts = { buffer = true, silent = true }
@@ -1380,12 +1775,12 @@ vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
     end,
 })
 
-vim.api.nvim_create_autocmd("BufWritePost", {
+autocmd("BufWritePost", {
     pattern = { "*.agda", "*.lagda", "*.lagda.md", "*.lagda.tex" },
     command = "CornelisLoad",
 })
 
-vim.api.nvim_create_autocmd("QuitPre", {
+autocmd("QuitPre", {
     pattern = { "*.agda", "*.lagda", "*.lagda.md", "*.lagda.tex" },
     command = "CornelisCloseInfoWindows",
 })

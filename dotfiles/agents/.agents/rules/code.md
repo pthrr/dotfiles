@@ -1,45 +1,42 @@
 ---
 when:
     "*.rs *.c *.h *.cc *.cpp *.cxx *.hpp *.hh *.hxx *.py *.pyi *.ts *.tsx *.mts *.cts *.js *.jsx *.mjs *.cjs *.zig *.sh
-    *.bash"
+    *.bash *.lua"
 ---
 
 # Code
 
-## Etiquette
-
-- Be precise in what you propose and explain (what/why/where/current/future)
-- Keep in mind that the user most often will not have the concrete code and problem at the top of his head. Therefore,
-  provide context and explain from first principles.
-- Never start writing code right away. Plan first and implement only when the user agreed.
-
 ## Workflow
 
 - This project is interfaced using the tasks defined in Taskfile.yml. Building, testing, linting all run through `task`
-  calls.
-- We use test suites of stepped complexity (pre/ci/nightly).
+  calls inside the project's dev shell: `nix develop -c task <name>`.
 - Run `task pre` after completing substantial tasks for verification and validation.
-- Test suite runs in pre-commit (task pre) with max duration of 30 seconds with a warm cache.
-- CI runs are limited to 10 minutes.
-- Nightly runs are limited to 3 hours.
-- Make sure to provide all project dependencies through a nix dev shell except for already globally installed tools.
+- The project is hermetic: it builds, lints and tests only with what it declares and pins itself. It takes no tool,
+  config or version from the machine and no path into another repository; a package of the same repository is part of
+  the project. The machine may decide how fast and where the work runs, never its result: caches keyed by their inputs
+  (sccache, the Nix store and its substituters, pnpm's store), mirrors of hash-checked downloads and the number of
+  parallel jobs are fine.
+- Every dependency is pinned in a committed lockfile, in the lowest layer that can hold it. The nix flake (`flake.lock`)
+  provides only what the language's dependency manager cannot: the compiler or runtime, the dependency manager itself
+  and `task`. The dependency manager (pnpm, cargo) pins the rest, including the formatters and linters it can install,
+  so Neovim and the checks run the same project-local tool.
+- A new project or dependency starts at the newest stable release that is at least 7 days old. Every tool that can
+  enforce this cool-off is set to (pnpm, Cargo, Renovate); flake inputs have no such check. After that, versions move
+  only through `task update` or an update bot such as Renovate that opens as few changes as it can: one with every
+  update of every layer, and one for its lockfile maintenance.
 
-## Code Style
+## Code style
 
-- Minimize re-exports
+- Minimize re-exports, prefer clean logical structure that is reflected in code organization as well
 - use proper variable names - even traditional i, x, c can become index, value, count
-
-## Modifications
-
 - Keep SOLID principles in mind when adding or modifying code
 - For hot paths we want Data-oriented Design (DOD)
-- Make sure changes are minimal and reuse as much existent primitives as possible (YAGNI)
 - For tests we target behavioural and numerical equivalence - no bit-for-bit exactness
 
 ## Code layout: blank lines around constructs (MANDATORY)
 
-This rule is mandatory for all code you write or modify, in every language. It overrides any default tendency toward
-compact code. A violation is a defect, just like a failing test.
+This rule is mandatory for all new code you write, in every language. It overrides any default tendency toward compact
+code. A violation is a defect, just like a failing test.
 
 The goal: control flow must be visible at a glance. A construct is always set apart by blank lines. Elsewhere, a blank
 line is optional and marks a conceptual break.
@@ -48,9 +45,11 @@ line is optional and marks a conceptual break.
 
 - **Construct**: a statement that owns a block of statements. Examples: `if`/`else`, `match`/`switch`,
   `for`/`while`/`loop`/`do`, `try`/`catch`/`finally`, `with`/`using`, `unsafe`/`defer`/bare `{ }` blocks, nested
-  function definitions, and any statement that contains a multi-line `if`/`match` expression or a closure with a
-  statement body. All branches of one construct (`if` + `else if` + `else`, `try` + `catch` + `finally`) count as one
-  construct.
+  function definitions, and any statement that carries a multi-line `if`/`match` expression or a statement-body
+  closure inline on a statement that is not a binding. Statements binding to `var`/`const`/`let` — including
+  function or closure definitions — are straight-line code, so no blank line is required between statements that
+  are all straight-line; a construct keeps every blank line rule 1 gives it. All branches of one construct (`if` +
+  `else if` + `else`, `try` + `catch` + `finally`) count as one construct.
 - **Straight-line code**: every other statement (declarations, assignments, calls, `return`, `break`, `continue`).
   One-line conditional expressions (`a ? b : c`, `x if c else y`, comprehensions) are straight-line code.
 
@@ -81,13 +80,14 @@ line is optional and marks a conceptual break.
 
 ### Editing existing code
 
-Apply the rules to every construct you add or change, including the lines directly above and below it. Do not reformat
-untouched code elsewhere.
+Apply the rules to the code you add. In existing code, the surrounding style wins; do not re-space lines you did not
+write.
 
 ### Formatters
 
-Formatters do not enforce this rule. Insert the blank lines yourself, run the project formatter, then confirm the result
-still satisfies every rule above.
+Neovim formats each file when the user saves it; never run a formatter yourself. When `task pre` reports unformatted
+files, name them: the user formats them by saving them in Neovim. No formatter enforces this rule: insert the blank
+lines yourself, then confirm the result still satisfies every rule above.
 
 ### Examples
 

@@ -16,6 +16,7 @@
     ".clang-format".source = ../../dotfiles/lang/.clang-format;
     ".cmake-format.yaml".source = ../../dotfiles/lang/.cmake-format.yaml;
     ".config/stylua/stylua.toml".source = ../../dotfiles/lang/stylua.toml;
+    ".config/biome/biome.json".source = ../../dotfiles/lang/biome.json;
     ".bazelrc".source = ../../dotfiles/lang/.bazelrc;
     ".prettierrc".source = ../../dotfiles/lang/.prettierrc;
 
@@ -29,6 +30,10 @@
     };
     "bin" = {
       source = ../../dotfiles/misc/bin;
+      recursive = true;
+    };
+    ".local/lib/tshelpers" = {
+      source = ../../tshelpers;
       recursive = true;
     };
     "Vorlagen/slides" = {

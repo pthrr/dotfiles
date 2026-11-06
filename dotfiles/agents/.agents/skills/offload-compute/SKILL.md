@@ -138,15 +138,10 @@ Rules:
   most 30 live lines, and a short final tail. It can miss earlier lines; the
   full log is on the dashboard and at `GET /v1/runs/{run}/jobs/{job}`. Write
   important logs to a declared output file.
-- `cpu`, `memory` and `timeout` are whole numbers of at least 1. Memory is
-  GiB, timeout seconds. The defaults are 1 core, 1 GiB and 7200 s; a job
-  that uses more memory than its limit is killed.
-- Scripts run as one POSIX `/bin/sh -eu` program, not necessarily bash. The
-  image must provide `/bin/sh`; do not rely on `[[`, arrays, process
-  substitution or `pipefail`.
+- `/bin/sh` is not necessarily bash: the image must provide it; do not rely
+  on `[[`, arrays, process substitution or `pipefail`.
 - Input and output paths are literal relative names: `src`, not `./src`.
   `.`, `..` and absolute paths are refused, and there is no glob expansion.
-  A directory input includes everything beneath it, including dotfiles.
 - Job names must match `[A-Za-z0-9][A-Za-z0-9_.-]{0,127}`.
 - Symlinks are uploaded and captured as links, not followed. Declare a
   link's target too (or let it come from the image or `needs`), or it
@@ -155,6 +150,17 @@ Rules:
   job that runs as a non-root image user can read them but cannot write
   inside input directories; write outputs to new paths, or copy the tree
   first.
+
+## Nix in a job
+
+- Nix runs in the image `ghcr.io/cachix/devenv/devenv:latest`, pinned in the
+  job file by the digest it has when you write the job file (look it up as
+  Rules shows). It runs as UID 1000 and owns its Nix store. Set
+  `HOME=/home/devenv` and `NIX_REMOTE=local`, and pass
+  `--option build-users-group ''`.
+- NixOS VM tests run there without `/dev/kvm`, so QEMU falls back to TCG;
+  the image avoids virtiofsd's root-only setup. Keep the job's dropped
+  capabilities, seccomp and network restrictions.
 
 ## Packaging inputs
 
@@ -198,17 +204,9 @@ mkdir environment
 cat chunks/part-* | tar --extract --gzip --no-same-owner --file=- --directory=environment
 ```
 
-The 2026-11-03 probe repeatedly lost the connection on 512 MiB uploads;
-32 MiB chunks uploaded successfully. This is a measured workaround, not a
-new API limit or an established diagnosis of the disconnect. Packaging and
-client staging require disk space in addition to the source; a RAM-backed
-`TMPDIR` also spends memory on the staged archive. The job needs room for
-both its chunks and the extracted tree, plus its build outputs.
-
-Read-only source directories can prevent extraction in capability-free jobs,
-even with delayed directory-mode restoration. Adding owner writes to archived
-modes fixed the observed extraction failure without changing the source.
-`--no-same-owner` alone does not fix unwritable directories.
+Packaging and client staging require disk space in addition to the source; a
+RAM-backed `TMPDIR` also spends memory on the staged archive. The job needs
+room for both its chunks and the extracted tree, plus its build outputs.
 
 ## Reusing outputs
 
@@ -336,9 +334,6 @@ empty, for example when the image cannot be pulled. Common cases:
 - An unexpected cache hit: set `cache: false`, change the key, or use
   `retry`, which deletes the cached result. A job with `resume` continues
   from its latest outputs.
-
-After a failure or cancellation, `fetch` still retrieves the outputs the
-job produced.
 
 ## HTTP API
 

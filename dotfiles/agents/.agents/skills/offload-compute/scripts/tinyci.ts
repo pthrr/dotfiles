@@ -170,7 +170,7 @@ export function encodeTree(tree: Tree): string {
                     };
                 case "directory":
                     return { type: "directory", path: entry.path, mode: entry.mode };
-                case "symlink":
+                default:
                     return { type: "symlink", path: entry.path, target: entry.target };
             }
         }),
@@ -425,8 +425,15 @@ export async function submit(
 
         for (const [name, job] of Object.entries(file.jobs)) {
             const local = job.inputs.filter((input) => !isStoredInput(input));
-            const stored = await Promise.all(job.inputs.filter(isStoredInput).map((input) => storedInput(server, input)));
-            const { digest, bytes } = buildTree(base, local, store, stored.map((input) => input.tree));
+            const stored = await Promise.all(
+                job.inputs.filter(isStoredInput).map((input) => storedInput(server, input)),
+            );
+            const { digest, bytes } = buildTree(
+                base,
+                local,
+                store,
+                stored.map((input) => input.tree),
+            );
             trees.set(digest, bytes);
             reused.push(...stored);
             // A stored input is sent by its digest: the job's key follows content, not a run ID.
@@ -443,7 +450,9 @@ export async function submit(
             const gone = await server.missingBlobs(files);
 
             if (gone.length > 0) {
-                throw new Error(`input ${input}: ${gone.length} of its files are gone from the store; run the job that made them again`);
+                throw new Error(
+                    `input ${input}: ${gone.length} of its files are gone from the store; run the job that made them again`,
+                );
             }
         }
 
@@ -477,11 +486,7 @@ export async function submit(
 }
 
 /** Polls until every job of `run` has finished; it succeeded if they all did. */
-export async function wait(
-    server: Server,
-    run: string,
-    intervalMs = 5000,
-): Promise<{ run: Run; succeeded: boolean }> {
+export async function wait(server: Server, run: string, intervalMs = 5000): Promise<{ run: Run; succeeded: boolean }> {
     for (;;) {
         const current = await server.json<Run>("GET", `${runPath(run)}/summary`);
         const states = Object.values(current.jobs).map((job) => job.state);
@@ -527,9 +532,7 @@ export function runSummary(run: Run): { id: string; label: string; jobs: Record<
     return {
         id: run.id,
         label: run.label,
-        jobs: Object.fromEntries(
-            Object.entries(run.jobs).map(([name, job]) => [name, jobSummary(job)]),
-        ),
+        jobs: Object.fromEntries(Object.entries(run.jobs).map(([name, job]) => [name, jobSummary(job)])),
     };
 }
 
@@ -589,11 +592,16 @@ const maxFailureLines = 30;
 const maxSuccessLines = 8;
 /** The longest log line `follow` keeps, in characters. */
 const maxLineLength = 400;
+// biome-ignore lint/suspicious/noControlCharactersInRegex: an ANSI escape sequence starts with the ESC control character this matches.
 const ansi = /\x1b\[[0-?]*[ -/]*[@-~]/g;
 
 /** One log line without ANSI, the last carriage-return redraw, or excess length. */
 function compactLine(line: string): string {
-    const frame = line.split("\r").filter((part) => part.trim() !== "").at(-1) ?? "";
+    const frame =
+        line
+            .split("\r")
+            .filter((part) => part.trim() !== "")
+            .at(-1) ?? "";
     const plain = frame.replace(ansi, "").trimEnd();
 
     return plain.length > maxLineLength ? `${plain.slice(0, maxLineLength)}…` : plain;
@@ -628,7 +636,7 @@ export async function follow(
 ): Promise<boolean> {
     let previous: string[] = [];
     let lastState = "";
-    let printed = new Set<string>();
+    const printed = new Set<string>();
     let printedCount = 0;
     let capReported = false;
     let polled = false;
@@ -739,7 +747,9 @@ export async function fetchOutputs(
     }
 
     const entries =
-        selected.length === 0 ? tree.entries : tree.entries.filter((entry) => selected.some((path) => within(entry, path)));
+        selected.length === 0
+            ? tree.entries
+            : tree.entries.filter((entry) => selected.some((path) => within(entry, path)));
     let files = 0;
     mkdirSync(dirname(dest), { recursive: true, mode: 0o755 });
     // Claim the destination exclusively before entering cleanup handling.

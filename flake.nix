@@ -2,6 +2,9 @@
   description = "Dotfiles: dev shells, home-manager configuration and checks";
 
   inputs = {
+    # Include the nixbits submodule in this flake's source; without it Nix
+    # copies an empty directory and `import ./nixbits` fails.
+    self.submodules = true;
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -10,12 +13,13 @@
     # Was previously fetched unpinned via fetchTarball <latest.tar.gz> in the
     # home-manager imports; now a lockfile-pinned flake input.
     nix-flatpak.url = "github:gmodena/nix-flatpak";
-    # Not in nixpkgs; pinned by rev. Bump the rev here to upgrade monstar.
-    monstar.url = "github:rockorager/monstar/c41132f5570f6b6347ec15c9de5e9417d79f2f50";
-    # Git submodule. Flakes do not fetch submodule contents, so the flake
-    # consumes the repo itself; keep the pinned rev in flake.lock in sync
-    # with `git rev-parse nixbits` (task: nixbits check in task lint).
-    nixbits.url = "github:pthrr/nixbits";
+    # Not in nixpkgs. Follows this flake's nixpkgs, so it builds with this
+    # nixpkgs' Zig; `task update` moves it to its newest commit with the other
+    # inputs.
+    monstar = {
+      url = "github:rockorager/monstar";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -48,11 +52,14 @@
             packages =
               with pkgs;
               [
+                biome
                 go-task
                 pre-commit
                 nixfmt
                 nodejs
                 shellcheck
+                stylua
+                watchexec
               ]
               # The home-manager flake does not publish x86_64-darwin packages.
               ++ (nixpkgs.lib.optional (system != "x86_64-darwin") (
@@ -63,8 +70,9 @@
       );
 
       # `nix fmt` entry point. nixfmt reads stdin when given no files, so
-      # default to every .nix file under the flake root (PRJ_ROOT is set by
-      # nix fmt).
+      # default to every .nix file git tracks or would track under the flake
+      # root (PRJ_ROOT is set by nix fmt). git lists the nixbits submodule as
+      # one entry, never its files: nixbits checks its own formatting.
       formatter = eachSystem (
         pkgs: _:
         pkgs.writeShellScriptBin "format-nix" ''
@@ -77,7 +85,8 @@
             esac
           done
           if [ "''${#files[@]}" -eq 0 ]; then
-            mapfile -t files < <(find "''${PRJ_ROOT:-.}" -type f -name '*.nix')
+            cd "''${PRJ_ROOT:-.}"
+            mapfile -t files < <(git ls-files --cached --others --exclude-standard '*.nix')
           fi
           exec ${pkgs.nixfmt}/bin/nixfmt "''${flags[@]}" "''${files[@]}"
         ''
@@ -89,7 +98,18 @@
       homeConfigurations."pthrr@x86_64-linux" = home-manager.lib.homeManagerConfiguration {
         pkgs = nixpkgs.legacyPackages.x86_64-linux;
         extraSpecialArgs = { inherit inputs; };
-        modules = [ ./modules/home ];
+        modules = [
+          ./modules/home
+          # nixbits' `ts` and `tsWithEnv`: the inline TypeScript the
+          # modules run (nixbits/README.md). Built against this
+          # configuration's pkgs, so a module function rather than an inherit.
+          (
+            { pkgs, ... }:
+            {
+              _module.args.nixbitsLib = import ./nixbits { inherit pkgs; };
+            }
+          )
+        ];
       };
     };
 }

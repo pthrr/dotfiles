@@ -166,6 +166,10 @@ bindsym Control+Mod1+BackSpace exec swaymsg exit
 # Snipping tool - select area and copy to clipboard
 bindsym $mod+p exec grimshot copy area
 
+# Notifications - dismiss the newest / all
+bindsym $mod+n exec makoctl dismiss
+bindsym $mod+Shift+n exec makoctl dismiss --all
+
 # -----------------------------------------------------------------------------
 # Window Focus
 # -----------------------------------------------------------------------------
@@ -306,9 +310,8 @@ bindsym --locked XF86AudioPrev exec playerctl previous
 # 8. BAR
 # ==============================================================================
 
-bar {
-    swaybar_command waybar
-}
+# waybar runs as a systemd user service (modules/home/waybar.nix) so it
+# restarts after a crash; a bar block here would start a second one.
 
 # ==============================================================================
 # 9. SYSTEM INCLUDES
@@ -316,12 +319,12 @@ bar {
 
 include /etc/sway/config-vars.d/*
 
-# Include system configs (except swayidle which we define above, and bar which we define above)
+# Include system configs (except swayidle which we define above, and bar which runs as a user service)
 include /etc/sway/config.d/10-*.conf
 include /usr/share/sway/config.d/50-*.conf
 include /usr/share/sway/config.d/60-*.conf
 include /usr/share/sway/config.d/65-*.conf
-# Skip 90-bar.conf (we define waybar above) and 90-swayidle.conf (we define swayidle above)
+# Skip 90-bar.conf (waybar runs as a user service) and 90-swayidle.conf (we define swayidle above)
 include /usr/share/sway/config.d/95-xdg-desktop-autostart.conf
 include /usr/share/sway/config.d/95-xdg-user-dirs.conf
 

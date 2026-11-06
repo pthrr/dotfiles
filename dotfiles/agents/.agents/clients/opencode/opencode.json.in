@@ -1,0 +1,5 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "plugin": ["@AGENTS_DIR@/clients/opencode/plugin.ts"],
+  "lsp": true
+}

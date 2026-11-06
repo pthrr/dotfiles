@@ -9,10 +9,10 @@
 # Profiles are matched top-to-bottom. First matching profile is applied.
 # A profile matches if ALL specified outputs are connected.
 
-# Docked with external monitor (24" Acer on the left)
+# Docked with external monitor (24" Acer above the laptop, which sits centered below it)
 profile docked {
-    output "DP-2" mode 1920x1080@60Hz position 0,0 scale 1.0
-    output "eDP-1" mode 1920x1080@60Hz position 1920,0 scale 1.4
+    output "DP-2" mode 1920x1080@60Hz position 0,0 scale 1.1
+    output "eDP-1" mode 1920x1080@60Hz position 187,981 scale 1.4
 }
 
 # Laptop screen only

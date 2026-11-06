@@ -5,13 +5,8 @@
 }:
 
 let
-  xyceParallelNoCheck = pkgs.xyce-parallel.override {
-    enableDocs = false;
-    enableTests = false;
-  };
-
-  # Not in nixpkgs; consumed from upstream's own flake package output. The
-  # rev lives in the flake.nix input — bump it there to upgrade monstar.
+  # Not in nixpkgs; consumed from upstream's own flake package output.
+  # `task update` bumps it with the other flake inputs.
   monstar = inputs.monstar.packages.${pkgs.stdenv.hostPlatform.system}.default;
 in
 {
@@ -24,7 +19,7 @@ in
       usbutils
       pciutils
       openssl
-      unrar
+      unar
       unzip
       p7zip
       wget
@@ -40,12 +35,14 @@ in
         vifm
         zellij
         tree
+        viddy
         htop
         fzf
         ripgrep
         fd
         calcurse
         meli
+        gnuplot
       ]
     ++
 
@@ -102,6 +99,9 @@ in
         # the .clang-format and .clang-tidy wired up below.
         clang-tools
         rustup
+        # Real binary over rustup's proxy of the same name: the proxy recurses
+        # into itself when the active toolchain lacks the rust-analyzer component.
+        (lib.hiPrio rust-analyzer)
         (agda.withPackages (p: [
           p.cubical
           p.standard-library
@@ -113,11 +113,8 @@ in
       # JavaScript/TypeScript
       [
         # Shared harness hooks run TypeScript directly with Node.
-        nodejs
+        nodejs-slim
         pnpm
-        # bun
-        eslint
-        vscode-langservers-extracted
         typescript-language-server
         bash-language-server
         tree-sitter
@@ -174,7 +171,6 @@ in
         sccache
         cargo-sweep
         cargo-cache
-        # redis
         gdbgui
         rr
         hotspot
@@ -195,7 +191,7 @@ in
         # pcb2gcode
         # sby
         nextpnrWithGui
-        xyceParallelNoCheck
+        xyce-parallel
         minicom
         picocom
       ]
@@ -203,7 +199,7 @@ in
 
       # WebAssembly
       #   [
-      #     # emscripten
+      #     emscripten
       #     wasmtime
       #     wabt
       #   ]
@@ -232,6 +228,7 @@ in
         lua-language-server
         cmake-format
         prettier
+        biome
       ]
     ++
 
@@ -299,7 +296,7 @@ in
       # Other
       [
         go-task
-        # wineWow64Packages.waylandFull
-        # ripes # temporarily disabled due to cmake build issue
+        wineWow64Packages.waylandFull
+        ripes
       ];
 }

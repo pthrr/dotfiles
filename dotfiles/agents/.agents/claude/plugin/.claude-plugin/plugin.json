@@ -1,6 +1,0 @@
-{
-  "$schema": "https://anthropic.com/claude-code/plugin.schema.json",
-  "name": "agent-hooks",
-  "version": "1.0.0",
-  "description": "One approved plan per change: PLAN.md shown in full, the user's ok, only listed files, plan deleted when done. Plus path rules. Shared with Codex and OpenCode through ~/.agents/hooks/adapter.ts."
-}

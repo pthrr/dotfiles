@@ -1,6 +1,6 @@
 ---
 name: security-audit
-description: Audit the security of infrastructure (hosts, networks, clusters and the services on them) by published methods - NIST SP 800-115 for the process, OSSTMM 3 for the attack surface, MITRE ATT&CK for attack paths, CVSS v4.0 and NIST SP 800-30 for severity and risk. Compares what the owner declares with what the system does, from every direction an attacker can reach it, and reports evidence-backed findings and what was not tested. Read-only by default. Use when asked to audit, assess or review the security of a server, network, firewall or cluster. Not for application code; use security-review for that.
+description: Audit the security of infrastructure (hosts, networks, clusters and the services on them) by published methods - NIST SP 800-115 for the process, OSSTMM 3 for the attack surface, MITRE ATT&CK for attack paths, CVSS v4.0 and NIST SP 800-30 for severity and risk. Compares what the owner declares with what the system does, from every direction an attacker can reach it, and reports evidence-backed findings and what was not tested. Read-only by default. Use when asked to audit, assess or review the security of a server, network, firewall or cluster. Not for application code.
 ---
 
 # Security audit of infrastructure

@@ -2,8 +2,18 @@ import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
 import { randomBytes } from "node:crypto";
 import {
-    chmodSync, existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync,
-    readlinkSync, rmSync, statSync, symlinkSync, utimesSync, writeFileSync,
+    chmodSync,
+    existsSync,
+    mkdirSync,
+    mkdtempSync,
+    readFileSync,
+    readdirSync,
+    readlinkSync,
+    rmSync,
+    statSync,
+    symlinkSync,
+    utimesSync,
+    writeFileSync,
 } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -81,11 +91,32 @@ test("a failed archiver removes its own partial destination", (context) => {
     const root = mkdtempSync(join(tmpdir(), "offload-pack-"));
     context.after(() => rmSync(root, { recursive: true, force: true }));
     mkdirSync(join(root, "source"));
-    const result = spawnSync(process.execPath, [
-        "--experimental-strip-types", fileURLToPath(new URL("pack.ts", import.meta.url)),
-        join(root, "source"), join(root, "chunks"),
-    ], { env: { ...process.env, PATH: "/nonexistent" }, encoding: "utf8" });
+    const result = spawnSync(
+        process.execPath,
+        [
+            "--experimental-strip-types",
+            fileURLToPath(new URL("pack.ts", import.meta.url)),
+            join(root, "source"),
+            join(root, "chunks"),
+        ],
+        { env: { ...process.env, PATH: "/nonexistent" }, encoding: "utf8" },
+    );
     assert.equal(result.status, 1, result.stderr);
     assert.match(result.stderr, /ENOENT/);
     assert.equal(existsSync(join(root, "chunks")), false);
+});
+
+test("runs when invoked through a symlink, as home-manager installs it", (context) => {
+    const root = mkdtempSync(join(tmpdir(), "offload-pack-"));
+    context.after(() => rmSync(root, { recursive: true, force: true }));
+    mkdirSync(join(root, "source"));
+    writeFileSync(join(root, "source", "file"), "content");
+    symlinkSync(fileURLToPath(new URL("pack.ts", import.meta.url)), join(root, "pack.ts"));
+    const result = spawnSync(
+        process.execPath,
+        ["--experimental-strip-types", join(root, "pack.ts"), join(root, "source"), join(root, "chunks")],
+        { encoding: "utf8" },
+    );
+    assert.equal(result.status, 0, result.stderr);
+    assert.deepEqual(readdirSync(join(root, "chunks")), ["part-000000"]);
 });

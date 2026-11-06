@@ -107,15 +107,17 @@ chk "bare opencode resumes a chat of this directory" "opencode [-s ses_newest]" 
 
 chk "bare opencode with args passes through" "opencode [--help]" "$(run 'opencode --help')"
 
-echo "claude keys the project at the git root"
-# A repo fixture: root and subdirectory ship one project, so a chat authored at
-# the root is continued from the subdir as long as the slug recipe sees the
-# same root. git init is real, because rev-parse must answer.
+echo "claude keys the project at the directory it starts in"
+# A repo fixture: Claude keeps chats per start directory, not per git root, so
+# a chat authored at the root must not make a subdirectory continue.
 git -C "$work/gitproj" init -q 2>/dev/null
 root_chat "$work/gitproj" root
-chk "claude from a subdirectory continues it" "claude [--continue]" \
+chk "claude from a subdirectory ignores the root's chats" "claude []" \
     "$(cd "$work/gitproj" && run '(cd src && claude)')"
-rm -rf "$(slug_points_at "$work/gitproj")"
+root_chat "$work/gitproj/src" sub
+chk "claude from a subdirectory continues its own chat" "claude [--continue]" \
+    "$(cd "$work/gitproj" && run '(cd src && claude)')"
+rm -rf "$(slug_points_at "$work/gitproj")" "$(slug_points_at "$work/gitproj/src")"
 
 printf '%d passed, %d failed\n' "$pass" "$fail"
 [ "$fail" -eq 0 ]

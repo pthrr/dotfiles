@@ -132,16 +132,14 @@ function readonlyCommand([name, ...args]: string[]): boolean {
     // find is read-only until told otherwise: every action that writes or
     // executes is an explicit primary. Gated on flags, like sort -o above.
     if (name === "find")
-        return !args.some((arg) =>
-            /^-(delete|exec|execdir|ok|okdir|fls|fprint|fprintf|fprint0)$/.test(arg),
-        );
+        return !args.some((arg) => /^-(delete|exec|execdir|ok|okdir|fls|fprint|fprintf|fprint0)$/.test(arg));
     if (name === "sed") {
         if (args[0] !== "-n" || !/^\d+(?:,[\d$]+)?p$/.test(args[1] ?? "")) return false;
         // sed accepts options after the script and filenames. Before "--",
         // allow only literal paths: glob/brace expansion can introduce options.
         for (const arg of args.slice(2)) {
             if (arg === "--") return true;
-            if (arg.startsWith("-") || /[*?\[\]{}]/.test(arg)) return false;
+            if (arg.startsWith("-") || /[*?[\]{}]/.test(arg)) return false;
         }
         return true;
     }
@@ -165,20 +163,15 @@ export function expandHome(path: string): string {
     return path === "~" ? homedir() : path.startsWith("~/") ? homedir() + path.slice(1) : path;
 }
 
-export function shellEffect(
-    command: string,
-    cwd: string,
-): { readonly: boolean; directories: string[]; reads: string[] } {
+export function shellEffect(command: string, cwd: string): { readonly: boolean; reads: string[] } {
     const commands = shellCommands(command);
-    if (!commands) return { readonly: false, directories: [cwd], reads: [] };
+    if (!commands) return { readonly: false, reads: [] };
     let directory = cwd,
         readonly = true;
-    const directories = new Set([cwd]),
-        reads: string[] = [];
+    const reads: string[] = [];
     for (const words of commands) {
         if (words[0] === "cd" && words.length === 2 && !words[1].startsWith("-")) {
             directory = resolve(directory, expandHome(words[1]));
-            directories.add(directory);
             continue;
         }
         const safe = readonlyCommand(words);
@@ -189,5 +182,5 @@ export function shellEffect(
             }
         }
     }
-    return { readonly, directories: [...directories].sort(), reads };
+    return { readonly, reads };
 }

@@ -2,8 +2,9 @@
 import { spawn } from "node:child_process";
 import { closeSync, mkdirSync, openSync, realpathSync, rmSync, statSync, writeFileSync } from "node:fs";
 import { basename, dirname, join, resolve, sep } from "node:path";
-import { fileURLToPath } from "node:url";
 
+// 512 MiB uploads repeatedly lost the connection in the 2026-11-03 probe, while
+// 32 MiB parts went through: a measured workaround, not a protocol limit.
 export const chunkBytes = 32 * 1024 * 1024;
 
 /** Creates a new destination; existing directories and the source are never changed. */
@@ -26,14 +27,32 @@ export async function packInputs(sourcePath: string, destinationPath: string) {
     let partSize = 0;
     let chunks = 0;
     let bytes = 0;
-    const archive = spawn("tar", [
-        "--create", "--sort=name", "--mtime=@0", "--owner=0", "--group=0",
-        "--numeric-owner", "--format=gnu", "--mode=u+w",
-        "--use-compress-program=gzip -1 -n", "--file=-", "--directory", source, "--", ".",
-    ], {
-        stdio: ["ignore", "pipe", "pipe"],
-        env: { ...process.env, LC_ALL: "C", TZ: "UTC", TAR_OPTIONS: "", GZIP: "" },
-    });
+    // --mode=u+w: read-only source directories made extraction fail in jobs
+    // without capabilities, even with delayed directory-mode restoration, and
+    // --no-same-owner alone did not help.
+    const archive = spawn(
+        "tar",
+        [
+            "--create",
+            "--sort=name",
+            "--mtime=@0",
+            "--owner=0",
+            "--group=0",
+            "--numeric-owner",
+            "--format=gnu",
+            "--mode=u+w",
+            "--use-compress-program=gzip -1 -n",
+            "--file=-",
+            "--directory",
+            source,
+            "--",
+            ".",
+        ],
+        {
+            stdio: ["ignore", "pipe", "pipe"],
+            env: { ...process.env, LC_ALL: "C", TZ: "UTC", TAR_OPTIONS: "", GZIP: "" },
+        },
+    );
     let failure: Error | undefined;
     let diagnostics = "";
 
@@ -101,7 +120,7 @@ export async function packInputs(sourcePath: string, destinationPath: string) {
     }
 }
 
-if (fileURLToPath(import.meta.url) === resolve(process.argv[1] ?? "")) {
+if (import.meta.main) {
     try {
         if (process.argv.length !== 4) {
             throw new Error("usage: pack.ts <source-directory> <new-chunks-directory>");

@@ -1,13 +1,11 @@
 {
   config,
-  inputs,
+  nixbitsLib,
   pkgs,
   ...
 }:
 
 let
-  nixbitsLib = inputs.nixbits.lib.mkNodeLib pkgs;
-
   s3Host = "nwv-srv";
   s3Port = "8333";
   socketPath = "%t/sccache/sccache.sock";

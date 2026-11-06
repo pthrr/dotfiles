@@ -13,9 +13,9 @@ commits on its own branch.
 The lead then applies the branches to the main checkout as uncommitted
 changes, so the result looks like one agent's edits and the user commits.
 
-Claude Code only. Its sub-agents run in the lead's session, so the user's one
-`ok` covers them. OpenCode sub-agents are sessions of their own without an
-`ok`; Codex is unverified. Elsewhere, do the units one after another.
+It needs sub-agents that share your approval, so that the user's one `ok`
+covers them (`~/.agents/AGENTS.md`, Approval gate). Without them, do the units
+one after another.
 
 ## When not to use it
 
@@ -34,8 +34,7 @@ commands they run share whatever runs them: locally, this machine's cores and
 memory, with a cold build in every worktree; offloaded, TinyCI's four job
 slots, each at most 2 CPU and 8 GiB, with the rest queued. Workers also edit
 while other workers' commands run. Start at most four workers unless the user
-asks for more; every tool call of every worker, reads included, also waits its
-turn on the session's one hook lock.
+asks for more.
 
 ## 1. Plan
 
@@ -47,18 +46,15 @@ with the usual sections, plus:
   names its branch `par/<unit>`, worktree `.worktrees/<unit>`, and its run
   label if it offloads.
 - `## Changes`: every file any unit changes, relative to the main checkout,
-  and `.offload-jobs.json`, so any worker may offload. A write inside a
-  worktree is judged as the same
-  path in the main checkout, so a file missing here is denied in every
-  worktree.
+  and `.offload-jobs.json`, so any worker may offload.
 
 Units must have disjoint files. The main checkout must have no uncommitted
 changes in them: worktrees start from `HEAD`, and their diffs are applied on
-top. Show the plan and wait for `ok`.
+top. If it has some, ask the user to commit them first. Show the plan and
+wait for `ok`.
 
 The `ok` covers every step below, and it is the user's request to start the
-sub-agents; ask nothing else until the workers have reported. Any other
-message from the user while workers run pauses all of them until a new `ok`.
+sub-agents; ask nothing else until the workers have reported.
 
 ## 2. Prepare
 
@@ -92,9 +88,7 @@ read it, in particular the ## Workers line for <unit>.
 - Work only in <repo>/.worktrees/<unit>, on branch par/<unit>, and change
   only these files: <files>. Use absolute paths, and `git -C <worktree>`
   instead of `cd`.
-- Before editing, read ~/.claude/CLAUDE.md and every file in ~/.agents/rules/
-  whose `when:` globs match your files, and follow them. The hooks show those
-  rules only to the first agent of the session that writes a matching file.
+- Before editing, read ~/.agents/AGENTS.md and follow it.
 - Decide where your builds and tests run. Run them locally when they are
   quick and light. Offload them through
   ~/.agents/skills/offload-compute/SKILL.md when they run for many minutes,
@@ -106,12 +100,14 @@ read it, in particular the ## Workers line for <unit>.
   foreground, not `follow` in the background. Give `wait` the longest shell
   timeout; if the time limit cuts it off, run it again, since it only polls
   the server. If the repo builds and tests through `task`, the job runs the
-  same `task` commands when the image provides `task`.
+  same `task` commands. Where is your call: `nix develop -c task <name>` in
+  offload-compute's Nix image gets the versions the flake pins, but starts
+  from a cold Nix store unless a setup job provides one; an image that
+  provides `task` starts faster but brings its own versions.
   <Shared setup, if any: locally at <path>, or tree:<digest> as an input for
   ...>
 - You are done when: <check>.
-- If the write gate denies an edit, stop and report it. Never make that edit
-  through the shell instead.
+- If an edit is denied, stop and report it. Never make that edit another way.
 - Commit only your files on par/<unit>: `git -C <worktree> add <files>`,
   then `git -C <worktree> commit`.
 - Report your branch, commit, where your checks ran (with TinyCI run IDs and

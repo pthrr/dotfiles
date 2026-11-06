@@ -22,6 +22,7 @@ in
     ./vcs.nix
     ./editor.nix
     ./battery.nix
+    ./waybar.nix
     ./sccache.nix
     ./activation.nix
     ./flatpak.nix
@@ -60,6 +61,10 @@ in
   };
 
   nixpkgs.config.allowUnfree = true;
+  # nixpkgs marks qutebrowser-3.7.0 insecure ("Still accepts eMudhra TLS
+  # certs"); it stays installed by choice. Naming the exact version lets the
+  # allowance lapse once nixpkgs ships another one.
+  nixpkgs.config.permittedInsecurePackages = [ "qutebrowser-3.7.0" ];
 
   programs.home-manager.enable = true;
 

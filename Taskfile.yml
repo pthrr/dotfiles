@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 
 includes:
   nixbits:
@@ -7,20 +7,14 @@ includes:
 
 tasks:
   default:
-    desc: List available tasks
+    desc: List all tasks
+    silent: true
     cmds:
-      - task --list
-
-  fmt:
-    desc: Format the root Nix flake and home modules
-    cmds:
-      - nixfmt flake.nix modules/home/*.nix
+      - task --list-all
 
   lint:
-    desc: Check Nix and shell syntax
+    desc: Check shell syntax, the Nix parse and the TypeScript lint
     cmds:
-      - nixfmt --check flake.nix modules/home/*.nix
-      - nix flake check --no-build
       - find . -maxdepth 1 -type f -name '*.sh' -exec bash -n {} +
       - find system dotfiles -type f -name '*.sh' -exec bash -n {} +
       - find system dotfiles -type f -name '*bash*' -exec bash -n {} +
@@ -29,31 +23,67 @@ tasks:
       - find system dotfiles -type f -name '*bash*' -exec shellcheck --severity=warning {} +
       - find dotfiles/misc/bin -type f -exec shellcheck --severity=warning {} +
       - nix-instantiate --parse modules/home/*.nix >/dev/null
+      - find dotfiles -type f -name '*.ts' -exec biome lint --error-on-warnings --config-path dotfiles/lang {} +
 
   home:
     desc: Apply the home-manager configuration
     cmds:
       - home-manager switch --flake .#pthrr@x86_64-linux
 
-  test:
-    desc: Run shared agent hook tests
+  update:
+    desc: Bump the nixbits submodule and every flake input to their newest versions
     cmds:
-      - bash dotfiles/agents/.agents/hooks/write-gate.test.sh
-      - bash dotfiles/bash/bashrc.test.sh
-      - node --experimental-strip-types --test dotfiles/agents/.agents/hooks/adapter.test.ts
-      - node --experimental-strip-types --test dotfiles/agents/.agents/opencode/plugin.test.ts
-      - node --experimental-strip-types --test dotfiles/agents/.agents/skills/offload-compute/scripts/tinyci.test.ts
-      - node --experimental-strip-types --test dotfiles/agents/.agents/skills/offload-compute/scripts/pack.test.ts
+      - git submodule update --remote nixbits
+      - nix flake update
 
-  precommit:
-    desc: Run fast checks before a commit
+  test:
+    desc: Rerun the pre tests on every change
+    cmds:
+      - watchexec --restart --watch dotfiles/agents --watch dotfiles/bash -- task test:pre
+
+  test:pre:
+    desc: Run the tests that fit pre-commit
+    cmds:
+      - bash dotfiles/agents/.agents/hooks/gate/write-gate.test.sh
+      - bash dotfiles/bash/bashrc.test.sh
+      # One run, so node runs the files in parallel.
+      - >-
+        node --experimental-strip-types --test
+        dotfiles/agents/.agents/hooks/rules/rules.test.ts
+        dotfiles/agents/.agents/clients/claude/bridge.test.ts
+        dotfiles/agents/.agents/skills/offload-compute/scripts/tinyci.test.ts
+        dotfiles/agents/.agents/skills/offload-compute/scripts/pack.test.ts
+
+  test:ci:
+    desc: Run the approval gate's consent scenarios and the OpenCode plugin suite
+    cmds:
+      # Both spawn the gate for every event, too slow for pre; one run, in parallel.
+      - >-
+        node --experimental-strip-types --test
+        dotfiles/agents/.agents/hooks/gate/gate.test.ts
+        dotfiles/agents/.agents/clients/opencode/plugin.test.ts
+
+  pre:
+    desc: Lint, run the pre tests and check formatting (pre-commit)
     cmds:
       - task: lint
-      - task: nixbits:ci
+      - task: test:pre
+      # The format checks run last, so an unformatted file does not hide the
+      # lint and test results. Neovim formats each file on save; they catch
+      # files that never went through it, such as an agent's edits.
+      - nix fmt -- --check
+      # dotfiles/lang/biome.json is the source of ~/.config/biome/biome.json.
+      - find dotfiles -type f -name '*.ts' -exec biome format --config-path dotfiles/lang {} +
+      # Neovim formats JSON and YAML with Biome too. Biome runs from its config's directory:
+      # run from anywhere else, it refuses a file next to that config.
+      - git ls-files -z '*.json' '*.jsonc' '*.yaml' '*.yml' | sed -z "s|^|$PWD/|" | (cd dotfiles/lang && xargs -0 biome format --config-path .)
+      - stylua --check --config-path dotfiles/lang/stylua.toml dotfiles/nvim/.config/nvim/init.lua
 
   ci:
-    desc: Run root and nixbits checks
+    desc: Run pre, the gate scenarios, the flake and nixbits checks and a build of the home configuration
     cmds:
-      - task: lint
-      - task: test
+      - task: pre
+      - task: test:ci
+      - nix flake check --no-build
       - task: nixbits:ci
+      - nix build '.#homeConfigurations."pthrr@x86_64-linux".activationPackage' --no-link

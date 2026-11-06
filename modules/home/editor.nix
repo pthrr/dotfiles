@@ -15,7 +15,9 @@
     withNodeJs = false;
     plugins = with pkgs.vimPlugins; [
       nvim-treesitter.withAllGrammars
+      # Neogit (installed at runtime by mini.deps) requires plenary.
       plenary-nvim
+      # Neogit detects it and uses it for its selection menus.
       telescope-nvim
     ];
   };

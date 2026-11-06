@@ -1,0 +1,13 @@
+{
+  "alwaysThinkingEnabled": true,
+  "attribution": {
+    "commit": "",
+    "pr": ""
+  },
+  "idleCompaction": false,
+  "statusLine": {
+    "type": "command",
+    "command": "~/.agents/clients/claude/statusline.sh",
+    "padding": 0
+  }
+}

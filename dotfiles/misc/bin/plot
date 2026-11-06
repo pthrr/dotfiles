@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+# Plot CSV or JSON from stdin as an image in the terminal (kitty graphics protocol).
+# JSON is one array of flat objects or one flat object per line; it becomes CSV
+# with the first object's keys as the header.
+# The first row names the series, every column after the first is one series.
+# A numeric column 1 is the x axis of a line plot; a text column 1 labels the
+# bars of a bar chart, one group of bars per row.
+# gnuplot reads stdin only once, so the data goes into a datablock first.
+set -euo pipefail
+
+data=$(cat)
+json_start='^[[:space:]]*[[{]'
+
+# Every object gives its values in the header's key order, so reordered keys still line up.
+if [[ $data =~ $json_start ]]; then
+    data=$(jq -rs '
+        if length == 1 and (.[0] | type) == "array" then .[0] else . end
+        | (.[0] | keys_unsorted) as $keys
+        | ($keys | join(",")), (.[] | [.[$keys[]]] | map(tostring) | join(","))' <<< "$data")
+fi
+
+first_x=$(awk -F, '!/^#/ && ++rows == 2 { print $1; exit }' <<< "$data")
+
+if [[ $first_x =~ ^[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?$ ]]; then
+    plot_command='plot for [series=2:*] $data using 1:series with lines'
+else
+    plot_command='set style data histograms
+set style fill solid
+set yrange [0:*]
+set key outside
+set xtics rotate by -45
+plot for [series=2:*] $data using series:xticlabels(1)'
+fi
+
+{
+    echo '$data << EOD'
+    printf '%s\n' "$data"
+    echo 'EOD'
+    echo 'set datafile separator comma'
+    echo 'set key autotitle columnhead'
+    echo 'set terminal kittycairo noenhanced scroll'
+    echo "$plot_command"
+} | gnuplot

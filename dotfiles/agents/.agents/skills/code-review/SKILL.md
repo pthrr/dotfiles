@@ -3,9 +3,9 @@ name: code-review
 description: "Review the changes since a fixed point (commit, branch, tag, or merge-base) along two axes: Standards (does the code follow this repo's documented coding standards?) and Spec (does the code match what the originating issue/spec asked for?). Runs both reviews in parallel sub-agents and reports them side by side. Use when the user wants to review a branch, a PR, work-in-progress changes, or asks to \"review since X\"."
 ---
 
-Adapted from [Matt Pocock's code-review skill](https://github.com/mattpocock/skills/blob/main/skills/engineering/code-review/SKILL.md). See [LICENSE.txt](LICENSE.txt). The local adaptation accepts the original request or a relevant approved `PLAN.md` as the specification, without requiring an issue-tracker setup skill.
+Adapted from [Matt Pocock's code-review skill](https://github.com/mattpocock/skills/blob/main/skills/engineering/code-review/SKILL.md). See [LICENSE.txt](LICENSE.txt). The local adaptation accepts the original request or a relevant approved `PLAN.md` as the specification, without requiring an issue-tracker setup skill, and adds the coding rules of the user's global instructions to the standards sources. It also reviews uncommitted changes, because agents here never commit.
 
-Two-axis review of the diff between `HEAD` and a fixed point the user supplies:
+Two-axis review of the changes since a fixed point the user supplies, committed or not:
 
 - **Standards**: does the code conform to this repo's documented coding standards?
 - **Spec**: does the code faithfully implement the originating issue / spec?
@@ -18,9 +18,9 @@ Both axes run as **parallel sub-agents** so they don't pollute each other's cont
 
 Whatever the user said is the fixed point (a commit SHA, branch name, tag, `main`, `HEAD~5`, etc.). If they didn't specify one, ask for it.
 
-Capture the diff command once: `git diff <fixed-point>...HEAD` (three-dot, so the comparison is against the merge-base). Also note the list of commits via `git log <fixed-point>..HEAD --oneline`.
+Capture the two diff commands once: `git diff <fixed-point>...HEAD` (three-dot, so the comparison is against the merge-base) for the commits since the fixed point, and `git diff HEAD` for the uncommitted changes on top, staged or not. List the untracked files with `git ls-files --others --exclude-standard`: they are new files of the change, read in full. Also note the list of commits via `git log <fixed-point>..HEAD --oneline`, which is empty when nothing is committed yet.
 
-Before going further, confirm the fixed point resolves (`git rev-parse <fixed-point>`) and the diff is non-empty. A bad ref or empty diff should fail here, not inside two parallel sub-agents.
+Before going further, confirm the fixed point resolves (`git rev-parse <fixed-point>`) and the two diffs and the untracked list are not all empty. A bad ref or empty change should fail here, not inside two parallel sub-agents.
 
 ### 2. Identify the spec source
 
@@ -34,7 +34,7 @@ Look for the originating spec, in this order:
 
 ### 3. Identify the standards sources
 
-Search the repo for every file that documents how code should be written. When `CODING_STANDARDS.md` or `CONTRIBUTING.md` exists, it must be on the list.
+Search the repo for every file that documents how code should be written. When `CODING_STANDARDS.md` or `CONTRIBUTING.md` exists, it must be on the list. So are the coding rules your global instructions apply to the changed files.
 
 On top of whatever the repo documents, the Standards axis always carries the **smell baseline** below: a fixed set of Fowler code smells (_Refactoring_, ch.3) that applies even when a repo documents nothing. Two rules bind it:
 
@@ -62,13 +62,13 @@ Issue both sub-agent calls together, in the foreground, and aggregate the report
 
 **Standards sub-agent prompt** should include:
 
-- The full diff command and commit list.
+- Both diff commands, the untracked files and the commit list.
 - The list of standards-source files you found in step 3, **plus the smell baseline from step 3** pasted in full (the sub-agent has no other access to it).
 - The brief: "Report, per file/hunk where relevant, (a) every place the diff violates a documented standard: cite the standard (file + the rule); and (b) any baseline smell you spot: name it and quote the hunk. Distinguish hard violations from judgement calls: documented-standard breaches can be hard, but baseline smells are always judgement calls, and a documented repo standard overrides the baseline. Skip anything tooling enforces. Under 400 words."
 
 **Spec sub-agent prompt** should include:
 
-- The diff command and commit list.
+- Both diff commands, the untracked files and the commit list.
 - The path or fetched contents of the spec.
 - The brief: "Report: (a) requirements the spec asked for that are missing or partial; (b) behaviour in the diff that wasn't asked for (scope creep); (c) requirements that look implemented but where the implementation looks wrong. Quote the spec line for each finding. Under 400 words."
 

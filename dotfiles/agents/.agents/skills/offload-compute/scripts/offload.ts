@@ -1,15 +1,6 @@
 /** The command line of the offload-compute skill; see SKILL.md next to it. */
 import { parseArgs } from "node:util";
-import {
-    fetchOutputs,
-    follow,
-    jobSummary,
-    runSummary,
-    Server,
-    submit,
-    wait,
-    waitForJob,
-} from "./tinyci.ts";
+import { fetchOutputs, follow, jobSummary, runSummary, Server, submit, wait, waitForJob } from "./tinyci.ts";
 
 const usage = `usage: offload.ts <command> ...
   submit <jobs.json> [--label text]     check the run, upload the inputs, start it

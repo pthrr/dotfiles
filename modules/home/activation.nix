@@ -1,16 +1,11 @@
 {
   config,
-  inputs,
   lib,
+  nixbitsLib,
   pkgs,
   ...
 }:
 
-let
-  # nixbits is a git submodule consumed as a path flake input (see
-  # flake.nix); mkNodeLib hands back the plain library from default.nix.
-  nixbitsLib = inputs.nixbits.lib.mkNodeLib pkgs;
-in
 {
   # Unmount ~/Drive (sshfs) across suspend so a dead SSH tunnel can't
   # leave FUSE I/O stuck in D-state and block the kernel's freeze pass.
@@ -57,7 +52,7 @@ in
   # alone — the hooks arrive through the agent-hooks plugin instead.
   home.activation.seedClaudeSettings =
     let
-      seed = ../../dotfiles/agents/.agents/claude/settings.seed.json;
+      seed = ../../dotfiles/agents/.agents/clients/claude/settings.seed.json;
       dest = "${config.home.homeDirectory}/.claude/settings.json";
     in
     # After linkGeneration, not writeBoundary: linkGeneration is what removes the
@@ -138,5 +133,17 @@ in
       }
     ''
   );
+
+  # Keep rustup's default toolchain on the newest stable with every component: the default profile
+  # (rustc, cargo, rust-std, rust-docs, rustfmt, clippy), rust-src and rust-analyzer for the editor,
+  # llvm-tools for coverage and binutils. Projects pin their own toolchains through their flakes or
+  # rust-toolchain.toml; this one serves everything else. rustup needs the network, so a failure
+  # only warns instead of aborting the switch.
+  home.activation.rustupStable = lib.hm.dag.entryAfter [ "installPackages" ] ''
+    ${pkgs.rustup}/bin/rustup toolchain install stable --profile default \
+      --component rust-src --component rust-analyzer --component llvm-tools \
+      && ${pkgs.rustup}/bin/rustup default stable \
+      || echo "warning: could not install or update rustup's stable toolchain" >&2
+  '';
 
 }
