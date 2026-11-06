@@ -31,6 +31,10 @@
       source = ../../dotfiles/misc/bin;
       recursive = true;
     };
+    ".local/lib/tshelpers" = {
+      source = ../../tshelpers;
+      recursive = true;
+    };
     "Vorlagen/slides" = {
       source = ../../dotfiles/sent/Vorlagen/slides;
       recursive = true;

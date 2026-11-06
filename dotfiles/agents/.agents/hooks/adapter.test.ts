@@ -308,6 +308,11 @@ for (const client of ["claude", "codex", "opencode"] as const) {
         assert.equal(h.hook("PostToolUse", 0, event).stdout, "");
     });
 
+    scenario("rules read a when value wrapped onto indented lines", (h) => {
+        const event = { tool_name: "Write", tool_input: { file_path: join(h.root, "src/main.zig") } };
+        assert.match(h.hook("PostToolUse", 0, event).stdout, /Globs continue on indented lines/);
+    });
+
     scenario("malformed events fail closed", (h) => {
         h.hook("PreToolUse", 2, { tool_name: "apply_patch", tool_input: { command: "unparseable" } });
         h.hook("PreToolUse", 2, { tool_name: "Bash", tool_input: {} });
@@ -540,6 +545,11 @@ function harness(client: "claude" | "codex" | "opencode") {
     writeFileSync(
         join(root, "rules/rust.md"),
         '---\nwhen: "*.rs"\n---\n\n# Rust\n\n- `pub(crate)` shares code; it does not expose a boundary.\n',
+    );
+    // Wrapped the way prettier wraps a value longer than its print width.
+    writeFileSync(
+        join(root, "rules/code.md"),
+        '---\nwhen:\n    "*.c *.h\n    *.zig"\n---\n\n# Code\n\n- Globs continue on indented lines.\n',
     );
     const planFile = join(root, "PLAN.md");
     function writePlan(text = plan) {

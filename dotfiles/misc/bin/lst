@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+# Prints the folder tree without what .gitignore hides, unpaged, so `viddy -n 2 lst` can redraw it.
+exec tree -a -C -L 6 -I '.git|.jj' --gitignore "$@"

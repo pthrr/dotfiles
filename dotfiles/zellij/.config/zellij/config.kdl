@@ -41,6 +41,21 @@ keybinds clear-defaults=true {
         bind "k" "Up" { MoveFocus "Up"; SwitchToMode "Locked"; }
         bind "l" "Right" { MoveFocus "Right"; SwitchToMode "Locked"; }
         bind "x" { CloseFocus; SwitchToMode "Locked"; }
+        bind "&" { CloseTab; SwitchToMode "Locked"; }
+        bind "H" { Resize "Increase Left"; }
+        bind "J" { Resize "Increase Down"; }
+        bind "K" { Resize "Increase Up"; }
+        bind "L" { Resize "Increase Right"; }
+        bind "," { SwitchToMode "RenameTab"; TabNameInput 0; }
+        bind "1" { GoToTab 1; SwitchToMode "Locked"; }
+        bind "2" { GoToTab 2; SwitchToMode "Locked"; }
+        bind "3" { GoToTab 3; SwitchToMode "Locked"; }
+        bind "4" { GoToTab 4; SwitchToMode "Locked"; }
+        bind "5" { GoToTab 5; SwitchToMode "Locked"; }
+        bind "6" { GoToTab 6; SwitchToMode "Locked"; }
+        bind "7" { GoToTab 7; SwitchToMode "Locked"; }
+        bind "8" { GoToTab 8; SwitchToMode "Locked"; }
+        bind "9" { GoToTab 9; SwitchToMode "Locked"; }
         bind "z" { ToggleFocusFullscreen; SwitchToMode "Locked"; }
         bind "d" { Detach; }
         bind "[" { SwitchToMode "Scroll"; }
@@ -68,5 +83,10 @@ keybinds clear-defaults=true {
         bind "Ctrl g" "Esc" "q" { SwitchToMode "Locked"; }
         bind "n" { Search "down"; }
         bind "N" { Search "up"; }
+    }
+
+    renametab {
+        bind "Enter" { SwitchToMode "Locked"; }
+        bind "Esc" { UndoRenameTab; SwitchToMode "Locked"; }
     }
 }

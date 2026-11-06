@@ -166,6 +166,10 @@ bindsym Control+Mod1+BackSpace exec swaymsg exit
 # Snipping tool - select area and copy to clipboard
 bindsym $mod+p exec grimshot copy area
 
+# Notifications - dismiss the newest / all
+bindsym $mod+n exec makoctl dismiss
+bindsym $mod+Shift+n exec makoctl dismiss --all
+
 # -----------------------------------------------------------------------------
 # Window Focus
 # -----------------------------------------------------------------------------

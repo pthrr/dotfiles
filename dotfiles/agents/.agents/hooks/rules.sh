@@ -35,8 +35,15 @@ for f in "$dir"/*.md; do
     [ -f "$f" ] || continue
 
     # First match only: a second `when:` in the body is prose, not configuration.
-    when=$(grep -m1 '^when:[[:space:]]' "$f" 2>/dev/null) || continue
-    when=${when#when:}
+    # A formatter wraps a long value onto the indented lines below `when:`; they
+    # belong to the value up to the first line that is not indented.
+    when=$(awk '
+        found && /^[[:space:]]/ { value = value " " $0; next }
+        found { exit }
+        $0 == "when:" || /^when:[[:space:]]/ { value = substr($0, 6); found = 1 }
+        END { if (found) print value }
+    ' "$f" 2>/dev/null)
+    [ -n "$when" ] || continue
     when=${when//\"/}
     when=${when//\'/}
 

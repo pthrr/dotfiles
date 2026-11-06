@@ -40,6 +40,7 @@ in
         vifm
         zellij
         tree
+        viddy
         htop
         fzf
         ripgrep
@@ -113,9 +114,8 @@ in
       # JavaScript/TypeScript
       [
         # Shared harness hooks run TypeScript directly with Node.
-        nodejs
+        nodejs-slim
         pnpm
-        # bun
         eslint
         vscode-langservers-extracted
         typescript-language-server
@@ -174,7 +174,6 @@ in
         sccache
         cargo-sweep
         cargo-cache
-        # redis
         gdbgui
         rr
         hotspot
@@ -203,7 +202,7 @@ in
 
       # WebAssembly
       #   [
-      #     # emscripten
+      #     emscripten
       #     wasmtime
       #     wabt
       #   ]
@@ -299,7 +298,7 @@ in
       # Other
       [
         go-task
-        # wineWow64Packages.waylandFull
-        # ripes # temporarily disabled due to cmake build issue
+        wineWow64Packages.waylandFull
+        ripes
       ];
 }

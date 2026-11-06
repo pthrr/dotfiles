@@ -12,14 +12,16 @@ tasks:
       - task --list
 
   fmt:
-    desc: Format the root Nix flake and home modules
+    desc: Format the root Nix flake, home modules and Neovim config
     cmds:
       - nixfmt flake.nix modules/home/*.nix
+      - stylua --config-path dotfiles/lang/stylua.toml dotfiles/nvim/.config/nvim/init.lua
 
   lint:
-    desc: Check Nix and shell syntax
+    desc: Check Nix, Lua and shell formatting and syntax
     cmds:
       - nixfmt --check flake.nix modules/home/*.nix
+      - stylua --check --config-path dotfiles/lang/stylua.toml dotfiles/nvim/.config/nvim/init.lua
       - nix flake check --no-build
       - find . -maxdepth 1 -type f -name '*.sh' -exec bash -n {} +
       - find system dotfiles -type f -name '*.sh' -exec bash -n {} +
